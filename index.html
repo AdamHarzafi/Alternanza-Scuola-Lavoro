@@ -1436,6 +1436,49 @@
                 attemptsMsgObj.style.color = '#d97706'; 
             }
 
+            // ==========================================
+// LOGIN CON GOOGLE
+// ==========================================
+const googleBtn = document.getElementById('custom-google-btn');
+const googleErrorMsg = document.getElementById('google-login-error');
+
+googleBtn.addEventListener('click', () => {
+    // Disabilita il pulsante durante il caricamento
+    const originalText = googleBtn.innerHTML;
+    googleBtn.innerHTML = '<span>CARICAMENTO...</span>';
+    googleBtn.disabled = true;
+    googleErrorMsg.style.display = 'none';
+
+    // Inizializza il provider di Google
+    const provider = new firebase.auth.GoogleAuthProvider();
+    
+    // Mostra il popup di Google
+    auth.signInWithPopup(provider)
+        .then((result) => {
+            // Login riuscito!
+            const user = result.user;
+            console.log("Login Google riuscito con:", user.email);
+            
+            // Entra nel portale usando il nome dell'account Google
+            entraNelPortale(user.displayName || "Utente Scolastico");
+            
+            // Ripristina il pulsante
+            googleBtn.innerHTML = originalText;
+            googleBtn.disabled = false;
+        })
+        .catch((error) => {
+            // Gestione errori (es. utente chiude il popup)
+            console.error("Errore Login Google:", error);
+            googleErrorMsg.innerText = "Accesso annullato o non riuscito. Riprova.";
+            googleErrorMsg.style.display = 'block';
+            googleErrorMsg.style.color = '#ef4444';
+            
+            // Ripristina il pulsante
+            googleBtn.innerHTML = originalText;
+            googleBtn.disabled = false;
+        });
+});
+
             // Dropdown Autofill
             const usernameSelect = document.getElementById('username-select');
             const hiddenUsernameInput = document.getElementById('hidden-username');
