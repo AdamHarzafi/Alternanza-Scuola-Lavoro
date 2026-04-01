@@ -726,7 +726,28 @@
             .captcha-challenge-content { padding: 25px 15px; } /* Fix padding for small screens */
         }
     </style>
+
+    <!-- LIBRERIE FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
+        authDomain: "harzafi---fsl.firebaseapp.com",
+        projectId: "harzafi---fsl",
+        storageBucket: "harzafi---fsl.firebasestorage.app",
+        messagingSenderId: "743942918497",
+        appId: "1:743942918497:web:6d6e44ba348760ce137520"
+    };
+    // Inizializza Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+</script>
 </head>
+
 <body>
 
     <!-- ======================================================= -->
@@ -1348,40 +1369,10 @@
             const finalValue = 113.30;
             const landingObj = document.getElementById('landing-view');
             const dashboardObj = document.getElementById('app-dashboard');
-            
-            // Database
-            const studentsDb =[
-                { nome: "ABBATEPAOLO LUCA", cf: "BBTLCU08T20L219L" },
-                { nome: "ACERRA FEDERICO", cf: "CRRFRC09B22C665U" },
-                { nome: "AFFAOUI WALID", cf: "FFAWLD09L30L219A" },
-                { nome: "BALDARI LORENZO SIMONE", cf: "BLDLNZ08H17L219A" },
-                { nome: "BINTE RASHED MD NURE RUSIDA", cf: "BNTMNR07T53Z249J" },
-                { nome: "CAUDANA GABRIEL", cf: "CDNGRL09P25L219P" },
-                { nome: "ES SAID RAZANE", cf: "SSDRZN08D58L219M" },
-                { nome: "FERRIGNO DIEGO", cf: "FRRDGI09E22L219Y" },
-                { nome: "GALLE' MATTEO", cf: "GLLMTT09L15H355F" },
-                { nome: "GIBAJA GOMEZ MAURIZIO", cf: "GBJMRZ07E17L219Z" },
-                { nome: "HARZAFI ADAM", cf: "HRZDMA09D14F335D" },
-                { nome: "HEKAL AMR", cf: "HKLMRA09L16L219P" },
-                { nome: "HU MIRKO", cf: "HUXMRK08R01H620E" },
-                { nome: "IONESCU MARCO GABRIEL", cf: "NSCMCG08L05L219A" },
-                { nome: "KALTHI IRIS", cf: "KLTRSI09T52L219G" },
-                { nome: "MINOTTI MATTEO", cf: "MNTMTT09H06C627M" },
-                { nome: "PANERO MATTEO", cf: "PNRMTT08B20CSS5N" },
-                { nome: "ROSSI DE AZEVEDO LUIZ MIGUEL", cf: "RSSLMG06T02Z602O" },
-                { nome: "SCUDELER WILLIAM", cf: "SCDWLM09P13C665M" },
-                { nome: "TRUMINO SIMONE", cf: "TRMSMN08R08L219Q" },
-                { nome: "UY JOSEF RYAN", cf: "YUXJFR09M19Z216W" },
-                { nome: "YU ANDREA", cf: "YUXNDR09H16L219F" }
-            ];
-
-            const teachersDb =[
-                { nome: "ELENA GENETTI" },
-                { nome: "MARIA GRAZIA MAFFUCCI" }
-            ];
 
             let selectedRole = 'studente'; 
             let selectedUserValue = "";
+            let selectedUserEmail = ""; // NUOVO: Salva l'email vera presa dal database
             let selectedForgotUser = null;
 
             // Logica Anti-Bruteforce
@@ -1451,89 +1442,97 @@
             const forgotCognomeSelect = document.getElementById('forgot-cognome-select');
             const forgotError = document.getElementById('forgot-error');
 
+            // --- CONNESSIONE A FIRESTORE PER I MENU A TENDINA ---
             function populateUserDropdown(role) {
-                const optionsContainer = document.getElementById('username-options');
-                optionsContainer.innerHTML = '';
-                let list = role === 'studente' ? studentsDb : teachersDb;
-                
-                list.forEach(person => {
-                    const option = document.createElement('div');
-                    option.className = 'custom-option';
-                    option.textContent = person.nome;
-                    option.dataset.value = person.nome;
-                    
-                    option.addEventListener('click', function() {
-                        const display = document.getElementById('username-display');
-                        display.textContent = person.nome;
-                        display.parentElement.classList.add('selected');
-                        
-                        selectedUserValue = person.nome;
-                        hiddenUsernameInput.value = person.nome;
-                        
-                        optionsContainer.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
-                        this.classList.add('selected');
-                        
-                        usernameSelect.classList.remove('open');
-                        errorMsg.style.display = 'none';
-                    });
-                    optionsContainer.appendChild(option);
-                });
-                
-                const display = document.getElementById('username-display');
-                display.textContent = 'Seleziona Utente';
-                display.parentElement.classList.remove('selected');
-                selectedUserValue = "";
-                hiddenUsernameInput.value = "";
-            }
+    const optionsContainer = document.getElementById('username-options');
+    optionsContainer.innerHTML = '<div class="custom-option" style="text-align:center; color:#94a3b8;">Caricamento utenti...</div>';
+    
+    if (role === 'studente') {
+        db.collection("studenti").orderBy("nome", "asc").get().then((querySnapshot) => {
+            optionsContainer.innerHTML = ''; 
+            querySnapshot.forEach((doc) => {
+                const person = doc.data(); 
+                const emailUtente = person.email || "email_mancante@scuola.it";
+                creaOpzioneDropdown(person.nome, emailUtente, optionsContainer, 'username');
+            });
+        }).catch((error) => {
+            console.error("Errore DB:", error);
+            optionsContainer.innerHTML = '<div class="custom-option" style="color:red;">Errore di connessione</div>';
+        });
+    } else if (role === 'docente') {
+        // NUOVO CODICE: Prende i docenti dal database Firestore
+        db.collection("docenti").orderBy("nome", "asc").get().then((querySnapshot) => {
+            optionsContainer.innerHTML = ''; 
+            querySnapshot.forEach((doc) => {
+                const person = doc.data(); 
+                // Assicurati che nel DB dei docenti ci sia il campo 'email'
+                const emailUtente = person.email || "email_mancante@scuola.it";
+                creaOpzioneDropdown(person.nome, emailUtente, optionsContainer, 'username');
+            });
+        }).catch((error) => {
+            console.error("Errore DB:", error);
+            optionsContainer.innerHTML = '<div class="custom-option" style="color:red;">Errore di connessione</div>';
+        });
+    }
+    resetDropdownDisplay('username-display', 'Seleziona Utente');
+}
 
             function populateForgotDropdown() {
                 const optionsContainer = document.getElementById('forgot-cognome-options');
-                optionsContainer.innerHTML = '';
+                optionsContainer.innerHTML = '<div class="custom-option" style="text-align:center; color:#94a3b8;">Caricamento...</div>';
                 
-                studentsDb.forEach(person => {
-                    const option = document.createElement('div');
-                    option.className = 'custom-option';
-                    option.textContent = person.nome;
-                    option.dataset.value = person.nome;
+                db.collection("studenti").orderBy("nome", "asc").get().then((querySnapshot) => {
+                    optionsContainer.innerHTML = ''; 
+                    querySnapshot.forEach((doc) => {
+                        const person = doc.data(); 
+                        creaOpzioneDropdown(person.nome, person.cf, optionsContainer, 'forgot-cognome');
+                    });
+                });
+                resetDropdownDisplay('forgot-cognome-display', 'Seleziona lo studente');
+            }
+
+            function creaOpzioneDropdown(nome, datoExtra, container, tipo) {
+                const option = document.createElement('div');
+                option.className = 'custom-option';
+                option.textContent = nome;
+                option.dataset.value = nome;
+                
+                option.addEventListener('click', function() {
+                    const display = document.getElementById(`${tipo}-display`);
+                    display.textContent = nome;
+                    display.parentElement.classList.add('selected');
                     
-                    option.addEventListener('click', function() {
-                        const display = document.getElementById('forgot-cognome-display');
-                        display.textContent = person.nome;
-                        display.parentElement.classList.add('selected');
-                        selectedForgotUser = person;
-                        
-                        optionsContainer.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
-                        this.classList.add('selected');
-                        
+                    if(tipo === 'username') {
+                        selectedUserValue = nome;
+                        selectedUserEmail = datoExtra; // Salviamo l'email vera!
+                        hiddenUsernameInput.value = nome;
+                        usernameSelect.classList.remove('open');
+                        errorMsg.style.display = 'none';
+                    } else if (tipo === 'forgot-cognome') {
+                        selectedForgotUser = { nome: nome, cf: datoExtra }; // Salviamo il CF per il recupero
                         forgotCognomeSelect.classList.remove('open');
                         forgotError.style.display = 'none';
-                    });
-                    optionsContainer.appendChild(option);
+                    }
+                    
+                    container.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
                 });
-                
-                const display = document.getElementById('forgot-cognome-display');
-                display.textContent = 'Seleziona lo studente';
+                container.appendChild(option);
+            }
+
+            function resetDropdownDisplay(id, testo) {
+                const display = document.getElementById(id);
+                display.textContent = testo;
                 display.parentElement.classList.remove('selected');
-                selectedForgotUser = null;
+                if(id === 'username-display') {
+                    selectedUserValue = "";
+                    selectedUserEmail = "";
+                    hiddenUsernameInput.value = "";
+                }
             }
 
             populateUserDropdown('studente');
             populateForgotDropdown();
-
-            const updateDropdownFromAutofill = () => {
-                const val = hiddenUsernameInput.value.toUpperCase();
-                if (val && val !== selectedUserValue) {
-                    selectedUserValue = val;
-                    const display = document.getElementById('username-display');
-                    if(display) {
-                        display.textContent = val;
-                        display.parentElement.classList.add('selected');
-                    }
-                }
-            };
-            hiddenUsernameInput.addEventListener('input', updateDropdownFromAutofill);
-            hiddenUsernameInput.addEventListener('change', updateDropdownFromAutofill);
-            passInput.addEventListener('focus', () => setTimeout(updateDropdownFromAutofill, 300));
 
             usernameSelect.querySelector('.custom-select-trigger').addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -1549,69 +1548,6 @@
                 if (!e.target.closest('#username-select')) usernameSelect.classList.remove('open');
                 if (!e.target.closest('#forgot-cognome-select')) forgotCognomeSelect.classList.remove('open');
             });
-
-            // Login Google
-            let googleTokenClient;
-            function initGoogleAuth() {
-                if (typeof google !== 'undefined' && google.accounts) {
-                    googleTokenClient = google.accounts.oauth2.initTokenClient({
-                        client_id: "805714025630-s0l9r63ra10csarlcloqlnmcplak4g27.apps.googleusercontent.com",
-                        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
-                        callback: (tokenResponse) => {
-                            if (tokenResponse && tokenResponse.access_token) {
-                                fetchUserInfo(tokenResponse.access_token);
-                            }
-                        }
-                    });
-                } else {
-                    setTimeout(initGoogleAuth, 100);
-                }
-            }
-
-            function fetchUserInfo(accessToken) {
-                fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: { 'Authorization': `Bearer ${accessToken}` }
-                })
-                .then(res => res.json())
-                .then(data => handleGoogleUser(data.email, data.name))
-                .catch(err => showGoogleError("Si è verificato un errore durante l'accesso con Google."));
-            }
-
-            function handleGoogleUser(email, name) {
-                const googleErrorObj = document.getElementById('google-login-error');
-                googleErrorObj.style.display = 'none';
-
-                const userEmail = (email || '').toLowerCase();
-                const userName = name || 'Utente';
-
-                if (selectedRole === 'studente') {
-                    if (userEmail.endsWith('@studenti.itisavogadro.it')) entraNelPortaleGoogle(userName);
-                    else showGoogleError("Devi accedere con l'account @studenti.itisavogadro.it");
-                } else { 
-                    if (userEmail.endsWith('@itisavogadro.it')) entraNelPortaleGoogle(userName);
-                    else showGoogleError("Devi accedere con l'account @itisavogadro.it");
-                }
-            }
-
-            function showGoogleError(msg) {
-                const googleErrorObj = document.getElementById('google-login-error');
-                googleErrorObj.innerText = msg;
-                googleErrorObj.style.display = 'block';
-                googleErrorObj.style.animation = 'none';
-                void googleErrorObj.offsetWidth; 
-                googleErrorObj.style.animation = 'shake 0.4s';
-            }
-
-            function entraNelPortaleGoogle(name) {
-                entraNelPortale(name);
-            }
-
-            document.getElementById('custom-google-btn').addEventListener('click', () => {
-                if (googleTokenClient) googleTokenClient.requestAccessToken();
-                else showGoogleError("Servizio Google non ancora caricato. Riprova tra un istante.");
-            });
-
-            initGoogleAuth();
 
             // Scrolling e UI elementari
             const reveals = document.querySelectorAll('.reveal');
@@ -1656,7 +1592,7 @@
             let captchaSolved = false;
             let captchaValidUntil = 0;
             let currentCaptchaText = '';
-            let captchaTimeout = null; // Gestisce lo scadere dei 2 minuti
+            let captchaTimeout = null; 
 
             const captchaWidget = document.getElementById('custom-captcha-widget');
             const captchaBox = document.getElementById('captcha-checkbox');
@@ -1679,7 +1615,6 @@
                 const ctx = canvas.getContext('2d');
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // Rumore di fondo (Pallini)
                 for(let i=0; i<100; i++) {
                     ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.3)`;
                     ctx.beginPath();
@@ -1687,7 +1622,6 @@
                     ctx.fill();
                 }
 
-                // Rumore di fondo (Linee)
                 for(let i=0; i<6; i++) {
                     ctx.strokeStyle = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255},0.4)`;
                     ctx.lineWidth = Math.random() * 2 + 1;
@@ -1703,7 +1637,6 @@
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                // Disegno il testo lettera per lettera per applicare distorsioni
                 for(let i=0; i<currentCaptchaText.length; i++) {
                     ctx.save();
                     const x = 35 + i * 35;
@@ -1717,11 +1650,7 @@
 
             captchaBox.addEventListener('click', () => {
                 if (captchaSolved && Date.now() < captchaValidUntil) return;
-                
-                // Animazione di caricamento
                 captchaBox.classList.add('loading');
-                
-                // Simula il tempo di connessione al servizio CAPTCHA
                 setTimeout(() => {
                     captchaChallengeModal.classList.add('show');
                     drawCaptcha();
@@ -1754,60 +1683,47 @@
             function verifyCaptchaCode() {
                 const userText = captchaInputText.value.trim();
                 if (userText.toLowerCase() === currentCaptchaText.toLowerCase()) {
-                    // Successo
                     captchaChallengeModal.classList.remove('show');
                     captchaBox.classList.remove('loading');
                     captchaBox.classList.add('success');
                     captchaSolved = true;
                     
-                    // Valido per 2 minuti
                     const durataValiditaMs = 2 * 60 * 1000;
                     captchaValidUntil = Date.now() + durataValiditaMs; 
                     errorMsg.style.display = 'none';
                     
-                    // Rimuove la spunta visivamente quando il tempo scade
                     clearTimeout(captchaTimeout);
                     captchaTimeout = setTimeout(() => {
                         captchaSolved = false;
                         captchaBox.classList.remove('success');
                     }, durataValiditaMs);
 
-                    // Auto submit form login dopo il captcha
                     setTimeout(() => {
                         const submitEvent = new Event('submit', { cancelable: true });
                         loginForm.dispatchEvent(submitEvent);
                     }, 400);
 
                 } else {
-                    // Errore
                     captchaErrorMsg.style.display = 'block';
                     captchaErrorMsg.style.animation = 'none';
                     void captchaErrorMsg.offsetWidth;
                     captchaErrorMsg.style.animation = 'shake 0.4s';
-                    
                     drawCaptcha();
                     captchaInputText.value = '';
                     captchaInputText.focus();
                 }
             }
 
-            // Blocco copia-incolla password
             passInput.addEventListener('copy', e => {
                 e.preventDefault();
                 errorMsg.innerText = "Per motivi di sicurezza, non è possibile copiare la password.";
                 errorMsg.style.display = 'block';
-                errorMsg.style.animation = 'none';
-                void errorMsg.offsetWidth;
-                errorMsg.style.animation = 'shake 0.4s';
             });
 
             passInput.addEventListener('paste', e => {
                 e.preventDefault();
                 errorMsg.innerText = "Per motivi di sicurezza, non è possibile incollare la password.";
                 errorMsg.style.display = 'block';
-                errorMsg.style.animation = 'none';
-                void errorMsg.offsetWidth;
-                errorMsg.style.animation = 'shake 0.4s';
             });
 
             togglePasswordBtn.addEventListener('click', () => {
@@ -1877,24 +1793,9 @@
                 forgotResult.style.display = 'none';
                 document.getElementById('google-login-error').style.display = 'none';
                 
-                selectedUserValue = "";
-                hiddenUsernameInput.value = "";
-                const userDisplay = document.getElementById('username-display');
-                if(userDisplay) {
-                    userDisplay.textContent = 'Seleziona Utente';
-                    userDisplay.parentElement.classList.remove('selected');
-                    usernameSelect.classList.remove('open');
-                    document.querySelectorAll('#username-options .custom-option').forEach(opt => opt.classList.remove('selected'));
-                }
-                
+                resetDropdownDisplay('username-display', 'Seleziona Utente');
+                resetDropdownDisplay('forgot-cognome-display', 'Seleziona lo studente');
                 selectedForgotUser = null;
-                const forgotDisplay = document.getElementById('forgot-cognome-display');
-                if(forgotDisplay) {
-                    forgotDisplay.textContent = 'Seleziona lo studente';
-                    forgotDisplay.parentElement.classList.remove('selected');
-                    forgotCognomeSelect.classList.remove('open');
-                    document.querySelectorAll('#forgot-cognome-options .custom-option').forEach(opt => opt.classList.remove('selected'));
-                }
 
                 passInput.value = '';
                 passInput.type = 'password';
@@ -1904,7 +1805,6 @@
                 eyeSlashIcon.style.display = 'none';
                 document.getElementById('cf-input').value = '';
 
-                // Reset CAPTCHA alla chiusura del modale
                 captchaSolved = false;
                 captchaValidUntil = 0;
                 clearTimeout(captchaTimeout);
@@ -1925,39 +1825,96 @@
             }
 
             btnVerifyStudent.addEventListener('click', () => {
-                const cfInputVal = document.getElementById('cf-input').value.trim().toUpperCase();
+    const cfInputVal = document.getElementById('cf-input').value.trim().toUpperCase();
+    const btnReset = document.getElementById('btn-verify-student');
 
-                if(!selectedForgotUser || !cfInputVal) {
-                    forgotError.innerText = "Seleziona uno studente e inserisci il Codice Fiscale.";
-                    forgotError.style.display = 'block';
-                    forgotResult.style.display = 'none';
-                    return;
-                }
+    // 1. Controllo che i campi non siano vuoti
+    if(!selectedForgotUser || !cfInputVal) {
+        forgotError.innerText = "Seleziona uno studente e inserisci il Codice Fiscale.";
+        forgotError.style.display = 'block';
+        forgotResult.style.display = 'none';
+        return;
+    }
 
-                if(selectedForgotUser.cf === cfInputVal) {
-                    forgotError.style.display = 'none';
-                    let cordialName = selectedForgotUser.nome.split(' ')[0];
-                    cordialName = cordialName.charAt(0).toUpperCase() + cordialName.slice(1).toLowerCase();
-                    forgotResult.innerHTML = `Verifica superata, Ciao ${cordialName}.<br>La password di classe è:<br><span style="color:#059669; font-size:1.2rem; display:block; margin-top:5px; user-select:all;">STUDENTIAVOGADRO2009</span>`;
-                    forgotResult.style.display = 'block';
+    // 2. Controllo se il CF inserito corrisponde a quello salvato nel sistema
+    if(selectedForgotUser.cf === cfInputVal) {
+        
+        forgotError.style.display = 'none';
+        btnReset.innerText = "INVIO EMAIL IN CORSO...";
+        btnReset.disabled = true;
+
+        // 3. Vado a cercare l'email vera dello studente nel database Firestore
+        db.collection("studenti").where("cf", "==", cfInputVal).get().then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const userData = querySnapshot.docs[0].data();
+                const emailUtente = userData.email;
+
+                if (emailUtente) {
+                    // 4. CHIAMATA A FIREBASE PER INVIARE L'EMAIL DI RESET
+                    auth.sendPasswordResetEmail(emailUtente)
+                        .then(() => {
+                            // Email inviata con successo!
+                            forgotResult.innerHTML = `✅ <b>Verifica superata!</b><br><br>Ti abbiamo inviato un'email all'indirizzo associato al tuo profilo con il link per impostare una nuova password sicura.`;
+                            forgotResult.style.display = 'block';
+                            
+                            btnReset.innerText = "VERIFICA DATI";
+                            btnReset.disabled = false;
+                        })
+                        .catch((error) => {
+                            // Errore di Firebase (es. troppe richieste)
+                            console.error(error);
+                            forgotError.innerText = "Errore nell'invio dell'email. Riprova più tardi.";
+                            forgotError.style.display = 'block';
+                            
+                            btnReset.innerText = "VERIFICA DATI";
+                            btnReset.disabled = false;
+                        });
                 } else {
-                    forgotResult.style.display = 'none';
-                    forgotError.innerText = "Dati non trovati o errati. Riprova.";
+                    forgotError.innerText = "Nessuna email trovata per questo studente nel database.";
                     forgotError.style.display = 'block';
+                    btnReset.innerText = "VERIFICA DATI";
+                    btnReset.disabled = false;
                 }
-            });
+            }
+        }).catch((error) => {
+            console.error("Errore lettura DB:", error);
+            forgotError.innerText = "Errore di connessione al database.";
+            forgotError.style.display = 'block';
+            btnReset.innerText = "VERIFICA DATI";
+            btnReset.disabled = false;
+        });
 
+    } else {
+        // CF Sbagliato
+        forgotResult.style.display = 'none';
+        forgotError.innerText = "Il Codice Fiscale inserito non è corretto. Riprova.";
+        forgotError.style.display = 'block';
+        
+        // Animazione di errore (scossa)
+        forgotError.style.animation = 'none';
+        void forgotError.offsetWidth; 
+        forgotError.style.animation = 'shake 0.4s';
+    }
+});
+
+            // =====================================================
+            // IL VERO LOGIN SICURO CON FIREBASE (CON RADAR ATTIVO)
+            // =====================================================
             const loginForm = document.getElementById('login-form');
             loginForm.addEventListener('submit', (e) => {
-                if (checkLockoutState()) {
-                    e.preventDefault();
-                    return;
-                }
+                e.preventDefault(); 
+                console.log("📍 PUNTO 1: Hai cliccato il bottone ENTRA");
+
+                if (checkLockoutState()) return;
+
                 const pass = passInput.value.trim();
                 const uName = hiddenUsernameInput.value.trim();
                 
-                if (!uName) {
-                    e.preventDefault(); 
+                console.log("📍 PUNTO 2: Utente selezionato dal menu:", uName);
+                console.log("📍 PUNTO 3: Email pescata dal Database:", selectedUserEmail);
+
+                if (!uName || !selectedUserEmail) {
+                    console.log("❌ BLOCCO: Manca l'utente o l'email");
                     errorMsg.innerText = "Seleziona prima un utente dalla lista.";
                     errorMsg.style.display = 'block';
                     errorMsg.style.animation = 'none';
@@ -1967,7 +1924,7 @@
                 }
 
                 if (!pass) {
-                    e.preventDefault();
+                    console.log("❌ BLOCCO: Manca la password");
                     errorMsg.innerText = "Il campo password è obbligatorio.";
                     errorMsg.style.display = 'block';
                     errorMsg.style.animation = 'none';
@@ -1976,116 +1933,140 @@
                     return;
                 }
 
-                // Controllo superamento CAPTCHA o scadenza tempo
                 if (!captchaSolved || Date.now() > captchaValidUntil) {
-                    e.preventDefault();
-                    captchaSolved = false; // in caso sia scaduto
+                    console.log("❌ BLOCCO: Captcha non risolto o scaduto");
+                    captchaSolved = false; 
                     captchaBox.classList.remove('success');
                     errorMsg.innerText = "Per favore, completa la verifica di autenticità per continuare.";
                     errorMsg.style.display = 'block';
-                    
                     captchaWidget.style.animation = 'none';
                     void captchaWidget.offsetWidth;
                     captchaWidget.style.animation = 'shake 0.4s';
                     return;
                 }
 
-                const isStudentPass = btoa(pass) === 'U1RVREVOVElBVk9HQURSTzIwMDk=';
-                const isTeacherPass = btoa(pass) === 'MjZET0NFTlRJQVZP';
-                const isAdminPass   = btoa(pass) === 'YWRtaW4=';
-                
-                if ((selectedRole === 'studente' && isStudentPass) || (selectedRole === 'docente' && isTeacherPass) || isAdminPass) {
-                    e.preventDefault(); 
-                    localStorage.removeItem('pcto_failed_attempts');
-                    localStorage.removeItem('pcto_lockout_until');
-                    entraNelPortale(uName);
-                } else {
-                    e.preventDefault(); 
-                    passInput.value = ''; 
-                    
-                    let attempts = parseInt(localStorage.getItem('pcto_failed_attempts') || '0');
-                    attempts++;
-                    localStorage.setItem('pcto_failed_attempts', attempts);
-                    
-                    if (attempts >= MAX_ATTEMPTS) {
-                        const lockoutUntil = Date.now() + LOCKOUT_DURATION;
-                        localStorage.setItem('pcto_lockout_until', lockoutUntil);
-                        startLockoutCountdown(lockoutUntil);
-                    } else {
-                        const rem = MAX_ATTEMPTS - attempts;
-                        errorMsg.innerText = "Credenziali errate. Riprova.";
-                        errorMsg.style.display = 'block';
-                        
-                        attemptsMsgObj.innerText = rem === 1 ? 'Ti rimane 1 ultimo tentativo.' : `Ti rimangono ${rem} tentativi.`;
-                        attemptsMsgObj.style.display = 'block';
-                        
-                        errorMsg.style.animation = 'none';
-                        void errorMsg.offsetWidth; 
-                        errorMsg.style.animation = 'shake 0.4s';
-                        
-                        passInput.style.borderColor = '#ef4444';
-                        setTimeout(() => passInput.style.borderColor = '#e5e7eb', 1500);
+                console.log("📍 PUNTO 4: Tutti i controlli superati. Sto chiamando Firebase...");
+                submitBtn.innerText = "VERIFICA IN CORSO...";
+                submitBtn.disabled = true;
 
-                        // La spunta verde del CAPTCHA rimane attiva se il tempo non è scaduto.
-                    }
-                }
+                // CHIAMATA AL SERVER FIREBASE
+                auth.signInWithEmailAndPassword(selectedUserEmail, pass)
+                    .then((userCredential) => {
+                        console.log("✅ PUNTO 5: FIREBASE HA DETTO SI! Login riuscito.");
+                        localStorage.removeItem('pcto_failed_attempts');
+                        localStorage.removeItem('pcto_lockout_until');
+                        entraNelPortale(uName); 
+                    })
+                    .catch((error) => {
+                        console.error("❌ PUNTO 5: FIREBASE HA DETTO NO! Errore:", error.code, error.message);
+                        
+                        submitBtn.innerText = "ENTRA";
+                        submitBtn.disabled = false;
+                        passInput.value = ''; 
+                        
+                        let attempts = parseInt(localStorage.getItem('pcto_failed_attempts') || '0');
+                        attempts++;
+                        localStorage.setItem('pcto_failed_attempts', attempts);
+                        
+                        if (attempts >= MAX_ATTEMPTS) {
+                            const lockoutUntil = Date.now() + LOCKOUT_DURATION;
+                            localStorage.setItem('pcto_lockout_until', lockoutUntil);
+                            startLockoutCountdown(lockoutUntil);
+                        } else {
+                            const rem = MAX_ATTEMPTS - attempts;
+                            errorMsg.innerText = "Credenziali errate. Riprova.";
+                            errorMsg.style.display = 'block';
+                            
+                            attemptsMsgObj.innerText = rem === 1 ? 'Ti rimane 1 ultimo tentativo.' : `Ti rimangono ${rem} tentativi.`;
+                            attemptsMsgObj.style.display = 'block';
+                            
+                            errorMsg.style.animation = 'none';
+                            void errorMsg.offsetWidth; 
+                            errorMsg.style.animation = 'shake 0.4s';
+                            
+                            passInput.style.borderColor = '#ef4444';
+                            setTimeout(() => passInput.style.borderColor = '#e5e7eb', 1500);
+                        }
+                    });
             });
-
-            checkLockoutState();
 
             function entraNelPortale(uName) {
-                if (!uName) uName = selectedUserValue || (selectedRole === 'studente' ? "Studente" : "Docente");
-                const formattedName = uName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-                document.getElementById('user-greeting-title').innerText = `Buongiorno, ${formattedName}.`;
+    // 1. Formatta il nome (es. "HARZAFI ADAM" -> "Harzafi Adam")
+    const formattedName = uName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    
+    // 2. Aggiorna il titolo di benvenuto
+    const greetingTitle = document.getElementById('user-greeting-title');
+    if (greetingTitle) {
+        greetingTitle.innerText = `Buongiorno, ${formattedName}.`;
+    }
 
-                loginModal.classList.add('hidden');
-                landingObj.style.opacity = '0';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                
-                setTimeout(() => {
-                    landingObj.style.display = 'none';
-                    dashboardObj.style.display = 'block'; 
-                    void dashboardObj.offsetWidth; 
-                    dashboardObj.style.opacity = '1'; 
-                    
-                    setTimeout(() => {
-                         document.querySelectorAll('.stat-segment').forEach(el=> el.style.transform='scaleX(1)');
-                    }, 100); 
+    // 3. Nascondi il modale di login
+    const loginModal = document.getElementById('login-modal');
+    if (loginModal) {
+        loginModal.classList.add('hidden');
+    }
 
-                    let counterObj = document.getElementById('hour-counter');
-                    let cvValue = 0;
-                    const cDuration = 1800; 
-                    const speedInc = finalValue / (cDuration / 16.666); 
-                    function cycleFrames() {
-                        cvValue += speedInc;
-                        if (cvValue >= finalValue) {
-                            counterObj.innerText = finalValue.toFixed(2);
-                        } else {
-                            counterObj.innerText = cvValue.toFixed(2);
-                            window.requestAnimationFrame(cycleFrames);
-                        }
-                    };
-                    window.requestAnimationFrame(cycleFrames);
-                }, 500);
+    // 4. Fai sparire la landing page
+    const landingObj = document.getElementById('landing-view');
+    if (landingObj) {
+        landingObj.style.opacity = '0';
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // 5. Mostra la dashboard dopo una breve transizione
+    setTimeout(() => {
+        if (landingObj) landingObj.style.display = 'none';
+        
+        const dashboardObj = document.getElementById('app-dashboard');
+        if (dashboardObj) {
+            dashboardObj.style.display = 'block'; 
+            // Forza il browser a ricalcolare il layout prima di cambiare l'opacità
+            void dashboardObj.offsetWidth; 
+            dashboardObj.style.opacity = '1'; 
+            
+            // Anima le barre di progresso
+            setTimeout(() => {
+                 document.querySelectorAll('.stat-segment').forEach(el => el.style.transform = 'scaleX(1)');
+            }, 100); 
+
+            // Imposta il contatore delle ore (Senza animazioni complesse che si bloccano)
+            const counterObj = document.getElementById('hour-counter');
+            if (counterObj) {
+                counterObj.innerText = "113.30"; // Valore fisso per ora, poi lo prenderemo dal database!
             }
+        }
+        
+        // Ripristina il bottone di login per la prossima volta
+        const submitBtn = document.getElementById('login-submit');
+        if (submitBtn) {
+            submitBtn.innerText = "ENTRA";
+            submitBtn.disabled = false;
+        }
+        
+    }, 500);
+}
 
             document.getElementById('btn-logout-dash').addEventListener('click', () => {
-                dashboardObj.style.opacity = '0';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Disconnetti anche da Firebase
+                auth.signOut().then(() => {
+                    dashboardObj.style.opacity = '0';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-                setTimeout(() => {
-                    dashboardObj.style.display = 'none';
-                    landingObj.style.display = 'block';
-                    document.querySelectorAll('.stat-segment').forEach(el=> el.style.transform='scaleX(0)');
-                    void landingObj.offsetWidth; 
-                    landingObj.style.opacity = '1';
-                    resetModal();
-                }, 500);
+                    setTimeout(() => {
+                        dashboardObj.style.display = 'none';
+                        landingObj.style.display = 'block';
+                        document.querySelectorAll('.stat-segment').forEach(el=> el.style.transform='scaleX(0)');
+                        void landingObj.offsetWidth; 
+                        landingObj.style.opacity = '1';
+                        resetModal();
+                        submitBtn.innerText = "ENTRA";
+                        submitBtn.disabled = false;
+                    }, 500);
+                });
             });
 
-            // ==========================================
-            // LOGICA MENU TENDINA ANNO SCOLASTICO DASHBOARD
-            // ==========================================
+            // Logica Menu Anno Scolastico
             const yearDropdownBtn = document.getElementById('year-dropdown-btn');
             const yearDropdownMenu = document.getElementById('year-dropdown-menu');
             const yearOptions = document.querySelectorAll('.year-selector .year-option');
@@ -2116,7 +2097,6 @@
                 });
             }
 
-            // Espansione item timeline
             document.querySelectorAll('.timeline-item').forEach(currElMap => {
                 currElMap.addEventListener('click', function() {
                     const isOpen = this.getAttribute('aria-expanded') === 'true';
