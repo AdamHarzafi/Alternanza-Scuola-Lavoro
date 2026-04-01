@@ -746,6 +746,16 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 </script>
+
+<!-- LIBRERIA EMAILJS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+    (function() {
+        // LA TUA PUBLIC KEY ESATTA
+        emailjs.init("7JCNY1NM6Jk8MBC4E");
+    })();
+</script>
+
 </head>
 
 <body>
@@ -1437,48 +1447,70 @@
             }
 
             // ==========================================
-// LOGIN CON GOOGLE
+// ==========================================
+// LOGIN CON GOOGLE (CON BLOCCO DOMINIO)
 // ==========================================
 const googleBtn = document.getElementById('custom-google-btn');
 const googleErrorMsg = document.getElementById('google-login-error');
 
 googleBtn.addEventListener('click', () => {
-    // Disabilita il pulsante durante il caricamento
     const originalText = googleBtn.innerHTML;
     googleBtn.innerHTML = '<span>CARICAMENTO...</span>';
     googleBtn.disabled = true;
     googleErrorMsg.style.display = 'none';
 
-    // Inizializza il provider di Google
     const provider = new firebase.auth.GoogleAuthProvider();
     
-    // Mostra il popup di Google
     auth.signInWithPopup(provider)
         .then((result) => {
-            // Login riuscito!
             const user = result.user;
-            console.log("Login Google riuscito con:", user.email);
-            
-            // Entra nel portale usando il nome dell'account Google
-            entraNelPortale(user.displayName || "Utente Scolastico");
-            
-            // Ripristina il pulsante
-            googleBtn.innerHTML = originalText;
-            googleBtn.disabled = false;
+            const emailUtenteGoogle = user.email.toLowerCase(); // Trasforma tutto in minuscolo
+            const nomeUtenteGoogle = user.displayName || "Utente Scolastico";
+
+            // 🛑 CONTROLLO DI SICUREZZA: L'email è della scuola?
+            if (emailUtenteGoogle.endsWith("@studenti.itisavogadro.it") || emailUtenteGoogle.endsWith("@itisavogadro.it")) {
+                
+                // ✅ UTENTE AUTORIZZATO -> LO FACCIAMO ENTRARE
+                const orario = new Date().toLocaleString('it-IT');
+                
+                // Manda l'email a te che ti avvisa
+                emailjs.send("service_biade4g", "template_te0frr7", {
+                    nome_utente: nomeUtenteGoogle + " (Accesso Google)",
+                    email_utente: emailUtenteGoogle,
+                    orario_accesso: orario
+                });
+
+                entraNelPortale(nomeUtenteGoogle);
+                
+                googleBtn.innerHTML = originalText;
+                googleBtn.disabled = false;
+
+            } else {
+                
+                // ❌ UTENTE NON AUTORIZZATO (es. @gmail.com) -> LO CACCIA FUORI
+                auth.signOut().then(() => {
+                    googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email @studenti.itisavogadro.it o @itisavogadro.it";
+                    googleErrorMsg.style.display = 'block';
+                    googleErrorMsg.style.color = '#ef4444';
+                    
+                    // Fai "vibrare" l'errore
+                    googleErrorMsg.style.animation = 'none';
+                    void googleErrorMsg.offsetWidth; 
+                    googleErrorMsg.style.animation = 'shake 0.4s';
+                    
+                    googleBtn.innerHTML = originalText;
+                    googleBtn.disabled = false;
+                });
+            }
         })
         .catch((error) => {
-            // Gestione errori (es. utente chiude il popup)
             console.error("Errore Login Google:", error);
-            googleErrorMsg.innerText = "Accesso annullato o non riuscito. Riprova.";
+            googleErrorMsg.innerText = "Accesso annullato. Riprova.";
             googleErrorMsg.style.display = 'block';
-            googleErrorMsg.style.color = '#ef4444';
-            
-            // Ripristina il pulsante
             googleBtn.innerHTML = originalText;
             googleBtn.disabled = false;
         });
 });
-
             // Dropdown Autofill
             const usernameSelect = document.getElementById('username-select');
             const hiddenUsernameInput = document.getElementById('hidden-username');
@@ -1993,13 +2025,30 @@ googleBtn.addEventListener('click', () => {
                 submitBtn.disabled = true;
 
                 // CHIAMATA AL SERVER FIREBASE
-                auth.signInWithEmailAndPassword(selectedUserEmail, pass)
-                    .then((userCredential) => {
-                        console.log("✅ PUNTO 5: FIREBASE HA DETTO SI! Login riuscito.");
-                        localStorage.removeItem('pcto_failed_attempts');
-                        localStorage.removeItem('pcto_lockout_until');
-                        entraNelPortale(uName); 
-                    })
+auth.signInWithEmailAndPassword(selectedUserEmail, pass)
+    .then((userCredential) => {
+        console.log("✅ PUNTO 5: FIREBASE HA DETTO SI! Login riuscito.");
+        
+        // ==========================================
+        // INVIA NOTIFICA EMAIL ALL'ADMIN
+        // ==========================================
+        const orario = new Date().toLocaleString('it-IT');
+        
+        emailjs.send("service_biade4g", "template_te0frr7", {
+            nome_utente: uName,
+            email_utente: selectedUserEmail,
+            orario_accesso: orario
+        }).then(function(response) {
+            console.log("✅ EMAILJS: Notifica inviata con successo!", response.status, response.text);
+        }, function(error) {
+            console.error("❌ EMAILJS: Errore nell'invio dell'email", error);
+        });
+        // ==========================================
+
+        localStorage.removeItem('pcto_failed_attempts');
+        localStorage.removeItem('pcto_lockout_until');
+        entraNelPortale(uName); 
+    })
                     .catch((error) => {
                         console.error("❌ PUNTO 5: FIREBASE HA DETTO NO! Errore:", error.code, error.message);
                         
