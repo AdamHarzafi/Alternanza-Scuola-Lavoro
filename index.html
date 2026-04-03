@@ -53,7 +53,7 @@
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Animazioni di caricamento pure CSS (Senza scatti Javascript su mobile per la parte alta) */
+        /* Animazioni di caricamento pure CSS */
         .hero-anim {
             animation: heroFadeUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
         }
@@ -158,17 +158,10 @@
             max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; flex-wrap: wrap; gap: 20px;
         }
         .partner-logos img { 
-            max-height: 45px; 
-            width: auto; 
-            object-fit: contain; 
-            opacity: 0.85; 
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-            filter: brightness(0) invert(1); 
+            max-height: 45px; width: auto; object-fit: contain; opacity: 0.85; 
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); filter: brightness(0) invert(1); 
         }
-        .partner-logos img:hover { 
-            opacity: 1; 
-            transform: scale(1.05); 
-        }
+        .partner-logos img:hover { opacity: 1; transform: scale(1.05); }
 
         /* Benefits - Sezione Attività PCTO */
         .l-benefits {
@@ -199,26 +192,19 @@
         .b-text h4 { font-size: 1.25rem; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; }
         .b-text p { font-size: 1rem; color: var(--text-gray); line-height: 1.6; font-weight: 500;}
 
-        /* =================================================
-           MODALE LOGIN & RECUPERO PASSWORD
-        ================================================= */
+        /* MODALE LOGIN & RECUPERO PASSWORD */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            z-index: 99999; 
-            display: flex; align-items: flex-start; justify-content: center;
-            overflow-y: auto; 
-            padding: 30px 20px; 
-            opacity: 1; transition: opacity 0.4s ease;
+            z-index: 99999; display: flex; align-items: flex-start; justify-content: center;
+            overflow-y: auto; padding: 30px 20px; opacity: 1; transition: opacity 0.4s ease;
         }
         .modal-overlay.hidden { opacity: 0; pointer-events: none; }
 
         .modal-content {
             background: #ffffff; padding: 40px; border-radius: 28px; width: 100%; max-width: 460px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25); 
-            margin: auto; 
-            transform: translateY(0) scale(1);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25); margin: auto; 
+            transform: translateY(0) scale(1); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             color: var(--text-dark); position: relative;
         }
         .modal-overlay.hidden .modal-content { transform: translateY(50px) scale(0.9); }
@@ -239,8 +225,7 @@
         .role-btn { 
             flex: 1; padding: 12px; text-align: center; border-radius: 8px; cursor: pointer; 
             font-weight: 800; color: #64748b; border: none; background: transparent; 
-            font-size: 0.95rem; position: relative; z-index: 2; transition: color 0.3s ease;
-            outline: none;
+            font-size: 0.95rem; position: relative; z-index: 2; transition: color 0.3s ease; outline: none;
         }
         .role-btn.active { color: var(--primary); }
         .role-slider {
@@ -252,8 +237,7 @@
         .login-rules-banner {
             background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd;
             padding: 12px 5px; text-align: center; border-radius: 12px;
-            font-weight: 700; margin-bottom: 25px;
-            font-size: clamp(0.7rem, 3.5vw, 0.95rem); 
+            font-weight: 700; margin-bottom: 25px; font-size: clamp(0.7rem, 3.5vw, 0.95rem); 
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
         }
 
@@ -277,9 +261,7 @@
         #password-input { font-family: Verdana, Arial, Helvetica, sans-serif !important; letter-spacing: 2px; }
         #password-input::placeholder { font-family: 'Inter', sans-serif !important; letter-spacing: normal; }
 
-        /* =================================================
-           CUSTOM SELECT DROPDOWN (ANIMATO)
-        ================================================= */
+        /* CUSTOM SELECT DROPDOWN */
         .custom-select { position: relative; width: 100%; }
         .custom-select-trigger {
             display: flex; justify-content: space-between; align-items: center;
@@ -317,9 +299,7 @@
         .custom-option:hover { background: var(--primary-light); color: var(--primary-hover); }
         .custom-option.selected { background: var(--primary); color: #fff; }
 
-        /* =================================================
-           WIDGET CAPTCHA MODERNO E SEMPRE VISIBILE
-        ================================================= */
+        /* WIDGET CAPTCHA */
         .captcha-widget {
             display: flex; justify-content: space-between; align-items: center; gap: 15px;
             background: #ffffff; border: 2px solid #e5e7eb; border-radius: 12px; padding: 14px 20px; margin-bottom: 22px;
@@ -409,9 +389,7 @@
         }
         .toggle-password-btn:hover { color: var(--primary); }
 
-        /* =================================================
-           DASHBOARD PCTO 
-        ================================================= */
+        /* DASHBOARD PCTO */
         .dash-topbar {
             background: #fff; border-bottom: 1px solid var(--border-color);
             padding: 15px 5%; display: flex; justify-content: space-between; align-items: center;
@@ -426,7 +404,6 @@
 
         .dash-actions { display: flex; align-items: center; gap: 20px; }
 
-        /* DROPDOWN ANNO SCOLASTICO */
         .year-selector { position: relative; display: inline-block; }
         .year-badge { 
             font-weight: 900; background: var(--primary-light); color: var(--primary-hover); 
@@ -436,8 +413,7 @@
         .year-dropdown-menu {
             position: absolute; top: calc(100% + 10px); right: 0;
             background: #fff; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            border: 1px solid #e5e7eb; overflow: hidden; z-index: 100;
-            min-width: 160px;
+            border: 1px solid #e5e7eb; overflow: hidden; z-index: 100; min-width: 160px;
             opacity: 0; visibility: hidden; transform: translateY(-10px);
             transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
@@ -529,9 +505,7 @@
         .tl-ext-info ul { margin: 10px 0 0 20px; }
         .tl-ext-info li { margin-bottom: 5px; }
 
-        /* =================================================
-           FOOTER / CONTATTI
-        ================================================= */
+        /* FOOTER / CONTATTI */
         .footer-wrapper { background: #0c4a6e; border-radius: 50px 50px 0 0; padding: 80px 5% 40px; color: #fff; margin-top: 50px; scroll-margin-top: 50px;}
         .mim-footer-wrap { width: 100%; display: flex; justify-content: center; margin-bottom: 40px;}
         .footer-logo-mim { height: 100px; } 
@@ -559,9 +533,7 @@
         .legal-links a:hover { color: #fff; text-decoration: underline; }
         .legal-links span { color: rgba(255,255,255,0.2); font-size: 0.8rem; }
 
-        /* =================================================
-           HARZAFI ID - MODALE BOTTOM SHEET
-        ================================================= */
+        /* HARZAFI ID - MODALE BOTTOM SHEET */
         .hid-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
@@ -593,8 +565,7 @@
         .hid-circle {
             width: 130px; height: 130px; border-radius: 50%; border: 6px solid #3b82f6; 
             display: flex; justify-content: center; align-items: center; position: relative;
-            background: rgba(59, 130, 246, 0.05);
-            animation: hid-pulse 2.5s infinite;
+            background: rgba(59, 130, 246, 0.05); animation: hid-pulse 2.5s infinite;
         }
         .hid-phone-img { width: 130px; height: auto; object-fit: contain; }
         
@@ -723,50 +694,46 @@
             .captcha-box { width: 28px; height: 28px; }
             .captcha-box.success::after { left: 9px; top: 2px; width: 6px; height: 14px; }
 
-            .captcha-challenge-content { padding: 25px 15px; } /* Fix padding for small screens */
+            .captcha-challenge-content { padding: 25px 15px; } 
         }
     </style>
 
     <!-- LIBRERIE FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
-        authDomain: "harzafi---fsl.firebaseapp.com",
-        projectId: "harzafi---fsl",
-        storageBucket: "harzafi---fsl.firebasestorage.app",
-        messagingSenderId: "743942918497",
-        appId: "1:743942918497:web:6d6e44ba348760ce137520"
-    };
-    // Inizializza Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-</script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
+            authDomain: "harzafi---fsl.firebaseapp.com",
+            projectId: "harzafi---fsl",
+            storageBucket: "harzafi---fsl.firebasestorage.app",
+            messagingSenderId: "743942918497",
+            appId: "1:743942918497:web:6d6e44ba348760ce137520"
+        };
+        // Inizializza Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
 
-<!-- LIBRERIA EMAILJS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script type="text/javascript">
-    (function() {
-        // LA TUA PUBLIC KEY ESATTA
-        emailjs.init("7JCNY1NM6Jk8MBC4E");
-    })();
-</script>
+    <!-- LIBRERIA EMAILJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("7JCNY1NM6Jk8MBC4E");
+        })();
+    </script>
 
 </head>
 
 <body>
 
-    <!-- ======================================================= -->
-    <!-- LANDING PAGE                                            -->
-    <!-- ======================================================= -->
+    <!-- LANDING PAGE -->
     <div id="landing-view">
         <div class="l-nav-container">
             <nav class="l-nav">
-                <!-- LOGO CLICCABILE CHE PORTA IN ALTO -->
                 <div class="l-nav-logo">
                     <a href="#" aria-label="Torna in cima" onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); return false;" style="display: block;">
                         <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Logo Harzafi">
@@ -850,9 +817,7 @@
     <!-- IFRAME FANTASMA PER FAR SALVARE LA PASSWORD AL BROWSER -->
     <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
 
-    <!-- ======================================================= -->
-    <!-- MODALE LOGIN E RECUPERO PASSWORD                        -->
-    <!-- ======================================================= -->
+    <!-- MODALE LOGIN E RECUPERO PASSWORD -->
     <div id="login-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <button id="close-modal" class="close-btn" aria-label="Chiudi">&times;</button>
@@ -881,8 +846,7 @@
                                 <span id="username-display">Seleziona Utente</span>
                                 <div class="arrow"></div>
                             </div>
-                            <div class="custom-options" id="username-options">
-                            </div>
+                            <div class="custom-options" id="username-options"></div>
                         </div>
                     </div>
                     
@@ -954,8 +918,7 @@
                                 <span id="forgot-cognome-display">Seleziona lo studente</span>
                                 <div class="arrow"></div>
                             </div>
-                            <div class="custom-options" id="forgot-cognome-options">
-                            </div>
+                            <div class="custom-options" id="forgot-cognome-options"></div>
                         </div>
                     </div>
 
@@ -1007,9 +970,7 @@
         </div>
     </div>
 
-    <!-- ======================================================= -->
-    <!-- DASHBOARD PCTO                                          -->
-    <!-- ======================================================= -->
+    <!-- DASHBOARD PCTO -->
     <div id="app-dashboard">
         
         <div class="dash-topbar">
@@ -1024,7 +985,6 @@
             </div>
             
             <div class="dash-actions">
-                <!-- MENU A TENDINA ANNO SCOLASTICO -->
                 <div class="year-selector">
                     <div class="year-badge" id="year-dropdown-btn">
                         <span>A.S. 2025/2026</span>
@@ -1077,23 +1037,21 @@
                     </div>
                 </div>
             </div>
-<div class="dash-main">
-    <h2 class="section-tag">
-        <svg viewBox="0 0 24 24"><path d="M7,10H12V15H7M19,19H5V8H19M19,3H18V1H16V3H8V1H6V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3Z"/></svg>
-        Cronologia Attività
-    </h2>
-    
-    <!-- CONTENITORE VUOTO E SICURO: Nessun dato è scritto qui -->
-    <div class="timeline-wrapper" id="timeline-container">
-        
-    </div>
-</div>
+            
+            <div class="dash-main">
+                <h2 class="section-tag">
+                    <svg viewBox="0 0 24 24"><path d="M7,10H12V15H7M19,19H5V8H19M19,3H18V1H16V3H8V1H6V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3Z"/></svg>
+                    Cronologia Attività
+                </h2>
+                
+                <div class="timeline-wrapper" id="timeline-container">
+                    <!-- Dinamicamente popolato dal DB -->
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- ======================================================= -->
-    <!-- FOOTER / CONTATTI                                       -->
-    <!-- ======================================================= -->
+    <!-- FOOTER / CONTATTI -->
     <footer id="sezione-contatti" class="footer-wrapper">
         <div class="mim-footer-wrap">
             <img src="https://i.ibb.co/4gwq5P1T/LOGO-MIM.png" class="footer-logo-mim" alt="Logo Ministero">
@@ -1149,11 +1107,7 @@
         </div>
     </footer>
 
-    <!-- ======================================================= -->
-    <!-- HARZAFI ID E POPUP MESSAGGI CUSTOM                      -->
-    <!-- ======================================================= -->
-    
-    <!-- Modale HID -->
+    <!-- HARZAFI ID E POPUP MESSAGGI CUSTOM -->
     <div id="hid-modal" class="hid-overlay hidden">
         <div class="hid-bottom-sheet">
             <button id="hid-close-btn" class="hid-close-top">&times;</button>
@@ -1193,7 +1147,7 @@
         </div>
     </div>
 
-    <!-- POPUP SFIDA CAPTCHA (Canvas text recognition) -->
+    <!-- POPUP SFIDA CAPTCHA -->
     <div id="captcha-challenge-modal" class="custom-popup-overlay">
         <div class="captcha-challenge-content">
             <h3 style="margin-bottom: 10px; font-weight: 800; font-size: 1.3rem; color: var(--text-dark);">Verifica di sicurezza</h3>
@@ -1225,10 +1179,9 @@
 
             let selectedRole = 'studente'; 
             let selectedUserValue = "";
-            let selectedUserEmail = ""; // NUOVO: Salva l'email vera presa dal database
+            let selectedUserEmail = ""; 
             let selectedForgotUser = null;
 
-            // Logica Anti-Bruteforce
             const MAX_ATTEMPTS = 3;
             const LOCKOUT_DURATION = 60000; 
             let lockoutTimerInterval;
@@ -1290,110 +1243,103 @@
             }
 
             // ==========================================
-// ==========================================
-// LOGIN CON GOOGLE (CON BLOCCO DOMINIO)
-// ==========================================
-const googleBtn = document.getElementById('custom-google-btn');
-const googleErrorMsg = document.getElementById('google-login-error');
+            // LOGIN CON GOOGLE (CON FIX CRONOLOGIA)
+            // ==========================================
+            const googleBtn = document.getElementById('custom-google-btn');
+            const googleErrorMsg = document.getElementById('google-login-error');
 
-googleBtn.addEventListener('click', () => {
-    const originalText = googleBtn.innerHTML;
-    googleBtn.innerHTML = '<span>CARICAMENTO...</span>';
-    googleBtn.disabled = true;
-    googleErrorMsg.style.display = 'none';
+            googleBtn.addEventListener('click', () => {
+                const originalText = googleBtn.innerHTML;
+                googleBtn.innerHTML = '<span>CARICAMENTO...</span>';
+                googleBtn.disabled = true;
+                googleErrorMsg.style.display = 'none';
 
-    const provider = new firebase.auth.GoogleAuthProvider();
-    
-    auth.signInWithPopup(provider)
-        .then((result) => {
-            const user = result.user;
-            const emailUtenteGoogle = user.email.toLowerCase(); // Trasforma tutto in minuscolo
-            const nomeUtenteGoogle = user.displayName || "Utente Scolastico";
-
-            // 🛑 CONTROLLO DI SICUREZZA: L'email è della scuola?
-            if (emailUtenteGoogle.endsWith("@studenti.itisavogadro.it") || emailUtenteGoogle.endsWith("@itisavogadro.it")) {
+                const provider = new firebase.auth.GoogleAuthProvider();
                 
-                // ✅ UTENTE AUTORIZZATO -> LO FACCIAMO ENTRARE
-                const orario = new Date().toLocaleString('it-IT');
-                
-                // Manda l'email a te che ti avvisa
-                emailjs.send("service_biade4g", "template_te0frr7", {
-                    nome_utente: nomeUtenteGoogle + " (Accesso Google)",
-                    email_utente: emailUtenteGoogle,
-                    orario_accesso: orario
-                });
+                auth.signInWithPopup(provider)
+                    .then((result) => {
+                        const user = result.user;
+                        const emailUtenteGoogle = user.email.toLowerCase(); 
+                        const nomeUtenteGoogle = user.displayName || "Utente Scolastico";
 
-                entraNelPortale(nomeUtenteGoogle);
-                
-                googleBtn.innerHTML = originalText;
-                googleBtn.disabled = false;
+                        // CONTROLLO DI SICUREZZA
+                        if (emailUtenteGoogle.endsWith("@studenti.itisavogadro.it") || emailUtenteGoogle.endsWith("@itisavogadro.it")) {
+                            
+                            const orario = new Date().toLocaleString('it-IT');
+                            
+                            // Invio Notifica Email
+                            emailjs.send("service_biade4g", "template_te0frr7", {
+                                nome_utente: nomeUtenteGoogle + " (Accesso Google)",
+                                email_utente: emailUtenteGoogle,
+                                orario_accesso: orario
+                            });
 
-            } else {
-                
-                // ❌ UTENTE NON AUTORIZZATO (es. @gmail.com) -> LO CACCIA FUORI
-                auth.signOut().then(() => {
-                    googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email @studenti.itisavogadro.it o @itisavogadro.it";
-                    googleErrorMsg.style.display = 'block';
-                    googleErrorMsg.style.color = '#ef4444';
-                    
-                    // Fai "vibrare" l'errore
-                    googleErrorMsg.style.animation = 'none';
-                    void googleErrorMsg.offsetWidth; 
-                    googleErrorMsg.style.animation = 'shake 0.4s';
-                    
-                    googleBtn.innerHTML = originalText;
-                    googleBtn.disabled = false;
-                });
-            }
-        })
-        .catch((error) => {
-            console.error("Errore Login Google:", error);
-            googleErrorMsg.innerText = "Accesso annullato. Riprova.";
-            googleErrorMsg.style.display = 'block';
-            googleBtn.innerHTML = originalText;
-            googleBtn.disabled = false;
-        });
-});
+                            // Entrata e Caricamento dati
+                            entraNelPortale(nomeUtenteGoogle);
+                            scaricaECostruisciCronologia(); // <- IL FIX CHE RISOLVE IL PROBLEMA DELLE ATTIVITA' VUOTE
+                            
+                            googleBtn.innerHTML = originalText;
+                            googleBtn.disabled = false;
+
+                        } else {
+                            auth.signOut().then(() => {
+                                googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica.";
+                                googleErrorMsg.style.display = 'block';
+                                googleErrorMsg.style.color = '#ef4444';
+                                
+                                googleErrorMsg.style.animation = 'none';
+                                void googleErrorMsg.offsetWidth; 
+                                googleErrorMsg.style.animation = 'shake 0.4s';
+                                
+                                googleBtn.innerHTML = originalText;
+                                googleBtn.disabled = false;
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Errore Login Google:", error);
+                        googleErrorMsg.innerText = "Accesso annullato. Riprova.";
+                        googleErrorMsg.style.display = 'block';
+                        googleBtn.innerHTML = originalText;
+                        googleBtn.disabled = false;
+                    });
+            });
+
             // Dropdown Autofill
             const usernameSelect = document.getElementById('username-select');
             const hiddenUsernameInput = document.getElementById('hidden-username');
             const forgotCognomeSelect = document.getElementById('forgot-cognome-select');
             const forgotError = document.getElementById('forgot-error');
 
-            // --- CONNESSIONE A FIRESTORE PER I MENU A TENDINA ---
             function populateUserDropdown(role) {
-    const optionsContainer = document.getElementById('username-options');
-    optionsContainer.innerHTML = '<div class="custom-option" style="text-align:center; color:#94a3b8;">Caricamento utenti...</div>';
-    
-    if (role === 'studente') {
-        db.collection("studenti").orderBy("nome", "asc").get().then((querySnapshot) => {
-            optionsContainer.innerHTML = ''; 
-            querySnapshot.forEach((doc) => {
-                const person = doc.data(); 
-                const emailUtente = person.email || "email_mancante@scuola.it";
-                creaOpzioneDropdown(person.nome, emailUtente, optionsContainer, 'username');
-            });
-        }).catch((error) => {
-            console.error("Errore DB:", error);
-            optionsContainer.innerHTML = '<div class="custom-option" style="color:red;">Errore di connessione</div>';
-        });
-    } else if (role === 'docente') {
-        // NUOVO CODICE: Prende i docenti dal database Firestore
-        db.collection("docenti").orderBy("nome", "asc").get().then((querySnapshot) => {
-            optionsContainer.innerHTML = ''; 
-            querySnapshot.forEach((doc) => {
-                const person = doc.data(); 
-                // Assicurati che nel DB dei docenti ci sia il campo 'email'
-                const emailUtente = person.email || "email_mancante@scuola.it";
-                creaOpzioneDropdown(person.nome, emailUtente, optionsContainer, 'username');
-            });
-        }).catch((error) => {
-            console.error("Errore DB:", error);
-            optionsContainer.innerHTML = '<div class="custom-option" style="color:red;">Errore di connessione</div>';
-        });
-    }
-    resetDropdownDisplay('username-display', 'Seleziona Utente');
-}
+                const optionsContainer = document.getElementById('username-options');
+                optionsContainer.innerHTML = '<div class="custom-option" style="text-align:center; color:#94a3b8;">Caricamento utenti...</div>';
+                
+                if (role === 'studente') {
+                    db.collection("studenti").orderBy("nome", "asc").get().then((querySnapshot) => {
+                        optionsContainer.innerHTML = ''; 
+                        querySnapshot.forEach((doc) => {
+                            const person = doc.data(); 
+                            const emailUtente = person.email || "email_mancante@scuola.it";
+                            creaOpzioneDropdown(person.nome, emailUtente, optionsContainer, 'username');
+                        });
+                    }).catch((error) => {
+                        optionsContainer.innerHTML = '<div class="custom-option" style="color:red;">Errore di connessione</div>';
+                    });
+                } else if (role === 'docente') {
+                    db.collection("docenti").orderBy("nome", "asc").get().then((querySnapshot) => {
+                        optionsContainer.innerHTML = ''; 
+                        querySnapshot.forEach((doc) => {
+                            const person = doc.data(); 
+                            const emailUtente = person.email || "email_mancante@scuola.it";
+                            creaOpzioneDropdown(person.nome, emailUtente, optionsContainer, 'username');
+                        });
+                    }).catch((error) => {
+                        optionsContainer.innerHTML = '<div class="custom-option" style="color:red;">Errore di connessione</div>';
+                    });
+                }
+                resetDropdownDisplay('username-display', 'Seleziona Utente');
+            }
 
             function populateForgotDropdown() {
                 const optionsContainer = document.getElementById('forgot-cognome-options');
@@ -1422,12 +1368,12 @@ googleBtn.addEventListener('click', () => {
                     
                     if(tipo === 'username') {
                         selectedUserValue = nome;
-                        selectedUserEmail = datoExtra; // Salviamo l'email vera!
+                        selectedUserEmail = datoExtra; 
                         hiddenUsernameInput.value = nome;
                         usernameSelect.classList.remove('open');
                         errorMsg.style.display = 'none';
                     } else if (tipo === 'forgot-cognome') {
-                        selectedForgotUser = { nome: nome, cf: datoExtra }; // Salviamo il CF per il recupero
+                        selectedForgotUser = { nome: nome, cf: datoExtra }; 
                         forgotCognomeSelect.classList.remove('open');
                         forgotError.style.display = 'none';
                     }
@@ -1467,7 +1413,7 @@ googleBtn.addEventListener('click', () => {
                 if (!e.target.closest('#forgot-cognome-select')) forgotCognomeSelect.classList.remove('open');
             });
 
-            // Scrolling e UI elementari
+            // Scroll Reveal
             const reveals = document.querySelectorAll('.reveal');
             const revealOnScroll = () => {
                 const windowHeight = window.innerHeight;
@@ -1632,17 +1578,8 @@ googleBtn.addEventListener('click', () => {
                 }
             }
 
-            passInput.addEventListener('copy', e => {
-                e.preventDefault();
-                errorMsg.innerText = "Per motivi di sicurezza, non è possibile copiare la password.";
-                errorMsg.style.display = 'block';
-            });
-
-            passInput.addEventListener('paste', e => {
-                e.preventDefault();
-                errorMsg.innerText = "Per motivi di sicurezza, non è possibile incollare la password.";
-                errorMsg.style.display = 'block';
-            });
+            passInput.addEventListener('copy', e => { e.preventDefault(); errorMsg.innerText = "Operazione negata."; errorMsg.style.display = 'block'; });
+            passInput.addEventListener('paste', e => { e.preventDefault(); errorMsg.innerText = "Operazione negata."; errorMsg.style.display = 'block'; });
 
             togglePasswordBtn.addEventListener('click', () => {
                 if (passInput.type === 'password') {
@@ -1743,96 +1680,74 @@ googleBtn.addEventListener('click', () => {
             }
 
             btnVerifyStudent.addEventListener('click', () => {
-    const cfInputVal = document.getElementById('cf-input').value.trim().toUpperCase();
-    const btnReset = document.getElementById('btn-verify-student');
+                const cfInputVal = document.getElementById('cf-input').value.trim().toUpperCase();
+                const btnReset = document.getElementById('btn-verify-student');
 
-    // 1. Controllo che i campi non siano vuoti
-    if(!selectedForgotUser || !cfInputVal) {
-        forgotError.innerText = "Seleziona uno studente e inserisci il Codice Fiscale.";
-        forgotError.style.display = 'block';
-        forgotResult.style.display = 'none';
-        return;
-    }
-
-    // 2. Controllo se il CF inserito corrisponde a quello salvato nel sistema
-    if(selectedForgotUser.cf === cfInputVal) {
-        
-        forgotError.style.display = 'none';
-        btnReset.innerText = "INVIO EMAIL IN CORSO...";
-        btnReset.disabled = true;
-
-        // 3. Vado a cercare l'email vera dello studente nel database Firestore
-        db.collection("studenti").where("cf", "==", cfInputVal).get().then((querySnapshot) => {
-            if (!querySnapshot.empty) {
-                const userData = querySnapshot.docs[0].data();
-                const emailUtente = userData.email;
-
-                if (emailUtente) {
-                    // 4. CHIAMATA A FIREBASE PER INVIARE L'EMAIL DI RESET
-                    auth.sendPasswordResetEmail(emailUtente)
-                        .then(() => {
-                            // Email inviata con successo!
-                            forgotResult.innerHTML = `✅ <b>Verifica superata!</b><br><br>Ti abbiamo inviato un'email all'indirizzo associato al tuo profilo con il link per impostare una nuova password sicura.`;
-                            forgotResult.style.display = 'block';
-                            
-                            btnReset.innerText = "VERIFICA DATI";
-                            btnReset.disabled = false;
-                        })
-                        .catch((error) => {
-                            // Errore di Firebase (es. troppe richieste)
-                            console.error(error);
-                            forgotError.innerText = "Errore nell'invio dell'email. Riprova più tardi.";
-                            forgotError.style.display = 'block';
-                            
-                            btnReset.innerText = "VERIFICA DATI";
-                            btnReset.disabled = false;
-                        });
-                } else {
-                    forgotError.innerText = "Nessuna email trovata per questo studente nel database.";
+                if(!selectedForgotUser || !cfInputVal) {
+                    forgotError.innerText = "Seleziona uno studente e inserisci il Codice Fiscale.";
                     forgotError.style.display = 'block';
-                    btnReset.innerText = "VERIFICA DATI";
-                    btnReset.disabled = false;
+                    forgotResult.style.display = 'none';
+                    return;
                 }
-            }
-        }).catch((error) => {
-            console.error("Errore lettura DB:", error);
-            forgotError.innerText = "Errore di connessione al database.";
-            forgotError.style.display = 'block';
-            btnReset.innerText = "VERIFICA DATI";
-            btnReset.disabled = false;
-        });
 
-    } else {
-        // CF Sbagliato
-        forgotResult.style.display = 'none';
-        forgotError.innerText = "Il Codice Fiscale inserito non è corretto. Riprova.";
-        forgotError.style.display = 'block';
-        
-        // Animazione di errore (scossa)
-        forgotError.style.animation = 'none';
-        void forgotError.offsetWidth; 
-        forgotError.style.animation = 'shake 0.4s';
-    }
-});
+                if(selectedForgotUser.cf === cfInputVal) {
+                    forgotError.style.display = 'none';
+                    btnReset.innerText = "INVIO EMAIL IN CORSO...";
+                    btnReset.disabled = true;
 
-            // =====================================================
-            // IL VERO LOGIN SICURO CON FIREBASE (CON RADAR ATTIVO)
-            // =====================================================
+                    db.collection("studenti").where("cf", "==", cfInputVal).get().then((querySnapshot) => {
+                        if (!querySnapshot.empty) {
+                            const userData = querySnapshot.docs[0].data();
+                            const emailUtente = userData.email;
+
+                            if (emailUtente) {
+                                auth.sendPasswordResetEmail(emailUtente)
+                                    .then(() => {
+                                        forgotResult.innerHTML = `✅ <b>Verifica superata!</b><br><br>Ti abbiamo inviato un'email all'indirizzo associato al tuo profilo con il link per impostare una nuova password sicura.`;
+                                        forgotResult.style.display = 'block';
+                                        btnReset.innerText = "VERIFICA DATI";
+                                        btnReset.disabled = false;
+                                    })
+                                    .catch((error) => {
+                                        forgotError.innerText = "Errore nell'invio dell'email. Riprova più tardi.";
+                                        forgotError.style.display = 'block';
+                                        btnReset.innerText = "VERIFICA DATI";
+                                        btnReset.disabled = false;
+                                    });
+                            } else {
+                                forgotError.innerText = "Nessuna email trovata per questo studente nel database.";
+                                forgotError.style.display = 'block';
+                                btnReset.innerText = "VERIFICA DATI";
+                                btnReset.disabled = false;
+                            }
+                        }
+                    }).catch((error) => {
+                        forgotError.innerText = "Errore di connessione al database.";
+                        forgotError.style.display = 'block';
+                        btnReset.innerText = "VERIFICA DATI";
+                        btnReset.disabled = false;
+                    });
+
+                } else {
+                    forgotResult.style.display = 'none';
+                    forgotError.innerText = "Il Codice Fiscale inserito non è corretto. Riprova.";
+                    forgotError.style.display = 'block';
+                    forgotError.style.animation = 'none';
+                    void forgotError.offsetWidth; 
+                    forgotError.style.animation = 'shake 0.4s';
+                }
+            });
+
+            // LOGIN CON PASSWORD
             const loginForm = document.getElementById('login-form');
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault(); 
-                console.log("📍 PUNTO 1: Hai cliccato il bottone ENTRA");
-
                 if (checkLockoutState()) return;
 
                 const pass = passInput.value.trim();
                 const uName = hiddenUsernameInput.value.trim();
-                
-                console.log("📍 PUNTO 2: Utente selezionato dal menu:", uName);
-                console.log("📍 PUNTO 3: Email pescata dal Database:", selectedUserEmail);
 
                 if (!uName || !selectedUserEmail) {
-                    console.log("❌ BLOCCO: Manca l'utente o l'email");
                     errorMsg.innerText = "Seleziona prima un utente dalla lista.";
                     errorMsg.style.display = 'block';
                     errorMsg.style.animation = 'none';
@@ -1842,7 +1757,6 @@ googleBtn.addEventListener('click', () => {
                 }
 
                 if (!pass) {
-                    console.log("❌ BLOCCO: Manca la password");
                     errorMsg.innerText = "Il campo password è obbligatorio.";
                     errorMsg.style.display = 'block';
                     errorMsg.style.animation = 'none';
@@ -1852,7 +1766,6 @@ googleBtn.addEventListener('click', () => {
                 }
 
                 if (!captchaSolved || Date.now() > captchaValidUntil) {
-                    console.log("❌ BLOCCO: Captcha non risolto o scaduto");
                     captchaSolved = false; 
                     captchaBox.classList.remove('success');
                     errorMsg.innerText = "Per favore, completa la verifica di autenticità per continuare.";
@@ -1863,42 +1776,26 @@ googleBtn.addEventListener('click', () => {
                     return;
                 }
 
-                console.log("📍 PUNTO 4: Tutti i controlli superati. Sto chiamando Firebase...");
                 submitBtn.innerText = "VERIFICA IN CORSO...";
                 submitBtn.disabled = true;
 
-                // CHIAMATA AL SERVER FIREBASE
-auth.signInWithEmailAndPassword(selectedUserEmail, pass)
-    .then((userCredential) => {
-        console.log("✅ PUNTO 5: FIREBASE HA DETTO SI! Login riuscito.");
-        
-        // ==========================================
-        // INVIA NOTIFICA EMAIL ALL'ADMIN
-        // ==========================================
-        const orario = new Date().toLocaleString('it-IT');
-        
-        emailjs.send("service_biade4g", "template_te0frr7", {
-            nome_utente: uName,
-            email_utente: selectedUserEmail,
-            orario_accesso: orario
-        }).then(function(response) {
-            console.log("✅ EMAILJS: Notifica inviata con successo!", response.status, response.text);
-        }, function(error) {
-            console.error("❌ EMAILJS: Errore nell'invio dell'email", error);
-        });
-        // ==========================================
-
-        localStorage.removeItem('pcto_failed_attempts');
-        localStorage.removeItem('pcto_lockout_until');
-        entraNelPortale(uName); 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-            scaricaECostruisciCronologia();
-    
-    // 5. Mostra la dashboard dopo una breve transizione
-    })
-                    .catch((error) => {
-                        console.error("❌ PUNTO 5: FIREBASE HA DETTO NO! Errore:", error.code, error.message);
+                auth.signInWithEmailAndPassword(selectedUserEmail, pass)
+                    .then((userCredential) => {
                         
+                        const orario = new Date().toLocaleString('it-IT');
+                        emailjs.send("service_biade4g", "template_te0frr7", {
+                            nome_utente: uName,
+                            email_utente: selectedUserEmail,
+                            orario_accesso: orario
+                        });
+
+                        localStorage.removeItem('pcto_failed_attempts');
+                        localStorage.removeItem('pcto_lockout_until');
+                        
+                        entraNelPortale(uName); 
+                        scaricaECostruisciCronologia();
+                    })
+                    .catch((error) => {
                         submitBtn.innerText = "ENTRA";
                         submitBtn.disabled = false;
                         passInput.value = ''; 
@@ -1930,68 +1827,49 @@ auth.signInWithEmailAndPassword(selectedUserEmail, pass)
             });
 
             function entraNelPortale(uName) {
-    // 1. Formatta il nome (es. "HARZAFI ADAM" -> "Harzafi Adam")
-    const formattedName = uName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    
-    // 2. Aggiorna il titolo di benvenuto
-    const greetingTitle = document.getElementById('user-greeting-title');
-    if (greetingTitle) {
-        greetingTitle.innerText = `Buongiorno, ${formattedName}.`;
-    }
+                const formattedName = uName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+                
+                const greetingTitle = document.getElementById('user-greeting-title');
+                if (greetingTitle) greetingTitle.innerText = `Buongiorno, ${formattedName}.`;
 
-    // 3. Nascondi il modale di login
-    const loginModal = document.getElementById('login-modal');
-    if (loginModal) {
-        loginModal.classList.add('hidden');
-    }
+                const loginModal = document.getElementById('login-modal');
+                if (loginModal) loginModal.classList.add('hidden');
 
-    // 4. Fai sparire la landing page
-    const landingObj = document.getElementById('landing-view');
-    if (landingObj) {
-        landingObj.style.opacity = '0';
-    }
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // 5. Mostra la dashboard dopo una breve transizione
-    setTimeout(() => {
-        if (landingObj) landingObj.style.display = 'none';
-        
-        const dashboardObj = document.getElementById('app-dashboard');
-        if (dashboardObj) {
-            dashboardObj.style.display = 'block'; 
-            // Forza il browser a ricalcolare il layout prima di cambiare l'opacità
-            void dashboardObj.offsetWidth; 
-            dashboardObj.style.opacity = '1'; 
-            
-            // Anima le barre di progresso
-            setTimeout(() => {
-                 document.querySelectorAll('.stat-segment').forEach(el => el.style.transform = 'scaleX(1)');
-            }, 100); 
+                const landingObj = document.getElementById('landing-view');
+                if (landingObj) landingObj.style.opacity = '0';
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                setTimeout(() => {
+                    if (landingObj) landingObj.style.display = 'none';
+                    
+                    const dashboardObj = document.getElementById('app-dashboard');
+                    if (dashboardObj) {
+                        dashboardObj.style.display = 'block'; 
+                        void dashboardObj.offsetWidth; 
+                        dashboardObj.style.opacity = '1'; 
+                        
+                        setTimeout(() => {
+                             document.querySelectorAll('.stat-segment').forEach(el => el.style.transform = 'scaleX(1)');
+                        }, 100); 
 
-            // Imposta il contatore delle ore (Senza animazioni complesse che si bloccano)
-            const counterObj = document.getElementById('hour-counter');
-            if (counterObj) {
-                counterObj.innerText = "113.30"; // Valore fisso per ora, poi lo prenderemo dal database!
+                        const counterObj = document.getElementById('hour-counter');
+                        if (counterObj) counterObj.innerText = "113.30";
+                    }
+                    
+                    const submitBtn = document.getElementById('login-submit');
+                    if (submitBtn) {
+                        submitBtn.innerText = "ENTRA";
+                        submitBtn.disabled = false;
+                    }
+                }, 500);
             }
-        }
-        
-        // Ripristina il bottone di login per la prossima volta
-        const submitBtn = document.getElementById('login-submit');
-        if (submitBtn) {
-            submitBtn.innerText = "ENTRA";
-            submitBtn.disabled = false;
-        }
-        
-    }, 500);
-}
 
             document.getElementById('btn-logout-dash').addEventListener('click', () => {
                 auth.signOut().then(() => {
                     dashboardObj.style.opacity = '0';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-                    // AGGIUNGI QUESTA RIGA: Cancella i dati dallo schermo
                     document.getElementById('timeline-container').innerHTML = '';
 
                     setTimeout(() => {
@@ -2007,7 +1885,7 @@ auth.signInWithEmailAndPassword(selectedUserEmail, pass)
                 });
             });
 
-            // Logica Menu Anno Scolastico
+            // Menu Anno Scolastico
             const yearDropdownBtn = document.getElementById('year-dropdown-btn');
             const yearDropdownMenu = document.getElementById('year-dropdown-menu');
             const yearOptions = document.querySelectorAll('.year-selector .year-option');
@@ -2037,13 +1915,6 @@ auth.signInWithEmailAndPassword(selectedUserEmail, pass)
                     yearPopupOverlay.classList.remove('show');
                 });
             }
-
-            document.querySelectorAll('.timeline-item').forEach(currElMap => {
-                currElMap.addEventListener('click', function() {
-                    const isOpen = this.getAttribute('aria-expanded') === 'true';
-                    this.setAttribute('aria-expanded', !isOpen);
-                });
-            });
             
             document.querySelectorAll('.l-nav-links a').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
@@ -2099,6 +1970,7 @@ auth.signInWithEmailAndPassword(selectedUserEmail, pass)
                 if (valoreInserito === HID_VALIDO) {
                     chiudiModaleHID(); 
                     entraNelPortale("Utente HID"); 
+                    scaricaECostruisciCronologia();
                 } else {
                     hidError.style.display = 'block';
                     hidError.style.animation = 'none';
@@ -2110,7 +1982,7 @@ auth.signInWithEmailAndPassword(selectedUserEmail, pass)
         });
     </script>
 
-    <!-- SCRIPT DI PROTEZIONE ANTI-F12 E ANTI-ISPEZIONA -->
+    <!-- SCRIPT DI PROTEZIONE ANTI-F12 -->
     <script>
         (function() {
             document.addEventListener('contextmenu', e => e.preventDefault());
@@ -2132,64 +2004,61 @@ auth.signInWithEmailAndPassword(selectedUserEmail, pass)
             }, 1000);
         })();
 
-        // FUNZIONE DI SICUREZZA: Scarica le attività dal DB solo dopo il login
-function scaricaECostruisciCronologia() {
-    const container = document.getElementById('timeline-container');
-    container.innerHTML = '<div style="text-align:center; padding:20px; font-weight:bold; color:var(--primary);">Verifica sicurezza e download dati...</div>';
+        // CARICAMENTO CRONOLOGIA DA FIRESTORE
+        function scaricaECostruisciCronologia() {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '<div style="text-align:center; padding:20px; font-weight:bold; color:var(--primary);">Sincronizzazione dati in corso...</div>';
 
-    db.collection("attivita_pcto").orderBy("ordine", "desc").get()
-    .then((querySnapshot) => {
-        container.innerHTML = ''; // Svuota il messaggio di caricamento
+            db.collection("attivita_pcto").orderBy("ordine", "desc").get()
+            .then((querySnapshot) => {
+                container.innerHTML = ''; 
 
-        if (querySnapshot.empty) {
-            container.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;">Nessuna attività registrata.</div>';
-            return;
-        }
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;">Nessuna attività registrata.</div>';
+                    return;
+                }
 
-        querySnapshot.forEach((doc) => {
-            const att = doc.data();
-            const cssCertElement = att.certificato ? 'ac-cert' : '';
-            const cssDateElement = att.certificato ? 'special-badge-date' : '';
-            const bgCertInfo = att.certificato ? 'style="background:#ecfdf5; border-color:#a7f3d0;"' : '';
+                querySnapshot.forEach((doc) => {
+                    const att = doc.data();
+                    const cssCertElement = att.certificato ? 'ac-cert' : '';
+                    const cssDateElement = att.certificato ? 'special-badge-date' : '';
+                    const bgCertInfo = att.certificato ? 'style="background:#ecfdf5; border-color:#a7f3d0;"' : '';
 
-            const itemHTML = `
-                <div class="timeline-item ${cssCertElement}" aria-expanded="false">
-                    <div class="tl-header">
-                        <div class="tl-content">
-                            <span class="tl-date ${cssDateElement}">${att.data}</span>
-                            <h3>${att.titolo}</h3>
-                            <p class="tl-meta">${att.meta}</p>
-                        </div>
-                        <div class="tl-hours">${att.ore}</div>
-                    </div>
-                    <div class="tl-dropdown">
-                        <div class="tl-dropdown-inner">
-                            <div class="tl-ext-info" ${bgCertInfo}>
-                                ${att.descrizione}
+                    const itemHTML = `
+                        <div class="timeline-item ${cssCertElement}" aria-expanded="false">
+                            <div class="tl-header">
+                                <div class="tl-content">
+                                    <span class="tl-date ${cssDateElement}">${att.data}</span>
+                                    <h3>${att.titolo}</h3>
+                                    <p class="tl-meta">${att.meta}</p>
+                                </div>
+                                <div class="tl-hours">${att.ore}</div>
+                            </div>
+                            <div class="tl-dropdown">
+                                <div class="tl-dropdown-inner">
+                                    <div class="tl-ext-info" ${bgCertInfo}>
+                                        ${att.descrizione}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', itemHTML);
-        });
+                    `;
+                    container.insertAdjacentHTML('beforeend', itemHTML);
+                });
 
-        // Riattiva l'animazione di apertura schede
-        document.querySelectorAll('.timeline-item').forEach(currElMap => {
-            currElMap.addEventListener('click', function() {
-                const isOpen = this.getAttribute('aria-expanded') === 'true';
-                this.setAttribute('aria-expanded', !isOpen);
+                document.querySelectorAll('.timeline-item').forEach(currElMap => {
+                    currElMap.addEventListener('click', function() {
+                        const isOpen = this.getAttribute('aria-expanded') === 'true';
+                        this.setAttribute('aria-expanded', !isOpen);
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error("Errore caricamento timeline:", error);
+                container.innerHTML = '<div style="color:red; text-align:center; padding:20px;">ERRORE: Impossibile recuperare i dati. Assicurati di essere autenticato e di avere i permessi.</div>';
             });
-        });
-    })
-    .catch((error) => {
-        console.error("Accesso bloccato:", error);
-        container.innerHTML = '<div style="color:red; text-align:center; padding:20px;">ACCESSO NEGATO. Effettua il login.</div>';
-    });
-}
+        }
     </script>
-
-    
     
 </body>
 </html>
