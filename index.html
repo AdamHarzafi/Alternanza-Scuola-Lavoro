@@ -2283,5 +2283,40 @@ auth.signInWithEmailAndPassword(selectedUserEmail, pass)
             }, 1000);
         })();
     </script>
+
+    <!-- ========================================================== -->
+<!-- SCRIPT TEMPORANEO: CARICA LE ATTIVITÀ SU FIREBASE -->
+<!-- (CANCELLA TUTTO QUESTO BLOCCO DOPO AVER APERTO LA PAGINA) -->
+<!-- ========================================================== -->
+<script>
+    setTimeout(() => {
+        // Ho preso esattamente tutte le attività che avevi nel tuo file HTML originale
+        const tutteLeAttivita = [
+            { ordine: 1, data: "26 Marzo 2026", titolo: "Progetto di orientamento POT di UniTO", meta: "Luogo: <b>Scuola</b> • Prof: T. Elena & F. Mattia", ore: "2.0 h", descrizione: "Progetto di orientamento POT di UniTO: docente Stefano Dughera del dipartimento di economia e statistica.", certificato: false },
+            { ordine: 2, data: "6 Marzo 2026", titolo: "Progetto di orientamento POT di UniTO", meta: "Luogo: <b>Campus Einaudi</b> • Prof: E. Genetti & F. Saragnese", ore: "4.0 h", descrizione: "Partecipazione al progetto di orientamento POT presso il Campus Einaudi. Attività svolta in fascia mattutina.", certificato: false },
+            { ordine: 3, data: "24 Febbraio 2026", titolo: "Progetto di orientamento POT di UniTO", meta: "Luogo: <b>Scuola</b> • Prof: E. Genetti, F. Saragnese e Iannacone C. A.", ore: "2.0 h", descrizione: "Partecipazione con la docente Elena Siletti del dipartimento di economia e statistica.", certificato: false },
+            { ordine: 4, data: "21 Febbraio 2026", titolo: "Retro-Computing MUPIN (2° Incontro)", meta: "Seminario: Analisi storica reti logiche binare.", ore: "2.0 h", descrizione: "Lavoro di completamento seminario pre-festivi con ri-visita MUPIN e Focus architetture logico standard CPU pre-2000.", certificato: false },
+            { ordine: 5, data: "20 Gen — 18 Feb 2026", titolo: "ITS Academy: Power Up SoftSkillz", meta: "Luogo: <b>ITS in Via Durandi 10, Torino</b>", ore: "20.0 h", descrizione: "Gli studenti si recano in autonomia presso l'ITS Academy. Corso 'Public Speaking – Parla come pensi'. Basi, struttura discorso e simulazioni.", certificato: false },
+            { ordine: 6, data: "17 Gennaio 2026", titolo: "Open Day", meta: "Sorveglianza e supporto ai docenti.", ore: "4.0 h", descrizione: "Progetto Porte Aperte. Spiegato ed insegnato a potenziali neo studenti i laboratori. Solo 3 studenti di quest'anno hanno partecipato.", certificato: false },
+            { ordine: 7, data: "⭐ CERTIFICATO OTTENUTO", titolo: "Introduzione all'IoT e Cybersecurity", meta: "<b>Corso sulla piattaforma Cisco</b> protocolli web e reti hardware", ore: "50.0 h", descrizione: "Programmazione certificativa finale PCTO. Trattata messa in bolla reti router a protezione Layer 3 Osi (IP) unita alla gestione sensoristica di dispositivi Edge. Esami superati e validati.", certificato: true },
+            { ordine: 8, data: "Gennaio 2026", titolo: "Legge Obbligo Sicurezza d.lgs. 81", meta: "Formazione Sicurezza Lavoro", ore: "8.0 h", descrizione: "Laboratorio di qualificazione prevenzionale base & specifica svolta ai sensi delle Leggi attive PCTO Nazionali vigenti (In Aule Magna, SIST 1/ELE1).", certificato: false },
+            { ordine: 9, data: "06 Dic 2025 — 17 Gen 2026", titolo: "Hackersgen: HTML5 & CSS3", meta: "Tecnica Front-end Application Structure", ore: "6.0 h", descrizione: "Approccio accademico ed ecosistema per il Design di Siti Web performanti lato Front-end. (7 Sezioni Teorico/Pratiche).", certificato: false },
+            { ordine: 10, data: "24 Nov — 03 Dic 2025", titolo: "Hackersgen: AI for Developers", meta: "Strumenti per Sviluppatori Live Web (5 Moduli)", ore: "10.0 h", descrizione: "Percorso formativo su intelligenza artificiale generativa applicata allo sviluppo software. Focus su prompt engineering e integrazione API.", certificato: false },
+            { ordine: 11, data: "Sab 25 Ottobre 2025", titolo: "MUPIN: L'Alba dei Bit", meta: "Luogo: <b>Aula Magna (ITIS Avogadro)</b> • Storia Elettronica", ore: "1.30 h", descrizione: "Presenza evento speciale Museo Piemontese Dell'Informatica focalizzata all'orientamento ed inquadramento storico sui dispositivi logici mainframe.", certificato: false },
+            { ordine: 12, data: "Gio 16 Ottobre 2025", titolo: "Roll Cloud & Artificial Intelligence", meta: "Luogo: <b>Campus Einaudi (UniTo)</b> • Tutor: Elena Genetti", ore: "4.0 h", descrizione: "Lezione seminariale ospitata nell'infrastruttura d'Ateneo Università degli Studi Torino con Focus infrastrutture cloud aziendali collegate ai dataset delle reti LLM.", certificato: false }
+        ];
+
+        // Invia tutto a Firebase automaticamente
+        Promise.all(tutteLeAttivita.map(att => db.collection("attivita_pcto").add(att)))
+            .then(() => {
+                alert("✅ SUCCESSO! Tutte le attività sono state caricate nel database Firebase.\n\nOra puoi andare nel codice e CANCELLARE questo script temporaneo!");
+            })
+            .catch((error) => {
+                alert("❌ ERRORE: " + error.message);
+            });
+            
+    }, 2000); // Aspetta 2 secondi per far caricare Firebase
+</script>
+    
 </body>
 </html>
