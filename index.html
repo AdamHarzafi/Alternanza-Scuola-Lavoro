@@ -72,7 +72,7 @@
             
             /* Animazioni */
             --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
-            --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1); /* Slide-up morbido iOS (Senza rimbalzo) */
+            --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1);
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -84,8 +84,8 @@
             outline: none !important;
         }
 
-        html { scroll-behavior: smooth; }
-        body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; min-height: 100vh; }
+        html { scroll-behavior: smooth; overflow-x: hidden; width: 100vw; }
+        body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; width: 100%; min-height: 100vh; margin: 0; }
 
         /* Accelerazione GPU forzata per evitare micro-lag */
         .glass {
@@ -118,7 +118,7 @@
         .btn-premium:active { transform: scale(0.95); transition: all 0.1s; }
 
         .btn-gradient {
-            background: var(--primary); color: white; border: none; padding: 0 36px; height: 56px; border-radius: 30px;
+            background: var(--primary); color: white; border: none; padding: 0 36px; height: 52px; border-radius: 30px;
             font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, box-shadow 0.4s;
             box-shadow: 0 8px 24px rgba(2, 132, 199, 0.25); width: 100%; position: relative; overflow: hidden;
             text-transform: uppercase; letter-spacing: 0.5px;
@@ -150,7 +150,6 @@
             border: 1px solid rgba(255, 255, 255, 0.8);
             background: var(--surface);
             transition: top 0.4s var(--apple-ease), width 0.4s var(--apple-ease), max-width 0.4s var(--apple-ease), border-radius 0.4s var(--apple-ease), background 0.4s var(--apple-ease), padding 0.4s var(--apple-ease), border-color 0.4s var(--apple-ease), box-shadow 0.4s var(--apple-ease);
-            will-change: top, width, max-width, background, border-radius, padding;
         }
         .navbar-wrapper.scrolled {
             top: 0; 
@@ -166,7 +165,7 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
         }
 
-        .nav-logo img { height: 36px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); }
+        .nav-logo img { height: 36px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); transition: transform 0.3s var(--apple-ease); }
         .nav-links { display: flex; gap: 35px; }
         .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 0.95rem; transition: color 0.3s, transform 0.3s var(--apple-ease);}
 
@@ -232,7 +231,7 @@
         .bento-card p { color: var(--text-gray); font-weight: 500; }
         .bento-card.large p { color: #94a3b8; font-weight: 500; } 
 
-        /* MODALI - Curve Apple Smooth senza rimbalzi */
+        /* === MODALI APPLE STYLE (Ottimizzato per Desktop: Niente scorrimento) === */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%); z-index: 99999; display: flex; align-items: center; justify-content: center;
@@ -244,12 +243,12 @@
         .modal-content {
             background: #ffffff; 
             width: 100%; 
-            max-width: 440px; 
+            max-width: 620px; /* Notevolmente allargato in orizzontale */
             border-radius: 32px; 
-            padding: 48px 36px 36px;
+            padding: 35px 50px 30px; /* Margini verticali ridotti per evitare scroll */
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
             transform: scale(0.95) translateY(20px); 
-            transition: transform 0.5s var(--apple-smooth); /* Animazione super liscia e fluida */
+            transition: transform 0.5s var(--apple-smooth); 
             position: relative; max-height: 95vh; overflow-y: auto; overflow-x: hidden;
         }
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
@@ -257,10 +256,10 @@
 
         .modal-overlay.bottom-sheet { align-items: flex-end; padding: 0; }
         .modal-overlay.bottom-sheet .modal-content {
-            border-radius: 36px 36px 0 0; padding: 40px 25px 35px;
+            border-radius: 36px 36px 0 0; padding: 40px 25px 35px; max-width: 440px; margin: 0 auto;
             transform: translateY(100%) scale(1); border-bottom: none;
             max-height: 95vh; box-shadow: 0 -15px 40px rgba(0,0,0,0.15);
-            transition: transform 0.4s var(--apple-smooth); /* Entrata slide-up liscia */
+            transition: transform 0.4s var(--apple-smooth);
         }
         .modal-overlay.bottom-sheet.active .modal-content { transform: translateY(0) scale(1); }
 
@@ -270,25 +269,28 @@
             display: flex; align-items: center; justify-content: center; transition: background 0.3s, color 0.3s, transform 0.3s var(--apple-ease); z-index: 10;
         }
 
-        .auth-title { text-align: center; font-size: 2rem; margin-bottom: 25px; color: var(--text-dark); font-weight: 900; letter-spacing: -0.5px; }
+        .modal-logo-wrapper { display: flex; justify-content: center; margin-bottom: 12px; }
+        .modal-logo-wrapper img { height: 40px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(2, 132, 199, 0.12)); }
+
+        .auth-title { text-align: center; font-size: 1.7rem; margin-bottom: 15px; color: var(--text-dark); font-weight: 900; letter-spacing: -0.5px; }
         
-        .segmented-control { display: flex; background: #f5f5f7; border-radius: 14px; padding: 4px; margin-bottom: 25px; position: relative; }
+        .segmented-control { display: flex; background: #f5f5f7; border-radius: 14px; padding: 4px; margin-bottom: 15px; position: relative; }
         .seg-btn { flex: 1; padding: 10px 0; border: none; background: transparent; font-size: 0.95rem; font-weight: 700; color: var(--text-gray); cursor: pointer; z-index: 2; position: relative; transition: color 0.4s var(--apple-ease); border-radius: 10px; }
         .seg-btn.active { color: var(--text-dark); }
         .seg-slider { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: #ffffff; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: transform 0.4s var(--apple-ease); z-index: 1; }
 
         .login-rules-banner {
             background: #f0f9ff; color: var(--primary); border: 1px solid #bae6fd;
-            padding: 12px 16px; text-align: center; border-radius: 14px; font-weight: 700; margin-bottom: 24px; font-size: 0.85rem;
+            padding: 10px 16px; text-align: center; border-radius: 14px; font-weight: 700; margin-bottom: 15px; font-size: 0.85rem;
             cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        .input-group { margin-bottom: 20px; position: relative; }
-        .input-label { font-size: 0.8rem; font-weight: 800; color: var(--text-gray); margin-bottom: 8px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group { margin-bottom: 15px; position: relative; }
+        .input-label { font-size: 0.8rem; font-weight: 800; color: var(--text-gray); margin-bottom: 6px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
         
         .apple-input {
-            width: 100%; height: 56px; padding: 0 20px; background: #f5f5f7; border: 1px solid transparent; border-radius: 16px;
+            width: 100%; height: 52px; padding: 0 20px; background: #f5f5f7; border: 1px solid transparent; border-radius: 16px;
             font-size: 1.05rem; font-weight: 600; color: var(--text-dark); transition: all 0.3s var(--apple-ease); box-sizing: border-box;
         }
         .apple-input:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15); }
@@ -297,7 +299,7 @@
 
         .custom-select { position: relative; width: 100%; }
         .custom-select-trigger {
-            display: flex; justify-content: space-between; align-items: center; width: 100%; height: 56px; padding: 0 20px; 
+            display: flex; justify-content: space-between; align-items: center; width: 100%; height: 52px; padding: 0 20px; 
             background: #f5f5f7; border: 1px solid transparent; border-radius: 16px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s var(--apple-ease); box-sizing: border-box;
         }
         .custom-select-trigger span { color: #a1a1aa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -325,14 +327,25 @@
         }
         .toggle-password-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
 
-        .turnstile-wrap { margin-bottom: 24px; display: flex; justify-content: center; height: 65px; }
+        /* Privacy Disclaimer iCloud Style - Ottimizzato in altezza */
+        .privacy-disclaimer {
+            text-align: center; font-size: 0.75rem; color: var(--text-gray); 
+            line-height: 1.5; margin: 12px 0 15px; padding: 0 10px; font-weight: 500;
+        }
+        .privacy-disclaimer svg {
+            width: 26px; height: 26px; color: var(--primary); margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto;
+        }
+        .privacy-disclaimer a { color: var(--primary); text-decoration: none; font-weight: 700; transition: text-decoration 0.2s;}
+        .privacy-disclaimer a:hover { text-decoration: underline; }
+
+        .turnstile-wrap { margin-bottom: 15px; display: flex; justify-content: center; height: 65px; }
 
         .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none; font-weight: 700; text-align: center; animation: shake 0.4s; }
         .attempts-msg { color: var(--warning); font-size: 0.85rem; margin-top: 8px; display: none; font-weight: 800; text-align: center; }
 
         .btn-social {
-            width: 100%; height: 56px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 30px;
-            font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s, border-color 0.3s, box-shadow 0.3s; color: #374151; margin-bottom: 12px; font-size: 0.95rem;
+            width: 100%; height: 52px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 30px;
+            font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s, border-color 0.3s, box-shadow 0.3s; color: #374151; margin-bottom: 10px; font-size: 0.95rem;
         }
         .btn-social:active { transform: scale(0.98); }
 
@@ -351,7 +364,7 @@
         .btn-loader { display: flex; align-items: center; justify-content: center; gap: 10px; animation: fastFadeIn 0.2s var(--apple-ease) forwards; width: 100%; }
         .btn-spinner { width: 20px; height: 20px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin-circle 0.6s linear infinite; }
 
-        .divider { display: flex; align-items: center; text-align: center; margin: 24px 0; color: var(--text-light); font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; }
+        .divider { display: flex; align-items: center; text-align: center; margin: 15px 0; color: var(--text-light); font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
         .divider::before { margin-right: 15px; } .divider::after { margin-left: 15px; }
 
@@ -474,7 +487,7 @@
         .map-app-btn img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08)); transition: transform 0.3s var(--apple-ease); }
         .map-app-btn span { font-size: clamp(0.7rem, 2.5vw, 0.85rem); font-weight: 700; color: var(--text-dark); margin-top: 8px; white-space: nowrap; }
 
-        /* EFFETTI HOVER (SOLO PER PC/MOUSE) - Nessun rimbalzo su Touchscreen */
+        /* EFFETTI HOVER (SOLO PER PC/MOUSE) */
         @media (hover: hover) and (pointer: fine) {
             .btn-premium:hover { transform: scale(1.04); background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(2, 132, 199, 0.2); }
             .btn-gradient:hover { transform: translateY(-3px) scale(1.02); background: var(--primary-hover); box-shadow: 0 15px 35px rgba(2, 132, 199, 0.35); }
@@ -547,14 +560,21 @@
             .bento-card p { font-size: 1.05rem; } 
             .bento-card h3 { font-size: 1.5rem; }
             
+            /* MODAL MOBILE - FULL SCREEN TIPO APP NATIVA */
+            .modal-overlay { padding: 0; }
             .modal-content { 
-                padding: 32px 24px 24px; 
-                border-radius: 32px; 
-                width: 92%; 
-                max-width: 400px; 
-                max-height: 95vh; 
+                padding: 60px 24px 24px; 
+                border-radius: 0; 
+                width: 100%; 
+                height: 100vh; 
+                max-width: 100%; 
+                max-height: 100vh; 
+                display: flex;
+                flex-direction: column;
             }
-            .close-btn { top: 16px; right: 16px; width: 32px; height: 32px; font-size: 20px;}
+            .close-btn { top: 20px; right: 20px; width: 40px; height: 40px; background: #f1f5f9; color: var(--text-dark); font-size: 22px; }
+            .modal-logo-wrapper { margin-top: 10px; margin-bottom: 15px; }
+
             .auth-title { font-size: 1.7rem; margin-bottom: 20px; }
             
             .segmented-control { margin-bottom: 20px; padding: 4px; border-radius: 12px;}
@@ -724,6 +744,7 @@
                     <p>Anno di Corso: 2025/2026</p>
                     <p><br>Email personale:<br> <a href="mailto:adamharzafi@gmail.com" class="hi">adamharzafi@gmail.com</a></p>
                     <p>Email scolastica:<br> <a href="mailto:s11205413d@studenti.itisavogadro.it" class="hi">s11205413d@studenti.itisavogadro.it</a></p>
+                    <p>Richiesta di assistenza:<br> <a href="harzafi.support@gmail.com" class="hi">harzafi.support@gmail.com</a></p>
                 </div>
             </div>
 
@@ -748,7 +769,7 @@
     <div id="maps-modal" class="modal-overlay bottom-sheet">
         <div class="modal-content" style="padding-top: 25px;">
             <button class="close-btn" style="top: 15px;">&times;</button>
-            <h2 style="font-size: 1.4rem; margin-bottom: 20px; color: var(--text-dark); text-align:center; font-weight: 900;">Aprire tramite:</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 20px; color: var(--text-dark); text-align:center; font-weight: 900;">Scegli un'app per aprire.</h2>
             <div style="display: flex; justify-content: space-around; align-items: flex-start; margin-bottom: 10px;">
                 <a href="https://www.google.com/maps/search/?api=1&query=Corso+San+Maurizio,+8+-+10124+Torino" target="_blank" class="map-app-btn">
                     <img src="https://i.ibb.co/LdwVFcNg/Google-Maps-icon-2026-svg.png" alt="Google Maps">
@@ -766,9 +787,15 @@
         </div>
     </div>
 
+    <!-- MODALE LOGIN (STILE APPLE ACCOUNT) -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
             <button id="close-modal" class="close-btn">&times;</button>
+            
+            <div class="modal-logo-wrapper">
+                <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Harzafi Logo">
+            </div>
+
             <h2 class="auth-title">Area Riservata</h2>
 
             <div class="segmented-control" id="role-control">
@@ -812,6 +839,11 @@
                         <div class="attempts-msg" id="login-attempts">Ti rimangono 3 tentativi.</div>
                     </div>
 
+                    <div class="privacy-disclaimer">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                        Le informazioni del tuo Account Harzafi vengono utilizzate per permetterti di accedere al tuo account e ai tuoi dati in modo sicuro. Il sistema registra alcuni dati ai fini di sicurezza, assistenza e rendicontazione. Se accetti, l'Istituto può utilizzare le informazioni sul tuo Account anche per inviarti e-mail e comunicazioni scolastiche, in base all’utilizzo che fai dei servizi. <a href="privacy.html" target="_blank">Scopri come vengono gestiti i tuoi dati...</a>
+                    </div>
+
                     <div class="turnstile-wrap">
                         <div class="cf-turnstile" data-sitekey="0x4AAAAAAC6Galn1mtnng7_P" data-theme="light"></div>
                     </div>
@@ -820,7 +852,6 @@
                     
                     <div class="divider">- OPPURE CON -</div>
                     
-                    <!-- Bottone Google con Logo Fisso a Sinistra e Testo Centrato -->
                     <button type="button" id="custom-google-btn" class="btn-social">
                         <img src="https://i.ibb.co/99kjgY67/Google-Favicon-2025-svg.png" alt="Google">
                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2;">
@@ -863,7 +894,7 @@
                     <a href="mailto:s11205413d@studenti.itisavogadro.it" style="color: var(--primary); font-weight: 800; text-decoration: none; font-size: 1rem;">Invia Email a Adam Harzafi</a>
                 </div>
 
-                <button type="button" class="btn-text btn-back-login">← Torna al Login</button>
+                <button type="button" class="btn-text btn-back-login">Torna indietro</button>
             </div>
 
             <div id="rules-view" class="fade-form">
@@ -885,7 +916,7 @@
 
     <!-- Modale Bottom Sheet per HARZAFI ID -->
     <div id="hid-modal" class="modal-overlay bottom-sheet">
-        <div class="modal-content">
+        <div class="modal-content" style="max-height: 95vh; padding-top: 40px; border-radius: 36px 36px 0 0; width:100%;">
             <button id="hid-close-btn" class="close-btn" style="top: 15px;">&times;</button>
             <div id="hid-scan-view">
                 <h2 style="font-size: 1.8rem; margin-bottom: 10px; color: var(--text-dark); text-align:center;">Pronto per la scansione.</h2>
@@ -1025,7 +1056,7 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
 
-        // LOGICA NAVBAR SCROLL EFFECT (Ottimizzata tramite flag booleano)
+        // LOGICA NAVBAR SCROLL EFFECT
         const navbar = document.querySelector('.navbar-wrapper');
         let isScrolled = false;
         
