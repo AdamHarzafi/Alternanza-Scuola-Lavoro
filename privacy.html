@@ -69,7 +69,7 @@
             transform: translateY(0) scale(1) translateZ(0); 
         }
 
-        /* === NAVBAR PERFETTAMENTE CENTRATA COME INDEX === */
+        /* === NAVBAR === */
         .navbar-wrapper {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateZ(0); 
             width: calc(100% - 40px); max-width: 1200px; z-index: 1000; 
@@ -198,7 +198,6 @@
 </head>
 <body>
 
-    <!-- Floating Navbar (RIMOSSA LA CLASSE REVEAL PER EVITARE CONFLITTI DI TRANSFORM) -->
     <nav class="navbar-wrapper glass">
         <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
             <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Logo Harzafi">
@@ -276,7 +275,6 @@
         </div>
     </main>
 
-    <!-- Footer sincronizzato con index.html -->
     <footer class="footer-wrapper">
         <div class="mim-footer-wrap reveal">
             <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
@@ -359,7 +357,7 @@
 
         // Animazioni super-performanti
         document.addEventListener("DOMContentLoaded", function() {
-            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+            const observerOptions = { root: null, rootMargin: '20px', threshold: 0 };
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -374,6 +372,12 @@
             // Lettura del counter delle views per il footer
             const localViewsStr = localStorage.getItem("visits-tracker-pcto-avgd-adam") || "508";
             document.getElementById("dynamic-counter-tracker").innerText = localViewsStr;
+
+            // Fallback sicurezza per mobile (elementi troppo lunghi)
+            setTimeout(() => {
+                const mainBox = document.querySelector('.legal-box.reveal');
+                if (mainBox) mainBox.classList.add('active');
+            }, 150);
         });
 
         // Logica Scroll Navbar
