@@ -70,7 +70,9 @@
             --radius-md: 20px;
             --radius-lg: 32px;
             
+            /* Animazioni */
             --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
+            --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1); /* Slide-up morbido iOS (Senza rimbalzo) */
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -153,7 +155,7 @@
         .navbar-wrapper.scrolled {
             top: 0; 
             width: 100%; 
-            max-width: 2560px; /* Valore alto fisso per transizione px-px fluida */
+            max-width: 2560px; 
             border-radius: 0;
             padding: 15px 5vw;
             background: rgba(255, 255, 255, 0.85);
@@ -230,7 +232,7 @@
         .bento-card p { color: var(--text-gray); font-weight: 500; }
         .bento-card.large p { color: #94a3b8; font-weight: 500; } 
 
-        /* MODALI (Stile Desktop Perfetto ed Elegante) */
+        /* MODALI - Curve Apple Smooth senza rimbalzi */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%); z-index: 99999; display: flex; align-items: center; justify-content: center;
@@ -246,7 +248,8 @@
             border-radius: 32px; 
             padding: 48px 36px 36px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
-            transform: scale(0.95) translateY(20px); transition: transform 0.5s var(--apple-spring);
+            transform: scale(0.95) translateY(20px); 
+            transition: transform 0.5s var(--apple-smooth); /* Animazione super liscia e fluida */
             position: relative; max-height: 95vh; overflow-y: auto; overflow-x: hidden;
         }
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
@@ -257,13 +260,14 @@
             border-radius: 36px 36px 0 0; padding: 40px 25px 35px;
             transform: translateY(100%) scale(1); border-bottom: none;
             max-height: 95vh; box-shadow: 0 -15px 40px rgba(0,0,0,0.15);
+            transition: transform 0.4s var(--apple-smooth); /* Entrata slide-up liscia */
         }
         .modal-overlay.bottom-sheet.active .modal-content { transform: translateY(0) scale(1); }
 
         .close-btn {
             position: absolute; top: 18px; right: 18px; width: 36px; height: 36px; border-radius: 50%;
             background: #f5f5f7; border: none; font-size: 20px; cursor: pointer; color: var(--text-light);
-            display: flex; align-items: center; justify-content: center; transition: background 0.3s, color 0.3s, transform 0.3s var(--apple-spring); z-index: 10;
+            display: flex; align-items: center; justify-content: center; transition: background 0.3s, color 0.3s, transform 0.3s var(--apple-ease); z-index: 10;
         }
 
         .auth-title { text-align: center; font-size: 2rem; margin-bottom: 25px; color: var(--text-dark); font-weight: 900; letter-spacing: -0.5px; }
@@ -271,7 +275,7 @@
         .segmented-control { display: flex; background: #f5f5f7; border-radius: 14px; padding: 4px; margin-bottom: 25px; position: relative; }
         .seg-btn { flex: 1; padding: 10px 0; border: none; background: transparent; font-size: 0.95rem; font-weight: 700; color: var(--text-gray); cursor: pointer; z-index: 2; position: relative; transition: color 0.4s var(--apple-ease); border-radius: 10px; }
         .seg-btn.active { color: var(--text-dark); }
-        .seg-slider { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: #ffffff; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: transform 0.5s var(--apple-spring); z-index: 1; }
+        .seg-slider { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: #ffffff; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: transform 0.4s var(--apple-ease); z-index: 1; }
 
         .login-rules-banner {
             background: #f0f9ff; color: var(--primary); border: 1px solid #bae6fd;
@@ -303,10 +307,9 @@
         .custom-options {
             position: absolute; top: calc(100% + 8px); left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
             border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; max-height: 220px; overflow-y: auto; overflow-x: hidden;
-            z-index: 999; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.98); transition: opacity 0.3s, transform 0.3s var(--apple-spring);
+            z-index: 999; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.98); transition: opacity 0.3s, transform 0.3s var(--apple-ease);
             box-sizing: border-box;
         }
-        /* Custom Scrollbar che non sormonta mai i bordi arrotondati */
         .custom-options::-webkit-scrollbar { width: 5px; }
         .custom-options::-webkit-scrollbar-track { background: transparent; margin: 12px 0; } 
         .custom-options::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -342,7 +345,6 @@
         #btn-harzafi-id img { width: auto; height: 18px; }
         #btn-harzafi-id span { color: #0284c7; }
 
-        /* Loader Animation per Bottone Google - Veloce ed Elegante */
         @keyframes spin-circle { to { transform: rotate(360deg); } }
         @keyframes fastFadeIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
         
@@ -381,7 +383,7 @@
             padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s; user-select: none;
         }
         .year-dropdown-menu {
-            position: absolute; top: calc(100% + 10px); right: 0; background: #fff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; overflow: hidden; z-index: 100; min-width: 180px; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.98); transition: opacity 0.4s, transform 0.4s var(--apple-spring);
+            position: absolute; top: calc(100% + 10px); right: 0; background: #fff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; overflow: hidden; z-index: 100; min-width: 180px; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.98); transition: opacity 0.4s, transform 0.4s var(--apple-ease);
         }
         .year-dropdown-menu.open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         .year-option { padding: 14px 20px; font-size: 0.9rem; font-weight: 800; color: var(--text-dark); cursor: pointer; transition: background 0.3s var(--apple-ease), color 0.3s; text-align: left; border-bottom: 1px solid #f8fafc; }
@@ -417,7 +419,7 @@
         .timeline-wrapper { position: relative; padding-left: 30px; border-left: 3px solid var(--primary-light); }
         .timeline-item { position: relative; margin-bottom: 45px; cursor: pointer; transition: transform 0.3s var(--apple-ease); outline: none; -webkit-tap-highlight-color: transparent;}
         .timeline-item:last-child { margin-bottom: 0; }
-        .timeline-item::before { content: ''; position: absolute; left: -40.5px; top: 6px; width: 18px; height: 18px; background: #fff; border: 4px solid var(--primary); border-radius: 50%; transition: transform 0.4s var(--apple-spring), background 0.4s, box-shadow 0.4s; z-index: 2; }
+        .timeline-item::before { content: ''; position: absolute; left: -40.5px; top: 6px; width: 18px; height: 18px; background: #fff; border: 4px solid var(--primary); border-radius: 50%; transition: transform 0.4s var(--apple-ease), background 0.4s, box-shadow 0.4s; z-index: 2; }
         .timeline-item.ac-cert::before { border-color: var(--success); }
 
         .tl-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;}
@@ -451,9 +453,12 @@
 
         .grid-infos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 1200px; margin: 0 auto 50px; gap: 40px; border-bottom: 1px solid var(--border-color); padding-bottom: 50px; }
         .col-info h4 { font-size: 1.15rem; color: var(--text-dark); font-weight: 900; margin-bottom: 24px; text-transform: uppercase; display: flex; align-items: center; gap: 12px;}
-        .col-info h4 svg { width: 22px; fill: var(--primary); transition: transform 0.4s var(--apple-spring); }
+        .col-info h4 svg { width: 22px; fill: var(--primary); transition: transform 0.4s var(--apple-ease); }
         .col-info p { font-size: 1rem; line-height: 1.8; color: var(--text-gray); font-weight: 500;}
         .col-info a { color: var(--text-gray); text-decoration: none; font-weight: 700; transition: color 0.3s var(--apple-ease);}
+        
+        .address-link { color: var(--text-gray); font-weight: 500; text-decoration: none; border-bottom: 1px dashed #cbd5e1; transition: color 0.3s, border-color 0.3s; padding-bottom: 2px;}
+        .tel-link { font-weight: 800; color: var(--text-dark); text-decoration: none; transition: color 0.3s, transform 0.3s; display: inline-block;}
         .col-info span.hi { font-weight: 800; color: var(--text-dark);}
         
         .bottom-branding { text-align: center; padding-bottom: 30px; }
@@ -463,6 +468,11 @@
         .legal-links { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; }
         .legal-links a { color: var(--text-light); font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: color 0.3s var(--apple-ease);}
         .legal-links span { color: var(--border-color); font-size: 0.9rem; }
+
+        /* Pulsanti Modal Mappe */
+        .map-app-btn { display: flex; flex-direction: column; align-items: center; text-decoration: none; padding: 10px; border-radius: 16px; transition: transform 0.3s var(--apple-ease), background 0.3s; width: 30%; text-align: center; }
+        .map-app-btn img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08)); transition: transform 0.3s var(--apple-ease); }
+        .map-app-btn span { font-size: clamp(0.7rem, 2.5vw, 0.85rem); font-weight: 700; color: var(--text-dark); margin-top: 8px; white-space: nowrap; }
 
         /* EFFETTI HOVER (SOLO PER PC/MOUSE) - Nessun rimbalzo su Touchscreen */
         @media (hover: hover) and (pointer: fine) {
@@ -475,7 +485,6 @@
             .partners-inner a:hover img { transform: scale(1.15); filter: opacity(1) drop-shadow(0 15px 25px rgba(0,0,0,0.1)); }
             .bento-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 25px 60px rgba(2, 132, 199, 0.12); border-color: rgba(2, 132, 199, 0.15);}
             .bento-card.large:hover { box-shadow: 0 30px 60px rgba(15, 23, 42, 0.35); }
-            .bento-card:hover .bento-icon { transform: scale(1.15) rotate(-5deg); }
             .close-btn:hover { background: #e5e5ea; color: var(--text-dark); transform: scale(1.1); }
             .login-rules-banner:hover { background: #e0f2fe; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(2,132,199,0.1); }
             .custom-option:hover { background: #f0f9ff; color: var(--primary); }
@@ -496,6 +505,10 @@
             .col-info a:hover { color: var(--primary); }
             .badge-views:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(2, 132, 199, 0.1); }
             .legal-links a:hover { color: var(--primary); text-decoration: underline; }
+            .address-link:hover { color: var(--primary); border-color: var(--primary); }
+            .tel-link:hover { color: var(--primary); transform: scale(1.05); }
+            .map-app-btn:hover { background: #f8fafc; transform: translateY(-5px); }
+            .map-app-btn:hover img { transform: scale(1.1); }
         }
 
         /* MEDIA QUERIES MOBILE & TABLET */
@@ -510,7 +523,7 @@
             .bento-card.large { grid-column: span 1; }
             .dash-layout { grid-template-columns: 1fr; gap: 20px;}
             .dash-sidebar { position: relative; top: 0; }
-            .dash-topbar { flex-direction: column; text-align: center; gap:15px; padding: 20px 5%; border-radius: 0 0 30px 30px;}
+            .dash-topbar { position: relative; flex-direction: column; text-align: center; gap:15px; padding: 20px 5%; border-radius: 0 0 30px 30px;}
             .dash-school-info { flex-direction: column; gap: 10px;}
             .header-divider { display: none; }
             .footer-wrapper { padding: 60px 5% 30px; margin-top: 50px;}
@@ -534,7 +547,6 @@
             .bento-card p { font-size: 1.05rem; } 
             .bento-card h3 { font-size: 1.5rem; }
             
-            /* MODAL - PROPORZIONI APPLE, NO SCROLL */
             .modal-content { 
                 padding: 32px 24px 24px; 
                 border-radius: 32px; 
@@ -548,7 +560,6 @@
             .segmented-control { margin-bottom: 20px; padding: 4px; border-radius: 12px;}
             .seg-btn { padding: 8px 0; font-size: 0.9rem;}
             
-            /* Riga singola adattiva */
             .login-rules-banner { font-size: clamp(0.7rem, 3.5vw, 0.85rem); padding: 12px 10px; margin-bottom: 20px; letter-spacing: -0.2px; border-radius: 12px;}
             
             .input-group { margin-bottom: 16px; }
@@ -557,7 +568,6 @@
             .toggle-password-btn { width: 40px; height: 40px; right: 5px;}
             .toggle-password-btn svg { width: 20px; height: 20px; }
             
-            /* Ridimensionamento Cloudflare intelligente */
             .turnstile-wrap { margin-bottom: 20px; height: 58px; overflow: hidden; display: flex; align-items: flex-start; justify-content: center;}
             .cf-turnstile { transform: scale(0.88); transform-origin: top center; }
             
@@ -688,8 +698,8 @@
                         Struttura Operativa Scuola
                     </h4>
                     <p>ITIS Amedeo Avogadro</p>
-                    <p>Corso San Maurizio, 8 - 10124 Torino</p>
-                    <p>Tel: <span class="hi">+39 011 815 3611</span></p>
+                    <p><a href="#" id="btn-open-maps" class="address-link">Corso San Maurizio, 8 - 10124 Torino</a></p>
+                    <p>Tel: <a href="tel:+390118153611" class="tel-link">+39 011 815 3611</a></p>
                     <p>C.F: <span class="hi">97550230011</span> — CU: <span class="hi">UFEEBL</span></p>
                 </div>
                 
@@ -733,6 +743,28 @@
     </div>
 
     <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+
+    <!-- Modale Mappe -->
+    <div id="maps-modal" class="modal-overlay bottom-sheet">
+        <div class="modal-content" style="padding-top: 25px;">
+            <button class="close-btn" style="top: 15px;">&times;</button>
+            <h2 style="font-size: 1.4rem; margin-bottom: 20px; color: var(--text-dark); text-align:center; font-weight: 900;">Aprire tramite:</h2>
+            <div style="display: flex; justify-content: space-around; align-items: flex-start; margin-bottom: 10px;">
+                <a href="https://www.google.com/maps/search/?api=1&query=Corso+San+Maurizio,+8+-+10124+Torino" target="_blank" class="map-app-btn">
+                    <img src="https://i.ibb.co/LdwVFcNg/Google-Maps-icon-2026-svg.png" alt="Google Maps">
+                    <span>Google Maps</span>
+                </a>
+                <a href="http://maps.apple.com/?q=Corso+San+Maurizio+8+Torino" target="_blank" class="map-app-btn">
+                    <img src="https://i.ibb.co/Gff106ky/Apple-Maps-i-OS-26-icon.png" alt="Apple Mappe">
+                    <span>Apple Mappe</span>
+                </a>
+                <a href="https://waze.com/ul?q=Corso+San+Maurizio+8+Torino" target="_blank" class="map-app-btn">
+                    <img src="https://i.ibb.co/zTjqXx51/waze-app-icon-logo-brandlogos-net-l82da.png" alt="Waze">
+                    <span>Waze</span>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
@@ -1042,6 +1074,9 @@
             document.getElementById("dynamic-counter-tracker").innerText = trueGlobalMetricTrackerInt;
 
             const loginModal = document.getElementById('login-modal');
+            const mapsModal = document.getElementById('maps-modal');
+            
+            // Apertura Modale Login
             document.querySelectorAll('.btn-open-login').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1049,6 +1084,14 @@
                     checkLockoutState(); 
                 });
             });
+
+            // Apertura Modale Mappe
+            document.getElementById('btn-open-maps').addEventListener('click', (e) => {
+                e.preventDefault();
+                mapsModal.classList.add('active');
+            });
+
+            // Chiusura Modali globale
             document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => { 
                 btn.closest('.modal-overlay').classList.remove('active'); 
             }));
