@@ -116,10 +116,11 @@
         .btn-premium:active { transform: scale(0.95); transition: all 0.1s; }
 
         .btn-gradient {
-            background: var(--primary); color: white; border: none; padding: 16px 36px; border-radius: 30px;
+            background: var(--primary); color: white; border: none; padding: 0 36px; height: 56px; border-radius: 30px;
             font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, box-shadow 0.4s;
             box-shadow: 0 8px 24px rgba(2, 132, 199, 0.25); width: 100%; position: relative; overflow: hidden;
             text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; justify-content: center; align-items: center;
         }
         .btn-gradient:active { transform: translateY(0) scale(0.98); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2); transition: all 0.1s;}
         .btn-gradient:disabled { background: var(--text-light); cursor: not-allowed; box-shadow: none; transform: none; }
@@ -229,7 +230,7 @@
         .bento-card p { color: var(--text-gray); font-weight: 500; }
         .bento-card.large p { color: #94a3b8; font-weight: 500; } 
 
-        /* MODALI */
+        /* MODALI (Stile Desktop Perfetto ed Elegante) */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%); z-index: 99999; display: flex; align-items: center; justify-content: center;
@@ -246,7 +247,7 @@
             padding: 48px 36px 36px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
             transform: scale(0.95) translateY(20px); transition: transform 0.5s var(--apple-spring);
-            position: relative; max-height: 90vh; overflow-y: auto; overflow-x: hidden;
+            position: relative; max-height: 95vh; overflow-y: auto; overflow-x: hidden;
         }
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
         .modal-content::-webkit-scrollbar { width: 0; } 
@@ -321,14 +322,25 @@
         }
         .toggle-password-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
 
+        .turnstile-wrap { margin-bottom: 24px; display: flex; justify-content: center; height: 65px; }
+
         .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none; font-weight: 700; text-align: center; animation: shake 0.4s; }
         .attempts-msg { color: var(--warning); font-size: 0.85rem; margin-top: 8px; display: none; font-weight: 800; text-align: center; }
 
         .btn-social {
-            width: 100%; height: 50px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 30px;
-            font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s, border-color 0.3s, box-shadow 0.3s; color: #374151; margin-bottom: 12px; font-size: 0.9rem;
+            width: 100%; height: 56px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 30px;
+            font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s, border-color 0.3s, box-shadow 0.3s; color: #374151; margin-bottom: 12px; font-size: 0.95rem;
         }
         .btn-social:active { transform: scale(0.98); }
+
+        #custom-google-btn { position: relative; padding: 0; justify-content: center; overflow: hidden; }
+        #custom-google-btn img { width: 24px; position: absolute; left: 24px; }
+        #custom-google-btn .btn-text-main { font-weight: 800; color: #374151; font-size: 0.95rem; }
+        #custom-google-btn .btn-text-sub { font-weight: 600; color: #9ca3af; font-size: 0.75rem; text-transform: none; }
+
+        #btn-harzafi-id { border-color: #0284c7; }
+        #btn-harzafi-id img { width: auto; height: 18px; }
+        #btn-harzafi-id span { color: #0284c7; }
 
         /* Loader Animation per Bottone Google - Veloce ed Elegante */
         @keyframes spin-circle { to { transform: rotate(360deg); } }
@@ -515,18 +527,56 @@
             
             .hero-mesh { filter: blur(20px); } 
             
-            .btn-gradient, .btn-secondary { width: 100%; justify-content: center; padding: 18px 24px; font-size: 1.1rem;}
+            .btn-gradient, .btn-secondary { width: 100%; justify-content: center; padding: 16px 24px; font-size: 1.05rem;}
             .hero-main-img { max-width: 100%; padding: 0 10px;}
             .partners img { height: 35px; }
             .bento-card { padding: 30px 20px; }
             .bento-card p { font-size: 1.05rem; } 
             .bento-card h3 { font-size: 1.5rem; }
             
-            .modal-content { padding: 35px 20px 25px; border-radius: 28px; width: 95%; max-width: none;}
-            .apple-input, .custom-select-trigger { height: 60px; font-size: 1.1rem; }
+            /* MODAL - PROPORZIONI APPLE, NO SCROLL */
+            .modal-content { 
+                padding: 32px 24px 24px; 
+                border-radius: 32px; 
+                width: 92%; 
+                max-width: 400px; 
+                max-height: 95vh; 
+            }
+            .close-btn { top: 16px; right: 16px; width: 32px; height: 32px; font-size: 20px;}
+            .auth-title { font-size: 1.7rem; margin-bottom: 20px; }
             
-            .login-rules-banner { font-size: clamp(0.7rem, 3.5vw, 0.85rem); padding: 12px 10px; letter-spacing: -0.3px; }
+            .segmented-control { margin-bottom: 20px; padding: 4px; border-radius: 12px;}
+            .seg-btn { padding: 8px 0; font-size: 0.9rem;}
             
+            /* Riga singola adattiva */
+            .login-rules-banner { font-size: clamp(0.7rem, 3.5vw, 0.85rem); padding: 12px 10px; margin-bottom: 20px; letter-spacing: -0.2px; border-radius: 12px;}
+            
+            .input-group { margin-bottom: 16px; }
+            .input-label { margin-bottom: 6px; font-size: 0.75rem;}
+            .apple-input, .custom-select-trigger { height: 50px; font-size: 1rem; border-radius: 14px; padding: 0 16px;}
+            .toggle-password-btn { width: 40px; height: 40px; right: 5px;}
+            .toggle-password-btn svg { width: 20px; height: 20px; }
+            
+            /* Ridimensionamento Cloudflare intelligente */
+            .turnstile-wrap { margin-bottom: 20px; height: 58px; overflow: hidden; display: flex; align-items: flex-start; justify-content: center;}
+            .cf-turnstile { transform: scale(0.88); transform-origin: top center; }
+            
+            #login-submit { height: 50px; padding: 0; font-size: 1.05rem; margin-bottom: 0;}
+            
+            .divider { margin: 18px 0; font-size: 0.75rem;}
+            
+            .btn-social { height: 50px !important; margin-bottom: 12px; border-radius: 25px; padding: 0 15px;}
+            
+            #custom-google-btn { height: 50px; }
+            #custom-google-btn img { width: 20px; left: 16px;}
+            #custom-google-btn .btn-text-main { font-size: 0.85rem; }
+            #custom-google-btn .btn-text-sub { font-size: 0.7rem; }
+            
+            #btn-harzafi-id { height: 50px; margin-bottom: 0; }
+            #btn-harzafi-id img { height: 16px; }
+            #btn-harzafi-id span { font-size: 0.85rem; }
+            
+            /* Dashboard Mobile */
             .dash-actions { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
             .year-badge, .btn-logout { padding: 12px 20px; font-size: 1rem; width: 100%; justify-content: center;}
             .dash-main, .hours-card { padding: 25px 20px; border-radius: 24px;}
@@ -730,7 +780,7 @@
                         <div class="attempts-msg" id="login-attempts">Ti rimangono 3 tentativi.</div>
                     </div>
 
-                    <div style="margin-bottom: 24px; display: flex; justify-content: center;">
+                    <div class="turnstile-wrap">
                         <div class="cf-turnstile" data-sitekey="0x4AAAAAAC6Galn1mtnng7_P" data-theme="light"></div>
                     </div>
 
@@ -739,18 +789,18 @@
                     <div class="divider">- OPPURE CON -</div>
                     
                     <!-- Bottone Google con Logo Fisso a Sinistra e Testo Centrato -->
-                    <button type="button" id="custom-google-btn" class="btn-social" style="position: relative; height: 58px; padding: 0; justify-content: center; overflow: hidden;">
-                        <img src="https://i.ibb.co/99kjgY67/Google-Favicon-2025-svg.png" alt="Google" style="width: 24px; position: absolute; left: 20px;">
+                    <button type="button" id="custom-google-btn" class="btn-social">
+                        <img src="https://i.ibb.co/99kjgY67/Google-Favicon-2025-svg.png" alt="Google">
                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2;">
-                            <span style="font-weight: 800; color: #374151; font-size: 0.95rem;">ACCEDI CON GOOGLE</span>
-                            <span style="font-weight: 600; color: #9ca3af; font-size: 0.75rem; text-transform: none;">Tramite account istituzionale</span>
+                            <span class="btn-text-main">ACCEDI CON GOOGLE</span>
+                            <span class="btn-text-sub">Tramite account istituzionale</span>
                         </div>
                     </button>
                     <div class="error-msg" id="google-login-error" style="margin-bottom: 10px;"></div>
 
-                    <button type="button" id="btn-harzafi-id" class="btn-social" style="border-color: #0284c7;">
-                        <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Logo Harzafi" style="width: auto; height: 18px;">
-                        <span style="color: #0284c7;">ACCEDI CON HARZAFI ID</span>
+                    <button type="button" id="btn-harzafi-id" class="btn-social">
+                        <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Logo Harzafi">
+                        <span>ACCEDI CON HARZAFI ID</span>
                     </button>
                 </form>
             </div>
@@ -1210,10 +1260,11 @@
                 if (document.activeElement) document.activeElement.blur();
                 const originalGoogleBtn = googleBtn.innerHTML;
 
+                // Animazione di caricamento veloce e pulita (Cerchio Apple Style)
                 googleBtn.innerHTML = `
                     <div class="btn-loader">
                         <div class="btn-spinner"></div>
-                        <span style="font-weight: 800; color: #374151; font-size: 0.95rem;">CARICO...</span>
+                        <span class="btn-text-main" style="margin-left: 5px;">CARICO...</span>
                     </div>
                 `; 
                 googleBtn.disabled = true; 
