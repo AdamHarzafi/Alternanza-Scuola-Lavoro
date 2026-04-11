@@ -2,9 +2,17 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Termini di Servizio - Registro PCTO Harzafi</title>
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Harzafi PCTO">
+    <meta name="theme-color" content="#ffffff">
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/4R6Syg5N/Progetto-senza-titolo-removebg-preview.png">
     
     <style>
         :root {
@@ -12,92 +20,205 @@
             --primary-hover: #0369a1;  
             --primary-light: #e0f2fe;  
             --accent: #0ea5e9;         
-            --bg-body: #f8fafc;
+            
+            --bg-body: #ffffff; 
+            --surface: rgba(255, 255, 255, 0.75);
+            --surface-solid: #ffffff;
+            
             --text-dark: #0f172a;
             --text-gray: #475569;
             --text-light: #94a3b8;
             --border-color: #e2e8f0;
+
+            --radius-md: 20px;
+            --radius-lg: 32px;
+            --radius-xl: 48px;
+
+            --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
+            --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1); 
+            --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-        body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; min-height: 100vh; }
-        a { text-decoration: none; color: inherit; }
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+            outline: none !important;
+        }
 
-        /* NAVBAR */
-        .l-nav-container { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .l-nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; max-width: 1400px; margin: 0 auto; }
-        .l-nav-logo img { height: 40px; transition: transform 0.3s; }
-        .l-nav-logo img:hover { transform: scale(1.05); }
-        .l-nav-links { display: flex; gap: 30px; align-items: center; }
-        .l-nav-links a { font-weight: 700; font-size: 0.95rem; transition: color 0.2s, transform 0.2s; }
-        .l-nav-links a:hover { color: var(--primary); transform: translateY(-2px); }
-        .btn-solid { background: var(--primary); color: #fff; padding: 10px 24px; border-radius: 30px; font-weight: 800; transition: all 0.3s; border: none; cursor: pointer; }
-        .btn-solid:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(2, 132, 199, 0.2); }
+        html { scroll-behavior: smooth; overflow-x: hidden; width: 100vw; }
+        body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; width: 100%; min-height: 100vh; margin: 0; }
 
-        /* LEGAL CONTENT */
-        .legal-wrapper { max-width: 900px; margin: 60px auto; padding: 0 5%; }
-        .legal-box { background: #fff; padding: 50px 60px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
-        .legal-title { font-size: 2.8rem; font-weight: 900; color: var(--text-dark); margin-bottom: 10px; letter-spacing: -1px; }
-        .legal-date { font-size: 0.95rem; color: var(--text-light); font-weight: 600; margin-bottom: 40px; display: flex; align-items: center; gap: 8px; }
-        .legal-date svg { width: 18px; fill: currentColor; }
-        
-        .legal-box h2 { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 40px 0 15px; padding-bottom: 10px; border-bottom: 2px solid var(--primary-light); }
-        .legal-box p { font-size: 1.05rem; line-height: 1.8; color: var(--text-gray); margin-bottom: 20px; text-align: justify; }
-        .legal-box ul { margin-left: 20px; margin-bottom: 20px; color: var(--text-gray); line-height: 1.8; font-size: 1.05rem; }
-        .legal-box li { margin-bottom: 8px; }
+        .glass {
+            background: var(--surface); 
+            backdrop-filter: saturate(180%) blur(25px);
+            -webkit-backdrop-filter: saturate(180%) blur(25px);
+            box-shadow: 0 8px 32px rgba(2, 132, 199, 0.05);
+            transform: translateZ(0); 
+        }
+
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.96) translateZ(0); 
+            transition: opacity 0.8s var(--apple-ease), transform 0.8s var(--apple-ease); 
+            will-change: opacity, transform;
+        }
+        .reveal.active { 
+            opacity: 1; 
+            transform: translateY(0) scale(1) translateZ(0); 
+        }
+
+        /* === NAVBAR PERFETTAMENTE CENTRATA COME INDEX === */
+        .navbar-wrapper {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateZ(0); 
+            width: calc(100% - 40px); max-width: 1200px; z-index: 1000; 
+            border-radius: 100px; padding: 12px 24px; 
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.8); background: var(--surface);
+            transition: top 0.4s var(--apple-ease), width 0.4s var(--apple-ease), max-width 0.4s var(--apple-ease), border-radius 0.4s var(--apple-ease), background 0.4s var(--apple-ease), padding 0.4s var(--apple-ease), border-color 0.4s var(--apple-ease), box-shadow 0.4s var(--apple-ease);
+        }
+        .navbar-wrapper.scrolled {
+            top: 0; width: 100%; max-width: 2560px; border-radius: 0; padding: 15px 5vw;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: saturate(200%) blur(40px);
+            -webkit-backdrop-filter: saturate(200%) blur(40px);
+            border: 1px solid transparent; border-bottom-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-logo img { height: 36px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); transition: transform 0.3s var(--apple-ease); }
+        .nav-logo img:hover { transform: scale(1.05); }
+        .nav-links { display: flex; gap: 35px; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 0.95rem; transition: color 0.3s, transform 0.3s var(--apple-ease);}
+        .nav-links a:hover { color: var(--primary); transform: translateY(-2px); }
+
+        .btn-premium {
+            background: var(--primary-light); color: var(--primary); border: none; padding: 12px 24px; border-radius: 30px;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, color 0.4s, box-shadow 0.4s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+        }
+        .btn-premium:hover { transform: scale(1.04); background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(2, 132, 199, 0.2); }
+        .btn-premium:active { transform: scale(0.95); transition: all 0.1s; }
+
+        /* === CONTENUTO LEGALE === */
+        .legal-hero-mesh {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 20% 30%, rgba(14, 165, 233, 0.1) 0%, transparent 40%),
+                        radial-gradient(ellipse at 80% 60%, rgba(2, 132, 199, 0.08) 0%, transparent 45%);
+            z-index: -1; filter: blur(40px); pointer-events: none;
+        }
+        .legal-wrapper { max-width: 900px; margin: 140px auto 80px; padding: 0 5%; position: relative; }
+        .legal-box {
+            background: var(--surface-solid); padding: 60px 70px; border-radius: var(--radius-xl);
+            box-shadow: 0 20px 60px rgba(2, 132, 199, 0.06); border: 1px solid rgba(2, 132, 199, 0.06);
+            position: relative; overflow: hidden;
+        }
+        .legal-box::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .legal-title { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 900; color: var(--text-dark); margin-bottom: 12px; letter-spacing: -2px; line-height: 1.1; }
+        .legal-subtitle { font-size: 1.1rem; color: var(--text-light); font-weight: 600; margin-bottom: 35px; }
+        .legal-date {
+            display: inline-flex; align-items: center; gap: 10px; background: var(--primary-light);
+            color: var(--primary); padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 800; margin-bottom: 45px; text-transform: uppercase;
+        }
+        .legal-date svg { width: 18px; height: 18px; fill: currentColor; }
+        .legal-box h2 {
+            font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin: 45px 0 18px; padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light); letter-spacing: -0.03em; display: flex; align-items: center; gap: 12px;
+        }
+        .legal-box h2 .section-number {
+            display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px;
+            background: var(--primary-light); color: var(--primary); border-radius: 12px; font-size: 0.95rem; flex-shrink: 0;
+        }
+        .legal-box p { font-size: 1.08rem; line-height: 1.85; color: var(--text-gray); margin-bottom: 22px; text-align: justify; }
+        .legal-box ul { margin-left: 8px; margin-bottom: 24px; padding-left: 0; list-style: none; }
+        .legal-box li { position: relative; padding: 12px 0 12px 36px; color: var(--text-gray); line-height: 1.75; font-size: 1.05rem; border-bottom: 1px solid #f1f5f9; font-weight: 500; }
+        .legal-box li:last-child { border-bottom: none; }
+        .legal-box li::before { content: ''; position: absolute; left: 0; top: 22px; width: 8px; height: 8px; background: var(--primary); border-radius: 50%; opacity: 0.8; }
         .legal-box strong { color: var(--text-dark); font-weight: 700; }
+        .legal-box code { background: var(--primary-light); color: var(--primary); padding: 3px 10px; border-radius: 8px; font-size: 0.95em; font-weight: 700; }
+        .legal-box a { color: var(--primary); font-weight: 700; text-decoration: none; transition: color 0.3s; }
+        .legal-box a:hover { color: var(--primary-hover); text-decoration: underline; }
 
-        /* FOOTER */
-        .footer-wrapper { background: #0c4a6e; border-radius: 50px 50px 0 0; padding: 80px 5% 40px; color: #fff; margin-top: 60px; }
-        .mim-footer-wrap { width: 100%; display: flex; justify-content: center; margin-bottom: 40px;}
-        .footer-logo-mim { height: 100px; } 
-        .grid-infos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 1200px; margin: 0 auto 40px; gap: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; }
-        .col-info h4 { font-size: 1.1rem; font-weight: 900; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; }
-        .col-info h4 svg { width: 20px; fill: var(--accent); }
-        .col-info p { font-size: 0.95rem; line-height: 1.8; color: #bae6fd; font-weight: 600; }
-        .col-info span.hi { font-weight: 800; color: #fff;}
-        .bottom-branding { text-align: center; }
-        .copyright-text { font-size: 1rem; color: #fff; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin-top: 15px;}
-        .legal-links { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 15px; }
-        .legal-links a { color: #bae6fd; font-size: 0.85rem; font-weight: 700; transition: color 0.2s; }
-        .legal-links a:hover { color: #fff; text-decoration: underline; }
-        .legal-links span { color: rgba(255,255,255,0.2); font-size: 0.8rem; }
+        /* === FOOTER === */
+        .footer-wrapper { 
+            background: var(--surface-solid); border-top: 1px solid rgba(2, 132, 199, 0.08);
+            border-radius: 48px 48px 0 0; padding: 80px 5% 40px; color: var(--text-dark); 
+            margin-top: 80px; box-shadow: 0 -20px 50px rgba(2, 132, 199, 0.03); position: relative;
+        }
+        .mim-footer-wrap { width: 100%; display: flex; justify-content: center; margin-bottom: 50px; }
+        .footer-logo-mim { height: 80px; filter: opacity(0.9); transition: transform 0.4s var(--apple-ease); } 
+        .footer-logo-mim:hover { transform: scale(1.05); }
 
+        .grid-infos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 1200px; margin: 0 auto 50px; gap: 40px; border-bottom: 1px solid var(--border-color); padding-bottom: 50px; }
+        .col-info h4 { font-size: 1.15rem; color: var(--text-dark); font-weight: 900; margin-bottom: 24px; text-transform: uppercase; display: flex; align-items: center; gap: 12px;}
+        .col-info h4 svg { width: 22px; fill: var(--primary); transition: transform 0.4s var(--apple-ease); }
+        .col-info:hover h4 svg { transform: scale(1.2) rotate(10deg); }
+        .col-info p { font-size: 1rem; line-height: 1.8; color: var(--text-gray); font-weight: 500;}
+        .col-info a { color: var(--text-gray); text-decoration: none; font-weight: 700; transition: color 0.3s var(--apple-ease);}
+        .col-info a:hover { color: var(--primary); }
+        .col-info span.hi { font-weight: 800; color: var(--text-dark);}
+        
+        .bottom-branding { text-align: center; padding-bottom: 30px; }
+        .badge-views { display: inline-flex; align-items: center; gap: 10px; background: var(--primary-light); padding: 10px 24px; border-radius: 30px; font-size: 0.9rem; font-weight: 800; color: var(--primary-hover); margin-bottom: 24px; transition: transform 0.4s var(--apple-ease); box-shadow: 0 4px 15px rgba(2, 132, 199, 0.05);}
+        .badge-views:hover { transform: translateY(-3px) scale(1.02); }
+        .badge-views strong { color: var(--primary); font-size: 1.1rem;}
+        .copyright-text { font-size: 1rem; color: var(--text-gray); font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;}
+        .legal-links { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; }
+        .legal-links a { color: var(--text-light); font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: color 0.3s var(--apple-ease);}
+        .legal-links a:hover { color: var(--primary); }
+        .legal-links span { color: var(--border-color); font-size: 0.9rem; }
+
+        /* === MOBILE RESPONSIVE === */
         @media (max-width: 900px) {
-            .l-nav { flex-wrap: wrap; padding: 10px 5%; }
-            .l-nav-links { width: 100%; order: 3; justify-content: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.05); }
-            .l-nav-auth { order: 2; }
-            .legal-box { padding: 30px 20px; }
-            .legal-title { font-size: 2rem; }
-            .footer-wrapper { border-radius: 30px 30px 0 0; padding: 50px 5% 30px; }
-            .col-info { text-align: center; }
+            .nav-links { display: none; }
+            .legal-wrapper { margin-top: 120px; }
+            .legal-box { padding: 40px 30px; border-radius: var(--radius-lg); }
+            .grid-infos { justify-content: center; text-align: center; }
             .col-info h4 { justify-content: center; }
+        }
+
+        @media (max-width: 600px) {
+            .navbar-wrapper { width: 92%; padding: 12px 18px; top: 15px;}
+            .navbar-wrapper.scrolled { width: 100%; padding: 15px 20px; top: 0;}
+            .legal-wrapper { padding: 0 4%; margin-top: 100px;}
+            .legal-box { padding: 35px 20px; border-radius: var(--radius-md); }
+            .legal-title { font-size: 1.8rem; letter-spacing: -1px; }
+            .legal-box h2 { font-size: 1.2rem; }
+            .footer-wrapper { padding: 60px 5% 30px; margin-top: 50px; border-radius: 30px 30px 0 0;}
+            .footer-logo-mim { height: 60px; }
+            .badge-views { width: 100%; justify-content: center; padding: 15px;}
+            .legal-links { flex-direction: column; gap: 15px;}
+            .legal-links span { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="l-nav-container">
-        <nav class="l-nav">
-            <div class="l-nav-logo">
-                <a href="index.html" aria-label="Torna alla Home" style="display: block;">
-                    <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Logo Harzafi">
-                </a>
-            </div>
-            <div class="l-nav-links">
-                <a href="index.html">Torna alla Home</a>
-                <a href="index.html#sezione-attivita">Attività PCTO</a>
-                <a href="privacy.html">Privacy Policy</a>
-            </div>
-            <div class="l-nav-auth">
-                <a href="index.html"><button class="btn-solid">Accedi al Portale</button></a>
-            </div>
-        </nav>
-    </div>
+    <!-- Floating Navbar (RIMOSSA LA CLASSE REVEAL PER EVITARE CONFLITTI DI TRANSFORM) -->
+    <nav class="navbar-wrapper glass">
+        <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+            <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Logo Harzafi">
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#features">Funzionalità</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+        <a href="index.html"><button class="btn-premium">Accedi al Portale</button></a>
+    </nav>
 
+    <!-- Main Content -->
     <main class="legal-wrapper">
-        <div class="legal-box">
+        <div class="legal-hero-mesh"></div>
+        
+        <div class="legal-box reveal">
             <h1 class="legal-title">Termini di Servizio</h1>
+            <p class="legal-subtitle">Condizioni Generali d'Uso della Piattaforma</p>
+            
             <div class="legal-date">
                 <svg viewBox="0 0 24 24"><path d="M19 3H18V1H16V3H8V1H6V3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M19 19H5V8H19V19M7 10H12V15H7V10Z"/></svg>
                 In vigore dal: 22 Marzo 2026
@@ -106,7 +227,7 @@
             <p>Il presente documento stabilisce le Condizioni Generali d'Uso e i Termini di Servizio (di seguito "Termini") che regolano l'accesso e l'utilizzo del <strong>Registro Formazione PCTO</strong> (di seguito "Piattaforma"), un applicativo web sviluppato ad uso interno per l'ITIS Amedeo Avogadro di Torino.</p>
             <p>Accedendo alla Piattaforma e utilizzando i suoi servizi, l'Utente accetta senza riserve i presenti Termini. In caso di mancata accettazione, l'Utente è invitato a interrompere immediatamente la navigazione e a non effettuare l'accesso al sistema.</p>
 
-            <h2>1. Descrizione e Natura del Servizio</h2>
+            <h2><span class="section-number">1</span>Descrizione e Natura del Servizio</h2>
             <p>La Piattaforma è uno strumento digitale istituzionale messo a disposizione degli Studenti, dei Docenti Tutor e del Personale Amministrativo per:</p>
             <ul>
                 <li>Il monitoraggio e la storicizzazione delle ore svolte nell'ambito dei Percorsi per le Competenze Trasversali e l'Orientamento (ex Alternanza Scuola-Lavoro).</li>
@@ -115,7 +236,7 @@
             </ul>
             <p>I dati visualizzati all'interno della dashboard utente rivestono carattere ufficiale ai fini della validazione curriculare per l'Esame di Stato.</p>
 
-            <h2>2. Obblighi e Responsabilità dell'Utente</h2>
+            <h2><span class="section-number">2</span>Obblighi e Responsabilità dell'Utente</h2>
             <p>L'Utente si impegna a utilizzare la Piattaforma nel pieno rispetto delle leggi vigenti, dei regolamenti di Istituto e dei presenti Termini. È fatto espresso e severo divieto di:</p>
             <ul>
                 <li>Condividere le proprie credenziali d'accesso (Password o Harzafi ID) con soggetti terzi non autorizzati.</li>
@@ -124,15 +245,15 @@
                 <li>Dichiarare il falso o tentare di manipolare la quantità di ore effettivamente svolte nel percorso formativo.</li>
             </ul>
 
-            <h2>3. Misure di Sicurezza e Sospensione dell'Account</h2>
+            <h2><span class="section-number">3</span>Misure di Sicurezza e Sospensione dell'Account</h2>
             <p>La Piattaforma è dotata di rigidi meccanismi di sicurezza per tutelare l'integrità dei dati scolastici. Al fine di prevenire accessi fraudolenti, <strong>il sistema bloccherà automaticamente l'interfaccia di login per la durata di 60 secondi dopo 3 tentativi di accesso falliti consecutivi</strong>. Tale blocco viene gestito tramite l'uso del <code>LocalStorage</code> del browser utente e non può essere aggirato ricaricando la pagina.</p>
             <p>L'Amministrazione del sistema si riserva il diritto insindacabile di sospendere, disabilitare o bloccare temporaneamente e permanentemente gli account degli utenti in caso di fondato sospetto di compromissione o in caso di violazione accertata dei presenti Termini.</p>
 
-            <h2>4. Proprietà Intellettuale</h2>
+            <h2><span class="section-number">4</span>Proprietà Intellettuale</h2>
             <p>L'intero codice sorgente, l'interfaccia grafica (UI/UX), il design del database e le architetture logiche alla base della Piattaforma sono opera dell'ingegno e proprietà intellettuale di <strong>Harzafi Adam</strong>. È severamente vietata la riproduzione, la clonazione, la modifica, la distribuzione o l'utilizzo per scopi estranei alle funzioni scolastiche senza il consenso esplicito e per iscritto dell'autore.</p>
             <p>I loghi istituzionali presenti (MIM, Cisco, ITS Academy, Università di Torino, HackersGen, ITIS Avogadro) appartengono ai rispettivi proprietari e sono utilizzati esclusivamente a scopo dimostrativo-istituzionale interno.</p>
 
-            <h2>5. Limitazione di Responsabilità</h2>
+            <h2><span class="section-number">5</span>Limitazione di Responsabilità</h2>
             <p>Il servizio viene fornito "così com'è" e "come disponibile". Pur garantendo il massimo impegno per mantenere la Piattaforma operativa e sicura, né l'Istituto né lo Sviluppatore potranno essere ritenuti responsabili per:</p>
             <ul>
                 <li>Eventuali malfunzionamenti temporanei, tempi di inattività del server o impossibilità di accedere al sistema.</li>
@@ -140,39 +261,125 @@
                 <li>Danni diretti o indiretti causati da un uso improprio delle credenziali da parte dell'Utente stesso.</li>
             </ul>
 
-            <h2>6. Legge Applicabile e Foro Competente</h2>
+            <h2><span class="section-number">6</span>Legge Applicabile e Foro Competente</h2>
             <p>Le presenti Condizioni Generali sono regolate e interpretate in conformità con la Legge Italiana. Per qualsiasi controversia inerente all'interpretazione, esecuzione o risoluzione dei presenti Termini o derivante dall'utilizzo della piattaforma, la giurisdizione esclusiva apparterrà al Foro di Torino.</p>
 
-            <h2>7. Modifiche ai Termini di Servizio</h2>
+            <h2><span class="section-number">7</span>Modifiche ai Termini di Servizio</h2>
             <p>Ci riserviamo il diritto di aggiornare i presenti Termini per adeguarli a nuove funzionalità tecniche o a variazioni normative (ad esempio, le direttive introdotte dal Decreto Semplificazioni del 01/10/2021). Gli utenti sono tenuti a prendere regolarmente visione di questa pagina.</p>
         </div>
     </main>
 
+    <!-- Footer sincronizzato con index.html -->
     <footer class="footer-wrapper">
-        <div class="mim-footer-wrap">
-            <img src="https://i.ibb.co/4gwq5P1T/LOGO-MIM.png" class="footer-logo-mim" alt="Logo Ministero">
+        <div class="mim-footer-wrap reveal">
+            <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" class="footer-logo-mim" alt="Logo Ministero">
+            </a>
         </div>
+
         <div class="grid-infos">
-            <div class="col-info">
-                <h4><svg viewBox="0 0 24 24"><path d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7Z"/></svg> Struttura Operativa Scuola</h4>
-                <p>Corso San Maurizio, 8 - 10124 Torino</p>
-                <p>Tel: <a href="tel:+390118153611">+39 011 815 3611</a></p>
-                <p>C.F: <span class="hi">97550230011</span></p>
+            <div class="col-info reveal" style="transition-delay: 0.1s;">
+                <h4>
+                    <svg viewBox="0 0 24 24"><path d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7Z"/></svg>
+                    Struttura Operativa Scuola
+                </h4>
+                <p>ITIS Amedeo Avogadro</p>
+                <p><a href="https://www.google.com/maps/search/?api=1&query=Corso+San+Maurizio,+8+-+10124+Torino" target="_blank" style="border-bottom: 1px dashed #cbd5e1;">Corso San Maurizio, 8 - 10124 Torino</a></p>
+                <p>Tel: <a href="tel:+390118153611" class="hi">+39 011 815 3611</a></p>
+                <p>C.F: <span class="hi">97550230011</span> — CU: <span class="hi">UFEEBL</span></p>
             </div>
-            <div class="col-info">
-                <h4><svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg> Contatti Tecnici</h4>
-                <p>Gestore: Harzafi Adam</p>
-                <p>Email: <a href="mailto:s11205413d@studenti.itisavogadro.it">s11205413d@studenti.itisavogadro.it</a></p>
+            
+            <div class="col-info reveal" style="transition-delay: 0.2s;">
+                <h4>
+                    <svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
+                    Servizi Dati & Finanziari
+                </h4>
+                <p>Email Segreteria:<br> <a href="mailto:tois05100c@istruzione.it" class="hi">tois05100c@istruzione.it</a></p>
+                <p>Rete PEC:<br> <a href="mailto:tois05100c@pec.istruzione.it" class="hi">tois05100c@pec.istruzione.it</a></p>
+                <p>Banca Intesa:<br> <span class="hi">IT05K0306909208100000046188</span></p>
+                <p>Banca D'Italia:<br> <span class="hi">IT51C0100003245114300317144</span></p>
+            </div>
+            
+            <div class="col-info reveal" style="transition-delay: 0.3s;">
+                <h4>
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    Informazioni Contatto
+                </h4>
+                <p>Il sito è gestito da Harzafi Adam</p>
+                <p>Classe 3°A Informatica</p>
+                <p>Anno di Corso: 2025/2026</p>
+                <p><br>Email personale:<br> <a href="mailto:adamharzafi@gmail.com" class="hi">adamharzafi@gmail.com</a></p>
+                <p>Email scolastica:<br> <a href="mailto:s11205413d@studenti.itisavogadro.it" class="hi">s11205413d@studenti.itisavogadro.it</a></p>
+                <p>Richiesta di assistenza:<br> <a href="mailto:harzafi.support@gmail.com" class="hi">harzafi.support@gmail.com</a></p>
             </div>
         </div>
-        <div class="bottom-branding">
+
+        <div class="bottom-branding reveal" style="transition-delay: 0.4s;">
+            <div class="badge-views">
+                <svg style="width:20px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/></svg> 
+                Letture Tracciate: <strong id="dynamic-counter-tracker">...</strong>
+            </div>
             <p class="copyright-text">Harzafi © - Tutti i diritti riservati</p>
             <div class="legal-links">
                 <a href="privacy.html">Privacy Policy</a>
                 <span>|</span>
-                <a href="termini.html" style="color: #fff; text-decoration: underline;">Termini di Servizio</a>
+                <a href="termini.html" style="color: var(--primary);">Termini di Servizio</a>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Sistema di protezione
+        (function() {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if (e.key === 'F12' || e.keyCode === 123 || 
+                   (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+                   (e.ctrlKey && (e.key === 'u' || e.key === 'U'))) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            setInterval(() => {
+                const prima = new Date().getTime();
+                debugger;
+                if (new Date().getTime() - prima > 100) {
+                    document.body.innerHTML = '<h1 style="color:red; text-align:center; margin-top:20vh;">Accesso Negato: Strumenti sviluppatore bloccati.</h1>';
+                    window.location.replace("about:blank");
+                }
+            }, 1000);
+        })();
+
+        // Animazioni super-performanti
+        document.addEventListener("DOMContentLoaded", function() {
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            
+            // Lettura del counter delle views per il footer
+            const localViewsStr = localStorage.getItem("visits-tracker-pcto-avgd-adam") || "508";
+            document.getElementById("dynamic-counter-tracker").innerText = localViewsStr;
+        });
+
+        // Logica Scroll Navbar
+        const navbar = document.querySelector('.navbar-wrapper');
+        let isScrolled = false;
+        window.addEventListener('scroll', () => {
+            const shouldBeScrolled = window.scrollY > 40;
+            if (shouldBeScrolled !== isScrolled) {
+                isScrolled = shouldBeScrolled;
+                if (isScrolled) { navbar.classList.add('scrolled'); } 
+                else { navbar.classList.remove('scrolled'); }
+            }
+        }, { passive: true });
+    </script>
 </body>
 </html>
