@@ -135,7 +135,7 @@
 
         .btn-text { background: transparent; border: none; font-weight: 800; color: var(--text-light); cursor: pointer; font-size: 0.95rem; transition: color 0.3s var(--apple-ease); width: 100%; margin-top: 15px; }
 
-        /* NAVBAR OTTIMIZZATA PER DESKTOP (Zero scatti/snap) */
+        /* NAVBAR OTTIMIZZATA PER DESKTOP */
         .navbar-wrapper {
             position: fixed; 
             top: 20px; 
@@ -169,7 +169,7 @@
         .nav-links { display: flex; gap: 35px; }
         .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 0.95rem; transition: color 0.3s, transform 0.3s var(--apple-ease);}
 
-        /* HERO AREA OTTIMIZZATA */
+        /* HERO AREA */
         .hero-wrapper { position: relative; width: 100%; min-height: 100vh; display: flex; align-items: center; padding-top: 80px; overflow: hidden; background: #ffffff; }
         .hero-mesh {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -231,21 +231,22 @@
         .bento-card p { color: var(--text-gray); font-weight: 500; }
         .bento-card.large p { color: #94a3b8; font-weight: 500; } 
 
-        /* === MODALI APPLE STYLE (Ottimizzato per Desktop: Niente scorrimento) === */
+        /* === MODALI E BOTTOM SHEETS RISCRITTI (ZERO CRASH/ZERO VUOTI) === */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%); z-index: 99999; display: flex; align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); padding: 20px;
             transform: translateZ(0);
         }
-        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
         
+        /* Modale Classica (Login Desktop) */
         .modal-content {
             background: #ffffff; 
             width: 100%; 
-            max-width: 620px; /* Notevolmente allargato in orizzontale */
+            max-width: 620px; 
             border-radius: 32px; 
-            padding: 35px 50px 30px; /* Margini verticali ridotti per evitare scroll */
+            padding: 35px 50px 30px; 
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
             transform: scale(0.95) translateY(20px); 
             transition: transform 0.5s var(--apple-smooth); 
@@ -254,20 +255,45 @@
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
         .modal-content::-webkit-scrollbar { width: 0; } 
 
-        .modal-overlay.bottom-sheet { align-items: flex-end; padding: 0; }
-        .modal-overlay.bottom-sheet .modal-content {
-            border-radius: 36px 36px 0 0; padding: 40px 25px 35px; max-width: 440px; margin: 0 auto;
-            transform: translateY(100%) scale(1); border-bottom: none;
-            max-height: 95vh; box-shadow: 0 -15px 40px rgba(0,0,0,0.15);
-            transition: transform 0.4s var(--apple-smooth);
+        /* Bottom Sheet (Maps, Harzafi ID, Recupero Password) */
+        .modal-overlay.bottom-sheet { 
+            align-items: flex-end; 
+            padding: 0; 
         }
-        .modal-overlay.bottom-sheet.active .modal-content { transform: translateY(0) scale(1); }
+        
+        .modal-overlay.bottom-sheet .modal-content {
+            border-radius: 36px 36px 0 0; 
+            padding: 0; 
+            max-width: 500px; 
+            width: 100%;
+            margin: 0 auto;
+            transform: translateY(100%); 
+            border-bottom: none;
+            max-height: 92vh; 
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.15);
+            transition: transform 0.4s var(--apple-smooth);
+            display: block; /* EVITA BUG DI SAFARI CHE FACEVA SCOMPARIRE TUTTO */
+            overflow-y: auto; 
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .modal-overlay.bottom-sheet.active .modal-content { 
+            transform: translateY(0); 
+        }
+
+        .bottom-sheet-body {
+            padding: 25px 25px calc(30px + env(safe-area-inset-bottom, 0px)); /* Padding sicuro dinamico */
+            width: 100%;
+        }
 
         .close-btn {
-            position: absolute; top: 18px; right: 18px; width: 36px; height: 36px; border-radius: 50%;
-            background: #f5f5f7; border: none; font-size: 20px; cursor: pointer; color: var(--text-light);
-            display: flex; align-items: center; justify-content: center; transition: background 0.3s, color 0.3s, transform 0.3s var(--apple-ease); z-index: 10;
+            position: absolute; top: 15px; right: 15px; width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(0,0,0,0.06); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark);
+            display: flex; align-items: center; justify-content: center; transition: transform 0.3s var(--apple-ease); z-index: 100;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
         }
+        .close-btn:active { transform: scale(0.9); }
 
         .modal-logo-wrapper { display: flex; justify-content: center; margin-bottom: 12px; }
         .modal-logo-wrapper img { height: 40px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(2, 132, 199, 0.12)); }
@@ -327,14 +353,12 @@
         }
         .toggle-password-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
 
-        /* Privacy Disclaimer iCloud Style - Ottimizzato in altezza */
+        /* Privacy Disclaimer */
         .privacy-disclaimer {
             text-align: center; font-size: 0.75rem; color: var(--text-gray); 
             line-height: 1.5; margin: 12px 0 15px; padding: 0 10px; font-weight: 500;
         }
-        .privacy-disclaimer svg {
-            width: 26px; height: 26px; color: var(--primary); margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto;
-        }
+        .privacy-disclaimer svg { width: 26px; height: 26px; color: var(--primary); margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto; }
         .privacy-disclaimer a { color: var(--primary); text-decoration: none; font-weight: 700; transition: text-decoration 0.2s;}
         .privacy-disclaimer a:hover { text-decoration: underline; }
 
@@ -372,12 +396,55 @@
         .fade-form { animation: fadeIn 0.4s var(--apple-ease) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        #forgot-view, #rules-view { display: none; }
+        #rules-view { display: none; }
         .rules-list { list-style: none; margin-bottom: 24px; padding: 0; }
         .rules-list li { padding: 14px 16px; background: #f8fafc; border-left: 4px solid var(--primary); border-radius: 12px; margin-bottom: 10px; font-weight: 700; color: var(--text-dark); font-size: 0.9rem; display: flex; align-items: center; gap: 12px; transition: transform 0.3s var(--apple-ease), background 0.3s;}
 
-        #app-dashboard { display: none; opacity: 0; transition: opacity 0.5s ease; padding-bottom: 80px;}
+        /* --- STILI RECUPERO PASSWORD (OTTIMIZZATI) --- */
+        .recovery-hero {
+            position: relative;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 60px 20px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            width: 100%;
+        }
+        .recovery-hero::after {
+            content: ''; position: absolute; width: 150%; height: 150%;
+            background: linear-gradient(rgba(255,255,255,0.4), transparent);
+            transform: rotate(-45deg); top: -50%; pointer-events: none;
+        }
+        .recovery-card-img {
+            width: 100%; max-width: 240px; border-radius: 14px;
+            box-shadow: 0 15px 35px rgba(2, 132, 199, 0.2), 0 5px 15px rgba(0,0,0,0.08);
+            animation: floatCard 5s ease-in-out infinite;
+            position: relative; z-index: 2;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .recovery-title {
+            font-size: 1.6rem; font-weight: 900; text-align: center; color: var(--text-dark);
+            letter-spacing: -0.5px; margin-bottom: 8px; line-height: 1.2;
+        }
+        .recovery-subtitle {
+            text-align: center; font-size: 1rem; font-weight: 500; color: var(--text-gray);
+            margin-bottom: 25px; line-height: 1.5; padding: 0 10px;
+        }
         
+        .result-banner {
+            background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 16px; padding: 20px;
+            text-align: center; color: #065f46; font-size: 0.95rem; font-weight: 600; line-height: 1.5;
+            margin-top: 20px; display: none; animation: fastFadeIn 0.4s var(--apple-ease);
+        }
+        .result-banner svg { width: 32px; height: 32px; fill: var(--success); margin-bottom: 10px; }
+
+        /* Dashboard styles */
+        #app-dashboard { display: none; opacity: 0; transition: opacity 0.5s ease; padding-bottom: 80px;}
         .dash-topbar {
             background: #fff; border-bottom: 1px solid var(--border-color);
             padding: 15px 5%; display: flex; justify-content: space-between; align-items: center;
@@ -482,12 +549,10 @@
         .legal-links a { color: var(--text-light); font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: color 0.3s var(--apple-ease);}
         .legal-links span { color: var(--border-color); font-size: 0.9rem; }
 
-        /* Pulsanti Modal Mappe */
         .map-app-btn { display: flex; flex-direction: column; align-items: center; text-decoration: none; padding: 10px; border-radius: 16px; transition: transform 0.3s var(--apple-ease), background 0.3s; width: 30%; text-align: center; }
         .map-app-btn img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08)); transition: transform 0.3s var(--apple-ease); }
         .map-app-btn span { font-size: clamp(0.7rem, 2.5vw, 0.85rem); font-weight: 700; color: var(--text-dark); margin-top: 8px; white-space: nowrap; }
 
-        /* EFFETTI HOVER (SOLO PER PC/MOUSE) */
         @media (hover: hover) and (pointer: fine) {
             .btn-premium:hover { transform: scale(1.04); background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(2, 132, 199, 0.2); }
             .btn-gradient:hover { transform: translateY(-3px) scale(1.02); background: var(--primary-hover); box-shadow: 0 15px 35px rgba(2, 132, 199, 0.35); }
@@ -498,7 +563,7 @@
             .partners-inner a:hover img { transform: scale(1.15); filter: opacity(1) drop-shadow(0 15px 25px rgba(0,0,0,0.1)); }
             .bento-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 25px 60px rgba(2, 132, 199, 0.12); border-color: rgba(2, 132, 199, 0.15);}
             .bento-card.large:hover { box-shadow: 0 30px 60px rgba(15, 23, 42, 0.35); }
-            .close-btn:hover { background: #e5e5ea; color: var(--text-dark); transform: scale(1.1); }
+            .close-btn:hover { background: rgba(0,0,0,0.1); transform: scale(1.1); }
             .login-rules-banner:hover { background: #e0f2fe; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(2,132,199,0.1); }
             .custom-option:hover { background: #f0f9ff; color: var(--primary); }
             .toggle-password-btn:hover { color: var(--primary); }
@@ -524,7 +589,6 @@
             .map-app-btn:hover img { transform: scale(1.1); }
         }
 
-        /* MEDIA QUERIES MOBILE & TABLET */
         @media (max-width: 1024px) {
             .hero-container { flex-direction: column; text-align: center; padding-top: 40px; }
             .hero-text-col { max-width: 100%; }
@@ -544,15 +608,14 @@
             .col-info { text-align: center; }
             .col-info h4 { justify-content: center; }
         }
+        
+        /* FIX MEDIA QUERY SMARTPHONE - ZERO SPAZIO VUOTO SOTTO I BOTTOM SHEETS */
         @media (max-width: 600px) {
             .navbar-wrapper { width: 92%; padding: 12px 18px; top: 15px;}
             .navbar-wrapper.scrolled { width: 100%; padding: 15px 20px; top: 0;}
-            
             .hero-text-col h1 { font-size: clamp(3rem, 12vw, 4.5rem); margin-bottom: 15px; letter-spacing: -1.5px; line-height: 1.1;}
             .hero-text-col p { font-size: 1.15rem; margin-bottom: 30px;} 
-            
             .hero-mesh { filter: blur(20px); } 
-            
             .btn-gradient, .btn-secondary { width: 100%; justify-content: center; padding: 16px 24px; font-size: 1.05rem;}
             .hero-main-img { max-width: 100%; padding: 0 10px;}
             .partners img { height: 35px; }
@@ -560,53 +623,50 @@
             .bento-card p { font-size: 1.05rem; } 
             .bento-card h3 { font-size: 1.5rem; }
             
-            /* MODAL MOBILE - FULL SCREEN TIPO APP NATIVA */
-            .modal-overlay { padding: 0; }
-            .modal-content { 
+            /* Login a tutto schermo */
+            .modal-overlay:not(.bottom-sheet) { padding: 0; }
+            .modal-overlay:not(.bottom-sheet) .modal-content { 
                 padding: 60px 24px 24px; 
                 border-radius: 0; 
                 width: 100%; 
                 height: 100vh; 
                 max-width: 100%; 
                 max-height: 100vh; 
-                display: flex;
-                flex-direction: column;
             }
-            .close-btn { top: 20px; right: 20px; width: 40px; height: 40px; background: #f1f5f9; color: var(--text-dark); font-size: 22px; }
-            .modal-logo-wrapper { margin-top: 10px; margin-bottom: 15px; }
 
-            .auth-title { font-size: 1.7rem; margin-bottom: 20px; }
+            /* Bottom Sheet adattata allo smartphone per avvolgere il contenuto senza creare vuoti */
+            .bottom-sheet-body {
+                padding: 25px 20px calc(25px + env(safe-area-inset-bottom, 0px)); 
+            }
             
+            .recovery-hero { padding: 40px 20px 25px; }
+            .recovery-card-img { max-width: 200px; }
+            .recovery-title { font-size: 1.5rem; }
+
+            .close-btn { top: 15px; right: 15px; width: 40px; height: 40px; font-size: 22px; }
+            .modal-logo-wrapper { margin-top: 10px; margin-bottom: 15px; }
+            .auth-title { font-size: 1.7rem; margin-bottom: 20px; }
             .segmented-control { margin-bottom: 20px; padding: 4px; border-radius: 12px;}
             .seg-btn { padding: 8px 0; font-size: 0.9rem;}
-            
             .login-rules-banner { font-size: clamp(0.7rem, 3.5vw, 0.85rem); padding: 12px 10px; margin-bottom: 20px; letter-spacing: -0.2px; border-radius: 12px;}
-            
             .input-group { margin-bottom: 16px; }
             .input-label { margin-bottom: 6px; font-size: 0.75rem;}
             .apple-input, .custom-select-trigger { height: 50px; font-size: 1rem; border-radius: 14px; padding: 0 16px;}
             .toggle-password-btn { width: 40px; height: 40px; right: 5px;}
             .toggle-password-btn svg { width: 20px; height: 20px; }
-            
             .turnstile-wrap { margin-bottom: 20px; height: 58px; overflow: hidden; display: flex; align-items: flex-start; justify-content: center;}
             .cf-turnstile { transform: scale(0.88); transform-origin: top center; }
-            
             #login-submit { height: 50px; padding: 0; font-size: 1.05rem; margin-bottom: 0;}
-            
             .divider { margin: 18px 0; font-size: 0.75rem;}
-            
             .btn-social { height: 50px !important; margin-bottom: 12px; border-radius: 25px; padding: 0 15px;}
-            
             #custom-google-btn { height: 50px; }
             #custom-google-btn img { width: 20px; left: 16px;}
             #custom-google-btn .btn-text-main { font-size: 0.85rem; }
             #custom-google-btn .btn-text-sub { font-size: 0.7rem; }
-            
             #btn-harzafi-id { height: 50px; margin-bottom: 0; }
             #btn-harzafi-id img { height: 16px; }
             #btn-harzafi-id span { font-size: 0.85rem; }
             
-            /* Dashboard Mobile */
             .dash-actions { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
             .year-badge, .btn-logout { padding: 12px 20px; font-size: 1rem; width: 100%; justify-content: center;}
             .dash-main, .hours-card { padding: 25px 20px; border-radius: 24px;}
@@ -767,22 +827,24 @@
 
     <!-- Modale Mappe -->
     <div id="maps-modal" class="modal-overlay bottom-sheet">
-        <div class="modal-content" style="padding-top: 25px;">
-            <button class="close-btn" style="top: 15px;">&times;</button>
-            <h2 style="font-size: 1.4rem; margin-bottom: 20px; color: var(--text-dark); text-align:center; font-weight: 900;">Scegli un'app per aprire.</h2>
-            <div style="display: flex; justify-content: space-around; align-items: flex-start; margin-bottom: 10px;">
-                <a href="https://www.google.com/maps/search/?api=1&query=Corso+San+Maurizio,+8+-+10124+Torino" target="_blank" class="map-app-btn">
-                    <img src="https://i.ibb.co/LdwVFcNg/Google-Maps-icon-2026-svg.png" alt="Google Maps">
-                    <span>Google Maps</span>
-                </a>
-                <a href="http://maps.apple.com/?q=Corso+San+Maurizio+8+Torino" target="_blank" class="map-app-btn">
-                    <img src="https://i.ibb.co/Gff106ky/Apple-Maps-i-OS-26-icon.png" alt="Apple Mappe">
-                    <span>Apple Mappe</span>
-                </a>
-                <a href="https://waze.com/ul?q=Corso+San+Maurizio+8+Torino" target="_blank" class="map-app-btn">
-                    <img src="https://i.ibb.co/zTjqXx51/waze-app-icon-logo-brandlogos-net-l82da.png" alt="Waze">
-                    <span>Waze</span>
-                </a>
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <div class="bottom-sheet-body">
+                <h2 style="font-size: 1.4rem; margin-bottom: 25px; color: var(--text-dark); text-align:center; font-weight: 900;">Scegli un'app per aprire.</h2>
+                <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Corso+San+Maurizio,+8+-+10124+Torino" target="_blank" class="map-app-btn">
+                        <img src="https://i.ibb.co/LdwVFcNg/Google-Maps-icon-2026-svg.png" alt="Google Maps">
+                        <span>Google Maps</span>
+                    </a>
+                    <a href="http://maps.apple.com/?q=Corso+San+Maurizio+8+Torino" target="_blank" class="map-app-btn">
+                        <img src="https://i.ibb.co/Gff106ky/Apple-Maps-i-OS-26-icon.png" alt="Apple Mappe">
+                        <span>Apple Mappe</span>
+                    </a>
+                    <a href="https://waze.com/ul?q=Corso+San+Maurizio+8+Torino" target="_blank" class="map-app-btn">
+                        <img src="https://i.ibb.co/zTjqXx51/waze-app-icon-logo-brandlogos-net-l82da.png" alt="Waze">
+                        <span>Waze</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -790,7 +852,7 @@
     <!-- MODALE LOGIN (STILE APPLE ACCOUNT) -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
-            <button id="close-modal" class="close-btn">&times;</button>
+            <button id="close-modal" class="close-btn" style="background: #f1f5f9;">&times;</button>
             
             <div class="modal-logo-wrapper">
                 <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Harzafi Logo">
@@ -868,35 +930,6 @@
                 </form>
             </div>
 
-            <div id="forgot-view" class="fade-form">
-                <div id="student-forgot-form">
-                    <div class="input-group">
-                        <label class="input-label">Seleziona il tuo nome:</label>
-                        <div class="custom-select" id="forgot-cognome-select">
-                            <div class="custom-select-trigger"><span id="forgot-cognome-display">Seleziona lo studente</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 16px; color: var(--text-light);"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-                            <div class="custom-options" id="forgot-cognome-options"></div>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Inserisci il tuo codice fiscale:</label>
-                        <input type="text" id="cf-input" class="apple-input" placeholder="Codice Fiscale a 16 cifre" style="text-transform: uppercase;" maxlength="16">
-                        <div class="error-msg" id="forgot-error">Dati non trovati. Verifica l'inserimento.</div>
-                    </div>
-                    <button type="button" id="btn-verify-student" class="btn-gradient">VERIFICA DATI</button>
-                    <div class="result-box" id="forgot-result"></div>
-                </div>
-
-                <div id="teacher-forgot-msg" style="display:none; text-align:center; padding: 10px 0;">
-                    <svg viewBox="0 0 24 24" style="width:50px; fill:var(--primary); margin: 0 auto 15px; display:block;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-                    <h3 style="font-family: 'Inter', sans-serif; font-weight: 600; color: var(--text-gray); font-size: 1.05rem; line-height: 1.6; margin-bottom: 25px;">
-                        Per motivi di sicurezza, i docenti che hanno smarrito la password di accesso devono richiedere il reset via mail all'amministratore del sistema.
-                    </h3>
-                    <a href="mailto:s11205413d@studenti.itisavogadro.it" style="color: var(--primary); font-weight: 800; text-decoration: none; font-size: 1rem;">Invia Email a Adam Harzafi</a>
-                </div>
-
-                <button type="button" class="btn-text btn-back-login">Torna indietro</button>
-            </div>
-
             <div id="rules-view" class="fade-form">
                 <div style="background:#f0f9ff; border:1px solid #bae6fd; padding:15px; border-radius:12px; margin-bottom:20px;">
                     <p style="font-size:0.95rem; color:#0369a1; font-weight:600; text-align:justify; margin:0;">
@@ -916,28 +949,82 @@
 
     <!-- Modale Bottom Sheet per HARZAFI ID -->
     <div id="hid-modal" class="modal-overlay bottom-sheet">
-        <div class="modal-content" style="max-height: 95vh; padding-top: 40px; border-radius: 36px 36px 0 0; width:100%;">
-            <button id="hid-close-btn" class="close-btn" style="top: 15px;">&times;</button>
-            <div id="hid-scan-view">
-                <h2 style="font-size: 1.8rem; margin-bottom: 10px; color: var(--text-dark); text-align:center;">Pronto per la scansione.</h2>
-                <p style="margin-bottom: 35px; font-size: 1.05rem; font-weight: 500; color: var(--text-gray); text-align:center;">Tieni il telefono vicino all'ID Harzafi per effettuare la timbratura.</p>
-                <div style="display:flex; justify-content:center; margin-bottom: 30px;">
-                    <div style="width: 130px; height: 130px; border-radius: 50%; border: 6px solid #3b82f6; display: flex; justify-content: center; align-items: center; background: rgba(59, 130, 246, 0.05);">
-                        <img src="https://i.ibb.co/NndsvRXn/Progetto-senza-titolo-removebg-preview.png" alt="NFC" style="width: 130px;">
+        <div class="modal-content">
+            <button id="hid-close-btn" class="close-btn">&times;</button>
+            <div class="bottom-sheet-body">
+                <div id="hid-scan-view">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 10px; color: var(--text-dark); text-align:center; font-weight: 900;">Pronto per la scansione.</h2>
+                    <p style="margin-bottom: 35px; font-size: 1.05rem; font-weight: 500; color: var(--text-gray); text-align:center;">Tieni il telefono vicino all'ID Harzafi per effettuare la timbratura.</p>
+                    <div style="display:flex; justify-content:center; margin-bottom: 35px;">
+                        <div style="width: 130px; height: 130px; border-radius: 50%; border: 6px solid #3b82f6; display: flex; justify-content: center; align-items: center; background: rgba(59, 130, 246, 0.05); box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);">
+                            <img src="https://i.ibb.co/NndsvRXn/Progetto-senza-titolo-removebg-preview.png" alt="NFC" style="width: 130px;">
+                        </div>
                     </div>
+                    <a id="hid-open-manual" href="#" style="color: var(--primary); font-weight: 800; text-decoration: none; display: block; margin-bottom: 25px; text-align:center; transition: opacity 0.2s;">Non funziona? Inserisci L'HID</a>
+                    <button id="hid-cancel-btn" class="btn-premium" style="width: 100%; background: #f1f5f9; color: var(--text-dark);">Annulla</button>
                 </div>
-                <a id="hid-open-manual" href="#" style="color: var(--primary); font-weight: 800; text-decoration: none; display: block; margin-bottom: 25px; text-align:center; transition: opacity 0.2s;">Non funziona? Inserisci L'HID</a>
-                <button id="hid-cancel-btn" class="btn-premium" style="width: 100%; background: #e2e8f0; color: var(--text-dark);">Annullare</button>
+                <div id="hid-manual-view" style="display: none;">
+                    <h2 style="text-align: center; font-size: 1.6rem; margin-bottom: 10px; color: var(--text-dark); font-weight: 900;">Inserisci Harzafi ID</h2>
+                    <p style="text-align: center; margin-bottom: 25px; font-size: 1rem; font-weight: 500; color: var(--text-gray);">Digita il codice univoco a 24 cifre.</p>
+                    <div class="input-group">
+                        <input type="text" id="hid-input" class="apple-input" placeholder="XXXXXXXXXXXXXXXXXXXXXXXX" maxlength="24" style="text-align: center; letter-spacing: 2px;">
+                        <div class="error-msg" id="hid-error">HID non valido. Riprova.</div>
+                    </div>
+                    <button type="button" id="hid-submit-btn" class="btn-gradient">VERIFICA E ACCEDI</button>
+                    <button type="button" id="hid-back-btn" class="btn-text">← Torna alla scansione</button>
+                </div>
             </div>
-            <div id="hid-manual-view" style="display: none;">
-                <h2 style="text-align: center; font-size: 1.6rem; margin-bottom: 10px; color: var(--text-dark);">Inserisci Harzafi ID</h2>
-                <p style="text-align: center; margin-bottom: 25px; font-size: 1rem; font-weight: 500; color: var(--text-gray);">Digita il codice univoco a 24 cifre.</p>
-                <div class="input-group">
-                    <input type="text" id="hid-input" class="apple-input" placeholder="XXXXXXXXXXXXXXXXXXXXXXXX" maxlength="24" style="text-align: center; letter-spacing: 2px;">
-                    <div class="error-msg" id="hid-error">HID non valido. Riprova.</div>
+        </div>
+    </div>
+
+    <!-- MODALE BOTTOM SHEET PER RECUPERO PASSWORD (APPLE PAY SETUP STYLE) -->
+    <div id="forgot-sheet-modal" class="modal-overlay bottom-sheet">
+        <div class="modal-content">
+            <button id="forgot-sheet-close" class="close-btn" style="background: rgba(255,255,255,0.8);">&times;</button>
+            
+            <div id="student-forgot-form">
+                <!-- Box Superiore con Foto Galleggiante -->
+                <div class="recovery-hero">
+                    <img src="https://i.ibb.co/gb5LbmYR/TESSERA-SANITARIA.png" alt="Tessera Sanitaria" class="recovery-card-img">
                 </div>
-                <button type="button" id="hid-submit-btn" class="btn-gradient">VERIFICA E ACCEDI</button>
-                <button type="button" id="hid-back-btn" class="btn-text">← Torna alla scansione</button>
+
+                <div class="bottom-sheet-body">
+                    <h2 class="recovery-title">Verifica Identità</h2>
+                    <p class="recovery-subtitle">Abbiamo bisogno del tuo <strong>Codice Fiscale</strong> per assicurarci che sia davvero tu a richiedere l'accesso.</p>
+                    
+                    <div class="input-group">
+                        <div class="custom-select" id="forgot-cognome-select">
+                            <div class="custom-select-trigger">
+                                <span id="forgot-cognome-display">Seleziona lo studente</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 16px; color: var(--text-light);"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                            <div class="custom-options" id="forgot-cognome-options"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group" style="margin-bottom: 25px;">
+                        <input type="text" id="cf-input" class="apple-input" placeholder="INSERISCI CODICE FISCALE" style="text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; letter-spacing: 1px; font-weight: 800; text-align: center;" maxlength="16">
+                        <div class="error-msg" id="forgot-error">Codice Fiscale non valido o non associato.</div>
+                    </div>
+
+                    <button type="button" id="btn-verify-student" class="btn-gradient">VERIFICA ORA</button>
+                    
+                    <div class="result-banner" id="forgot-result"></div>
+                </div>
+            </div>
+
+            <!-- Vista per i Docenti -->
+            <div id="teacher-forgot-msg" style="display:none;">
+                <div class="bottom-sheet-body" style="padding-top: 50px;">
+                    <div style="background: #f0f9ff; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: inset 0 2px 5px rgba(2, 132, 199, 0.1);">
+                        <svg viewBox="0 0 24 24" style="width:40px; fill:var(--primary);"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                    </div>
+                    <h2 class="recovery-title">Accesso Protetto</h2>
+                    <p style="font-size: 1.05rem; font-weight: 500; color: var(--text-gray); text-align: center; margin-bottom: 30px; line-height: 1.6;">
+                        Per motivi di sicurezza, il reset password per il personale docente deve essere autorizzato direttamente dall'Amministrazione.
+                    </p>
+                    <a href="mailto:s11205413d@studenti.itisavogadro.it" class="btn-premium" style="width: 100%; height: 52px; font-size: 1.05rem; text-decoration: none;">Richiedi Assistenza</a>
+                </div>
             </div>
         </div>
     </div>
@@ -1041,7 +1128,7 @@
             }, 1000);
         })();
 
-        // Animazioni super-performanti tramite IntersectionObserver
+        // Animazioni super-performanti
         document.addEventListener("DOMContentLoaded", function() {
             const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
             const observer = new IntersectionObserver((entries, observer) => {
@@ -1052,14 +1139,12 @@
                     }
                 });
             }, observerOptions);
-
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
 
-        // LOGICA NAVBAR SCROLL EFFECT
+        // NAVBAR SCROLL EFFECT
         const navbar = document.querySelector('.navbar-wrapper');
         let isScrolled = false;
-        
         window.addEventListener('scroll', () => {
             const shouldBeScrolled = window.scrollY > 40;
             if (shouldBeScrolled !== isScrolled) {
@@ -1106,8 +1191,10 @@
 
             const loginModal = document.getElementById('login-modal');
             const mapsModal = document.getElementById('maps-modal');
+            const forgotSheetModal = document.getElementById('forgot-sheet-modal');
+            const hidModal = document.getElementById('hid-modal');
             
-            // Apertura Modale Login
+            // Aperture Modali
             document.querySelectorAll('.btn-open-login').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1116,16 +1203,30 @@
                 });
             });
 
-            // Apertura Modale Mappe
             document.getElementById('btn-open-maps').addEventListener('click', (e) => {
                 e.preventDefault();
                 mapsModal.classList.add('active');
+            });
+
+            document.getElementById('btn-forgot-pass').addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.classList.remove('active'); 
+                forgotSheetModal.classList.add('active');
+                setupForgotView();
             });
 
             // Chiusura Modali globale
             document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => { 
                 btn.closest('.modal-overlay').classList.remove('active'); 
             }));
+            
+            document.getElementById('forgot-sheet-close').addEventListener('click', () => {
+                forgotSheetModal.classList.remove('active');
+                document.getElementById('cf-input').value = '';
+                document.getElementById('forgot-result').style.display = 'none';
+                document.getElementById('btn-verify-student').style.display = 'block';
+                resetDropdownDisplay('forgot-cognome-display', 'Seleziona lo studente');
+            });
 
             function checkLockoutState() {
                 const lockoutUntil = localStorage.getItem('pcto_lockout_until');
@@ -1197,6 +1298,7 @@
             function resetDropdownDisplay(id, testo) {
                 document.getElementById(id).textContent = testo; document.getElementById(id).parentElement.classList.remove('selected');
                 if(id === 'username-display') { selectedUserValue = ""; selectedUserEmail = ""; hiddenUsernameInput.value = ""; }
+                if(id === 'forgot-cognome-display') { selectedForgotUser = null; }
             }
 
             populateUserDropdown('studente'); populateForgotDropdown();
@@ -1209,28 +1311,35 @@
             const segBtns = document.querySelectorAll('#role-control .seg-btn');
             const segSlider = document.getElementById('role-slider');
             const loginView = document.getElementById('login-view');
-            const forgotView = document.getElementById('forgot-view');
             const rulesView = document.getElementById('rules-view');
 
             segBtns.forEach((btn, index) => btn.addEventListener('click', (e) => {
                 segBtns.forEach(b => b.classList.remove('active')); e.target.classList.add('active');
                 selectedRole = e.target.dataset.role; segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
-                populateUserDropdown(selectedRole); if(forgotView.style.display === 'block') setupForgotView();
+                populateUserDropdown(selectedRole); 
                 document.getElementById('google-login-error').style.display = 'none';
             }));
 
             document.getElementById('btn-rules-banner').addEventListener('click', () => { loginView.style.display = 'none'; rulesView.style.display = 'block'; });
-            document.getElementById('btn-forgot-pass').addEventListener('click', (e) => { e.preventDefault(); loginView.style.display = 'none'; forgotView.style.display = 'block'; setupForgotView(); });
             
-            document.querySelectorAll('.btn-back-login').forEach(btn => btn.addEventListener('click', () => { 
-                forgotView.style.display = 'none'; rulesView.style.display = 'none'; loginView.style.display = 'block'; 
-                document.getElementById('hid-modal').classList.remove('active'); 
-            }));
+            document.querySelectorAll('.btn-back-login').forEach(btn => {
+                btn.addEventListener('click', () => { 
+                    rulesView.style.display = 'none'; loginView.style.display = 'block'; 
+                    hidModal.classList.remove('active'); 
+                });
+            });
 
             function setupForgotView() {
-                document.getElementById('forgot-error').style.display = 'none'; document.getElementById('forgot-result').style.display = 'none';
-                if(selectedRole === 'studente') { document.getElementById('student-forgot-form').style.display = 'block'; document.getElementById('teacher-forgot-msg').style.display = 'none'; }
-                else { document.getElementById('student-forgot-form').style.display = 'none'; document.getElementById('teacher-forgot-msg').style.display = 'block'; }
+                document.getElementById('forgot-error').style.display = 'none'; 
+                document.getElementById('forgot-result').style.display = 'none';
+                document.getElementById('btn-verify-student').style.display = 'block';
+                if(selectedRole === 'studente') { 
+                    document.getElementById('student-forgot-form').style.display = 'block'; 
+                    document.getElementById('teacher-forgot-msg').style.display = 'none'; 
+                } else { 
+                    document.getElementById('student-forgot-form').style.display = 'none'; 
+                    document.getElementById('teacher-forgot-msg').style.display = 'block'; 
+                }
             }
 
             const togglePasswordBtn = document.getElementById('toggle-password');
@@ -1252,21 +1361,50 @@
             passInput.addEventListener('copy', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
             passInput.addEventListener('paste', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
 
+            // LOGICA RECUPERO PASSWORD (MIGLIORATA VISIVAMENTE)
             document.getElementById('btn-verify-student').addEventListener('click', () => {
                 if (document.activeElement) document.activeElement.blur();
                 const cfInputVal = document.getElementById('cf-input').value.trim().toUpperCase();
                 const btnReset = document.getElementById('btn-verify-student');
                 const forgotErrorObj = document.getElementById('forgot-error');
                 const forgotResult = document.getElementById('forgot-result');
-                if(!selectedForgotUser || !cfInputVal) { forgotErrorObj.innerText = "Seleziona uno studente e inserisci il Codice Fiscale."; forgotErrorObj.style.display = 'block'; return; }
+                
+                if(!selectedForgotUser || !cfInputVal) { 
+                    forgotErrorObj.innerText = "Seleziona uno studente e compila il campo."; 
+                    forgotErrorObj.style.display = 'block'; return; 
+                }
+                
                 if(selectedForgotUser.cf === cfInputVal) {
-                    forgotErrorObj.style.display = 'none'; btnReset.innerText = "INVIO EMAIL IN CORSO..."; btnReset.disabled = true;
+                    forgotErrorObj.style.display = 'none'; 
+                    btnReset.innerText = "ATTENDERE..."; btnReset.disabled = true;
+                    
                     db.collection("studenti").where("cf", "==", cfInputVal).get().then((snap) => {
                         if (!snap.empty && snap.docs[0].data().email) {
-                            auth.sendPasswordResetEmail(snap.docs[0].data().email).then(() => { forgotResult.innerHTML = `✅ <b>Verifica superata!</b><br><br>Ti abbiamo inviato un'email all'indirizzo associato al tuo profilo con il link per impostare una nuova password sicura.`; forgotResult.style.display = 'block'; btnReset.innerText = "VERIFICA DATI"; btnReset.disabled = false; }).catch(() => { forgotErrorObj.innerText = "Errore nell'invio dell'email. Riprova più tardi."; forgotErrorObj.style.display = 'block'; btnReset.innerText = "VERIFICA DATI"; btnReset.disabled = false; });
-                        } else { forgotErrorObj.innerText = "Nessuna email trovata per questo studente nel database."; forgotErrorObj.style.display = 'block'; btnReset.disabled = false; btnReset.innerText = "VERIFICA DATI"; }
+                            auth.sendPasswordResetEmail(snap.docs[0].data().email).then(() => { 
+                                btnReset.style.display = 'none'; // Nasconde bottone dopo successo
+                                forgotResult.innerHTML = `
+                                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg><br>
+                                    Tutto confermato.<br><span style="font-weight:500; font-size:0.85rem; color:#0f766e;">Abbiamo inviato le istruzioni all'indirizzo email associato al tuo account.</span>
+                                `; 
+                                forgotResult.style.display = 'block'; 
+                                btnReset.innerText = "VERIFICA ORA"; btnReset.disabled = false; 
+                            }).catch(() => { 
+                                forgotErrorObj.innerText = "Impossibile contattare il server email."; 
+                                forgotErrorObj.style.display = 'block'; 
+                                btnReset.innerText = "RIPROVA"; btnReset.disabled = false; 
+                            });
+                        } else { 
+                            forgotErrorObj.innerText = "Account non trovato o email assente."; 
+                            forgotErrorObj.style.display = 'block'; 
+                            btnReset.disabled = false; btnReset.innerText = "VERIFICA ORA"; 
+                        }
                     });
-                } else { forgotResult.style.display = 'none'; forgotErrorObj.innerText = "Il Codice Fiscale inserito non è corretto. Riprova."; forgotErrorObj.style.display = 'block'; forgotErrorObj.style.animation = 'none'; void forgotErrorObj.offsetWidth; forgotErrorObj.style.animation = 'shake 0.4s'; }
+                } else { 
+                    forgotResult.style.display = 'none'; 
+                    forgotErrorObj.innerText = "Codice Fiscale non associato. Riprova."; 
+                    forgotErrorObj.style.display = 'block'; 
+                    forgotErrorObj.style.animation = 'none'; void forgotErrorObj.offsetWidth; forgotErrorObj.style.animation = 'shake 0.4s'; 
+                }
             });
 
             async function checkVPN() {
@@ -1302,6 +1440,7 @@
                     errorMsg.style.animation = 'none';
                     void errorMsg.offsetWidth; 
                     errorMsg.style.animation = 'shake 0.4s';
+                    submitBtn.innerText = "ENTRA"; submitBtn.disabled = false;
                     return;
                 }
 
@@ -1334,7 +1473,6 @@
                 if (document.activeElement) document.activeElement.blur();
                 const originalGoogleBtn = googleBtn.innerHTML;
 
-                // Animazione di caricamento veloce e pulita (Cerchio Apple Style)
                 googleBtn.innerHTML = `
                     <div class="btn-loader">
                         <div class="btn-spinner"></div>
@@ -1365,7 +1503,6 @@
                 }).catch(() => { googleErrorMsg.innerText = "Accesso annullato. Riprova."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; });
             });
 
-            const hidModal = document.getElementById('hid-modal');
             const HID_VALIDO = "849382019483720184758392";
             document.getElementById('btn-harzafi-id').addEventListener('click', () => { hidModal.classList.add('active'); if (document.activeElement) document.activeElement.blur(); });
             document.getElementById('hid-close-btn').addEventListener('click', () => { hidModal.classList.remove('active'); });
@@ -1398,7 +1535,6 @@
                 const landing = document.getElementById('landing-view'); 
                 const dash = document.getElementById('app-dashboard');
                 
-                // Forza reset visivo Navbar e Scorrimento top
                 isScrolled = false; 
                 navbar.classList.remove('scrolled'); 
                 landing.style.opacity = '0'; 
@@ -1471,7 +1607,6 @@
                             container.insertAdjacentHTML('beforeend', itemHTML);
                         });
 
-                        // Riapplica l'osservazione sui nuovi elementi aggiunti
                         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
                         const tlObserver = new IntersectionObserver((entries, obs) => {
                             entries.forEach(entry => {
