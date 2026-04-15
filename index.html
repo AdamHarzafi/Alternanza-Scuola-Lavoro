@@ -231,7 +231,7 @@
         .bento-card p { color: var(--text-gray); font-weight: 500; }
         .bento-card.large p { color: #94a3b8; font-weight: 500; } 
 
-        /* === MODALI E BOTTOM SHEETS RISCRITTI (ZERO CRASH/ZERO VUOTI) === */
+        /* === MODALI E BOTTOM SHEETS === */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%); z-index: 99999; display: flex; align-items: center; justify-content: center;
@@ -255,7 +255,7 @@
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
         .modal-content::-webkit-scrollbar { width: 0; } 
 
-        /* Bottom Sheet (Maps, Harzafi ID, Recupero Password) */
+        /* Bottom Sheet */
         .modal-overlay.bottom-sheet { 
             align-items: flex-end; 
             padding: 0; 
@@ -272,7 +272,7 @@
             max-height: 92vh; 
             box-shadow: 0 -15px 40px rgba(0,0,0,0.15);
             transition: transform 0.4s var(--apple-smooth);
-            display: block; /* EVITA BUG DI SAFARI CHE FACEVA SCOMPARIRE TUTTO */
+            display: block; 
             overflow-y: auto; 
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
@@ -283,7 +283,7 @@
         }
 
         .bottom-sheet-body {
-            padding: 25px 25px calc(30px + env(safe-area-inset-bottom, 0px)); /* Padding sicuro dinamico */
+            padding: 25px 25px calc(30px + env(safe-area-inset-bottom, 0px)); 
             width: 100%;
         }
 
@@ -362,8 +362,6 @@
         .privacy-disclaimer a { color: var(--primary); text-decoration: none; font-weight: 700; transition: text-decoration 0.2s;}
         .privacy-disclaimer a:hover { text-decoration: underline; }
 
-        .turnstile-wrap { margin-bottom: 15px; display: flex; justify-content: center; height: 65px; }
-
         .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none; font-weight: 700; text-align: center; animation: shake 0.4s; }
         .attempts-msg { color: var(--warning); font-size: 0.85rem; margin-top: 8px; display: none; font-weight: 800; text-align: center; }
 
@@ -400,7 +398,7 @@
         .rules-list { list-style: none; margin-bottom: 24px; padding: 0; }
         .rules-list li { padding: 14px 16px; background: #f8fafc; border-left: 4px solid var(--primary); border-radius: 12px; margin-bottom: 10px; font-weight: 700; color: var(--text-dark); font-size: 0.9rem; display: flex; align-items: center; gap: 12px; transition: transform 0.3s var(--apple-ease), background 0.3s;}
 
-        /* --- STILI RECUPERO PASSWORD (OTTIMIZZATI) --- */
+        /* --- STILI RECUPERO PASSWORD --- */
         .recovery-hero {
             position: relative;
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
@@ -609,7 +607,7 @@
             .col-info h4 { justify-content: center; }
         }
         
-        /* FIX MEDIA QUERY SMARTPHONE - ZERO SPAZIO VUOTO SOTTO I BOTTOM SHEETS */
+        /* FIX MEDIA QUERY SMARTPHONE */
         @media (max-width: 600px) {
             .navbar-wrapper { width: 92%; padding: 12px 18px; top: 15px;}
             .navbar-wrapper.scrolled { width: 100%; padding: 15px 20px; top: 0;}
@@ -623,22 +621,30 @@
             .bento-card p { font-size: 1.05rem; } 
             .bento-card h3 { font-size: 1.5rem; }
             
-            /* Login a tutto schermo */
             .modal-overlay:not(.bottom-sheet) { padding: 0; }
             .modal-overlay:not(.bottom-sheet) .modal-content { 
-                padding: 60px 24px 24px; 
+                /* Calcola lo spazio in alto considerando la safe-area dell'iPhone o del browser */
+                padding: calc(60px + env(safe-area-inset-top, 0px)) 24px 24px; 
                 border-radius: 0; 
                 width: 100%; 
-                height: 100vh; 
+                /* Usa la Dynamic Viewport Height (dvh) per adattarsi alla barra degli indirizzi mobile */
+                height: 100%; 
+                height: 100dvh; 
                 max-width: 100%; 
-                max-height: 100vh; 
+                max-height: 100%; 
+                max-height: 100dvh; 
             }
 
-            /* Bottom Sheet adattata allo smartphone per avvolgere il contenuto senza creare vuoti */
-            .bottom-sheet-body {
-                padding: 25px 20px calc(25px + env(safe-area-inset-bottom, 0px)); 
+            .close-btn { 
+                /* Abbassa dinamicamente la X se c'è una tacca o una barra del browser */
+                top: calc(15px + env(safe-area-inset-top, 0px)); 
+                right: 15px; 
+                width: 40px; 
+                height: 40px; 
+                font-size: 22px; 
             }
-            
+
+            .bottom-sheet-body { padding: 25px 20px calc(25px + env(safe-area-inset-bottom, 0px)); }
             .recovery-hero { padding: 40px 20px 25px; }
             .recovery-card-img { max-width: 200px; }
             .recovery-title { font-size: 1.5rem; }
@@ -654,8 +660,7 @@
             .apple-input, .custom-select-trigger { height: 50px; font-size: 1rem; border-radius: 14px; padding: 0 16px;}
             .toggle-password-btn { width: 40px; height: 40px; right: 5px;}
             .toggle-password-btn svg { width: 20px; height: 20px; }
-            .turnstile-wrap { margin-bottom: 20px; height: 58px; overflow: hidden; display: flex; align-items: flex-start; justify-content: center;}
-            .cf-turnstile { transform: scale(0.88); transform-origin: top center; }
+            
             #login-submit { height: 50px; padding: 0; font-size: 1.05rem; margin-bottom: 0;}
             .divider { margin: 18px 0; font-size: 0.75rem;}
             .btn-social { height: 50px !important; margin-bottom: 12px; border-radius: 25px; padding: 0 15px;}
@@ -849,7 +854,7 @@
         </div>
     </div>
 
-    <!-- MODALE LOGIN (STILE APPLE ACCOUNT) -->
+    <!-- MODALE LOGIN -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
             <button id="close-modal" class="close-btn" style="background: #f1f5f9;">&times;</button>
@@ -871,6 +876,9 @@
                 <div class="login-rules-banner" id="btn-rules-banner">
                     Leggi le regole di accesso dal 01/10/2021
                 </div>
+
+                <!-- CLOUDFLARE TURNSTILE INVISIBILE (Callback logic) -->
+                <div id="cf-turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAC6Galn1mtnng7_P" data-size="invisible" data-execution="execute" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError"></div>
 
                 <form id="login-form" target="dummyframe" action="about:blank" method="POST">
                     <div class="input-group">
@@ -904,10 +912,6 @@
                     <div class="privacy-disclaimer">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                         Le informazioni del tuo Account Harzafi vengono utilizzate per permetterti di accedere al tuo account e ai tuoi dati in modo sicuro. Il sistema registra alcuni dati ai fini di sicurezza, assistenza e rendicontazione. Se accetti, l'Istituto può utilizzare le informazioni sul tuo Account anche per inviarti e-mail e comunicazioni scolastiche, in base all’utilizzo che fai dei servizi. <a href="privacy.html" target="_blank">Scopri come vengono gestiti i tuoi dati...</a>
-                    </div>
-
-                    <div class="turnstile-wrap">
-                        <div class="cf-turnstile" data-sitekey="0x4AAAAAAC6Galn1mtnng7_P" data-theme="light"></div>
                     </div>
 
                     <button type="submit" id="login-submit" class="btn-gradient">ENTRA</button>
@@ -977,13 +981,12 @@
         </div>
     </div>
 
-    <!-- MODALE BOTTOM SHEET PER RECUPERO PASSWORD (APPLE PAY SETUP STYLE) -->
+    <!-- MODALE BOTTOM SHEET PER RECUPERO PASSWORD -->
     <div id="forgot-sheet-modal" class="modal-overlay bottom-sheet">
         <div class="modal-content">
             <button id="forgot-sheet-close" class="close-btn" style="background: rgba(255,255,255,0.8);">&times;</button>
             
             <div id="student-forgot-form">
-                <!-- Box Superiore con Foto Galleggiante -->
                 <div class="recovery-hero">
                     <img src="https://i.ibb.co/gb5LbmYR/TESSERA-SANITARIA.png" alt="Tessera Sanitaria" class="recovery-card-img">
                 </div>
@@ -1106,6 +1109,24 @@
         </div>
     </div>
 
+    <!-- SCRIPT CLOUDFLARE TURNSTILE (CALLBACKS GLOBALI) -->
+    <script>
+        window.globalTurnstileToken = "";
+        window.isWaitingForToken = false;
+        
+        window.onTurnstileSuccess = function(token) {
+            window.globalTurnstileToken = token;
+            if (window.isWaitingForToken) {
+                window.isWaitingForToken = false;
+                if(typeof window.eseguiAccessoServer === 'function') {
+                    window.eseguiAccessoServer();
+                }
+            }
+        };
+        window.onTurnstileExpired = function() { window.globalTurnstileToken = ""; };
+        window.onTurnstileError = function() { window.globalTurnstileToken = ""; window.isWaitingForToken = false; };
+    </script>
+
     <script>
         // SCRIPT PROTEZIONE (ANTI-F12)
         (function() {
@@ -1128,7 +1149,7 @@
             }, 1000);
         })();
 
-        // Animazioni super-performanti
+        // Animazioni
         document.addEventListener("DOMContentLoaded", function() {
             const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
             const observer = new IntersectionObserver((entries, observer) => {
@@ -1142,7 +1163,6 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
 
-        // NAVBAR SCROLL EFFECT
         const navbar = document.querySelector('.navbar-wrapper');
         let isScrolled = false;
         window.addEventListener('scroll', () => {
@@ -1154,7 +1174,6 @@
             }
         }, { passive: true });
 
-        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1169,6 +1188,34 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+
+            // --- BLOCCO SCROLL SFONDO GLOBALE (PC E MOBILE) SENZA "SALTI" DI LAYOUT ---
+            const modalObserver = new MutationObserver(() => {
+                const isAnyModalOpen = document.querySelectorAll('.modal-overlay.active').length > 0;
+                
+                if (isAnyModalOpen) {
+                    // 1. Calcola lo spessore della scrollbar su PC (su mobile di solito è 0)
+                    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+                    
+                    // 2. Blocca lo scorrimento
+                    document.body.style.overflow = 'hidden';
+                    
+                    // 3. Aggiunge un padding pari alla scrollbar per evitare che il sito si sposti
+                    document.body.style.paddingRight = `${scrollbarWidth}px`;
+                    
+                } else {
+                    // Ripristina tutto alla normalità quando si chiude la X
+                    document.body.style.overflow = '';
+                    document.body.style.paddingRight = '';
+                }
+            });
+
+            // Applica il "sorvegliante" a tutte le modali presenti e future
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modalObserver.observe(modal, { attributes: true, attributeFilter: ['class'] });
+            });
+            // --------------------------------------------------------------------------
+
             const finalHoursValue = "113.30";
             let selectedRole = 'studente'; 
             let selectedUserValue = "";
@@ -1194,31 +1241,20 @@
             const forgotSheetModal = document.getElementById('forgot-sheet-modal');
             const hidModal = document.getElementById('hid-modal');
             
-            // Aperture Modali
             document.querySelectorAll('.btn-open-login').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     loginModal.classList.add('active'); 
                     checkLockoutState(); 
+                    
+                    window.globalTurnstileToken = "";
+                    if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
                 });
             });
 
-            document.getElementById('btn-open-maps').addEventListener('click', (e) => {
-                e.preventDefault();
-                mapsModal.classList.add('active');
-            });
-
-            document.getElementById('btn-forgot-pass').addEventListener('click', (e) => {
-                e.preventDefault();
-                loginModal.classList.remove('active'); 
-                forgotSheetModal.classList.add('active');
-                setupForgotView();
-            });
-
-            // Chiusura Modali globale
-            document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => { 
-                btn.closest('.modal-overlay').classList.remove('active'); 
-            }));
+            document.getElementById('btn-open-maps').addEventListener('click', (e) => { e.preventDefault(); mapsModal.classList.add('active'); });
+            document.getElementById('btn-forgot-pass').addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.remove('active'); forgotSheetModal.classList.add('active'); setupForgotView(); });
+            document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => { btn.closest('.modal-overlay').classList.remove('active'); }));
             
             document.getElementById('forgot-sheet-close').addEventListener('click', () => {
                 forgotSheetModal.classList.remove('active');
@@ -1321,25 +1357,16 @@
             }));
 
             document.getElementById('btn-rules-banner').addEventListener('click', () => { loginView.style.display = 'none'; rulesView.style.display = 'block'; });
-            
             document.querySelectorAll('.btn-back-login').forEach(btn => {
-                btn.addEventListener('click', () => { 
-                    rulesView.style.display = 'none'; loginView.style.display = 'block'; 
-                    hidModal.classList.remove('active'); 
-                });
+                btn.addEventListener('click', () => { rulesView.style.display = 'none'; loginView.style.display = 'block'; hidModal.classList.remove('active'); });
             });
 
             function setupForgotView() {
                 document.getElementById('forgot-error').style.display = 'none'; 
                 document.getElementById('forgot-result').style.display = 'none';
                 document.getElementById('btn-verify-student').style.display = 'block';
-                if(selectedRole === 'studente') { 
-                    document.getElementById('student-forgot-form').style.display = 'block'; 
-                    document.getElementById('teacher-forgot-msg').style.display = 'none'; 
-                } else { 
-                    document.getElementById('student-forgot-form').style.display = 'none'; 
-                    document.getElementById('teacher-forgot-msg').style.display = 'block'; 
-                }
+                if(selectedRole === 'studente') { document.getElementById('student-forgot-form').style.display = 'block'; document.getElementById('teacher-forgot-msg').style.display = 'none'; } 
+                else { document.getElementById('student-forgot-form').style.display = 'none'; document.getElementById('teacher-forgot-msg').style.display = 'block'; }
             }
 
             const togglePasswordBtn = document.getElementById('toggle-password');
@@ -1361,7 +1388,6 @@
             passInput.addEventListener('copy', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
             passInput.addEventListener('paste', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
 
-            // LOGICA RECUPERO PASSWORD (MIGLIORATA VISIVAMENTE)
             document.getElementById('btn-verify-student').addEventListener('click', () => {
                 if (document.activeElement) document.activeElement.blur();
                 const cfInputVal = document.getElementById('cf-input').value.trim().toUpperCase();
@@ -1369,42 +1395,19 @@
                 const forgotErrorObj = document.getElementById('forgot-error');
                 const forgotResult = document.getElementById('forgot-result');
                 
-                if(!selectedForgotUser || !cfInputVal) { 
-                    forgotErrorObj.innerText = "Seleziona uno studente e compila il campo."; 
-                    forgotErrorObj.style.display = 'block'; return; 
-                }
-                
+                if(!selectedForgotUser || !cfInputVal) { forgotErrorObj.innerText = "Seleziona uno studente e compila il campo."; forgotErrorObj.style.display = 'block'; return; }
                 if(selectedForgotUser.cf === cfInputVal) {
-                    forgotErrorObj.style.display = 'none'; 
-                    btnReset.innerText = "ATTENDERE..."; btnReset.disabled = true;
-                    
+                    forgotErrorObj.style.display = 'none'; btnReset.innerText = "ATTENDERE..."; btnReset.disabled = true;
                     db.collection("studenti").where("cf", "==", cfInputVal).get().then((snap) => {
                         if (!snap.empty && snap.docs[0].data().email) {
                             auth.sendPasswordResetEmail(snap.docs[0].data().email).then(() => { 
-                                btnReset.style.display = 'none'; // Nasconde bottone dopo successo
-                                forgotResult.innerHTML = `
-                                    <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg><br>
-                                    Tutto confermato.<br><span style="font-weight:500; font-size:0.85rem; color:#0f766e;">Abbiamo inviato le istruzioni all'indirizzo email associato al tuo account.</span>
-                                `; 
-                                forgotResult.style.display = 'block'; 
-                                btnReset.innerText = "VERIFICA ORA"; btnReset.disabled = false; 
-                            }).catch(() => { 
-                                forgotErrorObj.innerText = "Impossibile contattare il server email."; 
-                                forgotErrorObj.style.display = 'block'; 
-                                btnReset.innerText = "RIPROVA"; btnReset.disabled = false; 
-                            });
-                        } else { 
-                            forgotErrorObj.innerText = "Account non trovato o email assente."; 
-                            forgotErrorObj.style.display = 'block'; 
-                            btnReset.disabled = false; btnReset.innerText = "VERIFICA ORA"; 
-                        }
+                                btnReset.style.display = 'none';
+                                forgotResult.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg><br>Tutto confermato.<br><span style="font-weight:500; font-size:0.85rem; color:#0f766e;">Abbiamo inviato le istruzioni all'indirizzo email associato al tuo account.</span>`; 
+                                forgotResult.style.display = 'block'; btnReset.innerText = "VERIFICA ORA"; btnReset.disabled = false; 
+                            }).catch(() => { forgotErrorObj.innerText = "Impossibile contattare il server email."; forgotErrorObj.style.display = 'block'; btnReset.innerText = "RIPROVA"; btnReset.disabled = false; });
+                        } else { forgotErrorObj.innerText = "Account non trovato o email assente."; forgotErrorObj.style.display = 'block'; btnReset.disabled = false; btnReset.innerText = "VERIFICA ORA"; }
                     });
-                } else { 
-                    forgotResult.style.display = 'none'; 
-                    forgotErrorObj.innerText = "Codice Fiscale non associato. Riprova."; 
-                    forgotErrorObj.style.display = 'block'; 
-                    forgotErrorObj.style.animation = 'none'; void forgotErrorObj.offsetWidth; forgotErrorObj.style.animation = 'shake 0.4s'; 
-                }
+                } else { forgotResult.style.display = 'none'; forgotErrorObj.innerText = "Codice Fiscale non associato. Riprova."; forgotErrorObj.style.display = 'block'; forgotErrorObj.style.animation = 'none'; void forgotErrorObj.offsetWidth; forgotErrorObj.style.animation = 'shake 0.4s'; }
             });
 
             async function checkVPN() {
@@ -1412,14 +1415,35 @@
                     const res = await fetch('https://ipapi.co/json/');
                     const data = await res.json();
                     const org = (data.org || "").toLowerCase();
-                    if (org.includes('vpn') || org.includes('hosting') || org.includes('cloud') || org.includes('datacenter')) {
-                        return true;
-                    }
+                    if (org.includes('vpn') || org.includes('hosting') || org.includes('cloud') || org.includes('datacenter')) { return true; }
                     return false;
-                } catch (e) {
-                    return false; 
-                }
+                } catch (e) { return false; }
             }
+
+            // FUNZIONE DI LOGIN (CHIAMATA AUTOMATICAMENTE DAL CALLBACK SE NECESSARIO)
+            window.eseguiAccessoServer = function() {
+                const pass = passInput.value.trim(); 
+                const uName = hiddenUsernameInput.value.trim();
+                
+                submitBtn.innerText = "VERIFICA IN CORSO...";
+                
+                auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
+                    if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: uName, email_utente: selectedUserEmail, orario_accesso: new Date().toLocaleString('it-IT') }); }
+                    localStorage.removeItem('pcto_failed_attempts'); localStorage.removeItem('pcto_lockout_until');
+                    submitBtn.innerText = "ENTRA";
+                    submitBtn.disabled = false;
+                    entraNelPortale(uName);
+                }).catch(() => {
+                    submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
+                    
+                    window.globalTurnstileToken = "";
+                    if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
+
+                    let attempts = parseInt(localStorage.getItem('pcto_failed_attempts') || '0') + 1; localStorage.setItem('pcto_failed_attempts', attempts);
+                    if (attempts >= MAX_ATTEMPTS) { const lockoutUntil = Date.now() + LOCKOUT_DURATION; localStorage.setItem('pcto_lockout_until', lockoutUntil); startLockoutCountdown(lockoutUntil); }
+                    else { const rem = MAX_ATTEMPTS - attempts; errorMsg.innerText = "Credenziali errate. Riprova."; errorMsg.style.display = 'block'; attemptsMsgObj.innerText = rem === 1 ? 'Ti rimane 1 ultimo tentativo.' : `Ti rimangono ${rem} tentativi.`; attemptsMsgObj.style.display = 'block'; errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s'; }
+                });
+            };
 
             document.getElementById('login-form').addEventListener('submit', async (e) => {
                 e.preventDefault(); 
@@ -1431,18 +1455,8 @@
                 if (!uName || !selectedUserEmail) { errorMsg.innerText = "Seleziona prima un utente dalla lista."; errorMsg.style.display = 'block'; return; }
                 if (!pass) { errorMsg.innerText = "Il campo password è obbligatorio."; errorMsg.style.display = 'block'; return; }
 
+                errorMsg.style.display = 'none';
                 submitBtn.innerText = "VERIFICA SICUREZZA..."; submitBtn.disabled = true;
-
-                const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]').value;
-                if (!turnstileResponse) {
-                    errorMsg.innerText = "Per favore, completa la verifica di sicurezza.";
-                    errorMsg.style.display = 'block';
-                    errorMsg.style.animation = 'none';
-                    void errorMsg.offsetWidth; 
-                    errorMsg.style.animation = 'shake 0.4s';
-                    submitBtn.innerText = "ENTRA"; submitBtn.disabled = false;
-                    return;
-                }
 
                 const isVpn = await checkVPN();
                 if (isVpn) {
@@ -1452,18 +1466,19 @@
                     return;
                 }
                 
-                submitBtn.innerText = "VERIFICA IN CORSO...";
-                
-                auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
-                    if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: uName, email_utente: selectedUserEmail, orario_accesso: new Date().toLocaleString('it-IT') }); }
-                    localStorage.removeItem('pcto_failed_attempts'); localStorage.removeItem('pcto_lockout_until');
-                    entraNelPortale(uName);
-                }).catch(() => {
-                    submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
-                    let attempts = parseInt(localStorage.getItem('pcto_failed_attempts') || '0') + 1; localStorage.setItem('pcto_failed_attempts', attempts);
-                    if (attempts >= MAX_ATTEMPTS) { const lockoutUntil = Date.now() + LOCKOUT_DURATION; localStorage.setItem('pcto_lockout_until', lockoutUntil); startLockoutCountdown(lockoutUntil); }
-                    else { const rem = MAX_ATTEMPTS - attempts; errorMsg.innerText = "Credenziali errate. Riprova."; errorMsg.style.display = 'block'; attemptsMsgObj.innerText = rem === 1 ? 'Ti rimane 1 ultimo tentativo.' : `Ti rimangono ${rem} tentativi.`; attemptsMsgObj.style.display = 'block'; errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s'; }
-                });
+                // SISTEMA INTELLIGENTE DI INVIO CON TURNSTILE
+                if (window.globalTurnstileToken) {
+                    window.eseguiAccessoServer();
+                } else {
+                    window.isWaitingForToken = true;
+                    if (typeof turnstile !== 'undefined') {
+                        try { turnstile.execute(); } catch(err) {}
+                    } else {
+                        errorMsg.innerText = "Errore di connessione a Cloudflare. Ricarica la pagina.";
+                        errorMsg.style.display = 'block';
+                        submitBtn.innerText = "ENTRA"; submitBtn.disabled = false;
+                    }
+                }
             });
 
             const googleBtn = document.getElementById('custom-google-btn');
@@ -1473,33 +1488,19 @@
                 if (document.activeElement) document.activeElement.blur();
                 const originalGoogleBtn = googleBtn.innerHTML;
 
-                googleBtn.innerHTML = `
-                    <div class="btn-loader">
-                        <div class="btn-spinner"></div>
-                        <span class="btn-text-main" style="margin-left: 5px;">CARICO...</span>
-                    </div>
-                `; 
-                googleBtn.disabled = true; 
-                googleErrorMsg.style.display = 'none';
+                googleBtn.innerHTML = `<div class="btn-loader"><div class="btn-spinner"></div><span class="btn-text-main" style="margin-left: 5px;">CARICO...</span></div>`; 
+                googleBtn.disabled = true; googleErrorMsg.style.display = 'none';
                 
                 const isVpn = await checkVPN();
-                if (isVpn) {
-                    googleErrorMsg.innerText = "Disattivare la VPN per continuare.";
-                    googleErrorMsg.style.display = 'block';
-                    googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false;
-                    return;
-                }
-
+                if (isVpn) { googleErrorMsg.innerText = "Disattivare la VPN per continuare."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
                 if(typeof auth === 'undefined') { googleErrorMsg.innerText = "Firebase assente."; googleErrorMsg.style.display = 'block'; return; }
                 
                 auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((result) => {
                     const email = result.user.email.toLowerCase();
                     if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
                         if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: result.user.displayName, email_utente: email, orario_accesso: new Date().toLocaleString('it-IT') }); }
-                        entraNelPortale(result.user.displayName || "Utente"); 
-                        googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; 
-                    }
-                    else { auth.signOut().then(() => { googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; }); }
+                        entraNelPortale(result.user.displayName || "Utente"); googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; 
+                    } else { auth.signOut().then(() => { googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; }); }
                 }).catch(() => { googleErrorMsg.innerText = "Accesso annullato. Riprova."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; });
             });
 
@@ -1511,10 +1512,8 @@
             document.getElementById('hid-back-btn').addEventListener('click', () => { document.getElementById('hid-manual-view').style.display = 'none'; document.getElementById('hid-scan-view').style.display = 'block'; document.getElementById('hid-error').style.display = 'none'; });
             document.getElementById('hid-submit-btn').addEventListener('click', async () => { 
                 if (document.activeElement) document.activeElement.blur();
-                
                 const isVpn = await checkVPN();
                 if (isVpn) { document.getElementById('hid-error').innerText = "Disattivare la VPN per continuare."; document.getElementById('hid-error').style.display = 'block'; return; }
-
                 if (document.getElementById('hid-input').value.trim() === HID_VALIDO) { hidModal.classList.remove('active'); entraNelPortale("Utente HID"); } 
                 else { document.getElementById('hid-error').innerText = "HID non valido. Riprova."; document.getElementById('hid-error').style.display = 'block'; document.getElementById('hid-error').style.animation = 'none'; void document.getElementById('hid-error').offsetWidth; document.getElementById('hid-error').style.animation = 'shake 0.4s'; } 
             });
@@ -1528,31 +1527,26 @@
 
             function entraNelPortale(nomeUtente) {
                 document.getElementById('login-modal').classList.remove('active');
-                
                 const formattedName = nomeUtente.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
                 document.getElementById('user-greeting-title').innerText = `Buongiorno, ${formattedName}.`;
                 
-                const landing = document.getElementById('landing-view'); 
-                const dash = document.getElementById('app-dashboard');
-                
-                isScrolled = false; 
-                navbar.classList.remove('scrolled'); 
-                landing.style.opacity = '0'; 
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                const landing = document.getElementById('landing-view'); const dash = document.getElementById('app-dashboard');
+                isScrolled = false; navbar.classList.remove('scrolled'); landing.style.opacity = '0'; window.scrollTo({ top: 0, behavior: 'smooth' });
                 
                 setTimeout(() => { 
-                    landing.style.display = 'none'; 
-                    dash.style.display = 'block'; void dash.offsetWidth; dash.style.opacity = '1'; 
+                    landing.style.display = 'none'; dash.style.display = 'block'; void dash.offsetWidth; dash.style.opacity = '1'; 
                     document.getElementById('hour-counter').innerText = finalHoursValue; 
-                    
                     setTimeout(() => { document.querySelectorAll('.stat-segment').forEach((el, index) => { setTimeout(() => { el.style.transform = 'scaleX(1)'; }, index * 150); }); }, 100);
-
                     scaricaECostruisciCronologia(); 
                 }, 500);
             }
 
             document.getElementById('btn-logout-dash').addEventListener('click', () => { 
                 if(typeof auth !== 'undefined') auth.signOut();
+                
+                window.globalTurnstileToken = "";
+                if(typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
+
                 const dash = document.getElementById('app-dashboard'); const landing = document.getElementById('landing-view'); 
                 dash.style.opacity = '0'; window.scrollTo({ top: 0, behavior: 'smooth' }); 
                 
@@ -1560,9 +1554,10 @@
                 errorMsg.style.display = 'none'; document.querySelectorAll('.stat-segment').forEach(el=> el.style.transform='scaleX(0)');
                 document.getElementById('timeline-container').innerHTML = '';
 
-                setTimeout(() => { 
-                    dash.style.display = 'none'; landing.style.display = 'block'; void landing.offsetWidth; landing.style.opacity = '1'; 
-                }, 500); 
+                submitBtn.innerText = "ENTRA";
+                submitBtn.disabled = false;
+
+                setTimeout(() => { dash.style.display = 'none'; landing.style.display = 'block'; void landing.offsetWidth; landing.style.opacity = '1'; }, 500); 
             });
 
             function scaricaECostruisciCronologia() {
@@ -1573,66 +1568,24 @@
                     db.collection("attivita_pcto").orderBy("ordine", "desc").get()
                     .then((querySnapshot) => {
                         container.innerHTML = ''; 
-
-                        if (querySnapshot.empty) {
-                            container.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;">Nessuna attività registrata.</div>';
-                            return;
-                        }
+                        if (querySnapshot.empty) { container.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;">Nessuna attività registrata.</div>'; return; }
 
                         querySnapshot.forEach((doc, index) => {
-                            const att = doc.data();
-                            const cssCertElement = att.certificato ? 'ac-cert' : '';
-                            const cssDateElement = att.certificato ? 'special-badge-date' : '';
-                            const bgCertInfo = att.certificato ? 'style="background:#ecfdf5; border-color:#a7f3d0;"' : '';
-
-                            const itemHTML = `
-                                <div class="timeline-item ${cssCertElement} reveal" style="transition-delay: ${index * 0.1}s;" aria-expanded="false">
-                                    <div class="tl-header">
-                                        <div class="tl-content">
-                                            <span class="tl-date ${cssDateElement}">${att.data}</span>
-                                            <h3>${att.titolo}</h3>
-                                            <p class="tl-meta">${att.meta}</p>
-                                        </div>
-                                        <div class="tl-hours">${att.ore}</div>
-                                    </div>
-                                    <div class="tl-dropdown">
-                                        <div class="tl-dropdown-inner">
-                                            <div class="tl-ext-info" ${bgCertInfo}>
-                                                ${att.descrizione || "Dettagli non disponibili."}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
+                            const att = doc.data(); const cssCertElement = att.certificato ? 'ac-cert' : ''; const cssDateElement = att.certificato ? 'special-badge-date' : ''; const bgCertInfo = att.certificato ? 'style="background:#ecfdf5; border-color:#a7f3d0;"' : '';
+                            const itemHTML = `<div class="timeline-item ${cssCertElement} reveal" style="transition-delay: ${index * 0.1}s;" aria-expanded="false"><div class="tl-header"><div class="tl-content"><span class="tl-date ${cssDateElement}">${att.data}</span><h3>${att.titolo}</h3><p class="tl-meta">${att.meta}</p></div><div class="tl-hours">${att.ore}</div></div><div class="tl-dropdown"><div class="tl-dropdown-inner"><div class="tl-ext-info" ${bgCertInfo}>${att.descrizione || "Dettagli non disponibili."}</div></div></div></div>`;
                             container.insertAdjacentHTML('beforeend', itemHTML);
                         });
 
                         const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-                        const tlObserver = new IntersectionObserver((entries, obs) => {
-                            entries.forEach(entry => {
-                                if (entry.isIntersecting) {
-                                    entry.target.classList.add('active');
-                                    obs.unobserve(entry.target);
-                                }
-                            });
-                        }, observerOptions);
+                        const tlObserver = new IntersectionObserver((entries, obs) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); obs.unobserve(entry.target); } }); }, observerOptions);
                         container.querySelectorAll('.reveal').forEach(el => tlObserver.observe(el));
-
-                        container.querySelectorAll('.timeline-item').forEach(currElMap => {
-                            currElMap.addEventListener('click', function() {
-                                const isOpen = this.getAttribute('aria-expanded') === 'true';
-                                this.setAttribute('aria-expanded', String(!isOpen));
-                            });
-                        });
-                    }).catch((error) => {
-                        console.error("Errore caricamento timeline:", error);
-                        container.innerHTML = '<div style="color:var(--danger); text-align:center; padding:20px;">ERRORE: Impossibile recuperare i dati. Assicurati di essere autenticato e di avere i permessi.</div>';
-                    });
-                } else {
-                    container.innerHTML = '<div style="color:var(--warning); text-align:center; padding:20px; font-weight:700;">Dati temporaneamente offline.</div>';
-                }
+                        container.querySelectorAll('.timeline-item').forEach(currElMap => { currElMap.addEventListener('click', function() { const isOpen = this.getAttribute('aria-expanded') === 'true'; this.setAttribute('aria-expanded', String(!isOpen)); }); });
+                    }).catch((error) => { container.innerHTML = '<div style="color:var(--danger); text-align:center; padding:20px;">ERRORE: Impossibile recuperare i dati. Assicurati di essere autenticato e di avere i permessi.</div>'; });
+                } else { container.innerHTML = '<div style="color:var(--warning); text-align:center; padding:20px; font-weight:700;">Dati temporaneamente offline.</div>'; }
             }
         });
+
+
     </script>
 </body>
 </html>
