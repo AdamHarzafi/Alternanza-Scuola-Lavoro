@@ -24,8 +24,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     
-    <!-- LIBRERIA EMAILJS -->
+    <!-- LIBRERIE EMAILJS & SCANNER QR/BARCODE -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     
     <!-- GOOGLE LOGIN & CLOUDFLARE TURNSTILE -->
     <meta name="google-site-verification" content="sbEJOTIS_aeemOMbv_Alq3MKfx3Y9eryt8OcIdt8t3E" />
@@ -70,134 +71,48 @@
             --radius-md: 20px;
             --radius-lg: 32px;
             
-            /* Animazioni */
+            /* Animazioni fluide Apple Style */
             --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
             --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1);
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -webkit-tap-highlight-color: transparent;
-            outline: none !important;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; outline: none !important; }
         html { scroll-behavior: smooth; overflow-x: hidden; width: 100vw; }
         body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; width: 100%; min-height: 100vh; margin: 0; }
 
-        /* Accelerazione GPU forzata per evitare micro-lag */
-        .glass {
-            background: var(--surface); 
-            backdrop-filter: saturate(180%) blur(25px);
-            -webkit-backdrop-filter: saturate(180%) blur(25px);
-            box-shadow: 0 8px 32px rgba(2, 132, 199, 0.05);
-            transform: translateZ(0); 
-        }
-
-        .reveal { 
-            opacity: 0; 
-            transform: translateY(30px) scale(0.96) translateZ(0); 
-            transition: opacity 0.8s var(--apple-ease), transform 0.8s var(--apple-ease); 
-            will-change: opacity, transform;
-        }
-        .reveal.active { 
-            opacity: 1; 
-            transform: translateY(0) scale(1) translateZ(0); 
-        }
+        .glass { background: var(--surface); backdrop-filter: saturate(180%) blur(25px); -webkit-backdrop-filter: saturate(180%) blur(25px); box-shadow: 0 8px 32px rgba(2, 132, 199, 0.05); transform: translateZ(0); }
+        .reveal { opacity: 0; transform: translateY(30px) scale(0.96) translateZ(0); transition: opacity 0.8s var(--apple-ease), transform 0.8s var(--apple-ease); will-change: opacity, transform; }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1) translateZ(0); }
 
         h1, h2, h3 { letter-spacing: -0.04em; font-weight: 800; }
         p { line-height: 1.6; color: var(--text-gray); font-size: 1.05rem; }
 
-        .btn-premium {
-            background: var(--primary-light); color: var(--primary); border: none; padding: 12px 24px; border-radius: 30px;
-            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, color 0.4s, box-shadow 0.4s;
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-        }
+        .btn-premium { background: var(--primary-light); color: var(--primary); border: none; padding: 12px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, color 0.4s, box-shadow 0.4s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-premium:active { transform: scale(0.95); transition: all 0.1s; }
 
-        .btn-gradient {
-            background: var(--primary); color: white; border: none; padding: 0 36px; height: 52px; border-radius: 30px;
-            font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, box-shadow 0.4s;
-            box-shadow: 0 8px 24px rgba(2, 132, 199, 0.25); width: 100%; position: relative; overflow: hidden;
-            text-transform: uppercase; letter-spacing: 0.5px;
-            display: flex; justify-content: center; align-items: center;
-        }
+        .btn-gradient { background: var(--primary); color: white; border: none; padding: 0 36px; height: 52px; border-radius: 30px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, box-shadow 0.4s; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.25); width: 100%; position: relative; overflow: hidden; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: center; align-items: center; }
         .btn-gradient:active { transform: translateY(0) scale(0.98); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2); transition: all 0.1s;}
         .btn-gradient:disabled { background: var(--text-light); cursor: not-allowed; box-shadow: none; transform: none; }
 
-        .btn-secondary {
-            background: rgba(255,255,255,0.5); color: var(--text-dark); border: 1px solid var(--border-color); padding: 15px 30px; border-radius: 30px;
-            font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, border-color 0.4s, color 0.4s, box-shadow 0.4s; text-decoration: none; display: inline-flex;
-        }
+        .btn-secondary { background: rgba(255,255,255,0.5); color: var(--text-dark); border: 1px solid var(--border-color); padding: 15px 30px; border-radius: 30px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, border-color 0.4s, color 0.4s, box-shadow 0.4s; text-decoration: none; display: inline-flex; }
         .btn-secondary:active { transform: scale(0.98); transition: all 0.1s;}
-
         .btn-text { background: transparent; border: none; font-weight: 800; color: var(--text-light); cursor: pointer; font-size: 0.95rem; transition: color 0.3s var(--apple-ease); width: 100%; margin-top: 15px; }
 
-        /* NAVBAR OTTIMIZZATA PER DESKTOP */
-        .navbar-wrapper {
-            position: fixed; 
-            top: 20px; 
-            left: 50%; 
-            transform: translateX(-50%) translateZ(0); 
-            width: calc(100% - 40px); 
-            max-width: 1200px;
-            z-index: 1000; 
-            border-radius: 100px; 
-            padding: 12px 24px; 
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            background: var(--surface);
-            transition: top 0.4s var(--apple-ease), width 0.4s var(--apple-ease), max-width 0.4s var(--apple-ease), border-radius 0.4s var(--apple-ease), background 0.4s var(--apple-ease), padding 0.4s var(--apple-ease), border-color 0.4s var(--apple-ease), box-shadow 0.4s var(--apple-ease);
-        }
-        .navbar-wrapper.scrolled {
-            top: 0; 
-            width: 100%; 
-            max-width: 2560px; 
-            border-radius: 0;
-            padding: 15px 5vw;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: saturate(200%) blur(40px);
-            -webkit-backdrop-filter: saturate(200%) blur(40px);
-            border: 1px solid transparent;
-            border-bottom-color: rgba(0, 0, 0, 0.08);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-        }
-
+        .navbar-wrapper { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateZ(0); width: calc(100% - 40px); max-width: 1200px; z-index: 1000; border-radius: 100px; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255, 255, 255, 0.8); background: var(--surface); transition: top 0.4s var(--apple-ease), width 0.4s var(--apple-ease), max-width 0.4s var(--apple-ease), border-radius 0.4s var(--apple-ease), background 0.4s var(--apple-ease), padding 0.4s var(--apple-ease), border-color 0.4s var(--apple-ease), box-shadow 0.4s var(--apple-ease); }
+        .navbar-wrapper.scrolled { top: 0; width: 100%; max-width: 2560px; border-radius: 0; padding: 15px 5vw; background: rgba(255, 255, 255, 0.85); backdrop-filter: saturate(200%) blur(40px); -webkit-backdrop-filter: saturate(200%) blur(40px); border: 1px solid transparent; border-bottom-color: rgba(0, 0, 0, 0.08); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); }
         .nav-logo img { height: 36px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); transition: transform 0.3s var(--apple-ease); }
         .nav-links { display: flex; gap: 35px; }
         .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 0.95rem; transition: color 0.3s, transform 0.3s var(--apple-ease);}
 
-        /* HERO AREA */
         .hero-wrapper { position: relative; width: 100%; min-height: 100vh; display: flex; align-items: center; padding-top: 80px; overflow: hidden; background: #ffffff; }
-        .hero-mesh {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at 20% 30%, rgba(14, 165, 233, 0.15) 0%, transparent 40%),
-                        radial-gradient(ellipse at 80% 60%, rgba(2, 132, 199, 0.12) 0%, transparent 45%);
-            z-index: 0; filter: blur(30px); pointer-events: none;
-            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 90%);
-            mask-image: linear-gradient(to bottom, black 40%, transparent 90%);
-            transform: translateZ(0);
-        }
-
+        .hero-mesh { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 20% 30%, rgba(14, 165, 233, 0.15) 0%, transparent 40%), radial-gradient(ellipse at 80% 60%, rgba(2, 132, 199, 0.12) 0%, transparent 45%); z-index: 0; filter: blur(30px); pointer-events: none; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 90%); transform: translateZ(0); }
         .hero-container { position: relative; z-index: 1; width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 5%; display: flex; align-items: center; justify-content: space-between; gap: 60px; }
         .hero-text-col { flex: 1; max-width: 580px; text-align: left; }
         .hero-text-col h1 { font-size: clamp(3rem, 5.5vw, 4.8rem); line-height: 1.05; margin-bottom: 24px; color: var(--text-dark); letter-spacing: -2px; }
         
-        .animated-gradient-text {
-            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 25%, #0ea5e9 50%, #0369a1 75%, #0284c7 100%);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: textPulseColor 5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
-        }
-        @keyframes textPulseColor {
-            0% { background-position: 0% 50%; }
-            20% { background-position: 100% 50%; } 
-            60% { background-position: 50% 50%; }  
-            100% { background-position: 0% 50%; }
-        }
+        .animated-gradient-text { background: linear-gradient(135deg, #0284c7 0%, #38bdf8 25%, #0ea5e9 50%, #0369a1 75%, #0284c7 100%); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textPulseColor 5s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
+        @keyframes textPulseColor { 0% { background-position: 0% 50%; } 20% { background-position: 100% 50%; } 60% { background-position: 50% 50%; } 100% { background-position: 0% 50%; } }
 
         .hero-text-col p { font-size: 1.25rem; font-weight: 500; color: var(--text-gray); margin-bottom: 40px; line-height: 1.6; }
         .hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
@@ -210,94 +125,32 @@
         .partners-inner a { display: inline-block; transition: transform 0.4s var(--apple-spring); }
         .partners img { height: 45px; object-fit: contain; filter: opacity(0.85); transition: all 0.4s var(--apple-spring); }
 
-        /* BENTO GRID */
         .bento-section { max-width: 1200px; margin: 100px auto; padding: 0 5%; scroll-margin-top: 120px; background: #ffffff;}
         .bento-section h2 { text-align: center; font-size: clamp(2.2rem, 5vw, 3.2rem); margin-bottom: 60px; color: var(--text-dark);}
         .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        
-        .bento-card { 
-            background: var(--surface-solid); 
-            border-radius: var(--radius-lg); 
-            padding: 40px; 
-            box-shadow: 0 10px 30px rgba(2, 132, 199, 0.04); 
-            border: 1px solid rgba(2, 132, 199, 0.05); 
-            transition: transform 0.5s var(--apple-ease), box-shadow 0.5s var(--apple-ease), border-color 0.5s; 
-            will-change: transform, box-shadow;
-        }
+        .bento-card { background: var(--surface-solid); border-radius: var(--radius-lg); padding: 40px; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.04); border: 1px solid rgba(2, 132, 199, 0.05); transition: transform 0.5s var(--apple-ease), box-shadow 0.5s var(--apple-ease), border-color 0.5s; will-change: transform, box-shadow; }
         .bento-card.large { grid-column: span 2; background: linear-gradient(135deg, var(--text-dark), #1e293b); color: white; border: none; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);}
-        
         .bento-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; color: var(--primary); transition: transform 0.5s var(--apple-spring); }
         .bento-card h3 { font-size: 1.8rem; margin-bottom: 12px; }
         .bento-card p { color: var(--text-gray); font-weight: 500; }
         .bento-card.large p { color: #94a3b8; font-weight: 500; } 
 
-        /* === MODALI E BOTTOM SHEETS === */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%); z-index: 99999; display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); padding: 20px;
-            transform: translateZ(0);
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); z-index: 99999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); padding: 20px; transform: translateZ(0); }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        
-        /* Modale Classica (Login Desktop) */
-        .modal-content {
-            background: #ffffff; 
-            width: 100%; 
-            max-width: 620px; 
-            border-radius: 32px; 
-            padding: 35px 50px 30px; 
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
-            transform: scale(0.95) translateY(20px); 
-            transition: transform 0.5s var(--apple-smooth); 
-            position: relative; max-height: 95vh; overflow-y: auto; overflow-x: hidden;
-        }
+        .modal-content { background: #ffffff; width: 100%; max-width: 620px; border-radius: 32px; padding: 35px 50px 30px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05); transform: scale(0.95) translateY(20px); transition: transform 0.5s var(--apple-smooth); position: relative; max-height: 95vh; overflow-y: auto; overflow-x: hidden; }
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
         .modal-content::-webkit-scrollbar { width: 0; } 
 
-        /* Bottom Sheet */
-        .modal-overlay.bottom-sheet { 
-            align-items: flex-end; 
-            padding: 0; 
-        }
-        
-        .modal-overlay.bottom-sheet .modal-content {
-            border-radius: 36px 36px 0 0; 
-            padding: 0; 
-            max-width: 500px; 
-            width: 100%;
-            margin: 0 auto;
-            transform: translateY(100%); 
-            border-bottom: none;
-            max-height: 92vh; 
-            box-shadow: 0 -15px 40px rgba(0,0,0,0.15);
-            transition: transform 0.4s var(--apple-smooth);
-            display: block; 
-            overflow-y: auto; 
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .modal-overlay.bottom-sheet.active .modal-content { 
-            transform: translateY(0); 
-        }
+        .modal-overlay.bottom-sheet { align-items: flex-end; padding: 0; }
+        .modal-overlay.bottom-sheet .modal-content { border-radius: 36px 36px 0 0; padding: 0; max-width: 500px; width: 100%; margin: 0 auto; transform: translateY(100%); border-bottom: none; max-height: 92vh; box-shadow: 0 -15px 40px rgba(0,0,0,0.15); transition: transform 0.4s var(--apple-smooth); display: block; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+        .modal-overlay.bottom-sheet.active .modal-content { transform: translateY(0); }
+        .bottom-sheet-body { padding: 25px 25px calc(30px + env(safe-area-inset-bottom, 0px)); width: 100%; }
 
-        .bottom-sheet-body {
-            padding: 25px 25px calc(30px + env(safe-area-inset-bottom, 0px)); 
-            width: 100%;
-        }
-
-        .close-btn {
-            position: absolute; top: 15px; right: 15px; width: 36px; height: 36px; border-radius: 50%;
-            background: rgba(0,0,0,0.06); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark);
-            display: flex; align-items: center; justify-content: center; transition: transform 0.3s var(--apple-ease); z-index: 100;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        }
+        .close-btn { position: absolute; top: 15px; right: 15px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.06); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; justify-content: center; transition: transform 0.3s var(--apple-ease); z-index: 100; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
         .close-btn:active { transform: scale(0.9); }
 
         .modal-logo-wrapper { display: flex; justify-content: center; margin-bottom: 12px; }
         .modal-logo-wrapper img { height: 40px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(2, 132, 199, 0.12)); }
-
         .auth-title { text-align: center; font-size: 1.7rem; margin-bottom: 15px; color: var(--text-dark); font-weight: 900; letter-spacing: -0.5px; }
         
         .segmented-control { display: flex; background: #f5f5f7; border-radius: 14px; padding: 4px; margin-bottom: 15px; position: relative; }
@@ -305,59 +158,33 @@
         .seg-btn.active { color: var(--text-dark); }
         .seg-slider { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: #ffffff; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: transform 0.4s var(--apple-ease); z-index: 1; }
 
-        .login-rules-banner {
-            background: #f0f9ff; color: var(--primary); border: 1px solid #bae6fd;
-            padding: 10px 16px; text-align: center; border-radius: 14px; font-weight: 700; margin-bottom: 15px; font-size: 0.85rem;
-            cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
+        .login-rules-banner { background: #f0f9ff; color: var(--primary); border: 1px solid #bae6fd; padding: 10px 16px; text-align: center; border-radius: 14px; font-weight: 700; margin-bottom: 15px; font-size: 0.85rem; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .input-group { margin-bottom: 15px; position: relative; }
         .input-label { font-size: 0.8rem; font-weight: 800; color: var(--text-gray); margin-bottom: 6px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .apple-input {
-            width: 100%; height: 52px; padding: 0 20px; background: #f5f5f7; border: 1px solid transparent; border-radius: 16px;
-            font-size: 1.05rem; font-weight: 600; color: var(--text-dark); transition: all 0.3s var(--apple-ease); box-sizing: border-box;
-        }
+        .apple-input { width: 100%; height: 52px; padding: 0 20px; background: #f5f5f7; border: 1px solid transparent; border-radius: 16px; font-size: 1.05rem; font-weight: 600; color: var(--text-dark); transition: all 0.3s var(--apple-ease); box-sizing: border-box; }
         .apple-input:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15); }
         .apple-input::placeholder { color: #a1a1aa; font-weight: 500; font-family: 'Inter', sans-serif; letter-spacing: normal;}
         #password-input { font-family: Verdana, sans-serif; letter-spacing: 2px; }
 
         .custom-select { position: relative; width: 100%; }
-        .custom-select-trigger {
-            display: flex; justify-content: space-between; align-items: center; width: 100%; height: 52px; padding: 0 20px; 
-            background: #f5f5f7; border: 1px solid transparent; border-radius: 16px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s var(--apple-ease); box-sizing: border-box;
-        }
+        .custom-select-trigger { display: flex; justify-content: space-between; align-items: center; width: 100%; height: 52px; padding: 0 20px; background: #f5f5f7; border: 1px solid transparent; border-radius: 16px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s var(--apple-ease); box-sizing: border-box; }
         .custom-select-trigger span { color: #a1a1aa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .custom-select-trigger.selected span { color: var(--text-dark); font-weight: 700; }
         .custom-select.open .custom-select-trigger { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15); }
         
-        .custom-options {
-            position: absolute; top: calc(100% + 8px); left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
-            border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; max-height: 220px; overflow-y: auto; overflow-x: hidden;
-            z-index: 999; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.98); transition: opacity 0.3s, transform 0.3s var(--apple-ease);
-            box-sizing: border-box;
-        }
+        .custom-options { position: absolute; top: calc(100% + 8px); left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; max-height: 220px; overflow-y: auto; overflow-x: hidden; z-index: 999; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.98); transition: opacity 0.3s, transform 0.3s var(--apple-ease); box-sizing: border-box; }
         .custom-options::-webkit-scrollbar { width: 5px; }
         .custom-options::-webkit-scrollbar-track { background: transparent; margin: 12px 0; } 
         .custom-options::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
         .custom-select.open .custom-options { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         .custom-option { padding: 14px 20px; font-size: 0.95rem; font-weight: 600; color: var(--text-dark); cursor: pointer; border-bottom: 1px solid #f8fafc; transition: background 0.2s; word-wrap: break-word; }
 
-        .toggle-password-btn { 
-            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-            background: transparent; border: none; cursor: pointer; color: var(--text-light); 
-            border-radius: 12px; transition: color 0.3s var(--apple-ease); z-index: 5; outline: none;
-        }
+        .toggle-password-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; color: var(--text-light); border-radius: 12px; transition: color 0.3s var(--apple-ease); z-index: 5; outline: none; }
         .toggle-password-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
 
-        /* Privacy Disclaimer */
-        .privacy-disclaimer {
-            text-align: center; font-size: 0.75rem; color: var(--text-gray); 
-            line-height: 1.5; margin: 12px 0 15px; padding: 0 10px; font-weight: 500;
-        }
+        .privacy-disclaimer { text-align: center; font-size: 0.75rem; color: var(--text-gray); line-height: 1.5; margin: 12px 0 15px; padding: 0 10px; font-weight: 500; }
         .privacy-disclaimer svg { width: 26px; height: 26px; color: var(--primary); margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto; }
         .privacy-disclaimer a { color: var(--primary); text-decoration: none; font-weight: 700; transition: text-decoration 0.2s;}
         .privacy-disclaimer a:hover { text-decoration: underline; }
@@ -365,10 +192,7 @@
         .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none; font-weight: 700; text-align: center; animation: shake 0.4s; }
         .attempts-msg { color: var(--warning); font-size: 0.85rem; margin-top: 8px; display: none; font-weight: 800; text-align: center; }
 
-        .btn-social {
-            width: 100%; height: 52px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 30px;
-            font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s, border-color 0.3s, box-shadow 0.3s; color: #374151; margin-bottom: 10px; font-size: 0.95rem;
-        }
+        .btn-social { width: 100%; height: 52px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 30px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s, border-color 0.3s, box-shadow 0.3s; color: #374151; margin-bottom: 10px; font-size: 0.95rem; }
         .btn-social:active { transform: scale(0.98); }
 
         #custom-google-btn { position: relative; padding: 0; justify-content: center; overflow: hidden; }
@@ -398,56 +222,82 @@
         .rules-list { list-style: none; margin-bottom: 24px; padding: 0; }
         .rules-list li { padding: 14px 16px; background: #f8fafc; border-left: 4px solid var(--primary); border-radius: 12px; margin-bottom: 10px; font-weight: 700; color: var(--text-dark); font-size: 0.9rem; display: flex; align-items: center; gap: 12px; transition: transform 0.3s var(--apple-ease), background 0.3s;}
 
-        /* --- STILI RECUPERO PASSWORD --- */
-        .recovery-hero {
-            position: relative;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            padding: 60px 20px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            width: 100%;
-        }
-        .recovery-hero::after {
-            content: ''; position: absolute; width: 150%; height: 150%;
-            background: linear-gradient(rgba(255,255,255,0.4), transparent);
-            transform: rotate(-45deg); top: -50%; pointer-events: none;
-        }
-        .recovery-card-img {
-            width: 100%; max-width: 240px; border-radius: 14px;
-            box-shadow: 0 15px 35px rgba(2, 132, 199, 0.2), 0 5px 15px rgba(0,0,0,0.08);
-            animation: floatCard 5s ease-in-out infinite;
-            position: relative; z-index: 2;
-            border: 1px solid rgba(255,255,255,0.6);
-        }
-        @keyframes floatCard {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        .recovery-title {
-            font-size: 1.6rem; font-weight: 900; text-align: center; color: var(--text-dark);
-            letter-spacing: -0.5px; margin-bottom: 8px; line-height: 1.2;
-        }
-        .recovery-subtitle {
-            text-align: center; font-size: 1rem; font-weight: 500; color: var(--text-gray);
-            margin-bottom: 25px; line-height: 1.5; padding: 0 10px;
-        }
+        /* --- STILI RECUPERO PASSWORD (CIE & MANUALE) --- */
+        .recovery-hero { position: relative; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 60px 20px 40px; display: flex; justify-content: center; align-items: center; overflow: hidden; width: 100%; }
+        .recovery-hero::after { content: ''; position: absolute; width: 150%; height: 150%; background: linear-gradient(rgba(255,255,255,0.4), transparent); transform: rotate(-45deg); top: -50%; pointer-events: none; }
         
-        .result-banner {
-            background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 16px; padding: 20px;
-            text-align: center; color: #065f46; font-size: 0.95rem; font-weight: 600; line-height: 1.5;
-            margin-top: 20px; display: none; animation: fastFadeIn 0.4s var(--apple-ease);
-        }
+        .recovery-card-img { width: 100%; max-width: 240px; border-radius: 14px; box-shadow: 0 15px 35px rgba(2, 132, 199, 0.2), 0 5px 15px rgba(0,0,0,0.08); animation: floatCard 5s ease-in-out infinite; position: relative; z-index: 2; border: 1px solid rgba(255,255,255,0.6); }
+        @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        
+        .recovery-title { font-size: 1.6rem; font-weight: 900; text-align: center; color: var(--text-dark); letter-spacing: -0.5px; margin-bottom: 8px; line-height: 1.2; }
+        .recovery-subtitle { text-align: center; font-size: 1rem; font-weight: 500; color: var(--text-gray); margin-bottom: 25px; line-height: 1.5; padding: 0 10px; }
+        
+        .result-banner { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 16px; padding: 20px; text-align: center; color: #065f46; font-size: 0.95rem; font-weight: 600; line-height: 1.5; margin-top: 20px; display: none; animation: fastFadeIn 0.4s var(--apple-ease); }
         .result-banner svg { width: 32px; height: 32px; fill: var(--success); margin-bottom: 10px; }
+
+        /* Stili Modale Scanner CIE 3D */
+        .cie-card-container { width: 260px; height: 165px; perspective: 1200px; margin: 0 auto; position: relative; z-index: 2; animation: floatCard 5s ease-in-out infinite; }
+        .cie-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); transform-style: preserve-3d; }
+        .cie-card-container.flipped .cie-card-inner { transform: rotateY(180deg) scale(1.05); }
+        .cie-card-front, .cie-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 14px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5); background: #fff; display: flex; justify-content: center; align-items: center; overflow: hidden; transform: translateZ(0); }
+        .cie-card-front img, .cie-card-back img { width: 100%; height: 100%; object-fit: cover; }
+        .cie-card-back { transform: rotateY(180deg) translateZ(0); }
+
+        /* NUOVO LAYOUT SCANNER: Panoramico e senza sfocature */
+        #scanner-container { 
+            width: 100%; 
+            height: 200px; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            border: 2px solid var(--border-color); 
+            position: relative; 
+            background: #000; 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        #reader { 
+            width: 100%; 
+            height: 100%; 
+            position: relative; 
+            padding: 0 !important; 
+            border: none !important; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        #reader video { 
+            width: 100% !important; 
+            height: 100% !important; 
+            border-radius: 18px; 
+            display: block; 
+            object-fit: cover !important; /* Riempie il rettangolo senza distorsioni */
+        }
+        /* Riquadro virtuale in puro CSS (solo bordo, nessuna sfocatura) */
+        .custom-scanner-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            height: 110px;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            border-radius: 14px;
+            pointer-events: none; /* Permette il click through se necessario */
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: pulseFrame 2s infinite var(--apple-ease);
+        }
+        @keyframes pulseFrame {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.02); opacity: 1; border-color: var(--primary); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+        }
 
         /* Dashboard styles */
         #app-dashboard { display: none; opacity: 0; transition: opacity 0.5s ease; padding-bottom: 80px;}
-        .dash-topbar {
-            background: #fff; border-bottom: 1px solid var(--border-color);
-            padding: 15px 5%; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-        }
+        .dash-topbar { background: #fff; border-bottom: 1px solid var(--border-color); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         .dash-school-info { display: flex; align-items: center; gap: 20px; }
         .nav-mim-logo { height: 50px; object-fit: contain; } 
         .nav-school-logo { height: 55px; object-fit: contain; }
@@ -456,13 +306,8 @@
 
         .dash-actions { display: flex; align-items: center; gap: 20px; }
         .year-selector { position: relative; display: inline-block; }
-        .year-badge { 
-            font-weight: 900; background: var(--primary-light); color: var(--primary-hover); 
-            padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s; user-select: none;
-        }
-        .year-dropdown-menu {
-            position: absolute; top: calc(100% + 10px); right: 0; background: #fff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; overflow: hidden; z-index: 100; min-width: 180px; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.98); transition: opacity 0.4s, transform 0.4s var(--apple-ease);
-        }
+        .year-badge { font-weight: 900; background: var(--primary-light); color: var(--primary-hover); padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s; user-select: none; }
+        .year-dropdown-menu { position: absolute; top: calc(100% + 10px); right: 0; background: #fff; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; overflow: hidden; z-index: 100; min-width: 180px; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.98); transition: opacity 0.4s, transform 0.4s var(--apple-ease); }
         .year-dropdown-menu.open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         .year-option { padding: 14px 20px; font-size: 0.9rem; font-weight: 800; color: var(--text-dark); cursor: pointer; transition: background 0.3s var(--apple-ease), color 0.3s; text-align: left; border-bottom: 1px solid #f8fafc; }
 
@@ -515,17 +360,7 @@
         .tl-dropdown-inner { overflow: hidden; }
         .tl-ext-info { font-size: 0.95rem; color: var(--text-gray); line-height: 1.6; font-weight: 500; background: #f8fafc; padding: 18px 24px; border-radius: 16px; border: 1px solid var(--border-color); }
 
-        .footer-wrapper { 
-            background: var(--surface-solid); 
-            border-top: 1px solid rgba(2, 132, 199, 0.08);
-            border-radius: 48px 48px 0 0; 
-            padding: 80px 5% 40px; 
-            color: var(--text-dark); 
-            margin-top: 80px; 
-            box-shadow: 0 -20px 50px rgba(2, 132, 199, 0.03);
-            position: relative;
-            z-index: 10;
-        }
+        .footer-wrapper { background: var(--surface-solid); border-top: 1px solid rgba(2, 132, 199, 0.08); border-radius: 48px 48px 0 0; padding: 80px 5% 40px; color: var(--text-dark); margin-top: 80px; box-shadow: 0 -20px 50px rgba(2, 132, 199, 0.03); position: relative; z-index: 10; }
         .mim-footer-wrap { width: 100%; display: flex; justify-content: center; margin-bottom: 50px; }
         .footer-logo-mim { height: 80px; filter: opacity(0.9); transition: transform 0.4s var(--apple-ease), filter 0.4s; } 
 
@@ -607,7 +442,6 @@
             .col-info h4 { justify-content: center; }
         }
         
-        /* FIX MEDIA QUERY SMARTPHONE */
         @media (max-width: 600px) {
             .navbar-wrapper { width: 92%; padding: 12px 18px; top: 15px;}
             .navbar-wrapper.scrolled { width: 100%; padding: 15px 20px; top: 0;}
@@ -622,34 +456,14 @@
             .bento-card h3 { font-size: 1.5rem; }
             
             .modal-overlay:not(.bottom-sheet) { padding: 0; }
-            .modal-overlay:not(.bottom-sheet) .modal-content { 
-                /* Calcola lo spazio in alto considerando la safe-area dell'iPhone o del browser */
-                padding: calc(60px + env(safe-area-inset-top, 0px)) 24px 24px; 
-                border-radius: 0; 
-                width: 100%; 
-                /* Usa la Dynamic Viewport Height (dvh) per adattarsi alla barra degli indirizzi mobile */
-                height: 100%; 
-                height: 100dvh; 
-                max-width: 100%; 
-                max-height: 100%; 
-                max-height: 100dvh; 
-            }
-
-            .close-btn { 
-                /* Abbassa dinamicamente la X se c'è una tacca o una barra del browser */
-                top: calc(15px + env(safe-area-inset-top, 0px)); 
-                right: 15px; 
-                width: 40px; 
-                height: 40px; 
-                font-size: 22px; 
-            }
+            .modal-overlay:not(.bottom-sheet) .modal-content { padding: calc(60px + env(safe-area-inset-top, 0px)) 24px 24px; border-radius: 0; width: 100%; height: 100%; height: 100dvh; max-width: 100%; max-height: 100%; max-height: 100dvh; }
+            .close-btn { top: calc(15px + env(safe-area-inset-top, 0px)); right: 15px; width: 40px; height: 40px; font-size: 22px; }
 
             .bottom-sheet-body { padding: 25px 20px calc(25px + env(safe-area-inset-bottom, 0px)); }
             .recovery-hero { padding: 40px 20px 25px; }
             .recovery-card-img { max-width: 200px; }
             .recovery-title { font-size: 1.5rem; }
 
-            .close-btn { top: 15px; right: 15px; width: 40px; height: 40px; font-size: 22px; }
             .modal-logo-wrapper { margin-top: 10px; margin-bottom: 15px; }
             .auth-title { font-size: 1.7rem; margin-bottom: 20px; }
             .segmented-control { margin-bottom: 20px; padding: 4px; border-radius: 12px;}
@@ -685,6 +499,7 @@
             .badge-views { width: 100%; justify-content: center; padding: 15px;}
             .legal-links { flex-direction: column; gap: 15px;}
             .legal-links span { display: none; }
+            .cie-card-container { transform: scale(0.9); }
         }
     </style>
 </head>
@@ -872,12 +687,10 @@
             </div>
 
             <div id="login-view" class="fade-form">
-                
                 <div class="login-rules-banner" id="btn-rules-banner">
                     Leggi le regole di accesso dal 01/10/2021
                 </div>
 
-                <!-- CLOUDFLARE TURNSTILE INVISIBILE (Callback logic) -->
                 <div id="cf-turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAC6Galn1mtnng7_P" data-size="invisible" data-execution="execute" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError"></div>
 
                 <form id="login-form" target="dummyframe" action="about:blank" method="POST">
@@ -986,33 +799,70 @@
         <div class="modal-content">
             <button id="forgot-sheet-close" class="close-btn" style="background: rgba(255,255,255,0.8);">&times;</button>
             
+            <!-- CONTENITORE STUDENTE (CIE / MANUALE) -->
             <div id="student-forgot-form">
-                <div class="recovery-hero">
-                    <img src="https://i.ibb.co/gb5LbmYR/TESSERA-SANITARIA.png" alt="Tessera Sanitaria" class="recovery-card-img">
+                
+                <!-- VISTA INSERIMENTO MANUALE (DEFAULT) -->
+                <div id="student-forgot-manual-view">
+                    <div class="recovery-hero">
+                        <img src="https://i.ibb.co/gb5LbmYR/TESSERA-SANITARIA.png" alt="Tessera Sanitaria" class="recovery-card-img">
+                    </div>
+
+                    <div class="bottom-sheet-body">
+                        <h2 class="recovery-title">Verifica Identità</h2>
+                        <p class="recovery-subtitle">Abbiamo bisogno del tuo <strong>Codice Fiscale</strong> per assicurarci che sia davvero tu a richiedere l'accesso.</p>
+                        
+                        <div class="input-group">
+                            <div class="custom-select" id="forgot-cognome-select">
+                                <div class="custom-select-trigger">
+                                    <span id="forgot-cognome-display">Seleziona lo studente</span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 16px; color: var(--text-light);"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                                <div class="custom-options" id="forgot-cognome-options"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group" style="margin-bottom: 25px;">
+                            <input type="text" id="cf-input" class="apple-input" placeholder="INSERISCI CODICE FISCALE" style="text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; letter-spacing: 1px; font-weight: 800; text-align: center;" maxlength="16">
+                            <div class="error-msg" id="forgot-error">Codice Fiscale non valido o non associato.</div>
+                        </div>
+
+                        <button type="button" id="btn-verify-student" class="btn-gradient">VERIFICA ORA</button>
+                        
+                        <!-- BOTTONE OPZIONE ALTERNATIVA -->
+                        <button type="button" id="btn-open-scan" class="btn-social" style="margin-top: 12px; border-color: var(--primary-light); color: var(--primary); background: #f0f9ff; height: 52px; justify-content: center; gap: 8px;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px;"><path d="M4 7V4h3m10 0h3v3M4 17v3h3m10 0h3v-3M9 12h6M12 9v6"/></svg>
+                            Verifica in un altro modo
+                        </button>
+                        
+                        <div class="result-banner" id="forgot-result"></div>
+                    </div>
                 </div>
 
-                <div class="bottom-sheet-body">
-                    <h2 class="recovery-title">Verifica Identità</h2>
-                    <p class="recovery-subtitle">Abbiamo bisogno del tuo <strong>Codice Fiscale</strong> per assicurarci che sia davvero tu a richiedere l'accesso.</p>
-                    
-                    <div class="input-group">
-                        <div class="custom-select" id="forgot-cognome-select">
-                            <div class="custom-select-trigger">
-                                <span id="forgot-cognome-display">Seleziona lo studente</span>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 16px; color: var(--text-light);"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <!-- VISTA SCANSIONE CIE -->
+                <div id="student-forgot-scan-view" style="display: none;">
+                    <div class="recovery-hero" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+                        <div class="cie-card-container" id="cie-anim-container">
+                            <div class="cie-card-inner">
+                                <div class="cie-card-front"><img src="https://i.ibb.co/2w05z7s/CIE-FRONTE.png" alt="CIE Fronte"></div>
+                                <div class="cie-card-back"><img src="https://i.ibb.co/YTF16fQQ/CIE-RETRO.png" alt="CIE Retro"></div>
                             </div>
-                            <div class="custom-options" id="forgot-cognome-options"></div>
                         </div>
                     </div>
-                    
-                    <div class="input-group" style="margin-bottom: 25px;">
-                        <input type="text" id="cf-input" class="apple-input" placeholder="INSERISCI CODICE FISCALE" style="text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; letter-spacing: 1px; font-weight: 800; text-align: center;" maxlength="16">
-                        <div class="error-msg" id="forgot-error">Codice Fiscale non valido o non associato.</div>
-                    </div>
 
-                    <button type="button" id="btn-verify-student" class="btn-gradient">VERIFICA ORA</button>
-                    
-                    <div class="result-banner" id="forgot-result"></div>
+                    <div class="bottom-sheet-body">
+                        <h2 class="recovery-title">Verifica Identità</h2>
+                        <p class="recovery-subtitle" style="margin-bottom: 15px;">Inquadra il <strong>codice a barre</strong> presente sul retro della tua Carta d'Identità Elettronica.</p>
+                        
+                        <div id="scanner-container">
+                            <div id="reader"></div>
+                            <div class="custom-scanner-frame"></div>
+                        </div>
+                        
+                        <div class="result-banner" id="scan-result" style="margin-bottom: 20px; text-align: center; display: none; border-radius: 16px; padding: 15px;"></div>
+                        
+                        <button type="button" id="btn-back-to-manual" class="btn-text" style="margin-top: 5px;">← Torna all'inserimento manuale</button>
+                    </div>
                 </div>
             </div>
 
@@ -1109,7 +959,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT CLOUDFLARE TURNSTILE (CALLBACKS GLOBALI) -->
     <script>
         window.globalTurnstileToken = "";
         window.isWaitingForToken = false;
@@ -1118,9 +967,7 @@
             window.globalTurnstileToken = token;
             if (window.isWaitingForToken) {
                 window.isWaitingForToken = false;
-                if(typeof window.eseguiAccessoServer === 'function') {
-                    window.eseguiAccessoServer();
-                }
+                if(typeof window.eseguiAccessoServer === 'function') { window.eseguiAccessoServer(); }
             }
         };
         window.onTurnstileExpired = function() { window.globalTurnstileToken = ""; };
@@ -1128,16 +975,12 @@
     </script>
 
     <script>
-        // SCRIPT PROTEZIONE (ANTI-F12)
         (function() {
             document.addEventListener('contextmenu', e => e.preventDefault());
             document.addEventListener('keydown', e => {
                 if (e.key === 'F12' || e.keyCode === 123 || 
                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
-                   (e.ctrlKey && (e.key === 'u' || e.key === 'U'))) {
-                    e.preventDefault();
-                    return false;
-                }
+                   (e.ctrlKey && (e.key === 'u' || e.key === 'U'))) { e.preventDefault(); return false; }
             });
             setInterval(() => {
                 const prima = new Date().getTime();
@@ -1149,16 +992,10 @@
             }, 1000);
         })();
 
-        // Animazioni
         document.addEventListener("DOMContentLoaded", function() {
             const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
             const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                        observer.unobserve(entry.target);
-                    }
-                });
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
             }, observerOptions);
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
@@ -1169,8 +1006,7 @@
             const shouldBeScrolled = window.scrollY > 40;
             if (shouldBeScrolled !== isScrolled) {
                 isScrolled = shouldBeScrolled;
-                if (isScrolled) { navbar.classList.add('scrolled'); } 
-                else { navbar.classList.remove('scrolled'); }
+                if (isScrolled) { navbar.classList.add('scrolled'); } else { navbar.classList.remove('scrolled'); }
             }
         }, { passive: true });
 
@@ -1180,51 +1016,25 @@
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
                 const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                }
+                if (targetElement) { const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 80; window.scrollTo({ top: offsetPosition, behavior: 'smooth' }); }
             });
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-
-            // --- BLOCCO SCROLL SFONDO GLOBALE (PC E MOBILE) SENZA "SALTI" DI LAYOUT ---
             const modalObserver = new MutationObserver(() => {
                 const isAnyModalOpen = document.querySelectorAll('.modal-overlay.active').length > 0;
-                
                 if (isAnyModalOpen) {
-                    // 1. Calcola lo spessore della scrollbar su PC (su mobile di solito è 0)
                     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-                    
-                    // 2. Blocca lo scorrimento
-                    document.body.style.overflow = 'hidden';
-                    
-                    // 3. Aggiunge un padding pari alla scrollbar per evitare che il sito si sposti
-                    document.body.style.paddingRight = `${scrollbarWidth}px`;
-                    
+                    document.body.style.overflow = 'hidden'; document.body.style.paddingRight = `${scrollbarWidth}px`;
                 } else {
-                    // Ripristina tutto alla normalità quando si chiude la X
-                    document.body.style.overflow = '';
-                    document.body.style.paddingRight = '';
+                    document.body.style.overflow = ''; document.body.style.paddingRight = '';
                 }
             });
-
-            // Applica il "sorvegliante" a tutte le modali presenti e future
-            document.querySelectorAll('.modal-overlay').forEach(modal => {
-                modalObserver.observe(modal, { attributes: true, attributeFilter: ['class'] });
-            });
-            // --------------------------------------------------------------------------
+            document.querySelectorAll('.modal-overlay').forEach(modal => { modalObserver.observe(modal, { attributes: true, attributeFilter: ['class'] }); });
 
             const finalHoursValue = "113.30";
-            let selectedRole = 'studente'; 
-            let selectedUserValue = "";
-            let selectedUserEmail = ""; 
-            let selectedForgotUser = null;
-
-            const MAX_ATTEMPTS = 3;
-            const LOCKOUT_DURATION = 60000; 
-            let lockoutTimerInterval;
+            let selectedRole = 'studente'; let selectedUserValue = ""; let selectedUserEmail = ""; let selectedForgotUser = null;
+            const MAX_ATTEMPTS = 3; const LOCKOUT_DURATION = 60000; let lockoutTimerInterval;
 
             const submitBtn = document.getElementById('login-submit');
             const passInput = document.getElementById('password-input');
@@ -1243,10 +1053,7 @@
             
             document.querySelectorAll('.btn-open-login').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    loginModal.classList.add('active'); 
-                    checkLockoutState(); 
-                    
+                    e.preventDefault(); loginModal.classList.add('active'); checkLockoutState(); 
                     window.globalTurnstileToken = "";
                     if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
                 });
@@ -1262,6 +1069,10 @@
                 document.getElementById('forgot-result').style.display = 'none';
                 document.getElementById('btn-verify-student').style.display = 'block';
                 resetDropdownDisplay('forgot-cognome-display', 'Seleziona lo studente');
+                
+                stopScannerSafe();
+                document.getElementById('student-forgot-scan-view').style.display = 'none';
+                document.getElementById('student-forgot-manual-view').style.display = 'block';
             });
 
             function checkLockoutState() {
@@ -1269,8 +1080,7 @@
                 if (lockoutUntil) {
                     if (Date.now() < parseInt(lockoutUntil)) { startLockoutCountdown(parseInt(lockoutUntil)); return true; }
                     else { localStorage.removeItem('pcto_lockout_until'); localStorage.removeItem('pcto_failed_attempts'); resetLockoutUI(); }
-                }
-                return false;
+                } return false;
             }
             function startLockoutCountdown(endTime) {
                 submitBtn.disabled = true; passInput.disabled = true; errorMsg.style.display = 'none'; attemptsMsgObj.style.display = 'block';
@@ -1322,13 +1132,10 @@
                 const option = document.createElement('div');
                 option.className = 'custom-option'; option.textContent = nome;
                 option.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    document.getElementById(`${tipo}-display`).textContent = nome;
-                    document.getElementById(`${tipo}-display`).parentElement.classList.add('selected');
+                    e.stopPropagation(); document.getElementById(`${tipo}-display`).textContent = nome; document.getElementById(`${tipo}-display`).parentElement.classList.add('selected');
                     if(tipo === 'username') { selectedUserValue = nome; selectedUserEmail = datoExtra; hiddenUsernameInput.value = nome; usernameSelect.classList.remove('open'); errorMsg.style.display = 'none'; }
                     else if (tipo === 'forgot-cognome') { selectedForgotUser = { nome: nome, cf: datoExtra }; forgotCognomeSelect.classList.remove('open'); document.getElementById('forgot-error').style.display = 'none'; }
-                });
-                container.appendChild(option);
+                }); container.appendChild(option);
             }
 
             function resetDropdownDisplay(id, testo) {
@@ -1352,21 +1159,28 @@
             segBtns.forEach((btn, index) => btn.addEventListener('click', (e) => {
                 segBtns.forEach(b => b.classList.remove('active')); e.target.classList.add('active');
                 selectedRole = e.target.dataset.role; segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
-                populateUserDropdown(selectedRole); 
-                document.getElementById('google-login-error').style.display = 'none';
+                populateUserDropdown(selectedRole); document.getElementById('google-login-error').style.display = 'none';
             }));
 
             document.getElementById('btn-rules-banner').addEventListener('click', () => { loginView.style.display = 'none'; rulesView.style.display = 'block'; });
-            document.querySelectorAll('.btn-back-login').forEach(btn => {
-                btn.addEventListener('click', () => { rulesView.style.display = 'none'; loginView.style.display = 'block'; hidModal.classList.remove('active'); });
-            });
+            document.querySelectorAll('.btn-back-login').forEach(btn => { btn.addEventListener('click', () => { rulesView.style.display = 'none'; loginView.style.display = 'block'; hidModal.classList.remove('active'); }); });
 
             function setupForgotView() {
                 document.getElementById('forgot-error').style.display = 'none'; 
                 document.getElementById('forgot-result').style.display = 'none';
                 document.getElementById('btn-verify-student').style.display = 'block';
-                if(selectedRole === 'studente') { document.getElementById('student-forgot-form').style.display = 'block'; document.getElementById('teacher-forgot-msg').style.display = 'none'; } 
-                else { document.getElementById('student-forgot-form').style.display = 'none'; document.getElementById('teacher-forgot-msg').style.display = 'block'; }
+
+                document.getElementById('student-forgot-manual-view').style.display = 'block';
+                document.getElementById('student-forgot-scan-view').style.display = 'none';
+                stopScannerSafe();
+
+                if(selectedRole === 'studente') { 
+                    document.getElementById('student-forgot-form').style.display = 'block'; 
+                    document.getElementById('teacher-forgot-msg').style.display = 'none'; 
+                } else { 
+                    document.getElementById('student-forgot-form').style.display = 'none'; 
+                    document.getElementById('teacher-forgot-msg').style.display = 'block'; 
+                }
             }
 
             const togglePasswordBtn = document.getElementById('toggle-password');
@@ -1374,20 +1188,15 @@
             const eyeSlashIcon = document.getElementById('eye-slash-icon');
             togglePasswordBtn.addEventListener('click', () => {
                 if (passInput.type === 'password') { 
-                    passInput.type = 'text'; 
-                    passInput.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Inter', sans-serif";
-                    passInput.style.letterSpacing = "normal";
-                    eyeIcon.style.display = 'none'; eyeSlashIcon.style.display = 'block'; 
+                    passInput.type = 'text'; passInput.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Inter', sans-serif"; passInput.style.letterSpacing = "normal"; eyeIcon.style.display = 'none'; eyeSlashIcon.style.display = 'block'; 
                 } else { 
-                    passInput.type = 'password'; 
-                    passInput.style.fontFamily = "Verdana, sans-serif";
-                    passInput.style.letterSpacing = "2px";
-                    eyeIcon.style.display = 'block'; eyeSlashIcon.style.display = 'none'; 
+                    passInput.type = 'password'; passInput.style.fontFamily = "Verdana, sans-serif"; passInput.style.letterSpacing = "2px"; eyeIcon.style.display = 'block'; eyeSlashIcon.style.display = 'none'; 
                 }
             });
             passInput.addEventListener('copy', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
             passInput.addEventListener('paste', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
 
+            // LOGICA DI RECUPERO MANUALE
             document.getElementById('btn-verify-student').addEventListener('click', () => {
                 if (document.activeElement) document.activeElement.blur();
                 const cfInputVal = document.getElementById('cf-input').value.trim().toUpperCase();
@@ -1410,6 +1219,126 @@
                 } else { forgotResult.style.display = 'none'; forgotErrorObj.innerText = "Codice Fiscale non associato. Riprova."; forgotErrorObj.style.display = 'block'; forgotErrorObj.style.animation = 'none'; void forgotErrorObj.offsetWidth; forgotErrorObj.style.animation = 'shake 0.4s'; }
             });
 
+            // LOGICA DI RECUPERO TRAMITE SCANNER CIE
+            const manualView = document.getElementById('student-forgot-manual-view');
+            const scanView = document.getElementById('student-forgot-scan-view');
+            const btnOpenScan = document.getElementById('btn-open-scan');
+            const btnBackToManual = document.getElementById('btn-back-to-manual');
+            const cieAnimContainer = document.getElementById('cie-anim-container');
+            let html5QrCode = null;
+
+            btnOpenScan.addEventListener('click', () => {
+                manualView.style.display = 'none';
+                scanView.style.display = 'block';
+                document.getElementById('scan-result').style.display = 'none';
+                
+                cieAnimContainer.classList.remove('flipped');
+                setTimeout(() => {
+                    if(scanView.style.display === 'block') {
+                        cieAnimContainer.classList.add('flipped');
+                    }
+                }, 2000);
+
+                startCIEScanner();
+            });
+
+            btnBackToManual.addEventListener('click', () => {
+                stopScannerSafe();
+                scanView.style.display = 'none';
+                manualView.style.display = 'block';
+            });
+
+            function startCIEScanner() {
+                const readerElement = document.getElementById('reader');
+                readerElement.innerHTML = '<div style="color:white; padding: 40px 20px; text-align:center; font-weight:600; display:flex; align-items:center; height:100%; justify-content:center;">Richiesta accesso fotocamera...</div>';
+                
+                // Rimosso qrbox per evitare l'oscuramento invasivo.
+                // Usiamo l'intero video (adattato via CSS) per scansionare.
+                const config = {
+                    fps: 15
+                };
+
+                html5QrCode = new Html5Qrcode("reader");
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    config,
+                    (decodedText, decodedResult) => {
+                        const cfRegex = /^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/i;
+                        const cfMatchFallback = decodedText.match(/[A-Z0-9]{16}/i); 
+                        
+                        let extractedCF = null;
+
+                        if (cfRegex.test(decodedText)) { extractedCF = decodedText; } 
+                        else if (cfMatchFallback) { extractedCF = cfMatchFallback[0]; }
+
+                        if (extractedCF && extractedCF.length === 16) {
+                            const scannedCF = extractedCF.toUpperCase();
+                            stopScannerSafe().then(() => {
+                                verifyScannedCF(scannedCF);
+                            }).catch(() => {
+                                verifyScannedCF(scannedCF);
+                            });
+                        }
+                    },
+                    (errorMessage) => { 
+                        // Silenzioso
+                    }
+                ).catch((err) => {
+                    readerElement.innerHTML = `<div style="color:var(--danger); padding: 40px 20px; text-align:center; font-weight:600; background:#fff; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column;">Accesso fotocamera negato.<br><span style="font-size:0.8rem; color:#64748b; font-weight:500; margin-top:5px;">Controlla i permessi o usa l'inserimento manuale.</span></div>`;
+                });
+            }
+
+            function stopScannerSafe() {
+                return new Promise((resolve) => {
+                    if (html5QrCode && html5QrCode.isScanning) {
+                        html5QrCode.stop().then(() => {
+                            html5QrCode.clear();
+                            resolve();
+                        }).catch((e) => { resolve(); });
+                    } else {
+                        resolve();
+                    }
+                });
+            }
+
+            function verifyScannedCF(cfInputVal) {
+                const scanResult = document.getElementById('scan-result');
+                scanResult.style.display = 'block';
+                scanResult.innerHTML = `<div class="btn-loader" style="color: #d97706; width:100%; justify-content:center;"><div class="btn-spinner" style="border-top-color: #d97706; border-color: rgba(217,119,6,0.2);"></div><span style="font-weight:800; margin-left:8px;">Verifica in corso...</span></div>`;
+                scanResult.style.background = "#fffbeb";
+                scanResult.style.border = "1px solid #fde68a";
+                scanResult.style.color = "#d97706";
+
+                db.collection("studenti").where("cf", "==", cfInputVal).get().then((snap) => {
+                    if (!snap.empty && snap.docs[0].data().email) {
+                        auth.sendPasswordResetEmail(snap.docs[0].data().email).then(() => { 
+                            scanResult.innerHTML = `<svg viewBox="0 0 24 24" style="width: 36px; height: 36px; fill: var(--success); margin-bottom: 10px; display: block; margin: 0 auto 10px;"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg><span style="font-weight:900; font-size:1.15rem;">Identità Confermata</span><br><span style="font-weight:600; font-size:0.95rem; display:block; margin-top:5px;">Abbiamo inviato le istruzioni all'email di ${snap.docs[0].data().nome}.</span>`; 
+                            scanResult.style.background = "#ecfdf5";
+                            scanResult.style.border = "1px solid #a7f3d0";
+                            scanResult.style.color = "#065f46";
+                        }).catch(() => { 
+                            scanResult.innerHTML = `<span style="font-weight:900;">Errore di Rete</span><br><span style="font-weight:600; display:block; margin-top:5px;">Impossibile contattare il server email. Riprova tra poco.</span>`; 
+                            scanResult.style.background = "#fef2f2";
+                            scanResult.style.border = "1px solid #fecaca";
+                            scanResult.style.color = "#dc2626";
+                            setTimeout(() => { startCIEScanner(); scanResult.style.display = 'none'; }, 4000);
+                        });
+                    } else { 
+                        scanResult.innerHTML = `<span style="font-weight:900;">Non Trovato</span><br><span style="font-weight:600; display:block; margin-top:5px;">Il Codice Fiscale (${cfInputVal}) non corrisponde a nessun utente nel registro.</span>`; 
+                        scanResult.style.background = "#fef2f2";
+                        scanResult.style.border = "1px solid #fecaca";
+                        scanResult.style.color = "#dc2626";
+                        setTimeout(() => { startCIEScanner(); scanResult.style.display = 'none'; }, 4000);
+                    }
+                }).catch(err => {
+                    scanResult.innerHTML = `<span style="font-weight:900;">Errore di Rete</span><br><span style="font-weight:600; display:block; margin-top:5px;">Connessione al server di sicurezza fallita.</span>`; 
+                    scanResult.style.background = "#fef2f2";
+                    scanResult.style.border = "1px solid #fecaca";
+                    scanResult.style.color = "#dc2626";
+                    setTimeout(() => { startCIEScanner(); scanResult.style.display = 'none'; }, 4000);
+                });
+            }
+
             async function checkVPN() {
                 try {
                     const res = await fetch('https://ipapi.co/json/');
@@ -1420,22 +1349,15 @@
                 } catch (e) { return false; }
             }
 
-            // FUNZIONE DI LOGIN (CHIAMATA AUTOMATICAMENTE DAL CALLBACK SE NECESSARIO)
             window.eseguiAccessoServer = function() {
-                const pass = passInput.value.trim(); 
-                const uName = hiddenUsernameInput.value.trim();
-                
+                const pass = passInput.value.trim(); const uName = hiddenUsernameInput.value.trim();
                 submitBtn.innerText = "VERIFICA IN CORSO...";
-                
                 auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
                     if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: uName, email_utente: selectedUserEmail, orario_accesso: new Date().toLocaleString('it-IT') }); }
                     localStorage.removeItem('pcto_failed_attempts'); localStorage.removeItem('pcto_lockout_until');
-                    submitBtn.innerText = "ENTRA";
-                    submitBtn.disabled = false;
-                    entraNelPortale(uName);
+                    submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; entraNelPortale(uName);
                 }).catch(() => {
                     submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
-                    
                     window.globalTurnstileToken = "";
                     if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
 
@@ -1459,26 +1381,10 @@
                 submitBtn.innerText = "VERIFICA SICUREZZA..."; submitBtn.disabled = true;
 
                 const isVpn = await checkVPN();
-                if (isVpn) {
-                    errorMsg.innerText = "Disattivare la VPN per continuare.";
-                    errorMsg.style.display = 'block';
-                    submitBtn.innerText = "ENTRA"; submitBtn.disabled = false;
-                    return;
-                }
+                if (isVpn) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; return; }
                 
-                // SISTEMA INTELLIGENTE DI INVIO CON TURNSTILE
-                if (window.globalTurnstileToken) {
-                    window.eseguiAccessoServer();
-                } else {
-                    window.isWaitingForToken = true;
-                    if (typeof turnstile !== 'undefined') {
-                        try { turnstile.execute(); } catch(err) {}
-                    } else {
-                        errorMsg.innerText = "Errore di connessione a Cloudflare. Ricarica la pagina.";
-                        errorMsg.style.display = 'block';
-                        submitBtn.innerText = "ENTRA"; submitBtn.disabled = false;
-                    }
-                }
+                if (window.globalTurnstileToken) { window.eseguiAccessoServer(); } 
+                else { window.isWaitingForToken = true; if (typeof turnstile !== 'undefined') { try { turnstile.execute(); } catch(err) {} } else { errorMsg.innerText = "Errore di connessione a Cloudflare. Ricarica la pagina."; errorMsg.style.display = 'block'; submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; } }
             });
 
             const googleBtn = document.getElementById('custom-google-btn');
@@ -1487,7 +1393,6 @@
             googleBtn.addEventListener('click', async () => {
                 if (document.activeElement) document.activeElement.blur();
                 const originalGoogleBtn = googleBtn.innerHTML;
-
                 googleBtn.innerHTML = `<div class="btn-loader"><div class="btn-spinner"></div><span class="btn-text-main" style="margin-left: 5px;">CARICO...</span></div>`; 
                 googleBtn.disabled = true; googleErrorMsg.style.display = 'none';
                 
@@ -1584,8 +1489,6 @@
                 } else { container.innerHTML = '<div style="color:var(--warning); text-align:center; padding:20px; font-weight:700;">Dati temporaneamente offline.</div>'; }
             }
         });
-
-
     </script>
 </body>
 </html>
