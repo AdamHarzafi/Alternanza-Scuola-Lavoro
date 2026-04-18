@@ -142,7 +142,7 @@
         .modal-content::-webkit-scrollbar { width: 0; } 
 
         .modal-overlay.bottom-sheet { align-items: flex-end; padding: 0; }
-        .modal-overlay.bottom-sheet .modal-content { border-radius: 36px 36px 0 0; padding: 0; max-width: 500px; width: 100%; margin: 0 auto; transform: translateY(100%); border-bottom: none; max-height: 92vh; box-shadow: 0 -15px 40px rgba(0,0,0,0.15); transition: transform 0.4s var(--apple-smooth); display: block; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+        .modal-overlay.bottom-sheet .modal-content { border-radius: 36px 36px 0 0; padding: 0; max-width: 500px; width: 100%; margin: 0 auto; transform: translateY(100%); border-bottom: none; max-height: 92vh; box-shadow: 0 -15px 40px rgba(0,0,0,0.15); transition: transform 0.4s var(--apple-smooth); display: block; overflow: hidden; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; -webkit-mask-image: -webkit-radial-gradient(white, black); }
         .modal-overlay.bottom-sheet.active .modal-content { transform: translateY(0); }
         .bottom-sheet-body { padding: 25px 25px calc(30px + env(safe-area-inset-bottom, 0px)); width: 100%; }
 
@@ -158,7 +158,7 @@
         .seg-btn.active { color: var(--text-dark); }
         .seg-slider { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: #ffffff; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: transform 0.4s var(--apple-ease); z-index: 1; }
 
-        .login-rules-banner { background: #f0f9ff; color: var(--primary); border: 1px solid #bae6fd; padding: 10px 16px; text-align: center; border-radius: 14px; font-weight: 700; margin-bottom: 15px; font-size: 0.85rem; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .login-rules-banner { background: #f0f9ff; color: var(--primary); border: 1px solid #bae6fd; padding: 10px 16px; text-align: center; border-radius: 14px; font-weight: 700; margin-bottom: 15px; font-size: 0.85rem; cursor: pointer; transition: transform 0.3s var(--apple-ease), background 0.3s, border-color 0.3s, box-shadow 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .input-group { margin-bottom: 15px; position: relative; }
         .input-label { font-size: 0.8rem; font-weight: 800; color: var(--text-gray); margin-bottom: 6px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -228,7 +228,7 @@
             background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%); 
             padding: 40px 20px 20px; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            overflow: hidden; width: 100%; border-radius: 36px 36px 0 0; 
+            overflow: hidden; width: 100%; 
         }
         
         .recovery-title { font-size: 1.8rem; font-weight: 900; text-align: center; color: var(--text-dark); letter-spacing: -0.5px; margin-bottom: 25px; line-height: 1.2; position: relative; z-index: 2; }
@@ -296,10 +296,11 @@
         /* STILI SPECIFICI MODALE AVVISO CIE (Bottom Sheet Desktop -> Rounded Fullscreen Mobile) */
         .custom-bottom-sheet { align-items: flex-end; padding: 0; }
         .custom-bottom-sheet .avviso-modal-content { 
-            background: #ffffff; border-radius: 36px 36px 0 0; padding: 40px; 
+            background: #ffffff; border-radius: 36px 36px 0 0; padding: 40px 40px 60px 40px; 
             width: 100%; max-width: 650px; margin: 0 auto; 
             transform: translateY(100%); transition: transform 0.5s var(--apple-smooth); 
             border-bottom: none; box-shadow: 0 -20px 50px rgba(0,0,0,0.2); 
+            overflow: hidden; overflow-y: auto; -webkit-mask-image: -webkit-radial-gradient(white, black);
         }
         .custom-bottom-sheet.active .avviso-modal-content { transform: translateY(0); }
 
@@ -307,7 +308,8 @@
             .custom-bottom-sheet { align-items: flex-end; padding: 0; }
             .custom-bottom-sheet .avviso-modal-content { 
                 border-radius: 32px 32px 0 0; height: 95dvh; max-height: 95dvh; max-width: 100%; 
-                padding: 30px 20px; transform: translateY(100%); 
+                padding: 30px 20px calc(40px + env(safe-area-inset-bottom, 0px)); transform: translateY(100%); 
+                overflow: hidden; overflow-y: auto; -webkit-mask-image: -webkit-radial-gradient(white, black);
             }
             .avviso-inner-content {
                 display: flex; flex-direction: column; justify-content: flex-start; height: 100%;
@@ -417,7 +419,11 @@
             .bento-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 25px 60px rgba(2, 132, 199, 0.12); border-color: rgba(2, 132, 199, 0.15);}
             .bento-card.large:hover { box-shadow: 0 30px 60px rgba(15, 23, 42, 0.35); }
             .close-btn:hover { background: rgba(0,0,0,0.1); transform: scale(1.1); }
-            .login-rules-banner:hover { background: #fef3c7 !important; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.1); }
+            
+            /* DIVISI GLI HOVER DEI BANNER (BLU E GIALLO) */
+            #btn-rules-banner:hover { background: #e0f2fe !important; border-color: #7dd3fc !important; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15); }
+            #btn-cie-avviso:hover { background: #fef3c7 !important; border-color: #fde047 !important; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15); }
+            
             .custom-option:hover { background: #f0f9ff; color: var(--primary); }
             .toggle-password-btn:hover { color: var(--primary); }
             .btn-social:hover { background: #f9fafb; border-color: #d1d5db; transform: translateY(-2px) scale(1.01); box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
@@ -832,9 +838,11 @@
                         </div>
                     </div>
                     
-                    <!-- SOTTOTITOLO SOTTO L'IMMAGINE -->
-                    <p class="recovery-subtitle" style="margin-top: 25px; margin-bottom: 5px;">Inquadra il <strong>codice a barre</strong> presente sul retro della tua Carta d'Identità Elettronica.</p>
-                    <p style="font-size: 0.75rem; color: var(--text-light); text-align: center; font-weight: 600; margin-bottom: 0;">Le immagini potrebbero essere soggette a copyright.</p>
+                    <!-- COPYRIGHT SOTTO LA CIE -->
+                    <p style="font-size: 0.75rem; color: var(--text-light); text-align: center; font-weight: 600; margin-top: 15px; margin-bottom: 0;">Le immagini potrebbero essere soggette a copyright.</p>
+                    
+                    <!-- SOTTOTITOLO SOTTO IL COPYRIGHT -->
+                    <p class="recovery-subtitle" style="margin-top: 20px; margin-bottom: 5px;">Inquadra il <strong>codice a barre</strong> presente sul retro della tua Carta d'Identità Elettronica.</p>
                 </div>
 
                 <div class="bottom-sheet-body" style="padding-top: 15px;">
@@ -885,7 +893,7 @@
             <button class="close-btn" id="close-avviso-modal" style="top: 20px; right: 20px; z-index: 10;">&times;</button>
             
             <div class="avviso-inner-content">
-                <div style="background: #fffbeb; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; color: #d97706; box-shadow: 0 10px 25px rgba(217, 119, 6, 0.15);">
+                <div style="background: #fffbeb; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; color: #d97706; box-shadow: 0 10px 25px rgba(217, 119, 6, 0.15); flex-shrink: 0;">
                     <svg viewBox="0 0 24 24" style="width: 35px; fill: currentColor;"><path d="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"/></svg>
                 </div>
                 <h2 style="font-size: 1.8rem; color: var(--text-dark); text-align: center; margin-bottom: 25px; font-weight: 900; letter-spacing: -0.5px;">Avviso Importante</h2>
@@ -893,7 +901,7 @@
                     <p style="margin-bottom: 20px;">A partire dal <strong style="color: var(--text-dark);">3 agosto 2026</strong> la Carta d'Identità in formato cartaceo non sarà più considerata valida, né ai fini dell’espatrio, né come documento di riconoscimento sul territorio nazionale, come disposto dall'art. 5 del regolamento (UE) 2019/1157 del Parlamento Europeo del 20 giugno 2019 sul "Rafforzamento della sicurezza delle carte d'identità dei cittadini dell'Unione e dei titoli di soggiorno rilasciati ai cittadini dell'Unione e ai loro familiari che esercitano il diritto di libera circolazione."</p>
                     <p>A prescindere dalla data di scadenza riportata sul documento, la carta d’identità cartacea sarà quindi inutilizzabile e dovrà essere <strong style="color: var(--primary);">sostituita con la carta d’identità elettronica (CIE)</strong>.</p>
                 </div>
-                <button type="button" id="btn-close-avviso-full" class="btn-gradient" style="width: 100%; height: 56px; font-size: 1.1rem; border-radius: 16px;">← Torna indietro</button>
+                <button type="button" id="btn-close-avviso-full" class="btn-gradient" style="width: 100%; height: 56px; font-size: 1.1rem; border-radius: 16px; margin-top: auto; margin-bottom: 20px;">← Torna indietro</button>
             </div>
         </div>
     </div>
@@ -991,8 +999,6 @@
     </script>
 
     <script>
-        
-
         document.addEventListener("DOMContentLoaded", function() {
             const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
             const observer = new IntersectionObserver((entries, observer) => {
