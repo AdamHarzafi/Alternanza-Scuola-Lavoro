@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Dichiarazione di Accessibilità - Harzafi PCTO</title>
+    
+    <!-- Mobile Web App Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffffff">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/4R6Syg5N/Progetto-senza-titolo-removebg-preview.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://i.ibb.co/4R6Syg5N/Progetto-senza-titolo-removebg-preview.png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0284c7;        
+            --primary-hover: #0369a1;  
+            --primary-light: #e0f2fe;  
+            --accent: #0ea5e9;         
+            
+            --bg-body: #ffffff; 
+            --surface: rgba(255, 255, 255, 0.75);
+            --surface-solid: #ffffff;
+            
+            --text-dark: #0f172a;
+            --text-gray: #475569;
+            --text-light: #94a3b8;
+            
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border-color: #e2e8f0;
+
+            --radius-md: 20px;
+            --radius-lg: 32px;
+            
+            /* Animazioni fluide Apple Style */
+            --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
+            --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+            --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; outline: none !important; }
+        html { scroll-behavior: smooth; overflow-x: hidden; width: 100vw; }
+        body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; width: 100%; min-height: 100vh; margin: 0; display: flex; flex-direction: column; }
+
+        .glass { background: var(--surface); backdrop-filter: saturate(180%) blur(25px); -webkit-backdrop-filter: saturate(180%) blur(25px); box-shadow: 0 8px 32px rgba(2, 132, 199, 0.05); transform: translateZ(0); }
+        .reveal { opacity: 0; transform: translateY(30px) scale(0.96) translateZ(0); transition: opacity 0.8s var(--apple-ease), transform 0.8s var(--apple-ease); will-change: opacity, transform; }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1) translateZ(0); }
+
+        h1, h2, h3, h4 { letter-spacing: -0.04em; font-weight: 800; }
+        p { line-height: 1.6; color: var(--text-gray); font-size: 1.05rem; }
+
+        .btn-premium { background: var(--primary-light); color: var(--primary); border: none; padding: 12px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: transform 0.4s var(--apple-ease), background 0.4s, color 0.4s, box-shadow 0.4s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+        .btn-premium:active { transform: scale(0.95); transition: all 0.1s; }
+        @media (hover: hover) and (pointer: fine) { .btn-premium:hover { transform: scale(1.04); background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(2, 132, 199, 0.2); } }
+
+        /* NAVBAR IDENTICA AL SITO PRINCIPALE */
+        .navbar-wrapper { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateZ(0); width: calc(100% - 40px); max-width: 1200px; z-index: 1000; border-radius: 100px; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255, 255, 255, 0.8); background: var(--surface); transition: top 0.4s var(--apple-ease), width 0.4s var(--apple-ease), max-width 0.4s var(--apple-ease), border-radius 0.4s var(--apple-ease), background 0.4s var(--apple-ease), padding 0.4s var(--apple-ease), border-color 0.4s var(--apple-ease), box-shadow 0.4s var(--apple-ease); }
+        .navbar-wrapper.scrolled { top: 0; width: 100%; max-width: 2560px; border-radius: 0; padding: 15px 5vw; background: rgba(255, 255, 255, 0.85); backdrop-filter: saturate(200%) blur(40px); -webkit-backdrop-filter: saturate(200%) blur(40px); border: 1px solid transparent; border-bottom-color: rgba(0, 0, 0, 0.08); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); }
+        .nav-logo img { height: 36px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); transition: transform 0.3s var(--apple-ease); }
+        .nav-links { display: flex; gap: 35px; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 0.95rem; transition: color 0.3s, transform 0.3s var(--apple-ease);}
+        @media (hover: hover) and (pointer: fine) { .nav-links a:hover { color: var(--primary); transform: translateY(-2px); } }
+
+        /* LAYOUT CONTENUTI (Stile Bento / Dashboard Apple) */
+        .page-content { flex: 1; max-width: 1000px; margin: 150px auto 100px; padding: 0 5%; width: 100%; }
+        
+        .header-section { margin-bottom: 50px; text-align: center; }
+        .badge-gov { display: inline-flex; align-items: center; gap: 8px; background: var(--primary-light); color: var(--primary-hover); padding: 8px 16px; border-radius: 30px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px; border: 1px solid #bfdbfe; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.05); }
+        .badge-gov svg { width: 16px; fill: currentColor; }
+        .header-section h1 { font-size: clamp(2.5rem, 5vw, 3.8rem); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px; color: var(--text-dark); line-height: 1.1; }
+        .lead-text { font-size: 1.15rem; color: var(--text-gray); font-weight: 500; text-align: justify; margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto; }
+
+        /* Banner Conformità */
+        .compliance-banner { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: var(--radius-lg); padding: 35px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08); transition: transform 0.4s var(--apple-ease); }
+        .compliance-banner h2 { color: #065f46; font-size: 2rem; font-weight: 900; margin-bottom: 10px; letter-spacing: -0.5px;}
+        .compliance-banner p { color: #047857; font-size: 1.1rem; font-weight: 600; margin: 0; }
+
+        /* Card Dettagli Esecuzione UE */
+        .status-card { background: var(--surface-solid); border-radius: var(--radius-lg); padding: 40px; box-shadow: 0 15px 35px rgba(2, 132, 199, 0.04); border: 1px solid rgba(2, 132, 199, 0.05); margin-bottom: 50px; transition: transform 0.4s var(--apple-ease), box-shadow 0.4s var(--apple-ease); }
+        @media (hover: hover) and (pointer: fine) { .status-card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(2, 132, 199, 0.08); } }
+        
+        .status-header { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid var(--border-color); }
+        .status-circle { width: 50px; height: 50px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0; }
+        .status-header h3 { font-size: 1.4rem; margin: 0; color: var(--text-dark); line-height: 1.3;}
+        
+        .status-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .status-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: #f8fafc; border-radius: 16px; font-weight: 600; font-size: 1rem; border: 1px solid var(--border-color);}
+        .status-value { font-weight: 800; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; letter-spacing: 0.5px; display: inline-block;}
+        .status-value.yes { color: var(--success); background: #ecfdf5; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1); }
+        .status-value.no { color: var(--text-gray); background: #e2e8f0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);}
+
+        /* Sezioni Misure Tecniche WCAG */
+        .technical-section { margin-bottom: 20px; }
+        .technical-section > h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 15px; color: var(--text-dark); letter-spacing: -0.5px; text-align: center; }
+        .technical-section > p { font-size: 1.05rem; color: var(--text-gray); margin-bottom: 40px; font-weight: 500; text-align: center; max-width: 700px; margin-left: auto; margin-right: auto;}
+
+        .doc-section { background: var(--surface-solid); border-radius: var(--radius-lg); padding: 40px; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.04); border: 1px solid rgba(2, 132, 199, 0.05); margin-bottom: 24px; transition: transform 0.4s var(--apple-ease), box-shadow 0.4s; }
+        @media (hover: hover) and (pointer: fine) { .doc-section:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(2, 132, 199, 0.08); border-color: rgba(2, 132, 199, 0.15); } }
+        
+        .doc-section h3 { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 15px; margin-bottom: 25px; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 15px;}
+        .doc-section h3 svg { width: 30px; height: 30px; fill: var(--primary); }
+        
+        .req-list { list-style: none; }
+        .req-list li { margin-bottom: 25px; padding-left: 45px; position: relative; }
+        .req-list li:last-child { margin-bottom: 0; }
+        
+        /* Checkmark personalizzata */
+        .req-list li::before { 
+            content: ''; position: absolute; left: 0; top: 2px; width: 26px; height: 26px; 
+            background: var(--success); border-radius: 50%;
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>'); 
+            background-repeat: no-repeat; background-position: center; background-size: 16px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+        
+        .req-list strong { color: var(--text-dark); display: block; margin-bottom: 6px; font-size: 1.1rem; }
+        .req-list span { color: var(--text-gray); font-size: 1rem; font-weight: 500; line-height: 1.6; display: block; }
+
+        /* FOOTER IDENTICO AL SITO PRINCIPALE */
+        .footer-wrapper { background: var(--surface-solid); border-top: 1px solid rgba(2, 132, 199, 0.08); border-radius: 48px 48px 0 0; padding: 80px 5% 40px; color: var(--text-dark); box-shadow: 0 -20px 50px rgba(2, 132, 199, 0.03); position: relative; z-index: 10; margin-top: auto;}
+        .mim-footer-wrap { width: 100%; display: flex; justify-content: center; margin-bottom: 50px; }
+        .footer-logo-mim { height: 80px; filter: opacity(0.9); transition: transform 0.4s var(--apple-ease), filter 0.4s; } 
+        @media (hover: hover) and (pointer: fine) { .footer-logo-mim:hover { filter: opacity(1) drop-shadow(0 15px 25px rgba(0,0,0,0.1)); transform: scale(1.05); } }
+
+        .grid-infos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 1200px; margin: 0 auto 50px; gap: 40px; border-bottom: 1px solid var(--border-color); padding-bottom: 50px; }
+        .col-info h4 { font-size: 1.15rem; color: var(--text-dark); font-weight: 900; margin-bottom: 24px; text-transform: uppercase; display: flex; align-items: center; gap: 12px;}
+        .col-info h4 svg { width: 22px; fill: var(--primary); transition: transform 0.4s var(--apple-ease); }
+        .col-info p { font-size: 1rem; line-height: 1.8; color: var(--text-gray); font-weight: 500;}
+        .col-info a { color: var(--text-gray); text-decoration: none; font-weight: 700; transition: color 0.3s var(--apple-ease);}
+        .col-info span.hi { font-weight: 800; color: var(--text-dark);}
+        @media (hover: hover) and (pointer: fine) { .col-info:hover h4 svg { transform: scale(1.2) rotate(10deg); } .col-info a:hover { color: var(--primary); } }
+        
+        .bottom-branding { text-align: center; padding-bottom: 30px; }
+        .badge-views { display: inline-flex; align-items: center; gap: 10px; background: var(--primary-light); padding: 10px 24px; border-radius: 30px; font-size: 0.9rem; font-weight: 800; color: var(--primary-hover); margin-bottom: 24px; transition: transform 0.4s var(--apple-ease), box-shadow 0.4s; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.05);}
+        .copyright-text { font-size: 1rem; color: var(--text-gray); font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;}
+        .legal-links { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; }
+        .legal-links a { color: var(--text-light); font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: color 0.3s var(--apple-ease);}
+        .legal-links span.desktop-divider { color: var(--border-color); font-size: 0.9rem; }
+        @media (hover: hover) and (pointer: fine) { .legal-links a:hover { color: var(--primary); text-decoration: underline; } }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .grid-infos { justify-content: center; text-align: center; }
+            .col-info { text-align: center; }
+            .col-info h4 { justify-content: center; }
+        }
+
+        @media (max-width: 600px) {
+            .navbar-wrapper { width: 92%; padding: 12px 18px; top: 15px;}
+            .navbar-wrapper.scrolled { width: 100%; padding: 15px 20px; top: 0;}
+            .page-content { padding: 0 20px; margin-top: 110px; }
+            .header-section h1 { font-size: clamp(2.2rem, 10vw, 2.8rem); letter-spacing: -1px;}
+            .compliance-banner h2 { font-size: 1.6rem; }
+            .status-card, .doc-section { padding: 25px 20px; border-radius: 20px; }
+            .status-item { flex-direction: column; align-items: flex-start; gap: 10px; padding: 15px;}
+            .req-list li { padding-left: 35px; }
+            .req-list li::before { width: 22px; height: 22px; top: 3px; background-size: 14px;}
+            .footer-logo-mim { height: 60px; }
+            .legal-links { flex-direction: column; gap: 15px;}
+            .legal-links span.desktop-divider { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR IDENTICA -->
+    <nav class="navbar-wrapper glass">
+        <div class="nav-logo" onclick="window.location.href='index.html'">
+            <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Logo Harzafi">
+        </div>
+        <div class="nav-links">
+            <a href="index.html#features">Funzionalità</a>
+            <a href="index.html#footer">Contatti Ufficiali</a>
+        </div>
+        <a href="index.html" class="btn-premium">Torna al Portale</a>
+    </nav>
+
+    <!-- CONTENUTO PRINCIPALE -->
+    <main class="page-content">
+        
+        <div class="header-section reveal">
+            <div class="badge-gov">
+                <svg viewBox="0 0 24 24"><path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,10.99H19C18.47,14.61 15.82,17.75 12,18.91V11H5V6.3L12,3.19V10.99Z"/></svg>
+                Documento Ufficiale AgID
+            </div>
+            <h1>Dichiarazione di Accessibilità</h1>
+            <p class="lead-text">La piattaforma <strong>Registro PCTO Harzafi</strong> si impegna a rendere il proprio portale web accessibile, conformemente al D.lgs 10 agosto 2018, n. 106 che ha recepito la direttiva UE 2016/2102 del Parlamento europeo e del Consiglio.</p>
+        </div>
+
+        <div class="compliance-banner reveal">
+            <h2>Pienamente Conforme</h2>
+            <p>Il Portale Registro PCTO Harzafi rispetta rigorosamente i requisiti tecnici WCAG 2.1 (Livello AA).</p>
+        </div>
+
+        <div class="status-card reveal">
+            <div class="status-header">
+                <div class="status-circle">
+                    <svg viewBox="0 0 24 24" style="width: 26px; fill: currentColor;"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                </div>
+                <h3>Sezione 1 - Contenuti in ottemperanza alla Decisione di esecuzione UE 2018/1523</h3>
+            </div>
+            
+            <div class="status-grid">
+                <div class="status-item">
+                    <span>Stato di conformità:</span>
+                    <span class="status-value yes">CONFORME</span>
+                </div>
+                <div class="status-item">
+                    <span>Inosservanza della Legge 4/2004:</span>
+                    <span class="status-value no">NO</span>
+                </div>
+                <div class="status-item">
+                    <span>Onere sproporzionato:</span>
+                    <span class="status-value no">NO</span>
+                </div>
+                <div class="status-item">
+                    <span>Il contenuto non rientra nell'ambito della legislazione applicabile:</span>
+                    <span class="status-value no">NO</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="technical-section">
+            <h2 class="reveal">Misure Tecniche Applicate (WCAG 2.1)</h2>
+            <p class="reveal">Di seguito si elencano le soluzioni architetturali e di design implementate all'interno del codice sorgente del sito Harzafi per garantire l'accessibilità universale, affinché i contenuti siano percepibili, utilizzabili, comprensibili e robusti.</p>
+
+            <div class="doc-section reveal">
+                <h3>
+                    <svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
+                    Disabilità Visive (Ciechi/Ipovedenti)
+                </h3>
+                <ul class="req-list">
+                    <li><strong>Testo alternativo (ALT tag):</strong> <span>Tutte le immagini non testuali (inclusi loghi scolastici, icone partner e schede) possiedono descrizioni testuali accurate nel codice per essere lette dai software assistivi.</span></li>
+                    <li><strong>Compatibilità con Screen Reader:</strong> <span>Il portale presenta una struttura del codice HTML5 semantica e validata, corretta e ottimizzata per la piena interpretazione da parte dei lettori di schermo (VoiceOver, NVDA, JAWS).</span></li>
+                    <li><strong>Contrasto elevato:</strong> <span>L'interfaccia utente è disegnata per garantire sempre un contrasto netto tra testo e sfondo. I colori rispettano un rapporto minimo di luminanza di 4.5:1.</span></li>
+                    <li><strong>Ridimensionamento testo:</strong> <span>Il layout fluido permette la possibilità di ingrandire i caratteri (fino al 200%) tramite gli strumenti nativi del browser senza generare sovrapposizioni o perdere informazioni.</span></li>
+                </ul>
+            </div>
+
+            <div class="doc-section reveal">
+                <h3>
+                    <svg viewBox="0 0 24 24"><path d="M21 9h-4c-.55 0-1-.45-1-1s.45-1 1-1h4c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2h-4c-.55 0-1-.45-1-1s.45-1 1-1h4V9zM7 9H3v4h4c.55 0 1 .45 1 1s-.45 1-1 1H3c-1.1 0-2-.9-2-2V9c0-1.1.9-2 2-2h4c.55 0 1 .45 1 1s-.45 1-1 1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                    Disabilità Motorie
+                </h3>
+                <ul class="req-list">
+                    <li><strong>Navigazione da tastiera:</strong> <span>Tutto il sito, compresi modali, popup e menu a tendina, è esplorabile e pienamente operabile usando solo i tasti TAB, INVIO e le frecce direzionali, senza necessità di un mouse.</span></li>
+                    <li><strong>Focus visibile:</strong> <span>Forniamo un'indicazione chiara, evidente e standardizzata (focus ring) dell'elemento selezionato durante l'intera fase di navigazione.</span></li>
+                </ul>
+            </div>
+
+            <div class="doc-section reveal">
+                <h3>
+                    <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c2.12 0 4.07-.74 5.61-1.97l-1.42-1.42C14.33 18.49 13.22 19 12 19c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7c0 1.5-.47 2.89-1.28 4.02l1.42 1.42C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9zM11 7v6h6v-2h-4V7h-2z"/></svg>
+                    Disabilità Cognitive e Uditive
+                </h3>
+                <ul class="req-list">
+                    <li><strong>Struttura ordinata:</strong> <span>Uso gerarchico rigoroso di intestazioni (H1-H6), sezioni ben distinte e menu di navigazione logici e coerenti in tutto l'applicativo.</span></li>
+                    <li><strong>Sottotitoli e trascrizioni:</strong> <span>Laddove presenti contenuti multimediali formativi (per audio e video), sono previsti sottotitoli testuali o trascrizioni equivalenti.</span></li>
+                    <li><strong>Linguaggio semplice:</strong> <span>I testi d'uso comune sono redatti per essere immediati. È stato appositamente evitato l'inserimento di contenuti complessi e di elementi grafici lampeggianti che possano causare o innescare crisi di epilessia fotosensibile.</span></li>
+                </ul>
+            </div>
+
+            <div class="doc-section reveal">
+                <h3>
+                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                    Adempimenti Legali (Italia/UE)
+                </h3>
+                <ul class="req-list">
+                    <li><strong>Dichiarazione di accessibilità:</strong> <span>La dichiarazione è obbligatoriamente presente nel footer di tutte le pagine pubbliche, e descrive ufficialmente il nostro totale stato di conformità.</span></li>
+                </ul>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER IDENTICO -->
+    <footer id="footer" class="footer-wrapper">
+        <div class="mim-footer-wrap reveal">
+            <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" class="footer-logo-mim" alt="Logo Ministero">
+            </a>
+        </div>
+
+        <div class="grid-infos">
+            <div class="col-info reveal">
+                <h4>
+                    <svg viewBox="0 0 24 24"><path d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7Z"/></svg>
+                    Struttura Operativa Scuola
+                </h4>
+                <p>ITIS Amedeo Avogadro</p>
+                <p><span class="address-link">Corso San Maurizio, 8 - 10124 Torino</span></p>
+                <p>Tel: <a href="tel:+390118153611" class="tel-link">+39 011 815 3611</a></p>
+                <p>C.F: <span class="hi">97550230011</span> — CU: <span class="hi">UFEEBL</span></p>
+            </div>
+            
+            <div class="col-info reveal">
+                <h4>
+                    <svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
+                    Servizi Dati & Finanziari
+                </h4>
+                <p>Email Segreteria:<br> <a href="mailto:tois05100c@istruzione.it" class="hi">tois05100c@istruzione.it</a></p>
+                <p>Rete PEC:<br> <a href="mailto:tois05100c@pec.istruzione.it" class="hi">tois05100c@pec.istruzione.it</a></p>
+                <p>Banca Intesa:<br> <span class="hi">IT05K0306909208100000046188</span></p>
+                <p>Banca D'Italia:<br> <span class="hi">IT51C0100003245114300317144</span></p>
+            </div>
+            
+            <div class="col-info reveal">
+                <h4>
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    Informazioni Contatto
+                </h4>
+                <p>Il sito è gestito da Harzafi Adam</p>
+                <p>Classe 3°A Informatica</p>
+                <p>Anno di Corso: 2025/2026</p>
+                <p><br>Email personale:<br> <a href="mailto:adamharzafi@gmail.com" class="hi">adamharzafi@gmail.com</a></p>
+                <p>Email scolastica:<br> <a href="mailto:s11205413d@studenti.itisavogadro.it" class="hi">s11205413d@studenti.itisavogadro.it</a></p>
+                <p>Richiesta di assistenza:<br> <a href="harzafi.support@gmail.com" class="hi">harzafi.support@gmail.com</a></p>
+            </div>
+        </div>
+
+        <div class="bottom-branding reveal">
+            <p class="copyright-text">Harzafi © - Tutti i diritti riservati</p>
+            <div class="legal-links">
+                <a href="accessibilita.html" style="color: var(--primary);">Dichiarazione di Accessibilità</a>
+                <span class="desktop-divider">|</span>
+                <a href="privacy.html">Privacy Policy</a>
+                <span class="desktop-divider">|</span>
+                <a href="termini.html">Termini di Servizio</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script per le animazioni e lo scroll (Identico al sito principale) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Animazioni in entrata (.reveal)
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => { 
+                    if (entry.isIntersecting) { 
+                        entry.target.classList.add('active'); 
+                        observer.unobserve(entry.target); 
+                    } 
+                });
+            }, observerOptions);
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+
+        // Gestione effetto Glassmorphism Navbar allo scroll
+        const navbar = document.querySelector('.navbar-wrapper');
+        let isScrolled = false;
+        window.addEventListener('scroll', () => {
+            const shouldBeScrolled = window.scrollY > 40;
+            if (shouldBeScrolled !== isScrolled) {
+                isScrolled = shouldBeScrolled;
+                if (isScrolled) { navbar.classList.add('scrolled'); } 
+                else { navbar.classList.remove('scrolled'); }
+            }
+        }, { passive: true });
+    </script>
+
+</body>
+</html>
