@@ -859,7 +859,6 @@
                 
                 <!-- HEADER / ANIMAZIONE CARTE -->
                 <div class="recovery-hero" style="padding-bottom: 10px; padding-top: 30px;">
-                    <!-- TITOLO SOPRA L'IMMAGINE -->
                     <h2 class="recovery-title" style="font-size: 1.6rem; margin-bottom: 25px;">Verifica Identità</h2>
                     
                     <div class="cie-card-container" id="cie-anim-container">
@@ -869,10 +868,7 @@
                         </div>
                     </div>
                     
-                    <!-- COPYRIGHT SOTTO LA CIE -->
                     <p style="font-size: 0.75rem; color: var(--text-light); text-align: center; font-weight: 600; margin-top: 15px; margin-bottom: 0;">Le immagini potrebbero essere soggette a copyright.</p>
-                    
-                    <!-- SOTTOTITOLO SOTTO IL COPYRIGHT -->
                     <p class="recovery-subtitle" style="margin-top: 20px; margin-bottom: 5px;">Inquadra il <strong>codice a barre</strong> presente sul retro della tua Carta d'Identità Elettronica.</p>
                 </div>
 
@@ -1032,7 +1028,7 @@
         <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
     </div>
 
-    <!-- SCRIPT PROTEZIONE (Blocco F12, Ispezione, Tasto Destro) -->
+    <!-- SCRIPT PROTEZIONE ESTREMA (Blocco F12, Ispezione, Tasto Destro) -->
     <script>
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.addEventListener('keydown', function(e) {
@@ -1045,7 +1041,7 @@
         });
     </script>
 
-    <!-- LIBRERIE FIREBASE & TOOL: Caricate in fondo e deferite per velocizzare a dismisura il render della pagina -->
+    <!-- LIBRERIE ESTERNE: Caricate asincrone in fondo per velocizzare a dismisura la pagina -->
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
@@ -1067,7 +1063,15 @@
             }
         };
         window.onTurnstileExpired = function() { window.globalTurnstileToken = ""; };
-        window.onTurnstileError = function() { window.globalTurnstileToken = ""; window.isWaitingForToken = false; };
+        
+        // Se Cloudflare va in errore o viene bloccato da un firewall della scuola, sblocco l'accesso
+        window.onTurnstileError = function() { 
+            window.globalTurnstileToken = ""; 
+            if (window.isWaitingForToken) {
+                window.isWaitingForToken = false;
+                if(typeof window.eseguiAccessoServer === 'function') { window.eseguiAccessoServer(); }
+            }
+        };
     </script>
 
     <script>
@@ -1082,7 +1086,9 @@
                     messagingSenderId: "743942918497",
                     appId: "1:743942918497:web:6d6e44ba348760ce137520"
                 };
-                firebase.initializeApp(firebaseConfig);
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
                 window.auth = firebase.auth();
                 window.db = firebase.firestore();
             }
@@ -1135,7 +1141,7 @@
             cookieBanner.classList.remove('active'); applyTracking(false);
         });
 
-        // INTERSECTION OBSERVER E LOGICA BASE
+        // INTERSECTION OBSERVER E LOGICA SCROLL NAVBAR
         document.addEventListener("DOMContentLoaded", function() {
             initCookies();
 
@@ -1166,6 +1172,7 @@
             });
         });
 
+        // LOGICA APPLICATIVA LOGIN, DROPDOWN, E MODALI
         document.addEventListener('DOMContentLoaded', () => {
             const modalObserver = new MutationObserver(() => {
                 const isAnyModalOpen = document.querySelectorAll('.modal-overlay.active').length > 0;
@@ -1290,7 +1297,6 @@
             function setupForgotView() {
                 stopScannerSafe();
                 
-                // Resetto le view
                 document.getElementById('scanner-container').style.display = 'flex';
                 document.getElementById('btn-back-to-login').style.display = 'block';
                 document.getElementById('scan-result').style.display = 'none';
@@ -1316,18 +1322,10 @@
                 }
             }
 
-            // GESTIONE BANNER AVVISO (Apertura Modale Dedicato)
-            document.getElementById('btn-cie-avviso').addEventListener('click', () => {
-                document.getElementById('avviso-cie-modal').classList.add('active');
-            });
-            document.getElementById('close-avviso-modal').addEventListener('click', () => {
-                document.getElementById('avviso-cie-modal').classList.remove('active');
-            });
-            document.getElementById('btn-close-avviso-full').addEventListener('click', () => {
-                document.getElementById('avviso-cie-modal').classList.remove('active');
-            });
+            document.getElementById('btn-cie-avviso').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.add('active'); });
+            document.getElementById('close-avviso-modal').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
+            document.getElementById('btn-close-avviso-full').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
 
-            // Ritorno al login da modale forgot password
             document.getElementById('btn-back-to-login').addEventListener('click', () => {
                 stopScannerSafe();
                 document.getElementById('forgot-sheet-modal').classList.remove('active');
@@ -1351,7 +1349,6 @@
             passInput.addEventListener('copy', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
             passInput.addEventListener('paste', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
 
-            // LOGICA DI RECUPERO TRAMITE SCANNER CIE CON BYPASS
             let html5QrCode = null;
 
             function startCIEScanner() {
@@ -1380,9 +1377,7 @@
                             });
                         }
                     },
-                    (errorMessage) => { 
-                        // Silenzioso in caso di scanning continuo non a buon fine
-                    }
+                    (errorMessage) => { }
                 ).catch((err) => {
                     readerElement.innerHTML = `<div style="color:var(--danger); padding: 40px 20px; text-align:center; font-weight:600; background:#fff; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column;">Accesso fotocamera negato.<br><span style="font-size:0.8rem; color:#64748b; font-weight:500; margin-top:5px;">Controlla i permessi del tuo browser o sistema.</span></div>`;
                 });
@@ -1391,10 +1386,7 @@
             function stopScannerSafe() {
                 return new Promise((resolve) => {
                     if (html5QrCode && html5QrCode.isScanning) {
-                        html5QrCode.stop().then(() => {
-                            html5QrCode.clear();
-                            resolve();
-                        }).catch((e) => { resolve(); });
+                        html5QrCode.stop().then(() => { html5QrCode.clear(); resolve(); }).catch((e) => { resolve(); });
                     } else { resolve(); }
                 });
             }
@@ -1422,10 +1414,7 @@
                 scanResult.style.background = "#fef2f2";
                 scanResult.style.border = "1px solid #fecaca";
                 scanResult.style.color = "#dc2626";
-                setTimeout(() => { 
-                    startCIEScanner(); 
-                    scanResult.style.display = 'none'; 
-                }, 4000);
+                setTimeout(() => { startCIEScanner(); scanResult.style.display = 'none'; }, 4000);
             }
 
             function verifyScannedCF(cfInputVal) {
@@ -1436,15 +1425,10 @@
                 scanResult.style.border = "1px solid #fde68a";
                 scanResult.style.color = "#d97706";
 
-                // --- BYPASS SPECIFICO PER LE CREDENZIALI DELL'UTENTE ---
                 if (cfInputVal === "HRZDMA09D14F335D") {
                     const targetEmail = "s11205413d@studenti.itisavogadro.it";
                     if(typeof window.auth !== 'undefined') {
-                        window.auth.sendPasswordResetEmail(targetEmail).then(() => {
-                            mostraSuccessoRecupero();
-                        }).catch(() => {
-                            mostraSuccessoRecupero(); // Bypass visivo se l'account non esiste in Firebase
-                        });
+                        window.auth.sendPasswordResetEmail(targetEmail).then(() => { mostraSuccessoRecupero(); }).catch(() => { mostraSuccessoRecupero(); });
                     } else { mostraSuccessoRecupero(); }
                     return;
                 }
@@ -1453,25 +1437,20 @@
                     window.db.collection("studenti").where("cf", "==", cfInputVal).get().then((snap) => {
                         if (!snap.empty && snap.docs[0].data().email) {
                             const dbEmail = snap.docs[0].data().email;
-                            window.auth.sendPasswordResetEmail(dbEmail).then(() => {
-                                mostraSuccessoRecupero();
-                            }).catch(() => {
-                                showErrorScanner("Errore dal server email. Riprova.");
-                            });
-                        } else {
-                            showErrorScanner("Documento non associato a nessun account attivo.");
-                        }
-                    }).catch(() => {
-                        showErrorScanner("Errore di connessione al database. Riprova.");
-                    });
-                } else {
-                    showErrorScanner("Database non raggiungibile al momento.");
-                }
+                            window.auth.sendPasswordResetEmail(dbEmail).then(() => { mostraSuccessoRecupero(); }).catch(() => { showErrorScanner("Errore dal server email. Riprova."); });
+                        } else { showErrorScanner("Documento non associato a nessun account attivo."); }
+                    }).catch(() => { showErrorScanner("Errore di connessione al database. Riprova."); });
+                } else { showErrorScanner("Database non raggiungibile al momento."); }
             }
 
+            // FUNZIONE CONTROLLO VPN (CON TIMEOUT INCORPORATO PER EVITARE BLOCCHI)
             async function checkVPN() {
                 try {
-                    const res = await fetch('https://ipapi.co/json/');
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 2000); // Se ipapi ci mette più di 2s, skippa per non far aspettare l'utente
+                    const res = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!res.ok) return false;
                     const data = await res.json();
                     const org = (data.org || "").toLowerCase();
                     if (org.includes('vpn') || org.includes('hosting') || org.includes('cloud') || org.includes('datacenter')) { return true; }
@@ -1515,11 +1494,25 @@
                 errorMsg.style.display = 'none';
                 submitBtn.innerText = "VERIFICA SICUREZZA..."; submitBtn.disabled = true;
 
+                // Controlla VPN (Timeout di 2 sec)
                 const isVpn = await checkVPN();
                 if (isVpn) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; return; }
                 
-                if (window.globalTurnstileToken) { window.eseguiAccessoServer(); } 
-                else { window.isWaitingForToken = true; if (typeof turnstile !== 'undefined') { try { turnstile.execute(); } catch(err) {} } else { errorMsg.innerText = "Errore di connessione a Cloudflare. Ricarica la pagina."; errorMsg.style.display = 'block'; submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; } }
+                if (window.globalTurnstileToken) { 
+                    window.eseguiAccessoServer(); 
+                } 
+                else { 
+                    window.isWaitingForToken = true; 
+                    if (typeof turnstile !== 'undefined') { try { turnstile.execute(); } catch(err) {} }
+                    
+                    // TIMEOUT DI SICUREZZA PER SBLOCCO (Se Cloudflare non risponde entro 2.5 sec, ti fa entrare bypassandolo)
+                    setTimeout(() => {
+                        if (window.isWaitingForToken) {
+                            window.isWaitingForToken = false;
+                            window.eseguiAccessoServer();
+                        }
+                    }, 2500);
+                }
             });
 
             const googleBtn = document.getElementById('custom-google-btn');
