@@ -395,7 +395,7 @@
         .map-app-btn img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08)); transition: transform 0.3s var(--apple-ease); }
         .map-app-btn span { font-size: clamp(0.7rem, 2.5vw, 0.85rem); font-weight: 700; color: var(--text-dark); margin-top: 8px; white-space: nowrap; }
 
-        /* NUOVA FRECCIA TORNA SU */
+        /* FRECCIA TORNA SU */
         .scroll-to-top {
             position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px;
             border-radius: 50%; background: rgba(255, 255, 255, 0.85);
@@ -409,7 +409,7 @@
         .scroll-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .scroll-to-top svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: transform 0.3s; }
         
-        /* BANNER COOKIE APPLE STYLE */
+        /* BANNER COOKIE APPLE STYLE CON BISCOTTO SVG ANIMATO */
         .cookie-banner {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(150%);
             width: calc(100% - 40px); max-width: 800px;
@@ -422,7 +422,14 @@
             opacity: 0; pointer-events: none;
         }
         .cookie-banner.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
-        .cookie-icon { font-size: 46px; flex-shrink: 0; filter: drop-shadow(0 4px 10px rgba(217, 119, 6, 0.3)); animation: floatCard 4s ease-in-out infinite; }
+        
+        .cookie-icon { width: 46px; height: 46px; flex-shrink: 0; animation: floatCard 4s ease-in-out infinite; }
+        .cookie-icon svg { width: 100%; height: 100%; animation: pulseBlueCookie 4s ease-in-out infinite alternate; }
+        @keyframes pulseBlueCookie { 
+            0%, 100% { fill: #0284c7; filter: drop-shadow(0 4px 10px rgba(2, 132, 199, 0.3)); } 
+            50% { fill: #38bdf8; filter: drop-shadow(0 4px 15px rgba(56, 189, 248, 0.6)); } 
+        }
+
         .cookie-content { flex: 1; text-align: left; }
         .cookie-content h4 { margin-bottom: 8px; font-size: 1.15rem; color: var(--text-dark); font-weight: 900;}
         .cookie-content p { font-size: 0.9rem; line-height: 1.5; color: var(--text-gray); margin-bottom: 0; font-weight: 500;}
@@ -592,7 +599,6 @@
             </div>
         </header>
 
-        <!-- Aggiunto content-lazy per ottimizzazione mobile estrema -->
         <section class="partners reveal content-lazy">
             <h2 class="partners-title">In collaborazione con</h2>
             <div class="partners-inner">
@@ -617,7 +623,6 @@
             </div>
         </section>
 
-        <!-- Aggiunto content-lazy per ottimizzazione mobile estrema -->
         <section id="features" class="bento-section content-lazy">
             <h2 class="reveal">Tutto ciò che ti serve.<br><span style="color: var(--text-light);">In un unico posto.</span></h2>
             <div class="bento-grid">
@@ -644,7 +649,6 @@
             </div>
         </section>
 
-        <!-- Aggiunto content-lazy per ottimizzazione mobile estrema -->
         <footer id="footer" class="footer-wrapper content-lazy">
             <div class="mim-footer-wrap reveal">
                 <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
@@ -1019,7 +1023,12 @@
 
     <!-- BANNER COOKIE (Normative GDPR & ePrivacy) -->
     <div id="apple-cookie-banner" class="cookie-banner">
-        <div class="cookie-icon">🍪</div>
+        <div class="cookie-icon">
+            <!-- Vettore SVG Cookie Animato -->
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.06 0 2.08-.16 3.03-.46.33-.11.58-.39.64-.73.06-.35-.05-.71-.31-.95-.69-.64-1.12-1.54-1.12-2.54 0-1.93 1.57-3.5 3.5-3.5.34 0 .66.05.97.13.31.08.64.01.89-.2.24-.22.37-.53.33-.86-.13-.98.24-1.97.94-2.61.26-.24.37-.6.31-.95-.06-.34-.31-.62-.64-.73C18.6 3.19 15.48 2 12 2zm-3 5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 6c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm5 5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm3-7c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm1-4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
+            </svg>
+        </div>
         <div class="cookie-content">
             <h4>La tua Privacy è Importante</h4>
             <p>Utilizziamo cookie tecnici strettamente necessari per il funzionamento sicuro del sito e cookie di misurazione (tracciamento) per analizzare il traffico in forma aggregata, in conformità con il GDPR. Puoi scegliere se acconsentire all'uso dei cookie di tracciamento.</p>
@@ -1112,7 +1121,7 @@
         });
         scrollBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-        // GESTIONE BANNER COOKIE (Normative GDPR e ePrivacy)
+        // GESTIONE BANNER COOKIE E TRACCIAMENTO VISTE
         const cookieBanner = document.getElementById('apple-cookie-banner');
         const btnAccetto = document.getElementById('btn-accetto-cookie');
         const btnRifiuto = document.getElementById('btn-rifiuto-cookie');
