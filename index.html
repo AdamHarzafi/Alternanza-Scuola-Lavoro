@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Registro PCTO Harzafi - Portale Ufficiale</title>
     
-    <!-- OTTIMIZZAZIONE PERFORMANCE: Preconnect per velocizzare il caricamento DNS -->
+    <!-- OTTIMIZZAZIONE PERFORMANCE ESTREMA: Preconnect e DNS-Prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="preconnect" href="https://i.ibb.co">
+    <link rel="dns-prefetch" href="https://challenges.cloudflare.com">
 
     <!-- Mobile Web App Meta Tags -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -60,6 +61,9 @@
         
         /* Permetti selezione solo negli input */
         input, textarea { -webkit-user-select: auto; user-select: auto; }
+
+        /* Ottimizzazione Rendering Mobile - Evita di processare grafica fuori dallo schermo */
+        .content-lazy { content-visibility: auto; contain-intrinsic-size: 1000px; }
 
         html { scroll-behavior: smooth; overflow-x: hidden; width: 100vw; }
         body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; width: 100%; min-height: 100vh; margin: 0; }
@@ -276,7 +280,7 @@
             100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
         }
 
-        /* STILI SPECIFICI MODALE AVVISO CIE (Bottom Sheet Desktop -> Rounded Fullscreen Mobile) */
+        /* STILI SPECIFICI MODALE AVVISO CIE */
         .custom-bottom-sheet { align-items: flex-end; padding: 0; }
         .custom-bottom-sheet .avviso-modal-content { 
             background: #ffffff; border-radius: 36px 36px 0 0; padding: 40px 40px 60px 40px; 
@@ -588,31 +592,33 @@
             </div>
         </header>
 
-        <section class="partners reveal">
+        <!-- Aggiunto content-lazy per ottimizzazione mobile estrema -->
+        <section class="partners reveal content-lazy">
             <h2 class="partners-title">In collaborazione con</h2>
             <div class="partners-inner">
                 <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
-                    <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" alt="MIM">
+                    <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" loading="lazy" decoding="async" alt="MIM">
                 </a>
                 <a href="#" target="_blank" rel="noopener noreferrer">
-                    <img src="https://i.ibb.co/21sz18p8/ITS-ACADEMY.png" alt="ITS Academy" style="height: 50px;">
+                    <img src="https://i.ibb.co/21sz18p8/ITS-ACADEMY.png" loading="lazy" decoding="async" alt="ITS Academy" style="height: 50px;">
                 </a>
                 <a href="https://www.netacad.com/" target="_blank" rel="noopener noreferrer">
-                    <img src="https://i.ibb.co/fdPVg45h/Cisco-logo-blue-2016-svg.png" alt="Cisco">
+                    <img src="https://i.ibb.co/fdPVg45h/Cisco-logo-blue-2016-svg.png" loading="lazy" decoding="async" alt="Cisco">
                 </a>
                 <a href="https://www.unito.it/" target="_blank" rel="noopener noreferrer">
-                    <img src="https://i.ibb.co/VcDkMgJg/Universita-Di-Torino-Logo-Vector-svg-300x114.png" alt="UniTo">
+                    <img src="https://i.ibb.co/VcDkMgJg/Universita-Di-Torino-Logo-Vector-svg-300x114.png" loading="lazy" decoding="async" alt="UniTo">
                 </a>
                 <a href="https://www.hackersgen.com/" target="_blank" rel="noopener noreferrer">
-                    <img src="https://i.ibb.co/JRPS3QyJ/HGlogo2.png" alt="HackersGen">
+                    <img src="https://i.ibb.co/JRPS3QyJ/HGlogo2.png" loading="lazy" decoding="async" alt="HackersGen">
                 </a>
                 <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
-                    <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub" style="height: 35px;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" loading="lazy" decoding="async" alt="GitHub" style="height: 35px;">
                 </a>
             </div>
         </section>
 
-        <section id="features" class="bento-section">
+        <!-- Aggiunto content-lazy per ottimizzazione mobile estrema -->
+        <section id="features" class="bento-section content-lazy">
             <h2 class="reveal">Tutto ciò che ti serve.<br><span style="color: var(--text-light);">In un unico posto.</span></h2>
             <div class="bento-grid">
                 <div class="bento-card large reveal">
@@ -638,10 +644,11 @@
             </div>
         </section>
 
-        <footer id="footer" class="footer-wrapper">
+        <!-- Aggiunto content-lazy per ottimizzazione mobile estrema -->
+        <footer id="footer" class="footer-wrapper content-lazy">
             <div class="mim-footer-wrap reveal">
                 <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
-                    <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" class="footer-logo-mim" alt="Logo Ministero">
+                    <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" loading="lazy" decoding="async" class="footer-logo-mim" alt="Logo Ministero">
                 </a>
             </div>
 
@@ -709,15 +716,15 @@
                 <h2 style="font-size: 1.4rem; margin-bottom: 25px; color: var(--text-dark); text-align:center; font-weight: 900;">Scegli un'app per aprire.</h2>
                 <div style="display: flex; justify-content: space-around; align-items: flex-start;">
                     <a href="https://www.google.com/maps/search/?api=1&query=Corso+San+Maurizio,+8+-+10124+Torino" target="_blank" class="map-app-btn">
-                        <img src="https://i.ibb.co/LdwVFcNg/Google-Maps-icon-2026-svg.png" alt="Google Maps">
+                        <img src="https://i.ibb.co/LdwVFcNg/Google-Maps-icon-2026-svg.png" loading="lazy" decoding="async" alt="Google Maps">
                         <span>Google Maps</span>
                     </a>
                     <a href="http://maps.apple.com/?q=Corso+San+Maurizio+8+Torino" target="_blank" class="map-app-btn">
-                        <img src="https://i.ibb.co/Gff106ky/Apple-Maps-i-OS-26-icon.png" alt="Apple Mappe">
+                        <img src="https://i.ibb.co/Gff106ky/Apple-Maps-i-OS-26-icon.png" loading="lazy" decoding="async" alt="Apple Mappe">
                         <span>Apple Mappe</span>
                     </a>
                     <a href="https://waze.com/ul?q=Corso+San+Maurizio+8+Torino" target="_blank" class="map-app-btn">
-                        <img src="https://i.ibb.co/zTjqXx51/waze-app-icon-logo-brandlogos-net-l82da.png" alt="Waze">
+                        <img src="https://i.ibb.co/zTjqXx51/waze-app-icon-logo-brandlogos-net-l82da.png" loading="lazy" decoding="async" alt="Waze">
                         <span>Waze</span>
                     </a>
                 </div>
@@ -788,7 +795,7 @@
                     <div class="divider">- OPPURE CON -</div>
                     
                     <button type="button" id="custom-google-btn" class="btn-social">
-                        <img src="https://i.ibb.co/99kjgY67/Google-Favicon-2025-svg.png" alt="Google">
+                        <img src="https://i.ibb.co/99kjgY67/Google-Favicon-2025-svg.png" loading="lazy" alt="Google">
                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2;">
                             <span class="btn-text-main">ACCEDI CON GOOGLE</span>
                             <span class="btn-text-sub">Tramite account istituzionale</span>
@@ -797,7 +804,7 @@
                     <div class="error-msg" id="google-login-error" style="margin-bottom: 10px;"></div>
 
                     <button type="button" id="btn-harzafi-id" class="btn-social">
-                        <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Logo Harzafi">
+                        <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" loading="lazy" alt="Logo Harzafi">
                         <span>ACCEDI CON HARZAFI ID</span>
                     </button>
                 </form>
@@ -830,7 +837,7 @@
                     <p style="margin-bottom: 35px; font-size: 1.05rem; font-weight: 500; color: var(--text-gray); text-align:center;">Tieni il telefono vicino all'ID Harzafi per effettuare la timbratura.</p>
                     <div style="display:flex; justify-content:center; margin-bottom: 35px;">
                         <div style="width: 130px; height: 130px; border-radius: 50%; border: 6px solid #3b82f6; display: flex; justify-content: center; align-items: center; background: rgba(59, 130, 246, 0.05); box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);">
-                            <img src="https://i.ibb.co/NndsvRXn/Progetto-senza-titolo-removebg-preview.png" alt="NFC" style="width: 130px;">
+                            <img src="https://i.ibb.co/NndsvRXn/Progetto-senza-titolo-removebg-preview.png" loading="lazy" decoding="async" alt="NFC" style="width: 130px;">
                         </div>
                     </div>
                     <a id="hid-open-manual" href="#" style="color: var(--primary); font-weight: 800; text-decoration: none; display: block; margin-bottom: 25px; text-align:center; transition: opacity 0.2s;">Non funziona? Inserisci L'HID</a>
@@ -863,8 +870,8 @@
                     
                     <div class="cie-card-container" id="cie-anim-container">
                         <div class="cie-card-inner">
-                            <div class="cie-card-front"><img src="https://i.ibb.co/WNC8krrF/CIE-FRONTE.png" alt="CIE Fronte"></div>
-                            <div class="cie-card-back"><img src="https://i.ibb.co/gbyjtH22/CIE-RETRO.png" alt="CIE Retro"></div>
+                            <div class="cie-card-front"><img src="https://i.ibb.co/WNC8krrF/CIE-FRONTE.png" loading="lazy" decoding="async" alt="CIE Fronte"></div>
+                            <div class="cie-card-back"><img src="https://i.ibb.co/gbyjtH22/CIE-RETRO.png" loading="lazy" decoding="async" alt="CIE Retro"></div>
                         </div>
                     </div>
                     
@@ -937,9 +944,9 @@
     <div id="app-dashboard">
         <div class="dash-topbar">
             <div class="dash-school-info">
-                <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" class="nav-mim-logo" alt="Ministero dell'Istruzione" onerror="this.style.display='none'">
+                <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" loading="lazy" decoding="async" class="nav-mim-logo" alt="Ministero dell'Istruzione" onerror="this.style.display='none'">
                 <div class="header-divider" style="width:2px; height:40px; background:var(--border-color);"></div>
-                <img src="https://i.ibb.co/Q3fhCWBy/avologo.png" class="nav-school-logo" alt="Logo Avogadro">
+                <img src="https://i.ibb.co/Q3fhCWBy/avologo.png" loading="lazy" decoding="async" class="nav-school-logo" alt="Logo Avogadro">
                 <div class="school-text">
                     <h2>ITIS Amedeo Avogadro Torino</h2>
                     <p>Informatica e Telecomunicazioni</p>
@@ -1127,7 +1134,7 @@
                 localStorage.setItem("visits-tracker-pcto-avgd-adam", trueGlobalMetricTrackerInt.toString());
                 if(trackerText) trackerText.innerText = trueGlobalMetricTrackerInt;
             } else {
-                if(trackerText) trackerText.innerText = "Tracciamento disattivato";
+                if(trackerText) trackerText.innerText = "Non visibile. Hai rifiutato i cookie.";
             }
         }
 
@@ -1447,7 +1454,7 @@
             async function checkVPN() {
                 try {
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 2000); // Se ipapi ci mette più di 2s, skippa per non far aspettare l'utente
+                    const timeoutId = setTimeout(() => controller.abort(), 2000); // Timeout 2 secondi
                     const res = await fetch('https://ipapi.co/json/', { signal: controller.signal });
                     clearTimeout(timeoutId);
                     if (!res.ok) return false;
