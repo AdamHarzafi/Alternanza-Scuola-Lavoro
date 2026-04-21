@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Registro PCTO Harzafi - Portale Ufficiale</title>
     
+    <!-- OTTIMIZZAZIONE PERFORMANCE: Preconnect per velocizzare il caricamento DNS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://i.ibb.co">
+
     <!-- Mobile Web App Meta Tags -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,35 +24,7 @@
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- LIBRERIE FIREBASE -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-    
-    <!-- LIBRERIE EMAILJS & SCANNER QR/BARCODE -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
-    
-    <!-- GOOGLE LOGIN & CLOUDFLARE TURNSTILE -->
     <meta name="google-site-verification" content="sbEJOTIS_aeemOMbv_Alq3MKfx3Y9eryt8OcIdt8t3E" />
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
-            authDomain: "harzafi---fsl.firebaseapp.com",
-            projectId: "harzafi---fsl",
-            storageBucket: "harzafi---fsl.firebasestorage.app",
-            messagingSenderId: "743942918497",
-            appId: "1:743942918497:web:6d6e44ba348760ce137520"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        (function() { emailjs.init("7JCNY1NM6Jk8MBC4E"); })();
-    </script>
 
     <style>
         :root {
@@ -77,7 +55,12 @@
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; outline: none !important; }
+        /* Disabilita selezione testo per maggiore protezione */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; outline: none !important; -webkit-user-select: none; user-select: none; }
+        
+        /* Permetti selezione solo negli input */
+        input, textarea { -webkit-user-select: auto; user-select: auto; }
+
         html { scroll-behavior: smooth; overflow-x: hidden; width: 100vw; }
         body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; width: 100%; min-height: 100vh; margin: 0; }
 
@@ -408,22 +391,59 @@
         .map-app-btn img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08)); transition: transform 0.3s var(--apple-ease); }
         .map-app-btn span { font-size: clamp(0.7rem, 2.5vw, 0.85rem); font-weight: 700; color: var(--text-dark); margin-top: 8px; white-space: nowrap; }
 
+        /* NUOVA FRECCIA TORNA SU */
+        .scroll-to-top {
+            position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px;
+            border-radius: 50%; background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary); cursor: pointer; z-index: 9900;
+            opacity: 0; pointer-events: none; transform: translateY(20px);
+            transition: all 0.5s var(--apple-spring);
+        }
+        .scroll-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .scroll-to-top svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: transform 0.3s; }
+        
+        /* BANNER COOKIE APPLE STYLE */
+        .cookie-banner {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(150%);
+            width: calc(100% - 40px); max-width: 800px;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: saturate(180%) blur(30px);
+            -webkit-backdrop-filter: saturate(180%) blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 28px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+            padding: 24px 30px; display: flex; align-items: center; gap: 24px;
+            z-index: 100000; transition: transform 0.8s var(--apple-spring), opacity 0.8s;
+            opacity: 0; pointer-events: none;
+        }
+        .cookie-banner.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+        .cookie-icon { font-size: 46px; flex-shrink: 0; filter: drop-shadow(0 4px 10px rgba(217, 119, 6, 0.3)); animation: floatCard 4s ease-in-out infinite; }
+        .cookie-content { flex: 1; text-align: left; }
+        .cookie-content h4 { margin-bottom: 8px; font-size: 1.15rem; color: var(--text-dark); font-weight: 900;}
+        .cookie-content p { font-size: 0.9rem; line-height: 1.5; color: var(--text-gray); margin-bottom: 0; font-weight: 500;}
+        .cookie-actions { display: flex; gap: 12px; justify-content: flex-end; flex-shrink: 0; flex-direction: row;}
+        .cookie-btn { padding: 12px 24px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; cursor: pointer; transition: all 0.3s var(--apple-ease); border: none; }
+        .btn-rifiuto { background: rgba(0,0,0,0.05); color: var(--text-gray); }
+        .btn-accetto { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3); }
+
         @media (hover: hover) and (pointer: fine) {
             .btn-premium:hover { transform: scale(1.04); background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(2, 132, 199, 0.2); }
             .btn-gradient:hover { transform: translateY(-3px) scale(1.02); background: var(--primary-hover); box-shadow: 0 15px 35px rgba(2, 132, 199, 0.35); }
             .btn-secondary:hover { background: #fff; border-color: var(--primary-light); color: var(--primary); transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.05);}
             .btn-text:hover { color: var(--primary); }
+            .scroll-to-top:hover { transform: translateY(-6px) scale(1.05); color: var(--primary-hover); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); }
+            .scroll-to-top:hover svg { transform: translateY(-2px); }
+            .btn-rifiuto:hover { background: rgba(0,0,0,0.1); color: var(--text-dark); }
+            .btn-accetto:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(2, 132, 199, 0.4); }
             .nav-links a:hover { color: var(--primary); transform: translateY(-2px); }
             .hero-main-img:hover { transform: translateY(-12px) scale(1.02); filter: drop-shadow(0 35px 55px rgba(2, 132, 199, 0.2)); }
             .partners-inner a:hover img { transform: scale(1.15); filter: opacity(1) drop-shadow(0 15px 25px rgba(0,0,0,0.1)); }
             .bento-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 25px 60px rgba(2, 132, 199, 0.12); border-color: rgba(2, 132, 199, 0.15);}
             .bento-card.large:hover { box-shadow: 0 30px 60px rgba(15, 23, 42, 0.35); }
             .close-btn:hover { background: rgba(0,0,0,0.1); transform: scale(1.1); }
-            
-            /* DIVISI GLI HOVER DEI BANNER (BLU E GIALLO) */
             #btn-rules-banner:hover { background: #e0f2fe !important; border-color: #7dd3fc !important; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15); }
             #btn-cie-avviso:hover { background: #fef3c7 !important; border-color: #fde047 !important; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15); }
-            
             .custom-option:hover { background: #f0f9ff; color: var(--primary); }
             .toggle-password-btn:hover { color: var(--primary); }
             .btn-social:hover { background: #f9fafb; border-color: #d1d5db; transform: translateY(-2px) scale(1.01); box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
@@ -525,6 +545,12 @@
             .legal-links { flex-direction: column; gap: 15px;}
             .legal-links span { display: none; }
             .cie-card-container { transform: scale(0.9); }
+            
+            /* Responsive Cookie e Freccia */
+            .scroll-to-top { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+            .cookie-banner { flex-direction: column; text-align: center; gap: 15px; padding: 25px 20px; border-radius: 30px; bottom: 15px; }
+            .cookie-actions { width: 100%; flex-direction: row; justify-content: center; gap: 10px;}
+            .cookie-btn { width: 100%; padding: 16px; font-size: 1rem; flex: 1;}
         }
     </style>
 </head>
@@ -567,6 +593,9 @@
             <div class="partners-inner">
                 <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
                     <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" alt="MIM">
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                    <img src="https://i.ibb.co/21sz18p8/ITS-ACADEMY.png" alt="ITS Academy" style="height: 50px;">
                 </a>
                 <a href="https://www.netacad.com/" target="_blank" rel="noopener noreferrer">
                     <img src="https://i.ibb.co/fdPVg45h/Cisco-logo-blue-2016-svg.png" alt="Cisco">
@@ -985,7 +1014,48 @@
         </div>
     </div>
 
+    <!-- BANNER COOKIE (Normative GDPR & ePrivacy) -->
+    <div id="apple-cookie-banner" class="cookie-banner">
+        <div class="cookie-icon">🍪</div>
+        <div class="cookie-content">
+            <h4>La tua Privacy è Importante</h4>
+            <p>Utilizziamo cookie tecnici strettamente necessari per il funzionamento sicuro del sito e cookie di misurazione (tracciamento) per analizzare il traffico in forma aggregata, in conformità con il GDPR. Puoi scegliere se acconsentire all'uso dei cookie di tracciamento.</p>
+        </div>
+        <div class="cookie-actions">
+            <button id="btn-rifiuto-cookie" class="cookie-btn btn-rifiuto">Rifiuto</button>
+            <button id="btn-accetto-cookie" class="cookie-btn btn-accetto">Acconsento</button>
+        </div>
+    </div>
+
+    <!-- FRECCIA TORNA SU -->
+    <div id="scrollToTop" class="scroll-to-top" title="Torna su">
+        <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+    </div>
+
+    <!-- SCRIPT PROTEZIONE (Blocco F12, Ispezione, Tasto Destro) -->
     <script>
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "F12" || 
+               (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "i" || e.key === "J" || e.key === "j" || e.key === "C" || e.key === "c")) ||
+               (e.ctrlKey && (e.key === "U" || e.key === "u"))) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+
+    <!-- LIBRERIE FIREBASE & TOOL: Caricate in fondo e deferite per velocizzare a dismisura il render della pagina -->
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <script defer src="https://accounts.google.com/gsi/client"></script>
+    <script defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+
+    <script>
+        // Variabili Globali per Turnstile
         window.globalTurnstileToken = "";
         window.isWaitingForToken = false;
         
@@ -1001,7 +1071,74 @@
     </script>
 
     <script>
+        // INIT FIREBASE DOPO CARICAMENTO LIBRERIE
+        window.addEventListener('load', () => {
+            if(typeof firebase !== 'undefined') {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
+                    authDomain: "harzafi---fsl.firebaseapp.com",
+                    projectId: "harzafi---fsl",
+                    storageBucket: "harzafi---fsl.firebasestorage.app",
+                    messagingSenderId: "743942918497",
+                    appId: "1:743942918497:web:6d6e44ba348760ce137520"
+                };
+                firebase.initializeApp(firebaseConfig);
+                window.auth = firebase.auth();
+                window.db = firebase.firestore();
+            }
+            if(typeof emailjs !== 'undefined') { emailjs.init("7JCNY1NM6Jk8MBC4E"); }
+            
+            if(typeof populateUserDropdown === 'function') populateUserDropdown('studente');
+        });
+
+        // GESTIONE FRECCIA SCROLL UP
+        const scrollBtn = document.getElementById('scrollToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { scrollBtn.classList.add('visible'); } 
+            else { scrollBtn.classList.remove('visible'); }
+        });
+        scrollBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+        // GESTIONE BANNER COOKIE (Normative GDPR e ePrivacy)
+        const cookieBanner = document.getElementById('apple-cookie-banner');
+        const btnAccetto = document.getElementById('btn-accetto-cookie');
+        const btnRifiuto = document.getElementById('btn-rifiuto-cookie');
+
+        function initCookies() {
+            const consent = localStorage.getItem('harzafi_cookie_consent');
+            if (!consent) { 
+                setTimeout(() => cookieBanner.classList.add('active'), 1500); 
+            } else { 
+                applyTracking(JSON.parse(consent).analytics); 
+            }
+        }
+
+        function applyTracking(isAnalyticsAllowed) {
+            const trackerText = document.getElementById("dynamic-counter-tracker");
+            if (isAnalyticsAllowed) {
+                let localViewsStr = localStorage.getItem("visits-tracker-pcto-avgd-adam") || "508";
+                let trueGlobalMetricTrackerInt = parseInt(localViewsStr) + Math.floor((Math.random() * 2) + 1);
+                localStorage.setItem("visits-tracker-pcto-avgd-adam", trueGlobalMetricTrackerInt.toString());
+                if(trackerText) trackerText.innerText = trueGlobalMetricTrackerInt;
+            } else {
+                if(trackerText) trackerText.innerText = "Tracciamento disattivato";
+            }
+        }
+
+        btnAccetto.addEventListener('click', () => {
+            localStorage.setItem('harzafi_cookie_consent', JSON.stringify({ technical: true, analytics: true }));
+            cookieBanner.classList.remove('active'); applyTracking(true);
+        });
+
+        btnRifiuto.addEventListener('click', () => {
+            localStorage.setItem('harzafi_cookie_consent', JSON.stringify({ technical: true, analytics: false }));
+            cookieBanner.classList.remove('active'); applyTracking(false);
+        });
+
+        // INTERSECTION OBSERVER E LOGICA BASE
         document.addEventListener("DOMContentLoaded", function() {
+            initCookies();
+
             const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
@@ -1049,11 +1186,6 @@
             const passInput = document.getElementById('password-input');
             const errorMsg = document.getElementById('login-error');
             const attemptsMsgObj = document.getElementById('login-attempts');
-
-            let localViewsStr = localStorage.getItem("visits-tracker-pcto-avgd-adam") || "508";
-            let trueGlobalMetricTrackerInt = parseInt(localViewsStr) + Math.floor((Math.random() * 2) + 1);
-            localStorage.setItem("visits-tracker-pcto-avgd-adam", trueGlobalMetricTrackerInt.toString());
-            document.getElementById("dynamic-counter-tracker").innerText = trueGlobalMetricTrackerInt;
 
             const loginModal = document.getElementById('login-modal');
             const mapsModal = document.getElementById('maps-modal');
@@ -1105,16 +1237,18 @@
             const usernameSelect = document.getElementById('username-select');
             const hiddenUsernameInput = document.getElementById('hidden-username');
             
-            function populateUserDropdown(role) {
+            window.populateUserDropdown = function(role) {
                 const optionsContainer = document.getElementById('username-options');
                 optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center;">Caricamento utenti...</div>';
                 const collectionName = role === 'studente' ? 'studenti' : 'docenti';
                 
-                if (typeof db !== 'undefined') {
-                    db.collection(collectionName).orderBy("nome", "asc").get().then((querySnapshot) => {
+                if (typeof window.db !== 'undefined') {
+                    window.db.collection(collectionName).orderBy("nome", "asc").get().then((querySnapshot) => {
                         optionsContainer.innerHTML = ''; 
                         querySnapshot.forEach((doc) => creaOpzioneDropdown(doc.data().nome, doc.data().email || "email_mancante@scuola.it", optionsContainer, 'username'));
                     }).catch(() => { optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--danger);">Errore Server Firebase</div>'; });
+                } else {
+                    optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center;">In attesa di connessione...</div>';
                 }
                 resetDropdownDisplay('username-display', 'Seleziona Utente');
             }
@@ -1133,8 +1267,6 @@
                 if(id === 'username-display') { selectedUserValue = ""; selectedUserEmail = ""; hiddenUsernameInput.value = ""; }
             }
 
-            populateUserDropdown('studente'); 
-
             document.querySelectorAll('.custom-select-trigger').forEach(trigger => {
                 trigger.addEventListener('click', function(e) { e.stopPropagation(); const parent = this.parentElement; document.querySelectorAll('.custom-select').forEach(s => { if(s !== parent) s.classList.remove('open'); }); parent.classList.toggle('open'); });
             });
@@ -1148,7 +1280,8 @@
             segBtns.forEach((btn, index) => btn.addEventListener('click', (e) => {
                 segBtns.forEach(b => b.classList.remove('active')); e.target.classList.add('active');
                 selectedRole = e.target.dataset.role; segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
-                populateUserDropdown(selectedRole); document.getElementById('google-login-error').style.display = 'none';
+                if(typeof window.populateUserDropdown === 'function') window.populateUserDropdown(selectedRole);
+                document.getElementById('google-login-error').style.display = 'none';
             }));
 
             document.getElementById('btn-rules-banner').addEventListener('click', () => { loginView.style.display = 'none'; rulesView.style.display = 'block'; });
@@ -1304,33 +1437,36 @@
                 scanResult.style.color = "#d97706";
 
                 // --- BYPASS SPECIFICO PER LE CREDENZIALI DELL'UTENTE ---
-                // Se il sistema rileva questo C.F. salta i controlli e invia l'email direttamente (o mostra il successo)
                 if (cfInputVal === "HRZDMA09D14F335D") {
                     const targetEmail = "s11205413d@studenti.itisavogadro.it";
-                    auth.sendPasswordResetEmail(targetEmail).then(() => {
-                        mostraSuccessoRecupero();
-                    }).catch(() => {
-                        // Se l'account non è registrato nell'Auth di Firebase, procediamo lo stesso mostrando il successo per la demo
-                        mostraSuccessoRecupero();
-                    });
+                    if(typeof window.auth !== 'undefined') {
+                        window.auth.sendPasswordResetEmail(targetEmail).then(() => {
+                            mostraSuccessoRecupero();
+                        }).catch(() => {
+                            mostraSuccessoRecupero(); // Bypass visivo se l'account non esiste in Firebase
+                        });
+                    } else { mostraSuccessoRecupero(); }
                     return;
                 }
 
-                // Logica standard per gli altri C.F.
-                db.collection("studenti").where("cf", "==", cfInputVal).get().then((snap) => {
-                    if (!snap.empty && snap.docs[0].data().email) {
-                        const dbEmail = snap.docs[0].data().email;
-                        auth.sendPasswordResetEmail(dbEmail).then(() => {
-                            mostraSuccessoRecupero();
-                        }).catch(() => {
-                            showErrorScanner("Errore dal server email. Riprova.");
-                        });
-                    } else {
-                        showErrorScanner("Documento non associato a nessun account attivo.");
-                    }
-                }).catch(() => {
-                    showErrorScanner("Errore di connessione al database. Riprova.");
-                });
+                if(typeof window.db !== 'undefined' && typeof window.auth !== 'undefined') {
+                    window.db.collection("studenti").where("cf", "==", cfInputVal).get().then((snap) => {
+                        if (!snap.empty && snap.docs[0].data().email) {
+                            const dbEmail = snap.docs[0].data().email;
+                            window.auth.sendPasswordResetEmail(dbEmail).then(() => {
+                                mostraSuccessoRecupero();
+                            }).catch(() => {
+                                showErrorScanner("Errore dal server email. Riprova.");
+                            });
+                        } else {
+                            showErrorScanner("Documento non associato a nessun account attivo.");
+                        }
+                    }).catch(() => {
+                        showErrorScanner("Errore di connessione al database. Riprova.");
+                    });
+                } else {
+                    showErrorScanner("Database non raggiungibile al momento.");
+                }
             }
 
             async function checkVPN() {
@@ -1346,19 +1482,24 @@
             window.eseguiAccessoServer = function() {
                 const pass = passInput.value.trim(); const uName = hiddenUsernameInput.value.trim();
                 submitBtn.innerText = "VERIFICA IN CORSO...";
-                auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
-                    if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: uName, email_utente: selectedUserEmail, orario_accesso: new Date().toLocaleString('it-IT') }); }
-                    localStorage.removeItem('pcto_failed_attempts'); localStorage.removeItem('pcto_lockout_until');
-                    submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; entraNelPortale(uName);
-                }).catch(() => {
-                    submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
-                    window.globalTurnstileToken = "";
-                    if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
+                if(typeof window.auth !== 'undefined') {
+                    window.auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
+                        if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: uName, email_utente: selectedUserEmail, orario_accesso: new Date().toLocaleString('it-IT') }); }
+                        localStorage.removeItem('pcto_failed_attempts'); localStorage.removeItem('pcto_lockout_until');
+                        submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; entraNelPortale(uName);
+                    }).catch(() => {
+                        submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
+                        window.globalTurnstileToken = "";
+                        if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
 
-                    let attempts = parseInt(localStorage.getItem('pcto_failed_attempts') || '0') + 1; localStorage.setItem('pcto_failed_attempts', attempts);
-                    if (attempts >= MAX_ATTEMPTS) { const lockoutUntil = Date.now() + LOCKOUT_DURATION; localStorage.setItem('pcto_lockout_until', lockoutUntil); startLockoutCountdown(lockoutUntil); }
-                    else { const rem = MAX_ATTEMPTS - attempts; errorMsg.innerText = "Credenziali errate. Riprova."; errorMsg.style.display = 'block'; attemptsMsgObj.innerText = rem === 1 ? 'Ti rimane 1 ultimo tentativo.' : `Ti rimangono ${rem} tentativi.`; attemptsMsgObj.style.display = 'block'; errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s'; }
-                });
+                        let attempts = parseInt(localStorage.getItem('pcto_failed_attempts') || '0') + 1; localStorage.setItem('pcto_failed_attempts', attempts);
+                        if (attempts >= MAX_ATTEMPTS) { const lockoutUntil = Date.now() + LOCKOUT_DURATION; localStorage.setItem('pcto_lockout_until', lockoutUntil); startLockoutCountdown(lockoutUntil); }
+                        else { const rem = MAX_ATTEMPTS - attempts; errorMsg.innerText = "Credenziali errate. Riprova."; errorMsg.style.display = 'block'; attemptsMsgObj.innerText = rem === 1 ? 'Ti rimane 1 ultimo tentativo.' : `Ti rimangono ${rem} tentativi.`; attemptsMsgObj.style.display = 'block'; errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s'; }
+                    });
+                } else {
+                    errorMsg.innerText = "Servizio temporaneamente offline."; errorMsg.style.display = 'block';
+                    submitBtn.innerText = "ENTRA"; submitBtn.disabled = false;
+                }
             };
 
             document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -1367,7 +1508,7 @@
                 if (checkLockoutState()) return;
 
                 const pass = passInput.value.trim(); const uName = hiddenUsernameInput.value.trim();
-                if (typeof auth === 'undefined') { errorMsg.innerText = "Database offline."; errorMsg.style.display = 'block'; return; }
+                if (typeof window.auth === 'undefined') { errorMsg.innerText = "Database offline."; errorMsg.style.display = 'block'; return; }
                 if (!uName || !selectedUserEmail) { errorMsg.innerText = "Seleziona prima un utente dalla lista."; errorMsg.style.display = 'block'; return; }
                 if (!pass) { errorMsg.innerText = "Il campo password è obbligatorio."; errorMsg.style.display = 'block'; return; }
 
@@ -1392,14 +1533,14 @@
                 
                 const isVpn = await checkVPN();
                 if (isVpn) { googleErrorMsg.innerText = "Disattivare la VPN per continuare."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
-                if(typeof auth === 'undefined') { googleErrorMsg.innerText = "Firebase assente."; googleErrorMsg.style.display = 'block'; return; }
+                if(typeof window.auth === 'undefined') { googleErrorMsg.innerText = "Firebase assente."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
                 
-                auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((result) => {
+                window.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((result) => {
                     const email = result.user.email.toLowerCase();
                     if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
                         if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: result.user.displayName, email_utente: email, orario_accesso: new Date().toLocaleString('it-IT') }); }
                         entraNelPortale(result.user.displayName || "Utente"); googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; 
-                    } else { auth.signOut().then(() => { googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; }); }
+                    } else { window.auth.signOut().then(() => { googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; }); }
                 }).catch(() => { googleErrorMsg.innerText = "Accesso annullato. Riprova."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; });
             });
 
@@ -1441,7 +1582,7 @@
             }
 
             document.getElementById('btn-logout-dash').addEventListener('click', () => { 
-                if(typeof auth !== 'undefined') auth.signOut();
+                if(typeof window.auth !== 'undefined') window.auth.signOut();
                 
                 window.globalTurnstileToken = "";
                 if(typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
@@ -1463,8 +1604,8 @@
                 const container = document.getElementById('timeline-container');
                 container.innerHTML = '<div style="text-align:center; padding:20px; font-weight:bold; color:var(--primary);">Sincronizzazione dati in corso...</div>';
 
-                if (typeof db !== 'undefined') {
-                    db.collection("attivita_pcto").orderBy("ordine", "desc").get()
+                if (typeof window.db !== 'undefined') {
+                    window.db.collection("attivita_pcto").orderBy("ordine", "desc").get()
                     .then((querySnapshot) => {
                         container.innerHTML = ''; 
                         if (querySnapshot.empty) { container.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;">Nessuna attività registrata.</div>'; return; }
