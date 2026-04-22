@@ -563,6 +563,26 @@
             .cookie-actions { width: 100%; flex-direction: row; justify-content: center; gap: 10px;}
             .cookie-btn { width: 100%; padding: 16px; font-size: 1rem; flex: 1;}
         }
+
+        /* --- STILI OTP DOCENTI --- */
+        .otp-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; direction: ltr; }
+        .otp-box { 
+            width: 48px; height: 56px; padding: 0; text-align: center; 
+            font-size: 1.6rem; font-weight: 900; border-radius: 14px; 
+            caret-color: var(--primary); transition: all 0.3s var(--apple-ease);
+            background: #f5f5f7; border: 2px solid transparent; color: var(--text-dark);
+        }
+        .otp-box:focus { 
+            background: #ffffff; border-color: var(--primary); 
+            transform: translateY(-3px); box-shadow: 0 10px 20px rgba(2, 132, 199, 0.15); 
+        }
+        .otp-box.error { border-color: var(--danger); background: #fef2f2; color: var(--danger); animation: shake 0.4s; }
+        .otp-box.success { border-color: var(--success); background: #ecfdf5; color: var(--success); }
+        
+        @media (max-width: 600px) {
+            .otp-container { gap: 6px; }
+            .otp-box { width: 42px; height: 50px; font-size: 1.4rem; border-radius: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -910,16 +930,58 @@
             </div>
 
             <!-- Vista per i Docenti -->
+            <!-- Vista per i Docenti (Recupero con OTP) -->
             <div id="teacher-forgot-msg" style="display:none;">
-                <div class="bottom-sheet-body" style="padding-top: 50px;">
-                    <div style="background: #f0f9ff; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: inset 0 2px 5px rgba(2, 132, 199, 0.1);">
-                        <svg viewBox="0 0 24 24" style="width:40px; fill:var(--primary);"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                
+                <!-- STEP 1: Inserimento Email -->
+                <div id="teacher-step-1" class="bottom-sheet-body" style="padding-top: 40px; transition: opacity 0.4s var(--apple-ease);">
+                    <div style="background: #f0f9ff; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: inset 0 2px 5px rgba(2, 132, 199, 0.1);">
+                        <svg viewBox="0 0 24 24" style="width:35px; fill:var(--primary);"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
                     </div>
-                    <h2 class="recovery-title">Accesso Protetto</h2>
-                    <p style="font-size: 1.05rem; font-weight: 500; color: var(--text-gray); text-align: center; margin-bottom: 30px; line-height: 1.6;">
-                        Per motivi di sicurezza, il reset password per il personale docente deve essere autorizzato direttamente dall'Amministrazione.
+                    <h2 class="recovery-title" style="font-size: 1.7rem; margin-bottom: 10px;">Area Docenti</h2>
+                    <p style="font-size: 1rem; font-weight: 500; color: var(--text-gray); text-align: center; margin-bottom: 30px; line-height: 1.5;">
+                        Inserisci la tua email istituzionale per ricevere un codice di verifica temporaneo.
                     </p>
-                    <a href="mailto:s11205413d@studenti.itisavogadro.it" class="btn-premium" style="width: 100%; height: 52px; font-size: 1.05rem; text-decoration: none;">Richiedi Assistenza</a>
+                    <div class="input-group">
+                        <input type="email" id="teacher-email-input" class="apple-input" placeholder="nome.cognome@itisavogadro.it" style="text-align: center;">
+                        <div class="error-msg" id="teacher-otp-error">Email non trovata. Riprova.</div>
+                    </div>
+                    <button type="button" id="btn-send-otp" class="btn-gradient">RICHIEDI CODICE TEMPORANEO</button>
+                    <button type="button" class="btn-text btn-back-to-login-docenti" style="margin-top: 15px;">← Torna al Login</button>
+                </div>
+
+                <!-- STEP 2: Inserimento OTP -->
+                <div id="teacher-step-2" class="bottom-sheet-body" style="display: none; padding-top: 40px; transition: opacity 0.4s var(--apple-ease); opacity: 0;">
+                    <h2 class="recovery-title" style="font-size: 1.7rem; margin-bottom: 10px;">Verifica Identità</h2>
+                    <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-gray); text-align: center; margin-bottom: 25px; line-height: 1.5;">
+                        Abbiamo inviato un codice a 6 cifre a<br><strong id="display-target-email" style="color: var(--text-dark);"></strong>
+                    </p>
+                    
+                    <!-- Box OTP in stile Apple -->
+                    <div class="otp-container">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                    </div>
+                    
+                    <div class="error-msg" id="teacher-verify-error" style="margin-bottom: 20px;">Codice OTP non valido o scaduto.</div>
+                    <button type="button" id="btn-verify-otp" class="btn-gradient">VERIFICA E RIPRISTINA</button>
+                    <button type="button" id="btn-back-to-email" class="btn-text" style="margin-top: 15px;">Cambia Indirizzo Email</button>
+                </div>
+
+                <!-- STEP 3: Successo -->
+                <div id="teacher-step-3" class="bottom-sheet-body" style="display: none; padding-top: 40px; text-align: center; transition: opacity 0.4s var(--apple-ease); opacity: 0;">
+                    <div style="background: #ecfdf5; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);">
+                        <svg viewBox="0 0 24 24" style="width: 40px; height: 40px; fill: var(--success);"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg>
+                    </div>
+                    <h2 class="recovery-title" style="font-size: 1.7rem; margin-bottom: 10px; color: var(--success);">Identità Confermata</h2>
+                    <p style="font-size: 1.05rem; font-weight: 500; color: var(--text-gray); margin-bottom: 30px; line-height: 1.5;">
+                        Abbiamo inviato un'email con il link sicuro per reimpostare la tua password.
+                    </p>
+                    <button type="button" class="btn-gradient" onclick="chiudiModaleRecuperoEAproLogin()" style="width: 100%;">← TORNA AL LOGIN</button>
                 </div>
             </div>
         </div>
@@ -1633,6 +1695,175 @@
                 } else { container.innerHTML = '<div style="color:var(--warning); text-align:center; padding:20px; font-weight:700;">Dati temporaneamente offline.</div>'; }
             }
         });
+
+        // ==========================================
+            // LOGICA RECUPERO PASSWORD DOCENTI CON OTP
+            // ==========================================
+            let activeTeacherOTP = null;
+            let activeTeacherEmail = null;
+
+            const teacherStep1 = document.getElementById('teacher-step-1');
+            const teacherStep2 = document.getElementById('teacher-step-2');
+            const teacherStep3 = document.getElementById('teacher-step-3');
+            const emailInputTeacher = document.getElementById('teacher-email-input');
+            const otpInputs = document.querySelectorAll('.otp-box');
+
+            // Torna al login dal pannello docenti
+            document.querySelectorAll('.btn-back-to-login-docenti').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('forgot-sheet-modal').classList.remove('active');
+                    document.getElementById('login-modal').classList.add('active');
+                });
+            });
+
+            // Gestione invio richiesta OTP
+            document.getElementById('btn-send-otp').addEventListener('click', async function() {
+                const emailVal = emailInputTeacher.value.trim().toLowerCase();
+                const errorDiv = document.getElementById('teacher-otp-error');
+                const originalBtnText = this.innerHTML;
+                
+                if(!emailVal || !emailVal.includes('@')) {
+                    errorDiv.innerText = "Inserisci un'email valida."; errorDiv.style.display = 'block'; return;
+                }
+                
+                errorDiv.style.display = 'none';
+                this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Verifica in corso...</span></div>';
+                this.disabled = true;
+
+                try {
+                    // Controlla se l'email esiste nella collezione docenti
+                    const snapshot = await window.db.collection('docenti').where('email', '==', emailVal).get();
+                    
+                    if(snapshot.empty) {
+                        throw new Error("Email non associata ad alcun docente.");
+                    }
+
+                    // Genera OTP di 6 cifre
+                    activeTeacherOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                    activeTeacherEmail = emailVal;
+
+                    // Invia l'OTP via EmailJS
+                    // NOTA: Devi avere un template su EmailJS che accetta le variabili: {{to_email}} e {{otp_code}}
+                    await emailjs.send("service_biade4g", "template_315dse7", { // SOSTITUISCI CON L'ID DEL TUO NUOVO TEMPLATE EMAILJS
+                        to_email: activeTeacherEmail,
+                        otp_code: activeTeacherOTP,
+                        orario_richiesta: new Date().toLocaleString('it-IT')
+                    });
+
+                    // Transizione Apple-style allo Step 2
+                    document.getElementById('display-target-email').innerText = activeTeacherEmail;
+                    teacherStep1.style.opacity = '0';
+                    setTimeout(() => {
+                        teacherStep1.style.display = 'none';
+                        teacherStep2.style.display = 'block';
+                        // Pulisci input
+                        otpInputs.forEach(input => { input.value = ''; input.classList.remove('error'); });
+                        setTimeout(() => { 
+                            teacherStep2.style.opacity = '1'; 
+                            otpInputs[0].focus(); 
+                        }, 50);
+                    }, 400);
+
+                } catch (err) {
+                    errorDiv.innerText = err.message || "Errore di connessione al database.";
+                    errorDiv.style.display = 'block';
+                    errorDiv.style.animation = 'none'; void errorDiv.offsetWidth; errorDiv.style.animation = 'shake 0.4s';
+                } finally {
+                    this.innerHTML = originalBtnText;
+                    this.disabled = false;
+                }
+            });
+
+            // Gestione caselle OTP (Focus automatico, Cancella, Incolla)
+            otpInputs.forEach((input, index) => {
+                // Selezione automatica del testo al click
+                input.addEventListener('focus', (e) => e.target.select());
+                
+                // Digitare un numero passa al successivo
+                input.addEventListener('input', (e) => {
+                    input.value = input.value.replace(/[^0-9]/g, ''); // Solo numeri
+                    if (input.value !== '' && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+
+                // Backspace passa al precedente
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+
+                // Supporto incolla (iOS/Android/Desktop)
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').substring(0, 6);
+                    for (let i = 0; i < pastedData.length; i++) {
+                        otpInputs[i].value = pastedData[i];
+                    }
+                    if (pastedData.length > 0) {
+                        const focusIndex = Math.min(5, pastedData.length);
+                        if(focusIndex < 6) otpInputs[focusIndex].focus();
+                        else otpInputs[5].blur();
+                    }
+                });
+            });
+
+            // Torna indietro per modificare l'email
+            document.getElementById('btn-back-to-email').addEventListener('click', () => {
+                teacherStep2.style.opacity = '0';
+                setTimeout(() => {
+                    teacherStep2.style.display = 'none';
+                    teacherStep1.style.display = 'block';
+                    setTimeout(() => { teacherStep1.style.opacity = '1'; }, 50);
+                }, 400);
+            });
+
+            // Verifica dell'OTP inserito
+            document.getElementById('btn-verify-otp').addEventListener('click', async function() {
+                const enteredOTP = Array.from(otpInputs).map(i => i.value).join('');
+                const errorDiv = document.getElementById('teacher-verify-error');
+                const originalBtnText = this.innerHTML;
+
+                if (enteredOTP.length !== 6) {
+                    errorDiv.innerText = "Inserisci tutte le 6 cifre."; errorDiv.style.display = 'block'; return;
+                }
+
+                this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Conferma...</span></div>';
+                this.disabled = true;
+
+                // Controlla se l'OTP è corretto
+                if (enteredOTP === activeTeacherOTP) {
+                    errorDiv.style.display = 'none';
+                    otpInputs.forEach(i => i.classList.add('success'));
+                    
+                    try {
+                        // Invia l'email vera di Reset Password Firebase
+                        await window.auth.sendPasswordResetEmail(activeTeacherEmail);
+                        
+                        // Transizione allo Step 3 (Successo)
+                        setTimeout(() => {
+                            teacherStep2.style.opacity = '0';
+                            setTimeout(() => {
+                                teacherStep2.style.display = 'none';
+                                teacherStep3.style.display = 'block';
+                                setTimeout(() => { teacherStep3.style.opacity = '1'; }, 50);
+                            }, 400);
+                        }, 800);
+
+                    } catch (err) {
+                        errorDiv.innerText = "Errore durante l'invio del link. Riprova."; errorDiv.style.display = 'block';
+                        this.innerHTML = originalBtnText; this.disabled = false;
+                        otpInputs.forEach(i => { i.classList.remove('success'); i.classList.add('error'); });
+                    }
+                } else {
+                    // Animazione Errore
+                    errorDiv.innerText = "Codice OTP errato. Riprova."; errorDiv.style.display = 'block';
+                    this.innerHTML = originalBtnText; this.disabled = false;
+                    otpInputs.forEach(i => { i.classList.add('error'); });
+                    setTimeout(() => { otpInputs.forEach(i => i.classList.remove('error')); }, 500);
+                }
+            });
     </script>
 </body>
 </html>
