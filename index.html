@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Registro FSL Harzafi - Portale Ufficiale</title>
     
-    <!-- OTTIMIZZAZIONE PERFORMANCE ESTREMA: Preconnect e DNS-Prefetch -->
+    <!-- OTTIMIZZAZIONE PERFORMANCE: Preconnect e DNS-Prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com">
@@ -33,36 +33,25 @@
             --primary-hover: #0369a1;  
             --primary-light: #e0f2fe;  
             --accent: #0ea5e9;         
-            
             --bg-body: #ffffff; 
             --surface: rgba(255, 255, 255, 0.75);
             --surface-solid: #ffffff;
-            
             --text-dark: #0f172a;
             --text-gray: #475569;
             --text-light: #94a3b8;
-            
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
             --border-color: #e2e8f0;
-
             --radius-md: 20px;
             --radius-lg: 32px;
-            
-            /* Animazioni fluide Apple Style */
             --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
             --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1);
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* Disabilita selezione testo per maggiore protezione */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; outline: none !important; -webkit-user-select: none; user-select: none; }
-        
-        /* Permetti selezione solo negli input */
         input, textarea { -webkit-user-select: auto; user-select: auto; }
-
-        /* Ottimizzazione Rendering Mobile */
         .content-lazy { content-visibility: auto; contain-intrinsic-size: 1000px; }
 
         html { scroll-behavior: smooth; overflow-x: hidden; width: 100vw; }
@@ -209,32 +198,24 @@
         .rules-list { list-style: none; margin-bottom: 24px; padding: 0; }
         .rules-list li { padding: 14px 16px; background: #f8fafc; border-left: 4px solid var(--primary); border-radius: 12px; margin-bottom: 10px; font-weight: 700; color: var(--text-dark); font-size: 0.9rem; display: flex; align-items: center; gap: 12px; transition: transform 0.3s var(--apple-ease), background 0.3s;}
 
-        /* --- STILI RECUPERO PASSWORD (SOLO CIE) --- */
         .recovery-hero { 
-            position: relative; 
-            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%); 
-            padding: 40px 20px 20px; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            overflow: hidden; width: 100%; 
+            position: relative; background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%); 
+            padding: 40px 20px 20px; display: flex; flex-direction: column; justify-content: center; 
+            align-items: center; overflow: hidden; width: 100%; 
         }
-        
         .recovery-title { font-size: 1.8rem; font-weight: 900; text-align: center; color: var(--text-dark); letter-spacing: -0.5px; margin-bottom: 25px; line-height: 1.2; position: relative; z-index: 2; }
         .recovery-subtitle { text-align: center; font-size: 1.05rem; font-weight: 500; color: var(--text-gray); margin-top: 25px; margin-bottom: 8px; line-height: 1.5; padding: 0 10px; position: relative; z-index: 2; }
-        
         .result-banner { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 16px; padding: 20px; text-align: center; color: #065f46; font-size: 0.95rem; font-weight: 600; line-height: 1.5; margin-top: 20px; display: none; animation: fastFadeIn 0.4s var(--apple-ease); }
         .result-banner svg { width: 32px; height: 32px; fill: var(--success); margin-bottom: 10px; }
 
-        /* Stili Modale Scanner CIE 3D */
         .cie-card-container { 
             width: 260px; height: 165px; perspective: 1200px; margin: 0 auto; position: relative; z-index: 2; 
-            animation: floatCard 5s ease-in-out infinite; 
-            will-change: transform;
+            animation: floatCard 5s ease-in-out infinite; will-change: transform;
         }
         .cie-card-inner { 
             position: relative; width: 100%; height: 100%; text-align: center; 
             transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); 
-            transform-style: preserve-3d; 
-            will-change: transform;
+            transform-style: preserve-3d; will-change: transform;
         }
         .cie-card-container.flipped .cie-card-inner { transform: rotateY(180deg) scale(1.05); }
         
@@ -242,18 +223,13 @@
             position: absolute; width: 100%; height: 100%; 
             backface-visibility: hidden; -webkit-backface-visibility: hidden; 
             background: transparent; display: flex; justify-content: center; align-items: center; 
-            transform: translateZ(0); 
-            will-change: transform;
+            transform: translateZ(0); will-change: transform;
         }
         .cie-card-front img, .cie-card-back img { width: 100%; height: 100%; object-fit: contain; }
         .cie-card-back { transform: rotateY(180deg) translateZ(0); }
         
-        @keyframes floatCard { 
-            0%, 100% { transform: translate3d(0, 0, 0); } 
-            50% { transform: translate3d(0, -8px, 0); } 
-        }
+        @keyframes floatCard { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -8px, 0); } }
 
-        /* LAYOUT SCANNER */
         #scanner-container { 
             width: 100%; height: 200px; border-radius: 20px; overflow: hidden; 
             border: 2px solid var(--border-color); position: relative; background: #000; 
@@ -280,18 +256,16 @@
             100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
         }
 
-        /* STILI SPECIFICI MODALE AVVISO CIE */
         .custom-bottom-sheet { align-items: flex-end; padding: 0; }
         .custom-bottom-sheet .avviso-modal-content { 
             background: #ffffff; border-radius: 36px 36px 0 0; padding: 40px 40px 60px 40px; 
-            width: 100%; max-width: 650px; margin: 0 auto; 
-            transform: translateY(100%); transition: transform 0.5s var(--apple-smooth); 
-            border-bottom: none; box-shadow: 0 -20px 50px rgba(0,0,0,0.2); 
-            overflow: hidden; overflow-y: auto; -webkit-mask-image: -webkit-radial-gradient(white, black);
+            width: 100%; max-width: 650px; margin: 0 auto; transform: translateY(100%); 
+            transition: transform 0.5s var(--apple-smooth); border-bottom: none; 
+            box-shadow: 0 -20px 50px rgba(0,0,0,0.2); overflow: hidden; overflow-y: auto; 
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
         }
         .custom-bottom-sheet.active .avviso-modal-content { transform: translateY(0); }
 
-        /* --- STILI OTP DOCENTI E STUDENTI --- */
         .otp-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; direction: ltr; }
         .otp-box { 
             width: 48px; height: 56px; padding: 0; text-align: center; 
@@ -299,14 +273,10 @@
             caret-color: var(--primary); transition: all 0.3s var(--apple-ease);
             background: #f5f5f7; border: 2px solid transparent; color: var(--text-dark);
         }
-        .otp-box:focus { 
-            background: #ffffff; border-color: var(--primary); 
-            transform: translateY(-3px); box-shadow: 0 10px 20px rgba(2, 132, 199, 0.15); 
-        }
+        .otp-box:focus { background: #ffffff; border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(2, 132, 199, 0.15); }
         .otp-box.error { border-color: var(--danger); background: #fef2f2; color: var(--danger); animation: shake 0.4s; }
         .otp-box.success { border-color: var(--success); background: #ecfdf5; color: var(--success); }
         
-        /* --- STILI BOX SELEZIONE METODO (APPLE STYLE) --- */
         .auth-method-card {
             display: flex; align-items: center; gap: 16px; padding: 16px 20px;
             background: #ffffff; border: 2px solid #e2e8f0; border-radius: 24px;
@@ -328,26 +298,7 @@
         }
         .level-1 { background: #f1f5f9; color: #64748b; }
         .level-2 { background: #e0f2fe; color: #0284c7; }
-        @media (hover: hover) and (pointer: fine) {
-            .auth-method-card:hover { border-color: var(--primary); box-shadow: 0 10px 25px rgba(2, 132, 199, 0.1); transform: translateY(-3px); }
-        }
 
-        @media (max-width: 600px) {
-            .custom-bottom-sheet { align-items: flex-end; padding: 0; }
-            .custom-bottom-sheet .avviso-modal-content { 
-                border-radius: 32px 32px 0 0; height: 95dvh; max-height: 95dvh; max-width: 100%; 
-                padding: 30px 20px calc(40px + env(safe-area-inset-bottom, 0px)); transform: translateY(100%); 
-                overflow: hidden; overflow-y: auto; -webkit-mask-image: -webkit-radial-gradient(white, black);
-            }
-            .avviso-inner-content {
-                display: flex; flex-direction: column; justify-content: flex-start; height: 100%;
-                padding-top: 10px;
-            }
-            .otp-container { gap: 6px; }
-            .otp-box { width: 42px; height: 50px; font-size: 1.4rem; border-radius: 12px; }
-        }
-
-        /* Dashboard styles */
         #app-dashboard { display: none; opacity: 0; transition: opacity 0.5s ease; padding-bottom: 80px;}
         .dash-topbar { background: #fff; border-bottom: 1px solid var(--border-color); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         .dash-school-info { display: flex; align-items: center; gap: 20px; }
@@ -396,7 +347,6 @@
         .timeline-item:last-child { margin-bottom: 0; }
         .timeline-item::before { content: ''; position: absolute; left: -40.5px; top: 6px; width: 18px; height: 18px; background: #fff; border: 4px solid var(--primary); border-radius: 50%; transition: transform 0.4s var(--apple-ease), background 0.4s, box-shadow 0.4s; z-index: 2; }
         .timeline-item.ac-cert::before { border-color: var(--success); }
-
         .tl-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;}
         .tl-content { flex: 1; }
         .tl-date { color: var(--text-light); font-weight: 900; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 8px; display: inline-block; letter-spacing: 0.5px;}
@@ -406,7 +356,6 @@
         .tl-hours { background: var(--primary-light); color: var(--primary-hover); padding: 10px 18px; border-radius: 14px; font-weight: 900; font-size: 1.15rem; flex-shrink: 0; text-align: center; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.08);}
         .ac-cert .tl-content h3 { color: var(--success); }
         .ac-cert .tl-hours { background: #d1fae5; color: #065f46; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.08);}
-
         .tl-dropdown { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s var(--apple-ease), opacity 0.4s; opacity: 0; }
         .timeline-item[aria-expanded="true"] .tl-dropdown { grid-template-rows: 1fr; margin-top: 15px; opacity: 1; }
         .tl-dropdown-inner { overflow: hidden; }
@@ -415,13 +364,11 @@
         .footer-wrapper { background: var(--surface-solid); border-top: 1px solid rgba(2, 132, 199, 0.08); border-radius: 48px 48px 0 0; padding: 80px 5% 40px; color: var(--text-dark); margin-top: 80px; box-shadow: 0 -20px 50px rgba(2, 132, 199, 0.03); position: relative; z-index: 10; }
         .mim-footer-wrap { width: 100%; display: flex; justify-content: center; margin-bottom: 50px; }
         .footer-logo-mim { height: 80px; filter: opacity(0.9); transition: transform 0.4s var(--apple-ease), filter 0.4s; } 
-
         .grid-infos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 1200px; margin: 0 auto 50px; gap: 40px; border-bottom: 1px solid var(--border-color); padding-bottom: 50px; }
         .col-info h4 { font-size: 1.15rem; color: var(--text-dark); font-weight: 900; margin-bottom: 24px; text-transform: uppercase; display: flex; align-items: center; gap: 12px;}
         .col-info h4 svg { width: 22px; fill: var(--primary); transition: transform 0.4s var(--apple-ease); }
         .col-info p { font-size: 1rem; line-height: 1.8; color: var(--text-gray); font-weight: 500;}
         .col-info a { color: var(--text-gray); text-decoration: none; font-weight: 700; transition: color 0.3s var(--apple-ease);}
-        
         .address-link { color: var(--text-gray); font-weight: 500; text-decoration: none; border-bottom: 1px dashed #cbd5e1; transition: color 0.3s, border-color 0.3s; padding-bottom: 2px;}
         .tel-link { font-weight: 800; color: var(--text-dark); text-decoration: none; transition: color 0.3s, transform 0.3s; display: inline-block;}
         .col-info span.hi { font-weight: 800; color: var(--text-dark);}
@@ -438,7 +385,6 @@
         .map-app-btn img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08)); transition: transform 0.3s var(--apple-ease); }
         .map-app-btn span { font-size: clamp(0.7rem, 2.5vw, 0.85rem); font-weight: 700; color: var(--text-dark); margin-top: 8px; white-space: nowrap; }
 
-        /* FRECCIA TORNA SU */
         .scroll-to-top {
             position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px;
             border-radius: 50%; background: rgba(255, 255, 255, 0.85);
@@ -452,7 +398,6 @@
         .scroll-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .scroll-to-top svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: transform 0.3s; }
         
-        /* BANNER COOKIE APPLE STYLE CON BISCOTTO SVG ANIMATO */
         .cookie-banner {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(150%);
             width: calc(100% - 40px); max-width: 800px;
@@ -465,14 +410,9 @@
             opacity: 0; pointer-events: none;
         }
         .cookie-banner.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
-        
         .cookie-icon { width: 46px; height: 46px; flex-shrink: 0; animation: floatCard 4s ease-in-out infinite; }
         .cookie-icon svg { width: 100%; height: 100%; animation: pulseBlueCookie 4s ease-in-out infinite alternate; }
-        @keyframes pulseBlueCookie { 
-            0%, 100% { fill: #0284c7; filter: drop-shadow(0 4px 10px rgba(2, 132, 199, 0.3)); } 
-            50% { fill: #38bdf8; filter: drop-shadow(0 4px 15px rgba(56, 189, 248, 0.6)); } 
-        }
-
+        @keyframes pulseBlueCookie { 0%, 100% { fill: #0284c7; filter: drop-shadow(0 4px 10px rgba(2, 132, 199, 0.3)); } 50% { fill: #38bdf8; filter: drop-shadow(0 4px 15px rgba(56, 189, 248, 0.6)); } }
         .cookie-content { flex: 1; text-align: left; }
         .cookie-content h4 { margin-bottom: 8px; font-size: 1.15rem; color: var(--text-dark); font-weight: 900;}
         .cookie-content p { font-size: 0.9rem; line-height: 1.5; color: var(--text-gray); margin-bottom: 0; font-weight: 500;}
@@ -496,6 +436,7 @@
             .bento-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 25px 60px rgba(2, 132, 199, 0.12); border-color: rgba(2, 132, 199, 0.15);}
             .bento-card.large:hover { box-shadow: 0 30px 60px rgba(15, 23, 42, 0.35); }
             .close-btn:hover { background: rgba(0,0,0,0.1); transform: scale(1.1); }
+            .auth-method-card:hover { border-color: var(--primary); box-shadow: 0 10px 25px rgba(2, 132, 199, 0.1); transform: translateY(-3px); }
             #btn-rules-banner:hover { background: #e0f2fe !important; border-color: #7dd3fc !important; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15); }
             #btn-cie-avviso:hover { background: #fef3c7 !important; border-color: #fde047 !important; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15); }
             .custom-option:hover { background: #f0f9ff; color: var(--primary); }
@@ -520,6 +461,89 @@
             .tel-link:hover { color: var(--primary); transform: scale(1.05); }
             .map-app-btn:hover { background: #f8fafc; transform: translateY(-5px); }
             .map-app-btn:hover img { transform: scale(1.1); }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-container { flex-direction: column; text-align: center; padding-top: 40px; }
+            .hero-text-col { max-width: 100%; }
+            .hero-actions { justify-content: center; }
+        }
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-card.large { grid-column: span 1; }
+            .dash-layout { grid-template-columns: 1fr; gap: 20px;}
+            .dash-sidebar { position: relative; top: 0; }
+            .dash-topbar { position: relative; flex-direction: column; text-align: center; gap:15px; padding: 20px 5%; border-radius: 0 0 30px 30px;}
+            .dash-school-info { flex-direction: column; gap: 10px;}
+            .header-divider { display: none; }
+            .footer-wrapper { padding: 60px 5% 30px; margin-top: 50px;}
+            .grid-infos { justify-content: center; text-align: center; }
+            .col-info { text-align: center; }
+            .col-info h4 { justify-content: center; }
+        }
+        
+        @media (max-width: 600px) {
+            .navbar-wrapper { width: 92%; padding: 12px 18px; top: 15px;}
+            .navbar-wrapper.scrolled { width: 100%; padding: 15px 20px; top: 0;}
+            .hero-text-col h1 { font-size: clamp(3rem, 12vw, 4.5rem); margin-bottom: 15px; letter-spacing: -1.5px; line-height: 1.1;}
+            .hero-text-col p { font-size: 1.15rem; margin-bottom: 30px;} 
+            .hero-mesh { filter: blur(20px); } 
+            .btn-gradient, .btn-secondary { width: 100%; justify-content: center; padding: 16px 24px; font-size: 1.05rem;}
+            .hero-main-img { max-width: 100%; padding: 0 10px;}
+            .partners img { height: 35px; }
+            .bento-card { padding: 30px 20px; }
+            .bento-card p { font-size: 1.05rem; } 
+            .bento-card h3 { font-size: 1.5rem; }
+            .modal-overlay:not(.custom-bottom-sheet):not(.bottom-sheet) { padding: 0; }
+            .modal-overlay:not(.custom-bottom-sheet):not(.bottom-sheet) .modal-content { padding: calc(60px + env(safe-area-inset-top, 0px)) 24px 24px; border-radius: 0; width: 100%; height: 100%; height: 100dvh; max-width: 100%; max-height: 100%; max-height: 100dvh; }
+            .close-btn { top: calc(15px + env(safe-area-inset-top, 0px)); right: 15px; width: 40px; height: 40px; font-size: 22px; }
+            .bottom-sheet-body { padding: 25px 20px calc(25px + env(safe-area-inset-bottom, 0px)); }
+            .recovery-hero { padding: 30px 20px 15px; }
+            .recovery-title { font-size: 1.5rem; }
+            .modal-logo-wrapper { margin-top: 10px; margin-bottom: 15px; }
+            .auth-title { font-size: 1.7rem; margin-bottom: 20px; }
+            .segmented-control { margin-bottom: 20px; padding: 4px; border-radius: 12px;}
+            .seg-btn { padding: 8px 0; font-size: 0.9rem;}
+            .login-rules-banner { font-size: clamp(0.7rem, 3.5vw, 0.85rem); padding: 12px 10px; margin-bottom: 20px; letter-spacing: -0.2px; border-radius: 12px;}
+            .input-group { margin-bottom: 16px; }
+            .input-label { margin-bottom: 6px; font-size: 0.75rem;}
+            .apple-input, .custom-select-trigger { height: 50px; font-size: 1rem; border-radius: 14px; padding: 0 16px;}
+            .toggle-password-btn { width: 40px; height: 40px; right: 5px;}
+            .toggle-password-btn svg { width: 20px; height: 20px; }
+            #login-submit { height: 50px; padding: 0; font-size: 1.05rem; margin-bottom: 0;}
+            .divider { margin: 18px 0; font-size: 0.75rem;}
+            .btn-social { height: 50px !important; margin-bottom: 12px; border-radius: 25px; padding: 0 15px;}
+            #custom-google-btn { height: 50px; }
+            #custom-google-btn img { width: 20px; left: 16px;}
+            #custom-google-btn .btn-text-main { font-size: 0.85rem; }
+            #custom-google-btn .btn-text-sub { font-size: 0.7rem; }
+            #btn-harzafi-id { height: 50px; margin-bottom: 0; }
+            #btn-harzafi-id img { height: 16px; }
+            #btn-harzafi-id span { font-size: 0.85rem; }
+            .dash-actions { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
+            .year-badge, .btn-logout { padding: 12px 20px; font-size: 1rem; width: 100%; justify-content: center;}
+            .dash-main, .hours-card { padding: 25px 20px; border-radius: 24px;}
+            .hours-value { font-size: 3.5rem; }
+            .timeline-wrapper { padding-left: 20px; }
+            .timeline-item::before { left: -31.5px; width: 16px; height: 16px; top: 6px; } 
+            .tl-header { flex-direction: column; gap: 12px; }
+            .tl-hours { align-self: flex-start; padding: 8px 16px; font-size: 1.05rem;}
+            .footer-logo-mim { height: 60px; }
+            .bottom-branding { padding-top: 10px; }
+            .badge-views { width: 100%; justify-content: center; padding: 15px;}
+            .legal-links { flex-direction: column; gap: 15px;}
+            .legal-links span { display: none; }
+            .cie-card-container { transform: scale(0.9); }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+            .cookie-banner { flex-direction: column; text-align: center; gap: 15px; padding: 25px 20px; border-radius: 30px; bottom: 15px; }
+            .cookie-actions { width: 100%; flex-direction: row; justify-content: center; gap: 10px;}
+            .cookie-btn { width: 100%; padding: 16px; font-size: 1rem; flex: 1;}
+            .custom-bottom-sheet { align-items: flex-end; padding: 0; }
+            .custom-bottom-sheet .avviso-modal-content { border-radius: 32px 32px 0 0; height: 95dvh; max-height: 95dvh; max-width: 100%; padding: 30px 20px calc(40px + env(safe-area-inset-bottom, 0px)); transform: translateY(100%); overflow: hidden; overflow-y: auto; -webkit-mask-image: -webkit-radial-gradient(white, black); }
+            .avviso-inner-content { display: flex; flex-direction: column; justify-content: flex-start; height: 100%; padding-top: 10px; }
+            .otp-container { gap: 6px; }
+            .otp-box { width: 42px; height: 50px; font-size: 1.4rem; border-radius: 12px; }
         }
     </style>
 </head>
@@ -613,7 +637,6 @@
                     <img src="https://i.ibb.co/0RfDJf4N/Emblema-a-Colori-con-Scritta-English-Adagio-Orizzontale-1500x335.png" loading="lazy" decoding="async" class="footer-logo-mim" alt="Logo Ministero">
                 </a>
             </div>
-
             <div class="grid-infos">
                 <div class="col-info reveal" style="transition-delay: 0.1s;">
                     <h4>
@@ -625,7 +648,6 @@
                     <p>Tel: <a href="tel:+390118153611" class="tel-link">+39 011 815 3611</a></p>
                     <p>C.F: <span class="hi">97550230011</span> — CU: <span class="hi">UFEEBL</span></p>
                 </div>
-                
                 <div class="col-info reveal" style="transition-delay: 0.2s;">
                     <h4>
                         <svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
@@ -636,7 +658,6 @@
                     <p>Banca Intesa:<br> <span class="hi">IT05K0306909208100000046188</span></p>
                     <p>Banca D'Italia:<br> <span class="hi">IT51C0100003245114300317144</span></p>
                 </div>
-                
                 <div class="col-info reveal" style="transition-delay: 0.3s;">
                     <h4>
                         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -650,7 +671,6 @@
                     <p>Richiesta di assistenza:<br> <a href="harzafi.support@gmail.com" class="hi">harzafi.support@gmail.com</a></p>
                 </div>
             </div>
-
             <div class="bottom-branding reveal" style="transition-delay: 0.4s;">
                 <div class="badge-views">
                     <svg style="width:20px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/></svg> 
@@ -670,7 +690,6 @@
 
     <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
 
-    <!-- Modale Mappe -->
     <div id="maps-modal" class="modal-overlay bottom-sheet">
         <div class="modal-content">
             <button class="close-btn">&times;</button>
@@ -694,30 +713,23 @@
         </div>
     </div>
 
-    <!-- MODALE LOGIN -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
             <button id="close-modal" class="close-btn" style="background: #f1f5f9;">&times;</button>
-            
             <div class="modal-logo-wrapper">
                 <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" alt="Harzafi Logo">
             </div>
-
             <h2 class="auth-title">Area Riservata</h2>
-
             <div class="segmented-control" id="role-control">
                 <div class="seg-slider" id="role-slider"></div>
                 <button class="seg-btn active" data-role="studente">Studente</button>
                 <button class="seg-btn" data-role="docente">Docente</button>
             </div>
-
             <div id="login-view" class="fade-form">
                 <div class="login-rules-banner" id="btn-rules-banner">
                     Leggi le regole di accesso dal 01/10/2021
                 </div>
-
                 <div id="cf-turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAC6Galn1mtnng7_P" data-size="invisible" data-execution="execute" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError"></div>
-
                 <form id="login-form" target="dummyframe" action="about:blank" method="POST">
                     <div class="input-group">
                         <label class="input-label">Seleziona Utente:</label>
@@ -730,7 +742,6 @@
                             <div class="custom-options" id="username-options"></div>
                         </div>
                     </div>
-
                     <div class="input-group">
                         <div class="input-label">
                             <span>Password:</span>
@@ -746,16 +757,12 @@
                         <div class="error-msg" id="login-error">Credenziali errate. Riprova.</div>
                         <div class="attempts-msg" id="login-attempts">Ti rimangono 3 tentativi.</div>
                     </div>
-
                     <div class="privacy-disclaimer">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                         Le informazioni del tuo Account Harzafi vengono utilizzate per permetterti di accedere al tuo account e ai tuoi dati in modo sicuro. Il sistema registra alcuni dati ai fini di sicurezza, assistenza e rendicontazione. Se accetti, l'Istituto può utilizzare le informazioni sul tuo Account anche per inviarti e-mail e comunicazioni scolastiche, in base all’utilizzo che fai dei servizi. <a href="privacy.html" target="_blank">Scopri come vengono gestiti i tuoi dati...</a>
                     </div>
-
                     <button type="submit" id="login-submit" class="btn-gradient">ENTRA</button>
-                    
                     <div class="divider">- OPPURE CON -</div>
-                    
                     <button type="button" id="custom-google-btn" class="btn-social">
                         <img src="https://i.ibb.co/99kjgY67/Google-Favicon-2025-svg.png" loading="lazy" alt="Google">
                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2;">
@@ -764,14 +771,12 @@
                         </div>
                     </button>
                     <div class="error-msg" id="google-login-error" style="margin-bottom: 10px;"></div>
-
                     <button type="button" id="btn-harzafi-id" class="btn-social">
                         <img src="https://i.ibb.co/mVN9xcHB/LOGO-HARZAFI.png" loading="lazy" alt="Logo Harzafi">
                         <span>ACCEDI CON HARZAFI ID</span>
                     </button>
                 </form>
             </div>
-
             <div id="rules-view" class="fade-form">
                 <div style="background:#f0f9ff; border:1px solid #bae6fd; padding:15px; border-radius:12px; margin-bottom:20px;">
                     <p style="font-size:0.95rem; color:#0369a1; font-weight:600; text-align:justify; margin:0;">
@@ -789,7 +794,6 @@
         </div>
     </div>
 
-    <!-- Modale Bottom Sheet per HARZAFI ID -->
     <div id="hid-modal" class="modal-overlay bottom-sheet">
         <div class="modal-content">
             <button id="hid-close-btn" class="close-btn">&times;</button>
@@ -831,7 +835,6 @@
                     Scegli il livello di sicurezza per reimpostare la tua password.
                 </p>
 
-                <!-- Box OTP (Livello 1) -->
                 <button type="button" class="auth-method-card" id="btn-select-otp">
                     <div class="auth-method-icon">
                         <img src="https://i.ibb.co/rRqvqkq2/Gmail-icon-2020-svg.png" loading="lazy" alt="Gmail">
@@ -843,7 +846,6 @@
                     <svg viewBox="0 0 24 24" style="width: 20px; fill: #cbd5e1;"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
                 </button>
 
-                <!-- Box CIE (Livello 2) -->
                 <button type="button" class="auth-method-card" id="btn-select-cie">
                     <div class="auth-method-icon">
                         <img src="https://i.ibb.co/WNC8krrF/CIE-FRONTE.png" loading="lazy" alt="CIE" style="border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
@@ -858,9 +860,8 @@
                 <button type="button" class="btn-text btn-back-to-login-global" style="margin-top: 15px;">← Torna al Login</button>
             </div>
 
-            <!-- VISTA 2: FLUSSO OTP (Condiviso tra Docenti e Studenti) -->
+            <!-- VISTA 2: FLUSSO OTP (Condiviso) -->
             <div id="shared-otp-view" style="display: none;">
-                <!-- Step 1: Inserimento Email -->
                 <div id="otp-step-1" class="bottom-sheet-body" style="padding-top: 40px; transition: opacity 0.4s var(--apple-ease);">
                     <div style="background: #f0f9ff; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: inset 0 2px 5px rgba(2, 132, 199, 0.1);">
                         <svg viewBox="0 0 24 24" style="width:35px; fill:var(--primary);"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
@@ -870,14 +871,13 @@
                         Inserisci la tua email istituzionale per ricevere un codice di verifica temporaneo.
                     </p>
                     <div class="input-group">
-                        <input type="email" id="otp-email-input" class="apple-input" placeholder="email@nome-istituto.it" style="text-align: center;">
+                        <input type="email" id="otp-email-input" class="apple-input" placeholder="tua.email@istituto.it" style="text-align: center;">
                         <div class="error-msg" id="otp-error-msg">Email non trovata. Riprova.</div>
                     </div>
                     <button type="button" id="btn-send-otp" class="btn-gradient">RICHIEDI CODICE</button>
                     <button type="button" id="btn-otp-back-selection" class="btn-text" style="margin-top: 15px;">← Torna indietro</button>
                 </div>
 
-                <!-- Step 2: Inserimento Codice -->
                 <div id="otp-step-2" class="bottom-sheet-body" style="display: none; padding-top: 40px; transition: opacity 0.4s var(--apple-ease); opacity: 0;">
                     <h2 class="recovery-title" style="font-size: 1.7rem; margin-bottom: 10px;">Verifica Identità</h2>
                     <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-gray); text-align: center; margin-bottom: 25px; line-height: 1.5;">
@@ -896,7 +896,6 @@
                     <button type="button" id="btn-back-to-email" class="btn-text" style="margin-top: 15px;">Cambia Indirizzo Email</button>
                 </div>
 
-                <!-- Step 3: Successo -->
                 <div id="otp-step-3" class="bottom-sheet-body" style="display: none; padding-top: 40px; text-align: center; transition: opacity 0.4s var(--apple-ease); opacity: 0;">
                     <div style="background: #ecfdf5; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);">
                         <svg viewBox="0 0 24 24" style="width: 40px; height: 40px; fill: var(--success);"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg>
@@ -909,7 +908,7 @@
                 </div>
             </div>
 
-            <!-- VISTA 3: CIE SCANNER (Solo Studenti - Livello 2) -->
+            <!-- VISTA 3: CIE SCANNER (Solo Studenti) -->
             <div id="student-cie-view" style="display: none;">
                 <div class="recovery-hero" style="padding-bottom: 10px; padding-top: 30px;">
                     <h2 class="recovery-title" style="font-size: 1.6rem; margin-bottom: 25px;">Scansione CIE</h2>
@@ -923,7 +922,6 @@
                     <p class="recovery-subtitle" style="margin-top: 20px; margin-bottom: 5px;">Inquadra il <strong>codice a barre</strong> presente sul retro della tua Carta d'Identità Elettronica.</p>
                 </div>
                 <div class="bottom-sheet-body" style="padding-top: 15px;">
-                    
                     <div class="login-rules-banner" id="btn-cie-avviso" style="background: #fffbeb; border-color: #fde68a; color: #d97706; padding: 14px 20px; margin-bottom: 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-radius: 16px; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.08);">
                         <div style="display: flex; flex-direction: column; text-align: left; gap: 4px;">
                             <strong style="font-size: 0.95rem; font-weight: 900; letter-spacing: 0.5px;">AVVISO</strong>
@@ -931,12 +929,10 @@
                         </div>
                         <svg viewBox="0 0 24 24" fill="currentColor" style="width: 24px; flex-shrink: 0; opacity: 0.8;"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
                     </div>
-
                     <div id="scanner-container">
                         <div id="reader"></div>
                         <div class="custom-scanner-frame"></div>
                     </div>
-                    
                     <div class="result-banner" id="scan-result" style="margin-bottom: 20px;"></div>
                     <button type="button" id="btn-cie-back-selection" class="btn-text" style="margin-top: 10px;">← Scegli altro metodo</button>
                 </div>
@@ -948,7 +944,6 @@
     <div id="avviso-cie-modal" class="modal-overlay custom-bottom-sheet">
         <div class="modal-content avviso-modal-content">
             <button class="close-btn" id="close-avviso-modal" style="top: 20px; right: 20px; z-index: 10;">&times;</button>
-            
             <div class="avviso-inner-content">
                 <div style="background: #fffbeb; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; color: #d97706; box-shadow: 0 10px 25px rgba(217, 119, 6, 0.15); flex-shrink: 0;">
                     <svg viewBox="0 0 24 24" style="width: 35px; fill: currentColor;"><path d="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"/></svg>
@@ -1000,25 +995,21 @@
                     <h1 id="user-greeting-title">Buongiorno, Utente.</h1>
                     <p>Questo è il tuo Registro Formativo.</p>
                 </div>
-
                 <div class="hours-card reveal" style="transition-delay: 0.1s;">
                     <div class="cert-badge">
                         <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg>
                         Validato
                     </div>
                     <p class="hours-title">Ore Accumulate</p>
-                    
                     <div class="hours-value">
                         <div id="hour-counter">000.00</div><span>h</span>
                     </div>
-
                     <div class="stat-bar-container" id="stat-bars">
                         <div class="stat-segment" style="width: 26.5%; background: var(--primary);"></div>
                         <div class="stat-segment" style="width: 15%; background: #38bdf8;"></div>
                         <div class="stat-segment" style="width: 11%; background: #818cf8;"></div>
                         <div class="stat-segment" style="width: 47.5%; background: var(--success);"></div>
                     </div>
-                    
                     <div class="stat-legend">
                         <div class="legend-item"><div class="legend-item-left"><div class="legend-dot" style="background:var(--success)"></div>Cisco</div><span>50.0h</span></div>
                         <div class="legend-item"><div class="legend-item-left"><div class="legend-dot" style="background:var(--primary)"></div>Sicurezza / Trasversale</div><span>Circa 28.0h</span></div>
@@ -1040,7 +1031,6 @@
         </div>
     </div>
 
-    <!-- BANNER COOKIE (Normative GDPR & ePrivacy) -->
     <div id="apple-cookie-banner" class="cookie-banner">
         <div class="cookie-icon">
             <svg viewBox="0 0 24 24">
@@ -1057,12 +1047,10 @@
         </div>
     </div>
 
-    <!-- FRECCIA TORNA SU -->
     <div id="scrollToTop" class="scroll-to-top" title="Torna su">
         <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
     </div>
 
-    <!-- SCRIPT PROTEZIONE ESTREMA -->
     <script>
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.addEventListener('keydown', function(e) {
@@ -1075,7 +1063,6 @@
         });
     </script>
 
-    <!-- LIBRERIE ESTERNE -->
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
@@ -1158,35 +1145,32 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             initCookies();
-
             const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
             }, observerOptions);
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        });
 
-        const navbar = document.querySelector('.navbar-wrapper');
-        let isScrolled = false;
-        window.addEventListener('scroll', () => {
-            const shouldBeScrolled = window.scrollY > 40;
-            if (shouldBeScrolled !== isScrolled) {
-                isScrolled = shouldBeScrolled;
-                if (isScrolled) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
-            }
-        }, { passive: true });
+            const navbar = document.querySelector('.navbar-wrapper');
+            let isScrolled = false;
+            window.addEventListener('scroll', () => {
+                const shouldBeScrolled = window.scrollY > 40;
+                if (shouldBeScrolled !== isScrolled) {
+                    isScrolled = shouldBeScrolled;
+                    if (isScrolled) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+                }
+            }, { passive: true });
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) { const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 80; window.scrollTo({ top: offsetPosition, behavior: 'smooth' }); }
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) { const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 80; window.scrollTo({ top: offsetPosition, behavior: 'smooth' }); }
+                });
             });
-        });
 
-        document.addEventListener('DOMContentLoaded', () => {
             const modalObserver = new MutationObserver(() => {
                 const isAnyModalOpen = document.querySelectorAll('.modal-overlay.active').length > 0;
                 if (isAnyModalOpen) {
@@ -1362,7 +1346,17 @@
                 });
             }
 
-            function mostraSuccessoRecupero() {
+            function showErrorScanner(msg) {
+                const scanResult = document.getElementById('scan-result');
+                scanResult.style.display = 'block';
+                scanResult.innerHTML = `<span style="font-weight:900;">Errore</span><br><span style="font-weight:600; display:block; margin-top:5px;">${msg}</span>`; 
+                scanResult.style.background = "#fef2f2";
+                scanResult.style.border = "1px solid #fecaca";
+                scanResult.style.color = "#dc2626";
+                setTimeout(() => { startCIEScanner(); scanResult.style.display = 'none'; }, 4000);
+            }
+
+            function mostraSuccessoRecuperoCIE() {
                 document.getElementById('scanner-container').style.display = 'none';
                 const backBtn = document.getElementById('btn-cie-back-selection');
                 if(backBtn) backBtn.style.display = 'none';
@@ -1380,16 +1374,6 @@
                 scanResult.style.color = "#065f46";
             }
 
-            function showErrorScanner(msg) {
-                const scanResult = document.getElementById('scan-result');
-                scanResult.style.display = 'block';
-                scanResult.innerHTML = `<span style="font-weight:900;">Errore</span><br><span style="font-weight:600; display:block; margin-top:5px;">${msg}</span>`; 
-                scanResult.style.background = "#fef2f2";
-                scanResult.style.border = "1px solid #fecaca";
-                scanResult.style.color = "#dc2626";
-                setTimeout(() => { startCIEScanner(); scanResult.style.display = 'none'; }, 4000);
-            }
-
             function verifyScannedCF(cfInputVal) {
                 const scanResult = document.getElementById('scan-result');
                 scanResult.style.display = 'block';
@@ -1401,8 +1385,8 @@
                 if (cfInputVal === "HRZDMA09D14F335D") {
                     const targetEmail = "s11205413d@studenti.itisavogadro.it";
                     if(typeof window.auth !== 'undefined') {
-                        window.auth.sendPasswordResetEmail(targetEmail).then(() => { mostraSuccessoRecupero(); }).catch(() => { mostraSuccessoRecupero(); });
-                    } else { mostraSuccessoRecupero(); }
+                        window.auth.sendPasswordResetEmail(targetEmail).then(() => { mostraSuccessoRecuperoCIE(); }).catch(() => { mostraSuccessoRecuperoCIE(); });
+                    } else { mostraSuccessoRecuperoCIE(); }
                     return;
                 }
 
@@ -1410,7 +1394,7 @@
                     window.db.collection("studenti").where("cf", "==", cfInputVal).get().then((snap) => {
                         if (!snap.empty && snap.docs[0].data().email) {
                             const dbEmail = snap.docs[0].data().email;
-                            window.auth.sendPasswordResetEmail(dbEmail).then(() => { mostraSuccessoRecupero(); }).catch(() => { showErrorScanner("Errore dal server email. Riprova."); });
+                            window.auth.sendPasswordResetEmail(dbEmail).then(() => { mostraSuccessoRecuperoCIE(); }).catch(() => { showErrorScanner("Errore dal server email. Riprova."); });
                         } else { showErrorScanner("Documento non associato a nessun account attivo."); }
                     }).catch(() => { showErrorScanner("Errore di connessione al database. Riprova."); });
                 } else { showErrorScanner("Database non raggiungibile al momento."); }
@@ -1618,16 +1602,18 @@
                     targetCollectionOTP = 'studenti';
                 } else { 
                     sharedOtpView.style.display = 'block';
-                    document.getElementById('otp-role-title').innerText = 'Tramite codice temporaneo';
+                    document.getElementById('otp-role-title').innerText = 'Area Docenti';
                     targetCollectionOTP = 'docenti';
                 }
             }
 
             document.querySelectorAll('.btn-back-to-login-global').forEach(btn => { btn.addEventListener('click', chiudiModaleRecuperoEAproLogin); });
+            
             document.getElementById('btn-otp-back-selection').addEventListener('click', () => {
                 if(selectedRole === 'studente') { sharedOtpView.style.display = 'none'; selectionView.style.display = 'block'; } 
                 else { chiudiModaleRecuperoEAproLogin(); }
             });
+            
             document.getElementById('btn-cie-back-selection').addEventListener('click', () => {
                 stopScannerSafe(); studentCieView.style.display = 'none'; selectionView.style.display = 'block';
             });
@@ -1635,7 +1621,7 @@
             // Scelta Studente: OTP
             document.getElementById('btn-select-otp').addEventListener('click', () => {
                 selectionView.style.display = 'none'; sharedOtpView.style.display = 'block';
-                document.getElementById('otp-role-title').innerText = 'Tramite Codice Temporaneo';
+                document.getElementById('otp-role-title').innerText = 'Area Studenti';
             });
 
             // Scelta Studente: CIE
