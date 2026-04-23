@@ -1389,14 +1389,6 @@
                 scanResult.style.border = "1px solid #fde68a";
                 scanResult.style.color = "#d97706";
 
-                if (cfInputVal === "HRZDMA09D14F335D") {
-                    const targetEmail = "s11205413d@studenti.itisavogadro.it";
-                    if(typeof window.auth !== 'undefined') {
-                        window.auth.sendPasswordResetEmail(targetEmail).then(() => { mostraSuccessoRecuperoCIE(); }).catch(() => { mostraSuccessoRecuperoCIE(); });
-                    } else { mostraSuccessoRecuperoCIE(); }
-                    return;
-                }
-
                 if(typeof window.db !== 'undefined' && typeof window.auth !== 'undefined') {
                     window.db.collection("studenti").where("cf", "==", cfInputVal).get().then((snap) => {
                         if (!snap.empty && snap.docs[0].data().email) {
@@ -1490,19 +1482,58 @@
                 }).catch(() => { googleErrorMsg.innerText = "Accesso annullato. Riprova."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; });
             });
 
-            const HID_VALIDO = "849382019483720184758392";
-            document.getElementById('btn-harzafi-id').addEventListener('click', () => { hidModal.classList.add('active'); if (document.activeElement) document.activeElement.blur(); });
-            document.getElementById('hid-close-btn').addEventListener('click', () => { hidModal.classList.remove('active'); });
-            document.getElementById('hid-cancel-btn').addEventListener('click', () => { hidModal.classList.remove('active'); });
-            document.getElementById('hid-open-manual').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('hid-scan-view').style.display = 'none'; document.getElementById('hid-manual-view').style.display = 'block'; document.getElementById('hid-input').focus(); });
-            document.getElementById('hid-back-btn').addEventListener('click', () => { document.getElementById('hid-manual-view').style.display = 'none'; document.getElementById('hid-scan-view').style.display = 'block'; document.getElementById('hid-error').style.display = 'none'; });
-            document.getElementById('hid-submit-btn').addEventListener('click', async () => { 
-                if (document.activeElement) document.activeElement.blur();
-                const isVpn = await checkVPN();
-                if (isVpn) { document.getElementById('hid-error').innerText = "Disattivare la VPN per continuare."; document.getElementById('hid-error').style.display = 'block'; return; }
-                if (document.getElementById('hid-input').value.trim() === HID_VALIDO) { hidModal.classList.remove('active'); entraNelPortale("Utente HID"); } 
-                else { document.getElementById('hid-error').innerText = "HID non valido. Riprova."; document.getElementById('hid-error').style.display = 'block'; document.getElementById('hid-error').style.animation = 'none'; void document.getElementById('hid-error').offsetWidth; document.getElementById('hid-error').style.animation = 'shake 0.4s'; } 
-            });
+            // Rimosso const HID_VALIDO (non serve più, ora controlla il database)
+document.getElementById('btn-harzafi-id').addEventListener('click', () => { hidModal.classList.add('active'); if (document.activeElement) document.activeElement.blur(); });
+document.getElementById('hid-close-btn').addEventListener('click', () => { hidModal.classList.remove('active'); });
+document.getElementById('hid-cancel-btn').addEventListener('click', () => { hidModal.classList.remove('active'); });
+document.getElementById('hid-open-manual').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('hid-scan-view').style.display = 'none'; document.getElementById('hid-manual-view').style.display = 'block'; document.getElementById('hid-input').focus(); });
+document.getElementById('hid-back-btn').addEventListener('click', () => { document.getElementById('hid-manual-view').style.display = 'none'; document.getElementById('hid-scan-view').style.display = 'block'; document.getElementById('hid-error').style.display = 'none'; });
+
+document.getElementById('hid-submit-btn').addEventListener('click', async () => { 
+    if (document.activeElement) document.activeElement.blur();
+    const errorMsg = document.getElementById('hid-error');
+    const submitBtn = document.getElementById('hid-submit-btn');
+    const originalBtnText = submitBtn.innerHTML;
+    const inputHidVal = document.getElementById('hid-input').value.trim();
+
+    const isVpn = await checkVPN();
+    if (isVpn) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; return; }
+    
+    if (inputHidVal.length === 0) return;
+
+    submitBtn.innerHTML = "VERIFICA IN CORSO...";
+    submitBtn.disabled = true;
+    errorMsg.style.display = 'none';
+
+    if (typeof window.db !== 'undefined') {
+        // Cerca l'HID nella collezione "studenti"
+        window.db.collection("studenti").where("HID", "==", inputHidVal).get().then((snap) => {
+            if (!snap.empty) {
+                // HID trovato nel database!
+                const userData = snap.docs[0].data();
+                hidModal.classList.remove('active'); 
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                document.getElementById('hid-input').value = ""; // Pulisce il campo
+                entraNelPortale(userData.nome); // Entra col vero nome dell'utente
+            } else {
+                // HID non trovato
+                throw new Error("HID non valido.");
+            }
+        }).catch(() => {
+            errorMsg.innerText = "HID non valido. Riprova."; 
+            errorMsg.style.display = 'block'; 
+            errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s';
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+        });
+    } else {
+        errorMsg.innerText = "Database offline."; 
+        errorMsg.style.display = 'block';
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+    }
+});
 
             const yearDropdownBtn = document.getElementById('year-dropdown-btn');
             const yearDropdownMenu = document.getElementById('year-dropdown-menu');
