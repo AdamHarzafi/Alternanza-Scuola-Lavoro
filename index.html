@@ -1252,7 +1252,7 @@
                     window.db.collection(collectionName).orderBy("nome", "asc").get().then((querySnapshot) => {
                         optionsContainer.innerHTML = ''; 
                         querySnapshot.forEach((doc) => creaOpzioneDropdown(doc.data().nome, doc.data().email || "email_mancante@scuola.it", optionsContainer, 'username'));
-                    }).catch(() => { optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--danger);">Errore Server Firebase</div>'; });
+                    }).catch(() => { optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--danger);">Errore di connessione al server</div>'; });
                 } else {
                     optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center;">In attesa di connessione...</div>';
                 }
