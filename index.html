@@ -1466,7 +1466,7 @@
                 
                 const isVpn = await checkVPN();
                 if (isVpn) { googleErrorMsg.innerText = "Disattivare la VPN per continuare."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
-                if(typeof window.auth === 'undefined') { googleErrorMsg.innerText = "Firebase assente."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
+                if(typeof window.auth === 'undefined') { googleErrorMsg.innerText = "Servizio di autenticazione offline."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
                 
                 window.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((result) => {
                     const email = result.user.email.toLowerCase();
