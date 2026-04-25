@@ -1,13 +1,3 @@
-document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === "F12" || 
-               (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "i" || e.key === "J" || e.key === "j" || e.key === "C" || e.key === "c")) ||
-               (e.ctrlKey && (e.key === "U" || e.key === "u"))) {
-                e.preventDefault();
-                return false;
-            }
-        });
-
 window.globalTurnstileToken = "";
         window.isWaitingForToken = false;
         window.onTurnstileSuccess = function(token) {
