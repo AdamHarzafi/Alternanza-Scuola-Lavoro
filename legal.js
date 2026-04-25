@@ -1,24 +1,3 @@
-// Sistema di protezione
-        (function() {
-            document.addEventListener('contextmenu', e => e.preventDefault());
-            document.addEventListener('keydown', e => {
-                if (e.key === 'F12' || e.keyCode === 123 || 
-                   (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
-                   (e.ctrlKey && (e.key === 'u' || e.key === 'U'))) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            setInterval(() => {
-                const prima = new Date().getTime();
-                debugger;
-                if (new Date().getTime() - prima > 100) {
-                    document.body.innerHTML = '<h1 style="color:red; text-align:center; margin-top:20vh;">Accesso Negato: Strumenti sviluppatore bloccati.</h1>';
-                    window.location.replace("about:blank");
-                }
-            }, 1000);
-        })();
-
         // Animazioni super-performanti
         document.addEventListener("DOMContentLoaded", function() {
             const observerOptions = { root: null, rootMargin: '20px', threshold: 0 };
