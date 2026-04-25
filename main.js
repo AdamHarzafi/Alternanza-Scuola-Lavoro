@@ -69,40 +69,42 @@ window.addEventListener('load', () => {
     if (!trackerText) return;
 
     if (!isAnalyticsAllowed) {
-        trackerText.innerText = "Non tracciato (Cookie Rifiutati)";
+        trackerText.innerText = "Non tracciato";
         return;
     }
 
-    // Assicuriamoci che Firebase sia caricato
-    if (typeof window.db !== 'undefined' && typeof firebase !== 'undefined') {
-        const counterRef = window.db.collection('statistiche').doc('visualizzazioni');
-        
-        // Se non abbiamo ancora contato questa visita nella sessione corrente
-        if (!sessionStorage.getItem('view_counted')) {
-            // 1. Incrementa di 1 il valore sul database
-            counterRef.update({
-                count: firebase.firestore.FieldValue.increment(1)
-            }).then(() => {
-                // 2. Segna la visita come contata
-                sessionStorage.setItem('view_counted', 'true');
-                // 3. Leggi il nuovo valore totale
-                return counterRef.get();
-            }).then((doc) => {
-                if(doc.exists) trackerText.innerText = doc.data().count;
-            }).catch(err => {
-                console.error("Errore nell'aggiornamento del contatore:", err);
-                trackerText.innerText = "Non disponibile";
-            });
+    const executeTracking = () => {
+        if (typeof window.db !== 'undefined' && typeof firebase !== 'undefined') {
+            const counterRef = window.db.collection('statistiche').doc('visualizzazioni');
+            
+            if (!sessionStorage.getItem('view_counted')) {
+                counterRef.update({
+                    count: firebase.firestore.FieldValue.increment(1)
+                }).then(() => {
+                    sessionStorage.setItem('view_counted', 'true');
+                    return counterRef.get();
+                }).then((doc) => {
+                    if(doc.exists) trackerText.innerText = doc.data().count;
+                }).catch(err => {
+                    trackerText.innerText = "Non disponibile";
+                });
+            } else {
+                counterRef.get().then((doc) => {
+                    if(doc.exists) trackerText.innerText = doc.data().count;
+                }).catch(() => {
+                    trackerText.innerText = "Non disponibile";
+                });
+            }
         } else {
-            // Se la visita è già stata contata, scarica solo il numero attuale per mostrarlo
-            counterRef.get().then((doc) => {
-                if(doc.exists) trackerText.innerText = doc.data().count;
-            }).catch(() => {
-                trackerText.innerText = "Non disponibile";
-            });
+            trackerText.innerText = "Non disponibile";
         }
+    };
+
+    // Se Firebase è già pronto esegui, altrimenti aspetta che la pagina finisca di caricare
+    if (typeof window.db !== 'undefined') {
+        executeTracking();
     } else {
-        trackerText.innerText = "In attesa di connessione...";
+        window.addEventListener('load', executeTracking);
     }
 }
 
