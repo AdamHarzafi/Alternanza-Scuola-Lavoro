@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Pagina non trovata - Registro FSL Harzafi</title>
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar-wrapper glass">
+        <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+            <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Logo Harzafi">
+        </div>
+        <div class="nav-links">
+            <a href="index.html#features">Funzionalità</a>
+            <a href="index.html#footer">Contatti Ufficiali</a>
+        </div>
+        <a href="index.html" style="text-decoration: none;"><button class="btn-premium">Torna alla Home</button></a>
+    </nav>
+
+    <!-- Main Content 404 -->
+    <div class="hero-wrapper" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative;">
+        <div class="hero-mesh"></div>
+        
+        <div class="hero-container" style="flex-direction: column; text-align: center; gap: 20px;">
+            <div class="reveal active" style="margin-bottom: 20px;">
+                <h1 style="font-size: clamp(6rem, 20vw, 12rem); color: var(--primary); margin-bottom: 0; line-height: 1; letter-spacing: -5px; font-weight: 900; background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    404
+                </h1>
+                <h2 style="font-size: clamp(1.8rem, 5vw, 2.5rem); color: var(--text-dark); margin-bottom: 15px; font-weight: 900; letter-spacing: -1px;">
+                    Pagina non trovata
+                </h2>
+                <p style="font-size: 1.15rem; color: var(--text-gray); max-width: 500px; margin: 0 auto 35px; line-height: 1.6;">
+                    Sembra che tu ti sia perso. La pagina che stai cercando potrebbe essere stata spostata, eliminata oppure l'URL inserito non è corretto.
+                </p>
+                <div class="hero-actions" style="justify-content: center;">
+                    <a href="index.html" class="btn-gradient" style="text-decoration: none; display: inline-flex; width: auto; min-width: 200px;">TORNA AL PORTALE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Effetto Navbar allo scroll
+        const navbar = document.querySelector('.navbar-wrapper');
+        let isScrolled = false;
+        window.addEventListener('scroll', () => {
+            const shouldBeScrolled = window.scrollY > 40;
+            if (shouldBeScrolled !== isScrolled) {
+                isScrolled = shouldBeScrolled;
+                if (isScrolled) navbar.classList.add('scrolled');
+                else navbar.classList.remove('scrolled');
+            }
+        }, { passive: true });
+        
+        // Attivazione comparsa fluida
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                const reveals = document.querySelectorAll('.reveal');
+                reveals.forEach(el => el.classList.add('active'));
+            }, 100);
+        });
+    </script>
+</body>
+</html>
