@@ -137,7 +137,6 @@ window.addEventListener('load', () => {
 
             const finalHoursValue = "113.30";
             let selectedRole = 'studente'; let selectedUserValue = ""; let selectedUserEmail = ""; 
-            const MAX_ATTEMPTS = 3; const LOCKOUT_DURATION = 60000; let lockoutTimerInterval;
 
             const submitBtn = document.getElementById('login-submit');
             const passInput = document.getElementById('password-input');
@@ -150,9 +149,9 @@ window.addEventListener('load', () => {
             const hidModal = document.getElementById('hid-modal');
             
             document.querySelectorAll('.btn-open-login').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault(); loginModal.classList.add('active'); checkLockoutState(); 
-                    window.globalTurnstileToken = "";
+            btn.addEventListener('click', (e) => {
+                e.preventDefault(); loginModal.classList.add('active');
+                window.globalTurnstileToken = "";
                     if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
                 });
             });
@@ -167,29 +166,6 @@ window.addEventListener('load', () => {
                 document.getElementById('cie-anim-container').classList.remove('flipped');
                 document.getElementById('scan-result').style.display = 'none';
             });
-
-            function checkLockoutState() {
-                const lockoutUntil = localStorage.getItem('pcto_lockout_until');
-                if (lockoutUntil) {
-                    if (Date.now() < parseInt(lockoutUntil)) { startLockoutCountdown(parseInt(lockoutUntil)); return true; }
-                    else { localStorage.removeItem('pcto_lockout_until'); localStorage.removeItem('pcto_failed_attempts'); resetLockoutUI(); }
-                } return false;
-            }
-            function startLockoutCountdown(endTime) {
-                submitBtn.disabled = true; passInput.disabled = true; errorMsg.style.display = 'none'; attemptsMsgObj.style.display = 'block';
-                clearInterval(lockoutTimerInterval);
-                const updateTimer = () => {
-                    const remainingMs = endTime - Date.now();
-                    if (remainingMs <= 0) { clearInterval(lockoutTimerInterval); localStorage.removeItem('pcto_lockout_until'); resetLockoutUI(); }
-                    else {
-                        const remainingSec = Math.ceil(remainingMs / 1000);
-                        attemptsMsgObj.innerText = `Accesso bloccato per sicurezza. Riprova tra 00:${remainingSec < 10 ? '0'+remainingSec : remainingSec}`;
-                        submitBtn.innerText = `BLOCCATO (00:${remainingSec < 10 ? '0'+remainingSec : remainingSec})`;
-                    }
-                };
-                updateTimer(); lockoutTimerInterval = setInterval(updateTimer, 1000);
-            }
-            function resetLockoutUI() { submitBtn.disabled = false; passInput.disabled = false; submitBtn.innerText = 'ENTRA'; attemptsMsgObj.style.display = 'none'; }
 
             const usernameSelect = document.getElementById('username-select');
             const hiddenUsernameInput = document.getElementById('hidden-username');
@@ -365,16 +341,19 @@ window.addEventListener('load', () => {
                 if(typeof window.auth !== 'undefined') {
                     window.auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
                         if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: uName, email_utente: selectedUserEmail, orario_accesso: new Date().toLocaleString('it-IT') }); }
-                        localStorage.removeItem('pcto_failed_attempts'); localStorage.removeItem('pcto_lockout_until');
                         submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; entraNelPortale(uName);
                     }).catch(() => {
                         submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
                         window.globalTurnstileToken = "";
                         if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
 
-                        let attempts = parseInt(localStorage.getItem('pcto_failed_attempts') || '0') + 1; localStorage.setItem('pcto_failed_attempts', attempts);
-                        if (attempts >= MAX_ATTEMPTS) { const lockoutUntil = Date.now() + LOCKOUT_DURATION; localStorage.setItem('pcto_lockout_until', lockoutUntil); startLockoutCountdown(lockoutUntil); }
-                        else { const rem = MAX_ATTEMPTS - attempts; errorMsg.innerText = "Credenziali errate. Riprova."; errorMsg.style.display = 'block'; attemptsMsgObj.innerText = rem === 1 ? 'Ti rimane 1 ultimo tentativo.' : `Ti rimangono ${rem} tentativi.`; attemptsMsgObj.style.display = 'block'; errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s'; }
+                        // Mostra solo l'errore senza contare i tentativi
+                        errorMsg.innerText = "Credenziali errate. Riprova."; 
+                        errorMsg.style.display = 'block'; 
+                        attemptsMsgObj.style.display = 'none'; // Assicuriamoci di nascondere il contatore
+                        errorMsg.style.animation = 'none'; 
+                        void errorMsg.offsetWidth; 
+                        errorMsg.style.animation = 'shake 0.4s';
                     });
                 } else {
                     errorMsg.innerText = "Servizio temporaneamente offline."; errorMsg.style.display = 'block';
@@ -385,7 +364,6 @@ window.addEventListener('load', () => {
             document.getElementById('login-form').addEventListener('submit', async (e) => {
                 e.preventDefault(); 
                 if (document.activeElement) document.activeElement.blur(); 
-                if (checkLockoutState()) return;
 
                 const pass = passInput.value.trim(); const uName = hiddenUsernameInput.value.trim();
                 if (typeof window.auth === 'undefined') { errorMsg.innerText = "Database offline."; errorMsg.style.display = 'block'; return; }
