@@ -1,3 +1,13 @@
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "F12" || 
+               (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "i" || e.key === "J" || e.key === "j" || e.key === "C" || e.key === "c")) ||
+               (e.ctrlKey && (e.key === "U" || e.key === "u"))) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
 window.globalTurnstileToken = "";
         window.isWaitingForToken = false;
         window.onTurnstileSuccess = function(token) {
@@ -65,16 +75,46 @@ window.addEventListener('load', () => {
         }
 
         function applyTracking(isAnalyticsAllowed) {
-            const trackerText = document.getElementById("dynamic-counter-tracker");
-            if (isAnalyticsAllowed) {
-                let localViewsStr = localStorage.getItem("visits-tracker-pcto-avgd-adam") || "508";
-                let trueGlobalMetricTrackerInt = parseInt(localViewsStr) + Math.floor((Math.random() * 2) + 1);
-                localStorage.setItem("visits-tracker-pcto-avgd-adam", trueGlobalMetricTrackerInt.toString());
-                if(trackerText) trackerText.innerText = trueGlobalMetricTrackerInt;
-            } else {
-                if(trackerText) trackerText.innerText = "Perchè? hai rifiutato i cookie.";
-            }
+    const trackerText = document.getElementById("dynamic-counter-tracker");
+    if (!trackerText) return;
+
+    if (!isAnalyticsAllowed) {
+        trackerText.innerText = "Non tracciato (Cookie Rifiutati)";
+        return;
+    }
+
+    // Assicuriamoci che Firebase sia caricato
+    if (typeof window.db !== 'undefined' && typeof firebase !== 'undefined') {
+        const counterRef = window.db.collection('statistiche').doc('visualizzazioni');
+        
+        // Se non abbiamo ancora contato questa visita nella sessione corrente
+        if (!sessionStorage.getItem('view_counted')) {
+            // 1. Incrementa di 1 il valore sul database
+            counterRef.update({
+                count: firebase.firestore.FieldValue.increment(1)
+            }).then(() => {
+                // 2. Segna la visita come contata
+                sessionStorage.setItem('view_counted', 'true');
+                // 3. Leggi il nuovo valore totale
+                return counterRef.get();
+            }).then((doc) => {
+                if(doc.exists) trackerText.innerText = doc.data().count;
+            }).catch(err => {
+                console.error("Errore nell'aggiornamento del contatore:", err);
+                trackerText.innerText = "Non disponibile";
+            });
+        } else {
+            // Se la visita è già stata contata, scarica solo il numero attuale per mostrarlo
+            counterRef.get().then((doc) => {
+                if(doc.exists) trackerText.innerText = doc.data().count;
+            }).catch(() => {
+                trackerText.innerText = "Non disponibile";
+            });
         }
+    } else {
+        trackerText.innerText = "In attesa di connessione...";
+    }
+}
 
         btnAccetto.addEventListener('click', () => {
             localStorage.setItem('harzafi_cookie_consent', JSON.stringify({ technical: true, analytics: true }));
