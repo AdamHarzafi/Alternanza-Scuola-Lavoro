@@ -22,15 +22,34 @@ window.globalTurnstileToken = "";
 
 window.addEventListener('load', () => {
             if(typeof firebase !== 'undefined') {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
-                    authDomain: "harzafi---fsl.firebaseapp.com",
-                    projectId: "harzafi---fsl",
-                    storageBucket: "harzafi---fsl.firebasestorage.app",
-                    messagingSenderId: "743942918497",
-                    appId: "1:743942918497:web:6d6e44ba348760ce137520"
-                };
-                if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const firebaseConfig = {
+            apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
+            authDomain: "harzafi---fsl.firebaseapp.com",
+            projectId: "harzafi---fsl",
+            storageBucket: "harzafi---fsl.firebasestorage.app",
+            messagingSenderId: "743942918497",
+            appId: "1:743942918497:web:6d6e44ba348760ce137520"
+        };
+        
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        // --- APP CHECK (Modalità Sicura) ---
+        // Attiva la modalità Debug automaticamente se sei in localhost
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+            self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+        }
+
+        try {
+            const appCheck = firebase.appCheck();
+            appCheck.activate(
+                new firebase.appCheck.ReCaptchaEnterpriseProvider('6LejpcksAAAAAEQEVZ602t2PL78MzHE73T4a608-'),
+                true
+            );
+            console.log("App Check inizializzato correttamente.");
+        } catch (error) {
+            console.error("Attenzione: App Check non caricato (normale se manca lo script o sei in locale).", error);
+        }
+        
                 window.auth = firebase.auth();
                 window.db = firebase.firestore();
             }
