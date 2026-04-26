@@ -87,6 +87,7 @@ Alternanza-Scuola-Lavoro/
 ├── 🎨 style.css               # Stili globali del portale principale
 ├── 🎨 legal.css               # Stili pagine legali (Privacy, Termini)
 ├── 🎨 accessibilita.css       # Stili pagina accessibilità
+├── 🎨 shared.css              # Stili principali identici (Privacy, Termini)
 │
 ├── ⚙️ main.js                 # Logica principale (auth, dashboard, dati)
 ├── ⚙️ legal.js                # Logica pagine legali (animazioni, counter)
