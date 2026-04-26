@@ -60,7 +60,8 @@ window.addEventListener('load', () => {
 
         function initCookies() {
             const consent = localStorage.getItem('harzafi_cookie_consent');
-            if (!consent) setTimeout(() => cookieBanner.classList.add('active'), 1500); 
+            // Timeout ridotto per ottimizzare la user-experience da mobile (Punto 9)
+            if (!consent) setTimeout(() => cookieBanner.classList.add('active'), 500); 
             else applyTracking(JSON.parse(consent).analytics); 
         }
 
