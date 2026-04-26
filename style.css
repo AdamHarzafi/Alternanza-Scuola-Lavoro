@@ -21,6 +21,32 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;  -webkit-user-select: none; user-select: none; }
+/* ==========================================================================
+   ACCESSIBILITÀ (WCAG 2.1 AA) - Gestione del Focus Visibile
+   ========================================================================== */
+
+/* Mostra un ring blu spaziato SOLO quando si naviga con la tastiera (TAB) */
+:focus-visible {
+    outline: 3px solid var(--primary) !important;
+    outline-offset: 3px !important;
+    border-radius: 8px; /* Si adatta alla maggior parte dei tuoi bottoni arrotondati */
+    transition: outline-offset 0.2s ease;
+}
+
+/* Nasconde l'outline di default dei browser vecchi se non si usa la tastiera */
+:focus:not(:focus-visible) {
+    outline: none !important;
+}
+
+/* Assicura che i bottoni completamente rotondi abbiano un focus ring rotondo */
+.btn-premium:focus-visible, 
+.btn-gradient:focus-visible, 
+.btn-secondary:focus-visible, 
+.close-btn:focus-visible,
+.cookie-btn:focus-visible,
+.badge-views:focus-visible {
+    border-radius: 30px;
+}
         input, textarea { -webkit-user-select: auto; user-select: auto; }
         .content-lazy { content-visibility: auto; contain-intrinsic-size: 1000px; }
 
