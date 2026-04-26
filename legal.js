@@ -27,7 +27,6 @@ function initLegal() {
         } else {
             const getUrl = 'https://firestore.googleapis.com/v1/projects/harzafi---fsl/databases/(default)/documents/statistiche/visualizzazioni';
             
-            // Funzione di fallback per la sola lettura
             const fetchCountOnly = () => {
                 fetch(getUrl)
                 .then(res => res.json())
@@ -40,11 +39,9 @@ function initLegal() {
                 }).catch(() => { trackerText.innerText = "Non disponibile"; });
             };
 
-            // Se l'utente non è ancora stato contato in questa sessione
             if (!sessionStorage.getItem('view_counted')) {
                 const commitUrl = 'https://firestore.googleapis.com/v1/projects/harzafi---fsl/databases/(default)/documents:commit';
                 
-                // Payload REST per incrementare il valore nel database
                 const payload = {
                     writes:[{
                         transform: {
@@ -67,23 +64,30 @@ function initLegal() {
                     return res.json();
                 })
                 .then(data => {
-                    // Imposta il flag per non contare più l'utente in altre pagine
                     sessionStorage.setItem('view_counted', 'true');
                     try {
-                        // Estrae il valore GIA' AGGIORNATO direttamente dalla risposta del commit
                         trackerText.innerText = data.writeResults[0].transformResults[0].integerValue;
                     } catch(e) { fetchCountOnly(); }
                 })
-                .catch(() => { 
-                    // Se la scrittura fallisce (es. per regole di sicurezza rigorose), 
-                    // ripiega sulla sola lettura.
-                    fetchCountOnly(); 
-                });
+                .catch(() => { fetchCountOnly(); });
             } else {
-                // L'utente è già stato contato (es. nella Home), legge e basta
                 fetchCountOnly();
             }
         }
+    }
+
+    // GESTIONE SCROLL NAVBAR SPOSTATA QUI
+    const navbar = document.querySelector('.navbar-wrapper');
+    if (navbar) {
+        let isScrolled = false;
+        window.addEventListener('scroll', () => {
+            const shouldBeScrolled = window.scrollY > 40;
+            if (shouldBeScrolled !== isScrolled) {
+                isScrolled = shouldBeScrolled;
+                if (isScrolled) { navbar.classList.add('scrolled'); } 
+                else { navbar.classList.remove('scrolled'); }
+            }
+        }, { passive: true });
     }
 }
 
@@ -93,14 +97,3 @@ if (document.readyState === 'loading') {
 } else {
     initLegal();
 }
-
-const navbar = document.querySelector('.navbar-wrapper');
-let isScrolled = false;
-window.addEventListener('scroll', () => {
-    const shouldBeScrolled = window.scrollY > 40;
-    if (shouldBeScrolled !== isScrolled) {
-        isScrolled = shouldBeScrolled;
-        if (isScrolled) { navbar.classList.add('scrolled'); } 
-        else { navbar.classList.remove('scrolled'); }
-    }
-}, { passive: true });
