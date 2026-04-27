@@ -38,9 +38,9 @@
 
     <div id="landing-view">
         <nav class="navbar-wrapper glass">
-            <div class="nav-logo" onclick="window.scrollTo(0,0)">
+            <button class="nav-logo" onclick="window.scrollTo(0,0)" aria-label="Torna all'inizio della pagina">
                 <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Logo">
-            </div>
+            </button>
             <div class="nav-links">
                 <a href="#features">Funzionalità</a>
                 <a href="#footer">Contatti Ufficiali</a>
@@ -175,7 +175,7 @@
 
     <div id="maps-modal" class="modal-overlay bottom-sheet">
         <div class="modal-content">
-            <button class="close-btn">&times;</button>
+            <button class="close-btn" aria-label="Chiudi">&times;</button>
             <div class="bottom-sheet-body">
                 <h2 style="font-size: 1.4rem; margin-bottom: 25px; color: var(--text-dark); text-align:center; font-weight: 900;">Scegli un'app per aprire.</h2>
                 <div style="display: flex; justify-content: space-around; align-items: flex-start;">
@@ -198,7 +198,7 @@
 
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
-            <button id="close-modal" class="close-btn" style="background: #f1f5f9;">&times;</button>
+            <button id="close-modal" class="close-btn" style="background: #f1f5f9;" aria-label="Chiudi modale">&times;</button>
             <div class="modal-logo-wrapper">
                 <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi Logo">
             </div>
@@ -218,11 +218,11 @@
                         <label class="input-label">Seleziona Utente:</label>
                         <div class="custom-select" id="username-select">
                             <input type="text" id="hidden-username" name="username" autocomplete="username" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none;" tabindex="-1">
-                            <div class="custom-select-trigger">
+                            <button type="button" class="custom-select-trigger" aria-label="Seleziona utente" aria-expanded="false" aria-haspopup="listbox">
                                 <span id="username-display">Seleziona Utente</span>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 16px; color: var(--text-light);"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                            </div>
-                            <div class="custom-options" id="username-options"></div>
+                            </button>
+                            <div class="custom-options" id="username-options" role="listbox" aria-labelledby="username-display"></div>
                         </div>
                     </div>
                     <div class="input-group">
@@ -232,7 +232,7 @@
                         </div>
                         <div style="position: relative; width: 100%;">
                             <input type="password" id="password-input" name="password" autocomplete="current-password" class="apple-input" placeholder="Inserisci la password" style="padding-right: 50px;">
-                            <button type="button" id="toggle-password" class="toggle-password-btn">
+                            <button type="button" id="toggle-password" class="toggle-password-btn" aria-label="Mostra o nascondi password">
                                 <svg id="eye-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/></svg>
                                 <svg id="eye-slash-icon" viewBox="0 0 24 24" fill="currentColor" style="display: none;"><path d="M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3M12,7A5,5 0 0,1 17,12C17,12.64 16.87,13.26 16.64,13.82L19.57,16.75C21.07,15.5 22.27,13.86 23,12C21.27,7.61 17,4.5 12,4.5C10.6,4.5 9.26,4.75 8,5.2L10.17,7.35C10.74,7.13 11.35,7 12,7Z"/></svg>
                             </button>
@@ -303,7 +303,7 @@
 
     <div id="hid-modal" class="modal-overlay bottom-sheet">
         <div class="modal-content">
-            <button id="hid-close-btn" class="close-btn">&times;</button>
+            <button id="hid-close-btn" class="close-btn" aria-label="Chiudi">&times;</button>
             <div class="bottom-sheet-body">
                 <div id="hid-scan-view">
                     <h2 style="font-size: 1.8rem; margin-bottom: 10px; color: var(--text-dark); text-align:center; font-weight: 900;">Pronto per la scansione.</h2>
@@ -333,7 +333,7 @@
     <!-- MODALE BOTTOM SHEET PER RECUPERO PASSWORD UNIFICATO -->
     <div id="forgot-sheet-modal" class="modal-overlay bottom-sheet">
         <div class="modal-content">
-            <button id="forgot-sheet-close" class="close-btn" style="background: rgba(255,255,255,0.8); z-index: 100;">&times;</button>
+            <button id="forgot-sheet-close" class="close-btn" style="background: rgba(255,255,255,0.8); z-index: 100;" aria-label="Chiudi">&times;</button>
             
             <!-- VISTA 1: SELEZIONE METODO (Solo Studenti) -->
             <div id="student-selection-view" class="bottom-sheet-body" style="padding-top: 40px; display: none;">
@@ -450,7 +450,7 @@
     <!-- Modale Avviso CIE (Popup dedicato) -->
     <div id="avviso-cie-modal" class="modal-overlay custom-bottom-sheet">
         <div class="modal-content avviso-modal-content">
-            <button class="close-btn" id="close-avviso-modal" style="top: 20px; right: 20px; z-index: 10;">&times;</button>
+            <button class="close-btn" id="close-avviso-modal" style="top: 20px; right: 20px; z-index: 10;" aria-label="Chiudi">&times;</button>
             <div class="avviso-inner-content">
                 <div style="background: #fffbeb; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; color: #d97706; box-shadow: 0 10px 25px rgba(217, 119, 6, 0.15); flex-shrink: 0;">
                     <svg viewBox="0 0 24 24" style="width: 35px; fill: currentColor;"><path d="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"/></svg>
