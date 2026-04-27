@@ -147,6 +147,34 @@ window.addEventListener('load', () => {
                 });
             });
 
+            // Focus trap for modals
+            function trapFocus(modal) {
+                const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                const firstFocusable = focusableElements[0];
+                const lastFocusable = focusableElements[focusableElements.length - 1];
+
+                function handleKeyDown(e) {
+                    if (e.key === 'Tab') {
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                e.preventDefault();
+                                lastFocusable.focus();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                e.preventDefault();
+                                firstFocusable.focus();
+                            }
+                        }
+                    }
+                }
+
+                modal.addEventListener('keydown', handleKeyDown);
+                if (firstFocusable) firstFocusable.focus();
+
+                return () => modal.removeEventListener('keydown', handleKeyDown);
+            }
+
             const modalObserver = new MutationObserver(() => {
                 const isAnyModalOpen = document.querySelectorAll('.modal-overlay.active').length > 0;
                 if (isAnyModalOpen) {
@@ -157,6 +185,28 @@ window.addEventListener('load', () => {
                 }
             });
             document.querySelectorAll('.modal-overlay').forEach(modal => { modalObserver.observe(modal, { attributes: true, attributeFilter: ['class'] }); });
+
+            // Focus trap observer
+            const focusTrapObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        const modal = mutation.target;
+                        if (modal.classList.contains('active')) {
+                            // Modal opened, trap focus
+                            if (!modal._focusTrapCleanup) {
+                                modal._focusTrapCleanup = trapFocus(modal);
+                            }
+                        } else {
+                            // Modal closed, remove trap
+                            if (modal._focusTrapCleanup) {
+                                modal._focusTrapCleanup();
+                                delete modal._focusTrapCleanup;
+                            }
+                        }
+                    }
+                });
+            });
+            document.querySelectorAll('.modal-overlay').forEach(modal => { focusTrapObserver.observe(modal, { attributes: true, attributeFilter: ['class'] }); });
 
             const finalHoursValue = "113.30";
             let selectedRole = 'studente'; let selectedUserValue = ""; let selectedUserEmail = ""; 
@@ -224,9 +274,21 @@ window.addEventListener('load', () => {
             }
 
             document.querySelectorAll('.custom-select-trigger').forEach(trigger => {
-                trigger.addEventListener('click', function(e) { e.stopPropagation(); const parent = this.parentElement; document.querySelectorAll('.custom-select').forEach(s => { if(s !== parent) s.classList.remove('open'); }); parent.classList.toggle('open'); });
+                trigger.addEventListener('click', function(e) { 
+                    e.stopPropagation(); 
+                    const parent = this.parentElement; 
+                    const isOpen = parent.classList.contains('open');
+                    document.querySelectorAll('.custom-select').forEach(s => { if(s !== parent) s.classList.remove('open'); }); 
+                    parent.classList.toggle('open'); 
+                    this.setAttribute('aria-expanded', parent.classList.contains('open'));
+                });
             });
-            document.addEventListener('click', () => document.querySelectorAll('.custom-select').forEach(sel => sel.classList.remove('open')));
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.custom-select').forEach(sel => { 
+                    sel.classList.remove('open'); 
+                    sel.querySelector('.custom-select-trigger').setAttribute('aria-expanded', 'false');
+                });
+            });
 
             const segBtns = document.querySelectorAll('#role-control .seg-btn');
             const segSlider = document.getElementById('role-slider');
