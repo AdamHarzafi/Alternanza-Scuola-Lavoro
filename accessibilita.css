@@ -21,6 +21,7 @@
 .status-value { font-weight: 800; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; letter-spacing: 0.5px; display: inline-block;}
 .status-value.yes { color: var(--success); background: #ecfdf5; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1); }
 .status-value.no { color: var(--text-gray); background: #e2e8f0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);}
+.status-value.partial { color: #f59e0b; background: #fef3c7; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.1); }
 
 .technical-section { margin-bottom: 20px; }
 .technical-section > h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 15px; color: var(--text-dark); letter-spacing: -0.5px; text-align: center; }
