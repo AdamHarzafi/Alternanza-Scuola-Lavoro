@@ -14,12 +14,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Usa lo stesso file CSS originale -->
     <link rel="stylesheet" href="style.css">
 
     <style>
-        /* CSS per rendere i Modali delle vere pagine statiche a tutto schermo */
         body {
             background-color: var(--bg-body);
             background-image: radial-gradient(ellipse at 20% 30%, rgba(14, 165, 233, 0.15) 0%, transparent 40%), radial-gradient(ellipse at 80% 60%, rgba(2, 132, 199, 0.12) 0%, transparent 45%);
@@ -72,7 +69,6 @@
 </head>
 <body>
 
-    <!-- REPLICA ESATTA DEL DOM ORIGINALE DEL LOGIN (HTML PURE) -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-content">
             <a href="index.html" class="btn-close-home" aria-label="Chiudi modale">&times;</a>
@@ -119,7 +115,7 @@
                     </div>
                     <div class="privacy-disclaimer">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                        Le informazioni del tuo Account Harzafi vengono utilizzate per permetterti di accedere al tuo account e ai tuoi dati in modo sicuro. Il sistema registra alcuni dati ai fini di sicurezza, assistenza e rendicontazione. Se accetti, l'Istituto può utilizzare le informazioni sul tuo Account anche per inviarti e-mail e comunicazioni scolastiche, in base all’utilizzo che fai dei servizi. <a href="privacy.html" target="_blank">Scopri come vengono gestiti i tuoi dati...</a>
+                        Le informazioni del tuo Account Harzafi vengono utilizzate per permetterti di accedere al tuo account e ai tuoi dati in modo sicuro. Il sistema registra alcuni dati ai fini di sicurezza, assistenza e rendicontazione. Se accetti, l'Istituto può utilizzare le informazioni sul tuo Account anche per inviarti e-mail e comunicazioni scolastiche, in base all'utilizzo che fai dei servizi. <a href="privacy.html" target="_blank">Scopri come vengono gestiti i tuoi dati...</a>
                     </div>
                     <button type="submit" id="login-submit" class="btn-gradient">ENTRA</button>
                     <div class="divider">- OPPURE CON -</div>
@@ -179,7 +175,7 @@
         </div>
     </div>
 
-    <!-- MODALI RESTANTI ORIGINALI (HID, RECUPERO, CIE) COPIATI 1:1 -->
+    <!-- MODALI HID, RECUPERO, CIE -->
     <div id="hid-modal" class="modal-overlay bottom-sheet">
         <div class="modal-content">
             <button id="hid-close-btn" class="close-btn" aria-label="Chiudi">&times;</button>
@@ -216,19 +212,16 @@
             <div id="student-selection-view" class="bottom-sheet-body" style="padding-top: 40px; display: none;">
                 <h2 class="recovery-title" style="font-size: 1.7rem; margin-bottom: 10px;">Verifica tramite:</h2>
                 <p style="font-size: 1rem; font-weight: 500; color: var(--text-gray); text-align: center; margin-bottom: 30px; line-height: 1.5;">Scegli il livello di sicurezza per reimpostare la tua password.</p>
-
                 <button type="button" class="auth-method-card" id="btn-select-otp">
                     <div class="auth-method-icon"><img src="IMMAGINI/GMAIL-LOGO.png" loading="lazy" alt="Gmail"></div>
                     <div class="auth-method-text"><div class="auth-method-title">Tramite codice temporaneo</div><div class="auth-method-level level-1">Livello 1</div></div>
                     <svg viewBox="0 0 24 24" style="width: 20px; fill: #cbd5e1;"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
                 </button>
-
                 <button type="button" class="auth-method-card" id="btn-select-cie">
                     <div class="auth-method-icon"><img src="IMMAGINI/CIE-FRONTE.png" loading="lazy" alt="CIE" style="border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"></div>
                     <div class="auth-method-text"><div class="auth-method-title">Tramite Carta d'Identità Elettronica</div><div class="auth-method-level level-2">Livello 2</div></div>
                     <svg viewBox="0 0 24 24" style="width: 20px; fill: #cbd5e1;"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
                 </button>
-
                 <button type="button" class="btn-text btn-back-to-login-global" style="margin-top: 15px;">← Torna al Login</button>
             </div>
 
@@ -246,18 +239,21 @@
                     <button type="button" id="btn-send-otp" class="btn-gradient">RICHIEDI CODICE</button>
                     <button type="button" id="btn-otp-back-selection" class="btn-text" style="margin-top: 15px;">← Torna indietro</button>
                 </div>
-
                 <div id="otp-step-2" class="bottom-sheet-body" style="display: none; padding-top: 40px; transition: opacity 0.4s var(--apple-ease); opacity: 0;">
                     <h2 class="recovery-title" style="font-size: 1.7rem; margin-bottom: 10px;">Verifica Identità</h2>
                     <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-gray); text-align: center; margin-bottom: 25px; line-height: 1.5;">Abbiamo inviato un codice a 6 cifre a<br><strong id="display-target-email" style="color: var(--text-dark);"></strong></p>
                     <div class="otp-container">
-                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric" autocomplete="one-time-code"><input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric"><input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric"><input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric"><input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric"><input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
+                        <input type="text" class="apple-input otp-box" maxlength="1" inputmode="numeric">
                     </div>
                     <div class="error-msg" id="otp-verify-error" style="margin-bottom: 20px;">Codice errato o scaduto.</div>
                     <button type="button" id="btn-verify-otp" class="btn-gradient">VERIFICA E RIPRISTINA</button>
                     <button type="button" id="btn-back-to-email" class="btn-text" style="margin-top: 15px;">Cambia Indirizzo Email</button>
                 </div>
-
                 <div id="otp-step-3" class="bottom-sheet-body" style="display: none; padding-top: 40px; text-align: center; transition: opacity 0.4s var(--apple-ease); opacity: 0;">
                     <div style="background: #ecfdf5; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);">
                         <svg viewBox="0 0 24 24" style="width: 40px; height: 40px; fill: var(--success);"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg>
@@ -308,303 +304,681 @@
                 </div>
                 <h2 style="font-size: 1.8rem; color: var(--text-dark); text-align: center; margin-bottom: 25px; font-weight: 900; letter-spacing: -0.5px;">Avviso Importante</h2>
                 <div style="font-size: 1.05rem; font-weight: 500; color: var(--text-gray); line-height: 1.7; text-align: justify; margin-bottom: 40px;">
-                    <p style="margin-bottom: 20px;">A partire dal <strong style="color: var(--text-dark);">3 agosto 2026</strong> la Carta d'Identità in formato cartaceo non sarà più considerata valida, né ai fini dell’espatrio, né come documento di riconoscimento sul territorio nazionale, come disposto dall'art. 5 del regolamento (UE) 2019/1157 del Parlamento Europeo del 20 giugno 2019 sul "Rafforzamento della sicurezza delle carte d'identità dei cittadini dell'Unione e dei titoli di soggiorno rilasciati ai cittadini dell'Unione e ai loro familiari che esercitano il diritto di libera circolazione."</p>
-                    <p>A prescindere dalla data di scadenza riportata sul documento, la carta d’identità cartacea sarà quindi inutilizzabile e dovrà essere <strong style="color: var(--primary);">sostituita con la carta d’identità elettronica (CIE)</strong>.</p>
+                    <p style="margin-bottom: 20px;">A partire dal <strong style="color: var(--text-dark);">3 agosto 2026</strong> la Carta d'Identità in formato cartaceo non sarà più considerata valida, né ai fini dell'espatrio, né come documento di riconoscimento sul territorio nazionale, come disposto dall'art. 5 del regolamento (UE) 2019/1157.</p>
+                    <p>A prescindere dalla data di scadenza riportata sul documento, la carta d'identità cartacea sarà quindi inutilizzabile e dovrà essere <strong style="color: var(--primary);">sostituita con la carta d'identità elettronica (CIE)</strong>.</p>
                 </div>
                 <button type="button" id="btn-close-avviso-full" class="btn-gradient" style="width: 100%; height: 56px; font-size: 1.1rem; border-radius: 16px; margin-top: auto; margin-bottom: 20px;">← Torna indietro</button>
             </div>
         </div>
     </div>
 
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
 
-    <!-- SCRIPT (Librerie e Logica Unificata senza dipendere da main.js) -->
-    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-check-compat.js"></script>
+    <!-- LIBRERIE FIREBASE (NON defer, caricate subito) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-check-compat.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     <script defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
 
     <script>
-        // CONFIGURAZIONE GLOBALE CLOUDFLARE E FIREBASE
+        // ==========================================
+        // TURNSTILE CALLBACKS (GLOBALI)
+        // ==========================================
         window.globalTurnstileToken = "";
         window.isWaitingForToken = false;
-        window.onTurnstileSuccess = function(token) { window.globalTurnstileToken = token; if(window.isWaitingForToken) { window.isWaitingForToken = false; eseguiAccessoServer(); } };
+        window.onTurnstileSuccess = function(token) {
+            window.globalTurnstileToken = token;
+            if (window.isWaitingForToken) {
+                window.isWaitingForToken = false;
+                eseguiAccessoServer();
+            }
+        };
         window.onTurnstileExpired = function() { window.globalTurnstileToken = ""; };
-        window.onTurnstileError = function() { window.globalTurnstileToken = ""; };
+        window.onTurnstileError = function() {
+            window.globalTurnstileToken = "";
+            // In caso di errore Turnstile, procedi comunque per non bloccare l'utente
+            if (window.isWaitingForToken) {
+                window.isWaitingForToken = false;
+                eseguiAccessoServer();
+            }
+        };
 
+        // ==========================================
+        // INIZIALIZZAZIONE FIREBASE (SINCRONA)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
+            authDomain: "harzafi---fsl.firebaseapp.com",
+            projectId: "harzafi---fsl",
+            storageBucket: "harzafi---fsl.firebasestorage.app",
+            messagingSenderId: "743942918497",
+            appId: "1:743942918497:web:6d6e44ba348760ce137520"
+        };
+
+        // Inizializza Firebase immediatamente (gli script non sono defer)
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        try {
+            firebase.appCheck().activate(
+                new firebase.appCheck.ReCaptchaEnterpriseProvider('6LejpcksAAAAAEQEVZ602t2PL78MzHE73T4a608-'),
+                true
+            );
+        } catch(e) {}
+
+        window.auth = firebase.auth();
+        window.db = firebase.firestore();
+
+        // ==========================================
+        // STATO GLOBALE
+        // ==========================================
         let selectedRole = 'studente';
         let selectedUserValue = "";
-        let selectedUserEmail = ""; 
+        let selectedUserEmail = "";
         let html5QrCode = null;
-
-        window.addEventListener('load', () => {
-            const firebaseConfig = {
-                apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
-                authDomain: "harzafi---fsl.firebaseapp.com",
-                projectId: "harzafi---fsl",
-                storageBucket: "harzafi---fsl.firebasestorage.app",
-                messagingSenderId: "743942918497",
-                appId: "1:743942918497:web:6d6e44ba348760ce137520"
-            };
-            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-            try { firebase.appCheck().activate(new firebase.appCheck.ReCaptchaEnterpriseProvider('6LejpcksAAAAAEQEVZ602t2PL78MzHE73T4a608-'), true); } catch (e) {}
-            
-            window.auth = firebase.auth();
-            window.db = firebase.firestore();
-            if(typeof emailjs !== 'undefined') emailjs.init("7JCNY1NM6Jk8MBC4E");
-
-            // SE L'UTENTE E' GIA LOGGATO, REINDIRIZZA DIRETTAMENTE ALLA HOME (DOVE SI VEDRA' LA DASHBOARD)
-            window.auth.onAuthStateChanged((user) => { if (user) window.location.href = 'index.html'; });
-
-            populateUserDropdown('studente');
-        });
+        let targetCollectionOTP = 'studenti';
+        let activeOTP = null;
+        let activeOTPEmail = null;
 
         // ==========================================
-        // UI: ANIMAZIONI E TRANSIZIONI FORM PRINCIPALE
+        // FUNZIONE: POPOLA DROPDOWN UTENTI
         // ==========================================
-        const loginView = document.getElementById('login-view');
-        const rulesView = document.getElementById('rules-view');
-
-        document.getElementById('btn-rules-banner').addEventListener('click', () => { loginView.style.display = 'none'; rulesView.style.display = 'block'; });
-        document.querySelector('.btn-back-login').addEventListener('click', () => { rulesView.style.display = 'none'; loginView.style.display = 'block'; });
-
-        const segBtns = document.querySelectorAll('#role-control .seg-btn');
-        const segSlider = document.getElementById('role-slider');
-        segBtns.forEach((btn, index) => btn.addEventListener('click', (e) => {
-            segBtns.forEach(b => b.classList.remove('active')); e.target.classList.add('active');
-            selectedRole = e.target.dataset.role; segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
-            populateUserDropdown(selectedRole);
-            document.getElementById('google-login-error').style.display = 'none';
-        }));
-
-        document.querySelector('.custom-select-trigger').addEventListener('click', function(e) { e.stopPropagation(); this.parentElement.classList.toggle('open'); });
-        document.addEventListener('click', () => { document.getElementById('username-select').classList.remove('open'); });
-
         function populateUserDropdown(role) {
             const optionsContainer = document.getElementById('username-options');
             const display = document.getElementById('username-display');
-            display.textContent = "Caricamento utenti...";
-            
-            if (typeof window.db !== 'undefined') {
-                window.db.collection(role === 'studente' ? 'studenti' : 'docenti').orderBy("nome", "asc").get().then((querySnapshot) => {
-                    optionsContainer.innerHTML = ''; 
+
+            optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center; pointer-events:none;">Caricamento utenti...</div>';
+            display.textContent = "Seleziona Utente";
+            display.parentElement.classList.remove('selected');
+            selectedUserValue = "";
+            selectedUserEmail = "";
+            document.getElementById('hidden-username').value = "";
+
+            const collectionName = role === 'studente' ? 'studenti' : 'docenti';
+
+            window.db.collection(collectionName).orderBy("nome", "asc").get()
+                .then((querySnapshot) => {
+                    optionsContainer.innerHTML = '';
+                    if (querySnapshot.empty) {
+                        optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center; pointer-events:none;">Nessun utente trovato</div>';
+                        return;
+                    }
                     querySnapshot.forEach((doc) => {
                         const option = document.createElement('div');
-                        option.className = 'custom-option'; option.textContent = doc.data().nome;
+                        option.className = 'custom-option';
+                        option.textContent = doc.data().nome;
                         option.addEventListener('click', function(e) {
-                            e.stopPropagation(); display.textContent = doc.data().nome; display.parentElement.classList.add('selected');
-                            selectedUserValue = doc.data().nome; selectedUserEmail = doc.data().email || "email_mancante@scuola.it"; 
-                            document.getElementById('hidden-username').value = doc.data().nome; document.getElementById('username-select').classList.remove('open');
+                            e.stopPropagation();
+                            display.textContent = doc.data().nome;
+                            display.parentElement.classList.add('selected');
+                            selectedUserValue = doc.data().nome;
+                            selectedUserEmail = doc.data().email || "";
+                            document.getElementById('hidden-username').value = doc.data().nome;
+                            document.getElementById('username-select').classList.remove('open');
                             document.getElementById('login-error').style.display = 'none';
-                        }); optionsContainer.appendChild(option);
+                        });
+                        optionsContainer.appendChild(option);
                     });
-                    display.textContent = "Seleziona Utente"; display.parentElement.classList.remove('selected');
-                    selectedUserValue = ""; selectedUserEmail = ""; document.getElementById('hidden-username').value = "";
+                })
+                .catch((err) => {
+                    console.error("Errore caricamento utenti:", err);
+                    optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--danger); text-align:center; pointer-events:none;">Errore di connessione</div>';
                 });
-            }
         }
 
-        const passInput = document.getElementById('password-input');
-        document.getElementById('toggle-password').addEventListener('click', () => {
-            if (passInput.type === 'password') { 
-                passInput.type = 'text'; passInput.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Inter', sans-serif"; passInput.style.letterSpacing = "normal"; 
-                document.getElementById('eye-icon').style.display = 'none'; document.getElementById('eye-slash-icon').style.display = 'block'; 
-            } else { 
-                passInput.type = 'password'; passInput.style.fontFamily = "Verdana, sans-serif"; passInput.style.letterSpacing = "2px"; 
-                document.getElementById('eye-icon').style.display = 'block'; document.getElementById('eye-slash-icon').style.display = 'none'; 
-            }
-        });
-
         // ==========================================
-        // ESECUZIONE ACCESSO (FIREBASE + REDIRECT)
+        // FUNZIONE: CHECK VPN
         // ==========================================
-        const submitBtn = document.getElementById('login-submit');
-        const errorMsg = document.getElementById('login-error');
-
         async function checkVPN() {
             try {
-                const controller = new AbortController(); setTimeout(() => controller.abort(), 2000); 
+                const controller = new AbortController();
+                setTimeout(() => controller.abort(), 2000);
                 const res = await fetch('https://ipapi.co/json/', { signal: controller.signal });
                 const org = ((await res.json()).org || "").toLowerCase();
                 return (org.includes('vpn') || org.includes('hosting') || org.includes('cloud') || org.includes('datacenter'));
             } catch (e) { return false; }
         }
 
+        // ==========================================
+        // FUNZIONE: ESEGUI ACCESSO CON EMAIL/PASSWORD
+        // ==========================================
         function eseguiAccessoServer() {
-            const pass = passInput.value.trim(); const uName = document.getElementById('hidden-username').value.trim();
+            const submitBtn = document.getElementById('login-submit');
+            const errorMsg = document.getElementById('login-error');
+            const passInput = document.getElementById('password-input');
+            const pass = passInput.value.trim();
+            const uName = document.getElementById('hidden-username').value.trim();
+
             submitBtn.innerText = "VERIFICA IN CORSO...";
-            window.auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
-                if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: uName, email_utente: selectedUserEmail, orario_accesso: new Date().toLocaleString('it-IT') }); }
-                // REDIRECT FONDAMENTALE ALL'INDEX
-                window.location.href = 'index.html';
-            }).catch(() => {
-                submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
-                if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
-                errorMsg.innerText = "Credenziali errate. Riprova."; errorMsg.style.display = 'block'; 
-                errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s';
-            });
+
+            window.auth.signInWithEmailAndPassword(selectedUserEmail, pass)
+                .then((userCredential) => {
+                    // Invia email di notifica login (non bloccante)
+                    if (typeof emailjs !== 'undefined') {
+                        emailjs.send("service_biade4g", "template_te0frr7", {
+                            nome_utente: uName,
+                            email_utente: selectedUserEmail,
+                            orario_accesso: new Date().toLocaleString('it-IT')
+                        }).catch(() => {});
+                    }
+                    // REDIRECT ALLA DASHBOARD
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    console.error("Errore login:", error.code, error.message);
+                    submitBtn.innerText = "ENTRA";
+                    submitBtn.disabled = false;
+                    passInput.value = '';
+                    window.globalTurnstileToken = "";
+                    if (typeof turnstile !== 'undefined') {
+                        try { turnstile.reset(); } catch(err) {}
+                    }
+                    errorMsg.innerText = "Credenziali errate. Riprova.";
+                    errorMsg.style.display = 'block';
+                    errorMsg.style.animation = 'none';
+                    void errorMsg.offsetWidth;
+                    errorMsg.style.animation = 'shake 0.4s';
+                });
         }
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault(); if (document.activeElement) document.activeElement.blur(); 
-            if (!document.getElementById('hidden-username').value.trim() || !selectedUserEmail) { errorMsg.innerText = "Seleziona prima un utente dalla lista."; errorMsg.style.display = 'block'; return; }
-            if (!passInput.value.trim()) { errorMsg.innerText = "Il campo password è obbligatorio."; errorMsg.style.display = 'block'; return; }
-            errorMsg.style.display = 'none'; submitBtn.innerText = "VERIFICA SICUREZZA..."; submitBtn.disabled = true;
-
-            const isVpn = await checkVPN();
-            if (isVpn) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; return; }
-            
-            if (window.globalTurnstileToken) eseguiAccessoServer(); 
-            else { window.isWaitingForToken = true; try { turnstile.execute(); } catch(err) {} }
-        });
+        // ==========================================
+        // FUNZIONE: CHIUDI MODALE RECUPERO
+        // ==========================================
+        window.chiudiModaleRecuperoEAproLogin = function() {
+            document.getElementById('forgot-sheet-modal').classList.remove('active');
+        };
 
         // ==========================================
-        // GOOGLE & HARZAFI ID
+        // DOM READY
         // ==========================================
-        document.getElementById('custom-google-btn').addEventListener('click', async () => {
-            const googleBtn = document.getElementById('custom-google-btn'); const googleErrorMsg = document.getElementById('google-login-error');
-            const originalGoogleBtn = googleBtn.innerHTML;
-            googleBtn.innerHTML = `<div class="btn-loader"><div class="btn-spinner" style="border-top-color:#374151;"></div><span class="btn-text-main" style="margin-left:5px;">CARICO...</span></div>`; 
-            googleBtn.disabled = true; googleErrorMsg.style.display = 'none';
-            
-            window.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((result) => {
-                const email = result.user.email.toLowerCase();
-                if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
-                    if(typeof emailjs !== 'undefined') emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: result.user.displayName, email_utente: email, orario_accesso: new Date().toLocaleString('it-IT') });
-                    window.location.href = 'index.html'; 
-                } else { window.auth.signOut().then(() => { googleErrorMsg.innerText = "Accesso negato. Usa l'email scolastica."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; }); }
-            }).catch(() => { googleErrorMsg.innerText = "Accesso annullato. Riprova."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; });
-        });
+        document.addEventListener('DOMContentLoaded', function() {
 
-        document.getElementById('btn-harzafi-id').addEventListener('click', () => document.getElementById('hid-modal').classList.add('active'));
-        document.getElementById('hid-close-btn').addEventListener('click', () => document.getElementById('hid-modal').classList.remove('active'));
-        document.getElementById('hid-cancel-btn').addEventListener('click', () => document.getElementById('hid-modal').classList.remove('active'));
-        document.getElementById('hid-open-manual').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('hid-scan-view').style.display = 'none'; document.getElementById('hid-manual-view').style.display = 'block'; });
-        document.getElementById('hid-back-btn').addEventListener('click', () => { document.getElementById('hid-manual-view').style.display = 'none'; document.getElementById('hid-scan-view').style.display = 'block'; document.getElementById('hid-error').style.display = 'none'; });
+            // EmailJS init (quando disponibile)
+            if (typeof emailjs !== 'undefined') emailjs.init("7JCNY1NM6Jk8MBC4E");
 
-        document.getElementById('hid-submit-btn').addEventListener('click', () => { 
-            const errorMsgHid = document.getElementById('hid-error'); const submitBtnHid = document.getElementById('hid-submit-btn'); const originalBtnText = submitBtnHid.innerHTML;
-            const inputHidVal = document.getElementById('hid-input').value.trim();
-            if (inputHidVal.length === 0) return;
+            // Popola subito la lista utenti (Firebase è già pronto)
+            populateUserDropdown('studente');
 
-            submitBtnHid.innerHTML = "VERIFICA IN CORSO..."; submitBtnHid.disabled = true; errorMsgHid.style.display = 'none';
-
-            window.db.collection("studenti").where("HID", "==", inputHidVal).get().then((snap) => {
-                if (!snap.empty) { window.location.href = 'index.html'; } 
-                else { throw new Error("HID non valido."); }
-            }).catch(() => {
-                errorMsgHid.innerText = "HID non valido. Riprova."; errorMsgHid.style.display = 'block'; 
-                errorMsgHid.style.animation = 'none'; void errorMsgHid.offsetWidth; errorMsgHid.style.animation = 'shake 0.4s';
-                submitBtnHid.innerHTML = originalBtnText; submitBtnHid.disabled = false;
+            // ---- SEGMENTED CONTROL (Studente/Docente) ----
+            const segBtns = document.querySelectorAll('#role-control .seg-btn');
+            const segSlider = document.getElementById('role-slider');
+            segBtns.forEach((btn, index) => {
+                btn.addEventListener('click', (e) => {
+                    segBtns.forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    selectedRole = e.target.dataset.role;
+                    segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
+                    populateUserDropdown(selectedRole);
+                    document.getElementById('google-login-error').style.display = 'none';
+                });
             });
-        });
 
-        // ==========================================
-        // GESTIONE RECUPERO PASSWORD (OTP E CIE)
-        // ==========================================
-        const selectionView = document.getElementById('student-selection-view'); const sharedOtpView = document.getElementById('shared-otp-view'); const studentCieView = document.getElementById('student-cie-view');
-        const otpStep1 = document.getElementById('otp-step-1'); const otpStep2 = document.getElementById('otp-step-2'); const otpStep3 = document.getElementById('otp-step-3');
-        const otpEmailInput = document.getElementById('otp-email-input'); const otpInputs = document.querySelectorAll('.otp-box');
-        let targetCollectionOTP = 'studenti'; let activeOTP = null; let activeOTPEmail = null;
+            // ---- DROPDOWN UTENTI ----
+            document.querySelector('.custom-select-trigger').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const parent = this.parentElement;
+                parent.classList.toggle('open');
+                this.setAttribute('aria-expanded', parent.classList.contains('open'));
+            });
+            document.addEventListener('click', () => {
+                document.getElementById('username-select').classList.remove('open');
+            });
 
-        window.chiudiModaleRecuperoEAproLogin = function() { document.getElementById('forgot-sheet-modal').classList.remove('active'); };
-
-        document.getElementById('btn-forgot-pass').addEventListener('click', (e) => { 
-            e.preventDefault(); document.getElementById('forgot-sheet-modal').classList.add('active'); 
-            
-            selectionView.style.display = 'none'; sharedOtpView.style.display = 'none'; studentCieView.style.display = 'none';
-            document.getElementById('scan-result').style.display = 'none';
-            otpStep1.style.display = 'block'; otpStep1.style.opacity = '1'; otpStep2.style.display = 'none'; otpStep2.style.opacity = '0'; otpStep3.style.display = 'none'; otpStep3.style.opacity = '0';
-            otpEmailInput.value = ''; otpInputs.forEach(i => { i.value = ''; i.classList.remove('error', 'success'); });
-
-            if(selectedRole === 'studente') { selectionView.style.display = 'block'; targetCollectionOTP = 'studenti'; } 
-            else { sharedOtpView.style.display = 'block'; document.getElementById('otp-role-title').innerText = 'Area Docenti'; targetCollectionOTP = 'docenti'; }
-        });
-
-        document.querySelectorAll('.btn-back-to-login-global').forEach(btn => { btn.addEventListener('click', chiudiModaleRecuperoEAproLogin); });
-        
-        document.getElementById('btn-otp-back-selection').addEventListener('click', () => {
-            if(selectedRole === 'studente') { sharedOtpView.style.display = 'none'; selectionView.style.display = 'block'; } else chiudiModaleRecuperoEAproLogin();
-        });
-        
-        document.getElementById('btn-cie-back-selection').addEventListener('click', () => {
-            if (html5QrCode && html5QrCode.isScanning) html5QrCode.stop().then(() => html5QrCode.clear());
-            studentCieView.style.display = 'none'; selectionView.style.display = 'block';
-        });
-
-        document.getElementById('btn-select-otp').addEventListener('click', () => { selectionView.style.display = 'none'; sharedOtpView.style.display = 'block'; document.getElementById('otp-role-title').innerText = 'Area Studenti'; });
-
-        document.getElementById('btn-select-cie').addEventListener('click', () => {
-            selectionView.style.display = 'none'; studentCieView.style.display = 'block';
-            document.getElementById('scanner-container').style.display = 'flex'; document.getElementById('scan-result').style.display = 'none';
-            const cieAnimContainer = document.getElementById('cie-anim-container'); cieAnimContainer.classList.remove('flipped');
-            setTimeout(() => { if(studentCieView.style.display === 'block') cieAnimContainer.classList.add('flipped'); }, 2000);
-            
-            html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start({ facingMode: "environment" }, { fps: 15 }, (decodedText) => {
-                const extractedCF = (decodedText.match(/[A-Z0-9]{16}/i) || [])[0];
-                if (extractedCF) {
-                    html5QrCode.stop(); document.getElementById('scan-result').innerHTML = `<div class="btn-loader" style="color: #d97706; justify-content:center;"><div class="btn-spinner" style="border-top-color: #d97706;"></div><span>Verifica in corso...</span></div>`; document.getElementById('scan-result').style.display = 'block'; document.getElementById('scan-result').style.background = "#fffbeb"; document.getElementById('scan-result').style.color = "#d97706";
-                    window.db.collection("studenti").where("cf", "==", extractedCF.toUpperCase()).get().then((snap) => {
-                        if (!snap.empty && snap.docs[0].data().email) { window.auth.sendPasswordResetEmail(snap.docs[0].data().email).then(() => {
-                            document.getElementById('scanner-container').style.display = 'none'; document.getElementById('btn-cie-back-selection').style.display = 'none';
-                            const scanResult = document.getElementById('scan-result'); scanResult.innerHTML = `<span style="font-weight:900; font-size:1.3rem; display:block; margin-bottom:8px;">Identità Confermata</span><span style="color: var(--text-gray);">Abbiamo inviato un link di recupero sicuro all'indirizzo email associato al tuo profilo.</span><button type="button" class="btn-gradient" onclick="chiudiModaleRecuperoEAproLogin()" style="width: 100%; margin-top:15px;">← TORNA AL LOGIN</button>`;
-                            scanResult.style.background = "#ecfdf5"; scanResult.style.color = "#065f46"; scanResult.style.border = "2px solid #a7f3d0";
-                        }); } else { document.getElementById('scan-result').innerHTML = `<span style="font-weight:900;">Errore</span><br><span>Documento non associato a nessun account.</span>`; document.getElementById('scan-result').style.background = "#fef2f2"; document.getElementById('scan-result').style.color = "#dc2626"; setTimeout(() => document.getElementById('scan-result').style.display='none', 4000); }
-                    });
+            // ---- MOSTRA/NASCONDI PASSWORD ----
+            const passInput = document.getElementById('password-input');
+            document.getElementById('toggle-password').addEventListener('click', () => {
+                if (passInput.type === 'password') {
+                    passInput.type = 'text';
+                    passInput.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Inter', sans-serif";
+                    passInput.style.letterSpacing = "normal";
+                    document.getElementById('eye-icon').style.display = 'none';
+                    document.getElementById('eye-slash-icon').style.display = 'block';
+                } else {
+                    passInput.type = 'password';
+                    passInput.style.fontFamily = "Verdana, sans-serif";
+                    passInput.style.letterSpacing = "2px";
+                    document.getElementById('eye-icon').style.display = 'block';
+                    document.getElementById('eye-slash-icon').style.display = 'none';
                 }
-            }, undefined).catch(() => { document.getElementById('reader').innerHTML = `<div style="color:var(--danger); padding: 40px 20px; text-align:center;">Accesso fotocamera negato.</div>`; });
-        });
-
-        document.getElementById('btn-send-otp').addEventListener('click', async function() {
-            const emailVal = otpEmailInput.value.trim().toLowerCase(); const errorDiv = document.getElementById('otp-error-msg'); const originalBtnText = this.innerHTML;
-            if(!emailVal || !emailVal.includes('@')) { errorDiv.innerText = "Inserisci un'email valida."; errorDiv.style.display = 'block'; return; }
-            errorDiv.style.display = 'none'; this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Verifica in corso...</span></div>'; this.disabled = true;
-
-            try {
-                const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
-                if(snapshot.empty) throw new Error("Email non trovata a sistema.");
-                activeOTP = Math.floor(100000 + Math.random() * 900000).toString(); activeOTPEmail = emailVal;
-                await emailjs.send("service_biade4g", "template_315dse7", { to_email: activeOTPEmail, otp_code: activeOTP, orario_richiesta: new Date().toLocaleString('it-IT') });
-                document.getElementById('display-target-email').innerText = activeOTPEmail;
-                otpStep1.style.opacity = '0'; setTimeout(() => { otpStep1.style.display = 'none'; otpStep2.style.display = 'block'; setTimeout(() => { otpStep2.style.opacity = '1'; otpInputs[0].focus(); }, 50); }, 400);
-            } catch (err) { errorDiv.innerText = err.message || "Errore."; errorDiv.style.display = 'block'; } finally { this.innerHTML = originalBtnText; this.disabled = false; }
-        });
-
-        otpInputs.forEach((input, index) => {
-            input.addEventListener('focus', (e) => e.target.select());
-            input.addEventListener('input', () => { input.value = input.value.replace(/[^0-9]/g, ''); if (input.value !== '' && index < otpInputs.length - 1) otpInputs[index + 1].focus(); });
-            input.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && input.value === '' && index > 0) otpInputs[index - 1].focus(); });
-            input.addEventListener('paste', (e) => {
-                e.preventDefault(); const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').substring(0, 6);
-                for (let i = 0; i < pastedData.length; i++) otpInputs[i].value = pastedData[i];
-                if (pastedData.length > 0) { const focusIndex = Math.min(5, pastedData.length); if(focusIndex < 6) otpInputs[focusIndex].focus(); else otpInputs[5].blur(); }
             });
-        });
 
-        document.getElementById('btn-back-to-email').addEventListener('click', () => {
-            otpStep2.style.opacity = '0'; setTimeout(() => { otpStep2.style.display = 'none'; otpStep1.style.display = 'block'; setTimeout(() => { otpStep1.style.opacity = '1'; }, 50); }, 400);
-        });
+            // ---- REGOLE DI ACCESSO ----
+            const loginView = document.getElementById('login-view');
+            const rulesView = document.getElementById('rules-view');
+            document.getElementById('btn-rules-banner').addEventListener('click', () => {
+                loginView.style.display = 'none';
+                rulesView.style.display = 'block';
+            });
+            document.querySelector('.btn-back-login').addEventListener('click', () => {
+                rulesView.style.display = 'none';
+                loginView.style.display = 'block';
+            });
 
-        document.getElementById('btn-verify-otp').addEventListener('click', async function() {
-            const enteredOTP = Array.from(otpInputs).map(i => i.value).join(''); const errorDiv = document.getElementById('otp-verify-error'); const originalBtnText = this.innerHTML;
-            if (enteredOTP.length !== 6) { errorDiv.innerText = "Inserisci tutte le 6 cifre."; errorDiv.style.display = 'block'; return; }
-            this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Conferma...</span></div>'; this.disabled = true;
+            // ---- SUBMIT FORM LOGIN ----
+            const submitBtn = document.getElementById('login-submit');
+            const errorMsg = document.getElementById('login-error');
 
-            if (enteredOTP === activeOTP) {
-                errorDiv.style.display = 'none'; otpInputs.forEach(i => i.classList.add('success'));
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (document.activeElement) document.activeElement.blur();
+
+                const uName = document.getElementById('hidden-username').value.trim();
+                const pass = passInput.value.trim();
+
+                // Validazioni
+                if (!uName || !selectedUserEmail) {
+                    errorMsg.innerText = "Seleziona prima un utente dalla lista.";
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+                if (!pass) {
+                    errorMsg.innerText = "Il campo password è obbligatorio.";
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+
+                errorMsg.style.display = 'none';
+                submitBtn.innerText = "VERIFICA SICUREZZA...";
+                submitBtn.disabled = true;
+
+                // Check VPN
+                const isVpn = await checkVPN();
+                if (isVpn) {
+                    errorMsg.innerText = "Disattivare la VPN per continuare.";
+                    errorMsg.style.display = 'block';
+                    submitBtn.innerText = "ENTRA";
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                // Turnstile
+                if (window.globalTurnstileToken) {
+                    eseguiAccessoServer();
+                } else {
+                    window.isWaitingForToken = true;
+                    if (typeof turnstile !== 'undefined') {
+                        try { turnstile.execute(); } catch(err) {}
+                    }
+                    // Fallback: se Turnstile non risponde entro 3s, procedi comunque
+                    setTimeout(() => {
+                        if (window.isWaitingForToken) {
+                            window.isWaitingForToken = false;
+                            eseguiAccessoServer();
+                        }
+                    }, 3000);
+                }
+            });
+
+            // ---- GOOGLE LOGIN ----
+            const googleBtn = document.getElementById('custom-google-btn');
+            const googleErrorMsg = document.getElementById('google-login-error');
+
+            googleBtn.addEventListener('click', async () => {
+                if (document.activeElement) document.activeElement.blur();
+                const originalContent = googleBtn.innerHTML;
+                googleBtn.innerHTML = `<div class="btn-loader"><div class="btn-spinner" style="border-top-color:#374151;"></div><span class="btn-text-main" style="margin-left:5px;">CARICO...</span></div>`;
+                googleBtn.disabled = true;
+                googleErrorMsg.style.display = 'none';
+
+                const isVpn = await checkVPN();
+                if (isVpn) {
+                    googleErrorMsg.innerText = "Disattivare la VPN per continuare.";
+                    googleErrorMsg.style.display = 'block';
+                    googleBtn.innerHTML = originalContent;
+                    googleBtn.disabled = false;
+                    return;
+                }
+
+                window.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+                    .then((result) => {
+                        const email = result.user.email.toLowerCase();
+                        if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) {
+                            if (typeof emailjs !== 'undefined') {
+                                emailjs.send("service_biade4g", "template_te0frr7", {
+                                    nome_utente: result.user.displayName,
+                                    email_utente: email,
+                                    orario_accesso: new Date().toLocaleString('it-IT')
+                                }).catch(() => {});
+                            }
+                            window.location.href = 'index.html';
+                        } else {
+                            window.auth.signOut().then(() => {
+                                googleErrorMsg.innerText = "Accesso negato. Usa l'email scolastica (@studenti.itisavogadro.it o @itisavogadro.it).";
+                                googleErrorMsg.style.display = 'block';
+                                googleBtn.innerHTML = originalContent;
+                                googleBtn.disabled = false;
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        googleErrorMsg.innerText = "Accesso annullato. Riprova.";
+                        googleErrorMsg.style.display = 'block';
+                        googleBtn.innerHTML = originalContent;
+                        googleBtn.disabled = false;
+                    });
+            });
+
+            // ---- HARZAFI ID ----
+            document.getElementById('btn-harzafi-id').addEventListener('click', () => {
+                document.getElementById('hid-modal').classList.add('active');
+            });
+            document.getElementById('hid-close-btn').addEventListener('click', () => {
+                document.getElementById('hid-modal').classList.remove('active');
+            });
+            document.getElementById('hid-cancel-btn').addEventListener('click', () => {
+                document.getElementById('hid-modal').classList.remove('active');
+            });
+            document.getElementById('hid-open-manual').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('hid-scan-view').style.display = 'none';
+                document.getElementById('hid-manual-view').style.display = 'block';
+                document.getElementById('hid-input').focus();
+            });
+            document.getElementById('hid-back-btn').addEventListener('click', () => {
+                document.getElementById('hid-manual-view').style.display = 'none';
+                document.getElementById('hid-scan-view').style.display = 'block';
+                document.getElementById('hid-error').style.display = 'none';
+            });
+
+            document.getElementById('hid-submit-btn').addEventListener('click', async () => {
+                const hidErrorMsg = document.getElementById('hid-error');
+                const hidSubmitBtn = document.getElementById('hid-submit-btn');
+                const originalBtnText = hidSubmitBtn.innerHTML;
+                const inputHidVal = document.getElementById('hid-input').value.trim();
+
+                if (!inputHidVal) return;
+
+                hidSubmitBtn.innerHTML = "VERIFICA IN CORSO...";
+                hidSubmitBtn.disabled = true;
+                hidErrorMsg.style.display = 'none';
+
+                const isVpn = await checkVPN();
+                if (isVpn) {
+                    hidErrorMsg.innerText = "Disattivare la VPN per continuare.";
+                    hidErrorMsg.style.display = 'block';
+                    hidSubmitBtn.innerHTML = originalBtnText;
+                    hidSubmitBtn.disabled = false;
+                    return;
+                }
+
+                window.db.collection("studenti").where("HID", "==", inputHidVal).get()
+                    .then((snap) => {
+                        if (!snap.empty) {
+                            document.getElementById('hid-modal').classList.remove('active');
+                            document.getElementById('hid-input').value = "";
+                            hidSubmitBtn.innerHTML = originalBtnText;
+                            hidSubmitBtn.disabled = false;
+                            window.location.href = 'index.html';
+                        } else {
+                            throw new Error("HID non trovato.");
+                        }
+                    })
+                    .catch(() => {
+                        hidErrorMsg.innerText = "HID non valido. Riprova.";
+                        hidErrorMsg.style.display = 'block';
+                        hidErrorMsg.style.animation = 'none';
+                        void hidErrorMsg.offsetWidth;
+                        hidErrorMsg.style.animation = 'shake 0.4s';
+                        hidSubmitBtn.innerHTML = originalBtnText;
+                        hidSubmitBtn.disabled = false;
+                    });
+            });
+
+            // ---- RECUPERO PASSWORD ----
+            const selectionView = document.getElementById('student-selection-view');
+            const sharedOtpView = document.getElementById('shared-otp-view');
+            const studentCieView = document.getElementById('student-cie-view');
+            const otpStep1 = document.getElementById('otp-step-1');
+            const otpStep2 = document.getElementById('otp-step-2');
+            const otpStep3 = document.getElementById('otp-step-3');
+            const otpEmailInput = document.getElementById('otp-email-input');
+            const otpInputs = document.querySelectorAll('.otp-box');
+
+            function resetForgotView() {
+                selectionView.style.display = 'none';
+                sharedOtpView.style.display = 'none';
+                studentCieView.style.display = 'none';
+                document.getElementById('scan-result').style.display = 'none';
+                otpStep1.style.display = 'block'; otpStep1.style.opacity = '1';
+                otpStep2.style.display = 'none'; otpStep2.style.opacity = '0';
+                otpStep3.style.display = 'none'; otpStep3.style.opacity = '0';
+                otpEmailInput.value = '';
+                otpInputs.forEach(i => { i.value = ''; i.classList.remove('error', 'success'); });
+            }
+
+            function stopScannerSafe() {
+                return new Promise((resolve) => {
+                    if (html5QrCode && html5QrCode.isScanning) {
+                        html5QrCode.stop().then(() => { html5QrCode.clear(); resolve(); }).catch(() => resolve());
+                    } else resolve();
+                });
+            }
+
+            document.getElementById('btn-forgot-pass').addEventListener('click', (e) => {
+                e.preventDefault();
+                resetForgotView();
+                if (selectedRole === 'studente') {
+                    selectionView.style.display = 'block';
+                    targetCollectionOTP = 'studenti';
+                } else {
+                    sharedOtpView.style.display = 'block';
+                    document.getElementById('otp-role-title').innerText = 'Area Docenti';
+                    targetCollectionOTP = 'docenti';
+                }
+                document.getElementById('forgot-sheet-modal').classList.add('active');
+            });
+
+            document.getElementById('forgot-sheet-close').addEventListener('click', () => {
+                stopScannerSafe();
+                document.getElementById('forgot-sheet-modal').classList.remove('active');
+                document.getElementById('cie-anim-container').classList.remove('flipped');
+            });
+
+            document.querySelectorAll('.btn-back-to-login-global').forEach(btn => {
+                btn.addEventListener('click', chiudiModaleRecuperoEAproLogin);
+            });
+
+            document.getElementById('btn-otp-back-selection').addEventListener('click', () => {
+                if (selectedRole === 'studente') {
+                    sharedOtpView.style.display = 'none';
+                    selectionView.style.display = 'block';
+                } else {
+                    chiudiModaleRecuperoEAproLogin();
+                }
+            });
+
+            document.getElementById('btn-select-otp').addEventListener('click', () => {
+                selectionView.style.display = 'none';
+                sharedOtpView.style.display = 'block';
+                document.getElementById('otp-role-title').innerText = 'Area Studenti';
+            });
+
+            document.getElementById('btn-select-cie').addEventListener('click', () => {
+                selectionView.style.display = 'none';
+                studentCieView.style.display = 'block';
+                document.getElementById('scanner-container').style.display = 'flex';
+                document.getElementById('scan-result').style.display = 'none';
+                const cieAnimContainer = document.getElementById('cie-anim-container');
+                cieAnimContainer.classList.remove('flipped');
+                setTimeout(() => { if (studentCieView.style.display === 'block') cieAnimContainer.classList.add('flipped'); }, 2000);
+
+                html5QrCode = new Html5Qrcode("reader");
+                html5QrCode.start({ facingMode: "environment" }, { fps: 15 }, (decodedText) => {
+                    const extractedCF = (decodedText.match(/[A-Z0-9]{16}/i) || [])[0];
+                    if (extractedCF) {
+                        html5QrCode.stop();
+                        const scanResult = document.getElementById('scan-result');
+                        scanResult.innerHTML = `<div class="btn-loader" style="color:#d97706; justify-content:center;"><div class="btn-spinner" style="border-top-color:#d97706;"></div><span>Verifica in corso...</span></div>`;
+                        scanResult.style.display = 'block';
+                        scanResult.style.background = "#fffbeb";
+                        scanResult.style.color = "#d97706";
+
+                        window.db.collection("studenti").where("cf", "==", extractedCF.toUpperCase()).get()
+                            .then((snap) => {
+                                if (!snap.empty && snap.docs[0].data().email) {
+                                    window.auth.sendPasswordResetEmail(snap.docs[0].data().email).then(() => {
+                                        document.getElementById('scanner-container').style.display = 'none';
+                                        document.getElementById('btn-cie-back-selection').style.display = 'none';
+                                        scanResult.innerHTML = `<span style="font-weight:900; font-size:1.3rem; display:block; margin-bottom:8px;">Identità Confermata</span><span style="color:var(--text-gray);">Link di recupero inviato alla tua email.</span><button type="button" class="btn-gradient" onclick="chiudiModaleRecuperoEAproLogin()" style="width:100%; margin-top:15px;">← TORNA AL LOGIN</button>`;
+                                        scanResult.style.background = "#ecfdf5";
+                                        scanResult.style.color = "#065f46";
+                                        scanResult.style.border = "2px solid #a7f3d0";
+                                    });
+                                } else {
+                                    scanResult.innerHTML = `<span style="font-weight:900;">Errore</span><br><span>Documento non associato a nessun account.</span>`;
+                                    scanResult.style.background = "#fef2f2";
+                                    scanResult.style.color = "#dc2626";
+                                }
+                            })
+                            .catch(() => {
+                                scanResult.innerHTML = `<span style="font-weight:900;">Errore di connessione</span>`;
+                                scanResult.style.background = "#fef2f2";
+                                scanResult.style.color = "#dc2626";
+                            });
+                    }
+                }, undefined).catch(() => {
+                    document.getElementById('reader').innerHTML = `<div style="color:var(--danger); padding:40px 20px; text-align:center;">Accesso fotocamera negato.</div>`;
+                });
+            });
+
+            document.getElementById('btn-cie-back-selection').addEventListener('click', () => {
+                stopScannerSafe();
+                studentCieView.style.display = 'none';
+                selectionView.style.display = 'block';
+            });
+
+            // ---- INVIO OTP ----
+            document.getElementById('btn-send-otp').addEventListener('click', async function() {
+                const emailVal = otpEmailInput.value.trim().toLowerCase();
+                const errorDiv = document.getElementById('otp-error-msg');
+                const originalBtnText = this.innerHTML;
+
+                if (!emailVal || !emailVal.includes('@')) {
+                    errorDiv.innerText = "Inserisci un'email valida.";
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+                errorDiv.style.display = 'none';
+                this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Verifica in corso...</span></div>';
+                this.disabled = true;
+
                 try {
-                    await window.auth.sendPasswordResetEmail(activeOTPEmail);
-                    setTimeout(() => { otpStep2.style.opacity = '0'; setTimeout(() => { otpStep2.style.display = 'none'; otpStep3.style.display = 'block'; setTimeout(() => { otpStep3.style.opacity = '1'; }, 50); }, 400); }, 800);
-                } catch (err) { errorDiv.innerText = "Errore durante l'invio. Riprova."; errorDiv.style.display = 'block'; this.innerHTML = originalBtnText; this.disabled = false; }
-            } else { errorDiv.innerText = "Codice OTP errato. Riprova."; errorDiv.style.display = 'block'; this.innerHTML = originalBtnText; this.disabled = false; otpInputs.forEach(i => i.classList.add('error')); setTimeout(() => { otpInputs.forEach(i => i.classList.remove('error')); }, 500); }
-        });
+                    const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
+                    if (snapshot.empty) throw new Error("Email non trovata a sistema.");
 
-        document.getElementById('btn-cie-avviso').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.add('active'); });
-        document.getElementById('close-avviso-modal').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
-        document.getElementById('btn-close-avviso-full').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
+                    activeOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                    activeOTPEmail = emailVal;
+
+                    await emailjs.send("service_biade4g", "template_315dse7", {
+                        to_email: activeOTPEmail,
+                        otp_code: activeOTP,
+                        orario_richiesta: new Date().toLocaleString('it-IT')
+                    });
+
+                    document.getElementById('display-target-email').innerText = activeOTPEmail;
+                    otpStep1.style.opacity = '0';
+                    setTimeout(() => {
+                        otpStep1.style.display = 'none';
+                        otpStep2.style.display = 'block';
+                        setTimeout(() => { otpStep2.style.opacity = '1'; otpInputs[0].focus(); }, 50);
+                    }, 400);
+                } catch (err) {
+                    errorDiv.innerText = err.message || "Errore di connessione.";
+                    errorDiv.style.display = 'block';
+                } finally {
+                    this.innerHTML = originalBtnText;
+                    this.disabled = false;
+                }
+            });
+
+            // ---- OTP INPUTS ----
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('focus', (e) => e.target.select());
+                input.addEventListener('input', () => {
+                    input.value = input.value.replace(/[^0-9]/g, '');
+                    if (input.value !== '' && index < otpInputs.length - 1) otpInputs[index + 1].focus();
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && input.value === '' && index > 0) otpInputs[index - 1].focus();
+                });
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').substring(0, 6);
+                    for (let i = 0; i < pastedData.length; i++) otpInputs[i].value = pastedData[i];
+                    if (pastedData.length > 0) {
+                        const focusIndex = Math.min(5, pastedData.length);
+                        if (focusIndex < 6) otpInputs[focusIndex].focus(); else otpInputs[5].blur();
+                    }
+                });
+            });
+
+            document.getElementById('btn-back-to-email').addEventListener('click', () => {
+                otpStep2.style.opacity = '0';
+                setTimeout(() => {
+                    otpStep2.style.display = 'none';
+                    otpStep1.style.display = 'block';
+                    setTimeout(() => { otpStep1.style.opacity = '1'; }, 50);
+                }, 400);
+            });
+
+            // ---- VERIFICA OTP ----
+            document.getElementById('btn-verify-otp').addEventListener('click', async function() {
+                const enteredOTP = Array.from(otpInputs).map(i => i.value).join('');
+                const errorDiv = document.getElementById('otp-verify-error');
+                const originalBtnText = this.innerHTML;
+
+                if (enteredOTP.length !== 6) {
+                    errorDiv.innerText = "Inserisci tutte le 6 cifre.";
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Conferma...</span></div>';
+                this.disabled = true;
+
+                if (enteredOTP === activeOTP) {
+                    errorDiv.style.display = 'none';
+                    otpInputs.forEach(i => i.classList.add('success'));
+                    try {
+                        await window.auth.sendPasswordResetEmail(activeOTPEmail);
+                        setTimeout(() => {
+                            otpStep2.style.opacity = '0';
+                            setTimeout(() => {
+                                otpStep2.style.display = 'none';
+                                otpStep3.style.display = 'block';
+                                setTimeout(() => { otpStep3.style.opacity = '1'; }, 50);
+                            }, 400);
+                        }, 800);
+                    } catch (err) {
+                        errorDiv.innerText = "Errore durante l'invio del link. Riprova.";
+                        errorDiv.style.display = 'block';
+                        this.innerHTML = originalBtnText;
+                        this.disabled = false;
+                    }
+                } else {
+                    errorDiv.innerText = "Codice OTP errato. Riprova.";
+                    errorDiv.style.display = 'block';
+                    this.innerHTML = originalBtnText;
+                    this.disabled = false;
+                    otpInputs.forEach(i => i.classList.add('error'));
+                    setTimeout(() => { otpInputs.forEach(i => i.classList.remove('error')); }, 500);
+                }
+            });
+
+            // ---- AVVISO CIE ----
+            document.getElementById('btn-cie-avviso').addEventListener('click', () => {
+                document.getElementById('avviso-cie-modal').classList.add('active');
+            });
+            document.getElementById('close-avviso-modal').addEventListener('click', () => {
+                document.getElementById('avviso-cie-modal').classList.remove('active');
+            });
+            document.getElementById('btn-close-avviso-full').addEventListener('click', () => {
+                document.getElementById('avviso-cie-modal').classList.remove('active');
+            });
+
+        }); // fine DOMContentLoaded
     </script>
 </body>
 </html>
