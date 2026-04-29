@@ -564,6 +564,12 @@ document.getElementById('hid-submit-btn').addEventListener('click', async () => 
                     document.getElementById('hour-counter').innerText = finalHoursValue; 
                     setTimeout(() => { document.querySelectorAll('.stat-segment').forEach((el, index) => { setTimeout(() => { el.style.transform = 'scaleX(1)'; }, index * 150); }); }, 100);
                     scaricaECostruisciCronologia(); 
+                    
+                    // MOSTRA IL POPUP DI AVVISO MINISTERIALE (Nuovo codice)
+                    setTimeout(() => {
+                        document.getElementById('disclaimer-ministero-modal').classList.add('active');
+                    }, 800); // 800ms di ritardo per farlo apparire in modo fluido dopo l'ingresso
+                    
                 }, 500);
             }
 
