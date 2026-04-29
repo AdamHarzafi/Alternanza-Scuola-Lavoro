@@ -565,10 +565,10 @@ document.getElementById('hid-submit-btn').addEventListener('click', async () => 
                     setTimeout(() => { document.querySelectorAll('.stat-segment').forEach((el, index) => { setTimeout(() => { el.style.transform = 'scaleX(1)'; }, index * 150); }); }, 100);
                     scaricaECostruisciCronologia(); 
                     
-                    // MOSTRA IL POPUP DI AVVISO MINISTERIALE (Nuovo codice)
+                    // MOSTRA IL POPUP DI AVVISO MINISTERIALE DOPO ESSERE ENTRATO
                     setTimeout(() => {
                         document.getElementById('disclaimer-ministero-modal').classList.add('active');
-                    }, 800); // 800ms di ritardo per farlo apparire in modo fluido dopo l'ingresso
+                    }, 800); 
                     
                 }, 500);
             }
@@ -803,4 +803,8 @@ document.getElementById('hid-submit-btn').addEventListener('click', async () => 
             document.getElementById('close-avviso-modal').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
             document.getElementById('btn-close-avviso-full').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
 
-        });
+                        // INCOLLA QUESTE DUE RIGHE QUI:
+            document.getElementById('close-disclaimer-modal').addEventListener('click', () => { document.getElementById('disclaimer-ministero-modal').classList.remove('active'); });
+            document.getElementById('btn-close-disclaimer-full').addEventListener('click', () => { document.getElementById('disclaimer-ministero-modal').classList.remove('active'); });
+
+        }); // <- QUESTA È L'ULTIMA RIGA DEL TUO JS
