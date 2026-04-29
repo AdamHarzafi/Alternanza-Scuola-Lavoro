@@ -465,6 +465,42 @@
         </div>
     </div>
 
+    <!-- MODALE AVVISO MINISTERIALE -->
+    <div id="disclaimer-ministero-modal" class="modal-overlay custom-bottom-sheet">
+        <div class="modal-content avviso-modal-content" style="max-width: 650px;">
+            <button class="close-btn" id="close-disclaimer-modal" style="top: 20px; right: 20px; z-index: 10;" aria-label="Chiudi">&times;</button>
+            <div class="avviso-inner-content">
+                
+                <div style="background: #f0f9ff; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; color: var(--primary); box-shadow: 0 10px 25px rgba(2, 132, 199, 0.15); flex-shrink: 0;">
+                    <!-- Icona Info -->
+                    <svg viewBox="0 0 24 24" style="width: 35px; fill: currentColor;"><path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z"/></svg>
+                </div>
+                
+                <h2 style="font-size: 1.8rem; color: var(--text-dark); text-align: center; margin-bottom: 25px; font-weight: 900; letter-spacing: -0.5px;">Nota Informativa sulle Ore PCTO</h2>
+                
+                <div style="font-size: 1.05rem; font-weight: 500; color: var(--text-gray); line-height: 1.7; text-align: justify; margin-bottom: 30px;">
+                    <p style="margin-bottom: 15px;">I dati e il monte ore mostrati all'interno di questo portale sono stati elaborati a scopo puramente indicativo e gestionale da <strong>Harzafi Adam</strong>. Tali informazioni <strong style="color: var(--danger);">non hanno alcun valore legale</strong> e non sostituiscono la documentazione ufficiale dell'Istituto.</p>
+                    <p>Per consultare il bilancio ufficiale, definitivo e validato delle tue ore di Percorsi per le Competenze Trasversali e l'Orientamento, ti invitiamo ad accedere alla piattaforma istituzionale del <strong>Ministero dell'Istruzione e del Merito</strong>.</p>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
+                    <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/login?goto=https://cloud.pubblica.istruzione.it/asl-gateway/#/private/profiliecontesti" target="_blank" style="text-decoration: none; width: 100%;">
+                        <button type="button" class="btn-social" style="height: 65px; border-color: #0066cc;">
+                            <img src="IMMAGINI/LOGO-ENTRA-CON-SPID.png" style="height: 35px; width: auto; object-fit: contain;" alt="Entra con SPID" onerror="this.src='IMMAGINI/LOGO-ENTRA-CON-SPID.svg'">
+                        </button>
+                    </a>
+                    <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/login?goto=https://cloud.pubblica.istruzione.it/asl-gateway/#/private/profiliecontesti" target="_blank" style="text-decoration: none; width: 100%;">
+                        <button type="button" class="btn-social" style="height: 65px; border-color: #0284c7;">
+                            <img src="IMMAGINI/LOGO-ENTRA-CON-CIE.png" style="height: 35px; width: auto; object-fit: contain;" alt="Entra con CIE" onerror="this.src='IMMAGINI/LOGO-ENTRA-CON-CIE.svg'">
+                        </button>
+                    </a>
+                </div>
+
+                <button type="button" id="btn-close-disclaimer-full" class="btn-gradient" style="width: 100%; height: 56px; font-size: 1.1rem; border-radius: 16px; margin-top: auto;">Ho capito, procedi all'area riservata</button>
+            </div>
+        </div>
+    </div>
+
     <!-- DASHBOARD FSL -->
     <div id="app-dashboard">
         <div class="dash-topbar">
