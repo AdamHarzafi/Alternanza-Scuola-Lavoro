@@ -465,7 +465,11 @@
         </div>
     </div>
 
-    <!-- MODALE AVVISO MINISTERIALE -->
+    <!-- ... fine del modale avviso CIE ... -->
+        </div>
+    </div>
+
+    <!-- INCOLLA QUI IL NUOVO CODICE DEL POPUP MINISTERIALE -->
     <div id="disclaimer-ministero-modal" class="modal-overlay custom-bottom-sheet">
         <div class="modal-content avviso-modal-content" style="max-width: 650px;">
             <button class="close-btn" id="close-disclaimer-modal" style="top: 20px; right: 20px; z-index: 10;" aria-label="Chiudi">&times;</button>
@@ -478,21 +482,19 @@
                 
                 <h2 style="font-size: 1.8rem; color: var(--text-dark); text-align: center; margin-bottom: 25px; font-weight: 900; letter-spacing: -0.5px;">Nota Informativa sulle Ore PCTO</h2>
                 
-                <div style="font-size: 1.05rem; font-weight: 500; color: var(--text-gray); line-height: 1.7; text-align: justify; margin-bottom: 30px;">
+                <div style="font-size: 1.05rem; font-weight: 500; color: var(--text-gray); line-height: 1.7; text-align: justify; margin-bottom: 35px;">
                     <p style="margin-bottom: 15px;">I dati e il monte ore mostrati all'interno di questo portale sono stati elaborati a scopo puramente indicativo e gestionale da <strong>Harzafi Adam</strong>. Tali informazioni <strong style="color: var(--danger);">non hanno alcun valore legale</strong> e non sostituiscono la documentazione ufficiale dell'Istituto.</p>
                     <p>Per consultare il bilancio ufficiale, definitivo e validato delle tue ore di Percorsi per le Competenze Trasversali e l'Orientamento, ti invitiamo ad accedere alla piattaforma istituzionale del <strong>Ministero dell'Istruzione e del Merito</strong>.</p>
                 </div>
                 
-                <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
-                    <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/login?goto=https://cloud.pubblica.istruzione.it/asl-gateway/#/private/profiliecontesti" target="_blank" style="text-decoration: none; width: 100%;">
-                        <button type="button" class="btn-social" style="height: 65px; border-color: #0066cc;">
-                            <img src="IMMAGINI/LOGO-ENTRA-CON-SPID.png" style="height: 35px; width: auto; object-fit: contain;" alt="Entra con SPID" onerror="this.src='IMMAGINI/LOGO-ENTRA-CON-SPID.svg'">
-                        </button>
+                <!-- BOTTONI SPID/CIE PULITI, ARROTONDATI E ZOOMATI -->
+                <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 35px; align-items: center;">
+                    <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/login?goto=https://cloud.pubblica.istruzione.it/asl-gateway/#/private/profiliecontesti" target="_blank" style="text-decoration: none; width: 100%; max-width: 280px; display: block; transition: transform 0.3s var(--apple-ease);" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.97)'">
+                        <img src="IMMAGINI/LOGO-ENTRA-CON-SPID.png" style="width: 100%; height: auto; border-radius: 10px; display: block; box-shadow: 0 8px 20px rgba(0, 102, 204, 0.2);" alt="Entra con SPID" onerror="this.src='IMMAGINI/LOGO-ENTRA-CON-SPID.svg'">
                     </a>
-                    <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/login?goto=https://cloud.pubblica.istruzione.it/asl-gateway/#/private/profiliecontesti" target="_blank" style="text-decoration: none; width: 100%;">
-                        <button type="button" class="btn-social" style="height: 65px; border-color: #0284c7;">
-                            <img src="IMMAGINI/LOGO-ENTRA-CON-CIE.png" style="height: 35px; width: auto; object-fit: contain;" alt="Entra con CIE" onerror="this.src='IMMAGINI/LOGO-ENTRA-CON-CIE.svg'">
-                        </button>
+                    
+                    <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/login?goto=https://cloud.pubblica.istruzione.it/asl-gateway/#/private/profiliecontesti" target="_blank" style="text-decoration: none; width: 100%; max-width: 280px; display: block; transition: transform 0.3s var(--apple-ease);" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'" onmousedown="this.style.transform='scale(0.97)'">
+                        <img src="IMMAGINI/LOGO-ENTRA-CON-CIE.png" style="width: 100%; height: auto; border-radius: 10px; display: block; box-shadow: 0 8px 20px rgba(2, 132, 199, 0.2);" alt="Entra con CIE" onerror="this.src='IMMAGINI/LOGO-ENTRA-CON-CIE.svg'">
                     </a>
                 </div>
 
@@ -500,6 +502,10 @@
             </div>
         </div>
     </div>
+    <!-- FINE POPUP MINISTERIALE -->
+
+    <!-- DASHBOARD FSL -->
+    <div id="app-dashboard">
 
     <!-- DASHBOARD FSL -->
     <div id="app-dashboard">
