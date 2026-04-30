@@ -16,16 +16,14 @@ async function inviaEmail(emailDestinatario, idModelloBrevo, parametriMail) {
             body: JSON.stringify(dataToSend)
         });
 
-        // Decodifica la risposta del Worker (SIA se va bene, SIA se c'è errore)
         const responseData = await response.json();
 
         if (!response.ok) {
-            // Se fallisce, stampa il VERO errore di Brevo in rosso nella console
             console.error("❌ ERRORE DA BREVO:", responseData.error);
             throw new Error(responseData.error || "Errore sconosciuto");
         }
         
-        console.log("✅ Email inviata con successo tramite Cloudflare e Brevo!");
+        console.log("✅ Email inviata in modo SUPER SICURO tramite Cloudflare e Brevo!");
     } catch (err) {
         console.error("❌ Dettagli errore di rete:", err);
     }
@@ -177,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function trapFocus(modal) {
-        const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea,[tabindex]:not([tabindex="-1"])');
         const firstFocusable = focusableElements[0];
         const lastFocusable = focusableElements[focusableElements.length - 1];
 
@@ -451,10 +449,10 @@ document.addEventListener("DOMContentLoaded", function() {
         if(typeof window.auth !== 'undefined') {
             window.auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
                 inviaEmail(selectedUserEmail, 2, { 
-    nome_utente: uName, 
-    email_utente: selectedUserEmail, 
-    orario_accesso: new Date().toLocaleString('it-IT') 
-});
+                    nome_utente: uName, 
+                    email_utente: selectedUserEmail, 
+                    orario_accesso: new Date().toLocaleString('it-IT') 
+                });
                 submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; entraNelPortale(uName);
             }).catch(() => {
                 submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
@@ -514,10 +512,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const email = result.user.email.toLowerCase();
             if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
                 inviaEmail(email, 2, { 
-    nome_utente: result.user.displayName || "Utente", 
-    email_utente: email, 
-    orario_accesso: new Date().toLocaleString('it-IT') 
-});
+                    nome_utente: result.user.displayName || "Utente", 
+                    email_utente: email, 
+                    orario_accesso: new Date().toLocaleString('it-IT') 
+                });
                 entraNelPortale(result.user.displayName || "Utente"); googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; 
             } else { window.auth.signOut().then(() => { googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; }); }
         }).catch(() => { googleErrorMsg.innerText = "Accesso annullato. Riprova."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; });
@@ -595,7 +593,6 @@ document.addEventListener("DOMContentLoaded", function() {
         setTimeout(() => { 
             landing.style.display = 'none'; 
             
-            // FIX SCHERMO VUOTO: Assicuriamo che la dashboard venga mostrata in modo sicuro
             dash.style.display = 'block'; 
             void dash.offsetWidth; 
             dash.style.opacity = '1'; 
@@ -605,7 +602,6 @@ document.addEventListener("DOMContentLoaded", function() {
             setTimeout(() => { document.querySelectorAll('.stat-segment').forEach((el, index) => { setTimeout(() => { el.style.transform = 'scaleX(1)'; }, index * 150); }); }, 100);
             scaricaECostruisciCronologia(); 
             
-            // MOSTRA IL POPUP DI AVVISO MINISTERIALE
             setTimeout(() => {
                 document.getElementById('disclaimer-ministero-modal').classList.add('active');
             }, 800); 
@@ -746,9 +742,9 @@ document.addEventListener("DOMContentLoaded", function() {
             activeOTPEmail = emailVal;
 
             await inviaEmail(activeOTPEmail, 3, {
-    otp_code: activeOTP, 
-    orario_richiesta: new Date().toLocaleString('it-IT')
-});
+                otp_code: activeOTP, 
+                orario_richiesta: new Date().toLocaleString('it-IT')
+            });
 
             document.getElementById('display-target-email').innerText = activeOTPEmail;
             otpStep1.style.opacity = '0';
@@ -834,11 +830,9 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('close-avviso-modal').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
     document.getElementById('btn-close-avviso-full').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
 
-    // CHIUSURA NUOVO MODALE (RIMUOVE LO SCHERMO VUOTO)
     document.getElementById('close-disclaimer-modal').addEventListener('click', () => { 
         document.getElementById('disclaimer-ministero-modal').classList.remove('active'); 
         
-        // Salvavita: Forza la Dashboard a rimanere visibile e toglie il blocco scorrimento
         const dash = document.getElementById('app-dashboard');
         if(dash) { dash.style.display = 'block'; dash.style.opacity = '1'; }
         document.body.style.overflow = '';
