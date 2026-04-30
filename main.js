@@ -1,3 +1,32 @@
+async function inviaEmail(emailDestinatario, idModelloBrevo, parametriMail) {
+    const WORKER_URL = "https://harzafi-email.allorasonoadam.workers.dev/"; 
+
+    // Impacchettiamo i dati da mandare al tuo server Cloudflare
+    const dataToSend = {
+        emailDestinatario: emailDestinatario,
+        idModelloBrevo: idModelloBrevo,
+        parametriMail: parametriMail
+    };
+
+    try {
+        const response = await fetch(WORKER_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        if (!response.ok) {
+            throw new Error("Errore durante la comunicazione con Cloudflare");
+        }
+        
+        console.log("Email inviata in modo SUPER SICURO tramite Cloudflare!");
+    } catch (err) {
+        console.error("Errore di rete:", err);
+    }
+}
+
 window.globalTurnstileToken = "";
 window.isWaitingForToken = false;
 window.onTurnstileSuccess = function(token) {
@@ -41,7 +70,7 @@ window.addEventListener('load', () => {
         window.auth = firebase.auth();
         window.db = firebase.firestore();
     }
-    if(typeof emailjs !== 'undefined') { emailjs.init("7JCNY1NM6Jk8MBC4E"); }
+    
     if(typeof populateUserDropdown === 'function') populateUserDropdown('studente');
 });
 
@@ -417,7 +446,11 @@ document.addEventListener("DOMContentLoaded", function() {
         submitBtn.innerText = "VERIFICA IN CORSO...";
         if(typeof window.auth !== 'undefined') {
             window.auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
-                if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: uName, email_utente: selectedUserEmail, orario_accesso: new Date().toLocaleString('it-IT') }); }
+                inviaEmail(selectedUserEmail, 2, { 
+    nome_utente: uName, 
+    email_utente: selectedUserEmail, 
+    orario_accesso: new Date().toLocaleString('it-IT') 
+});
                 submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; entraNelPortale(uName);
             }).catch(() => {
                 submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
@@ -476,7 +509,11 @@ document.addEventListener("DOMContentLoaded", function() {
         window.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((result) => {
             const email = result.user.email.toLowerCase();
             if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
-                if(typeof emailjs !== 'undefined') { emailjs.send("service_biade4g", "template_te0frr7", { nome_utente: result.user.displayName, email_utente: email, orario_accesso: new Date().toLocaleString('it-IT') }); }
+                inviaEmail(email, 2, { 
+    nome_utente: result.user.displayName || "Utente", 
+    email_utente: email, 
+    orario_accesso: new Date().toLocaleString('it-IT') 
+});
                 entraNelPortale(result.user.displayName || "Utente"); googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; 
             } else { window.auth.signOut().then(() => { googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; }); }
         }).catch(() => { googleErrorMsg.innerText = "Accesso annullato. Riprova."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; });
@@ -704,9 +741,10 @@ document.addEventListener("DOMContentLoaded", function() {
             activeOTP = Math.floor(100000 + Math.random() * 900000).toString();
             activeOTPEmail = emailVal;
 
-            await emailjs.send("service_biade4g", "template_315dse7", { 
-                to_email: activeOTPEmail, otp_code: activeOTP, orario_richiesta: new Date().toLocaleString('it-IT')
-            });
+            await inviaEmail(activeOTPEmail, 3, {
+    otp_code: activeOTP, 
+    orario_richiesta: new Date().toLocaleString('it-IT')
+});
 
             document.getElementById('display-target-email').innerText = activeOTPEmail;
             otpStep1.style.opacity = '0';
