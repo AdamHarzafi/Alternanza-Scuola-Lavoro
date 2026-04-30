@@ -1,7 +1,6 @@
 async function inviaEmail(emailDestinatario, idModelloBrevo, parametriMail) {
     const WORKER_URL = "https://harzafi-email.allorasonoadam.workers.dev/"; 
 
-    // Impacchettiamo i dati da mandare al tuo server Cloudflare
     const dataToSend = {
         emailDestinatario: emailDestinatario,
         idModelloBrevo: idModelloBrevo,
@@ -17,13 +16,18 @@ async function inviaEmail(emailDestinatario, idModelloBrevo, parametriMail) {
             body: JSON.stringify(dataToSend)
         });
 
+        // Decodifica la risposta del Worker (SIA se va bene, SIA se c'è errore)
+        const responseData = await response.json();
+
         if (!response.ok) {
-            throw new Error("Errore durante la comunicazione con Cloudflare");
+            // Se fallisce, stampa il VERO errore di Brevo in rosso nella console
+            console.error("❌ ERRORE DA BREVO:", responseData.error);
+            throw new Error(responseData.error || "Errore sconosciuto");
         }
         
-        console.log("Email inviata in modo SUPER SICURO tramite Cloudflare!");
+        console.log("✅ Email inviata con successo tramite Cloudflare e Brevo!");
     } catch (err) {
-        console.error("Errore di rete:", err);
+        console.error("❌ Dettagli errore di rete:", err);
     }
 }
 
