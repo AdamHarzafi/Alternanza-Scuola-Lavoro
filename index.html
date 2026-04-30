@@ -8,9 +8,6 @@
 
     <!-- Google Auth Platform -->
     <meta name="google-site-verification" content="sbEJOTIS_aeemOMbv_Alq3MKfx3Y9eryt8OcIdt8t3E" />
-
-    <!-- Google Firebase Secure-->
-    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-check-compat.js"></script>
     
     <!-- OTTIMIZZAZIONE PERFORMANCE: Preconnect e DNS-Prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -202,7 +199,7 @@
                 <div class="login-rules-banner" id="btn-rules-banner">
                     Leggi le regole di accesso dal 25/04/2026
                 </div>
-                <div id="cf-turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAC6Galn1mtnng7_P" data-size="invisible" data-execution="execute" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError"></div>
+                <div id="cf-turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAC6Galn1mtnng7_P" data-size="flexible" data-execution="execute" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError"></div>
                 <form id="login-form" target="dummyframe" action="about:blank" method="POST">
                     <div class="input-group">
                         <label class="input-label">Seleziona Utente:</label>
@@ -573,6 +570,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-check-compat.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     <script defer src="https://accounts.google.com/gsi/client"></script>
     <script defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
