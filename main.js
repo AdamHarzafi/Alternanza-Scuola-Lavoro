@@ -258,9 +258,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
     document.getElementById('forgot-sheet-close').addEventListener('click', () => {
         forgotSheetModal.classList.remove('active');
-        stopScannerSafe();
-        document.getElementById('cie-anim-container').classList.remove('flipped');
-        document.getElementById('scan-result').style.display = 'none';
     });
 
     const usernameSelect = document.getElementById('username-select');
@@ -341,93 +338,6 @@ document.addEventListener("DOMContentLoaded", function() {
     passInput.addEventListener('copy', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
     passInput.addEventListener('paste', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
 
-    let html5QrCode = null;
-
-    function startCIEScanner() {
-        const readerElement = document.getElementById('reader');
-        readerElement.innerHTML = '<div style="color:white; padding: 40px 20px; text-align:center; font-weight:600; display:flex; align-items:center; height:100%; justify-content:center;">Richiesta accesso fotocamera...</div>';
-        
-        const config = { fps: 15 };
-        html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-            { facingMode: "environment" },
-            config,
-            (decodedText, decodedResult) => {
-                const cfRegex = /^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/i;
-                const cfMatchFallback = decodedText.match(/[A-Z0-9]{16}/i); 
-                
-                let extractedCF = null;
-                if (cfRegex.test(decodedText)) { extractedCF = decodedText; } 
-                else if (cfMatchFallback) { extractedCF = cfMatchFallback[0]; }
-
-                if (extractedCF && extractedCF.length === 16) {
-                    const scannedCF = extractedCF.toUpperCase();
-                    stopScannerSafe().then(() => {
-                        verifyScannedCF(scannedCF);
-                    }).catch(() => {
-                        verifyScannedCF(scannedCF);
-                    });
-                }
-            },
-            (errorMessage) => { }
-        ).catch((err) => {
-            readerElement.innerHTML = `<div style="color:var(--danger); padding: 40px 20px; text-align:center; font-weight:600; background:#fff; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column;">Accesso fotocamera negato.<br><span style="font-size:0.8rem; color:#64748b; font-weight:500; margin-top:5px;">Controlla i permessi del tuo browser o sistema.</span></div>`;
-        });
-    }
-
-    function stopScannerSafe() {
-        return new Promise((resolve) => {
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().then(() => { html5QrCode.clear(); resolve(); }).catch((e) => { resolve(); });
-            } else { resolve(); }
-        });
-    }
-
-    function showErrorScanner(msg) {
-        const scanResult = document.getElementById('scan-result');
-        scanResult.style.display = 'block';
-        scanResult.innerHTML = `<span style="font-weight:900;">Errore</span><br><span style="font-weight:600; display:block; margin-top:5px;">${msg}</span>`; 
-        scanResult.style.background = "#fef2f2";
-        scanResult.style.border = "1px solid #fecaca";
-        scanResult.style.color = "#dc2626";
-        setTimeout(() => { startCIEScanner(); scanResult.style.display = 'none'; }, 4000);
-    }
-
-    function mostraSuccessoRecuperoCIE() {
-        document.getElementById('scanner-container').style.display = 'none';
-        const backBtn = document.getElementById('btn-cie-back-selection');
-        if(backBtn) backBtn.style.display = 'none';
-        
-        const scanResult = document.getElementById('scan-result');
-        scanResult.style.display = 'block';
-        scanResult.innerHTML = `
-            <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; fill: var(--success); margin-bottom: 15px; display: block; margin: 0 auto;"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/></svg>
-            <span style="font-weight:900; font-size:1.3rem; display:block; margin-bottom:8px;">Identità Confermata</span>
-            <span style="font-weight:500; font-size:1.05rem; display:block; margin-bottom: 25px; line-height: 1.5; color: var(--text-gray);">Abbiamo inviato un link di recupero sicuro all'indirizzo email associato al tuo profilo. Controlla la tua posta.</span>
-            <button type="button" class="btn-gradient" onclick="chiudiModaleRecuperoEAproLogin()" style="width: 100%;">← TORNA AL LOGIN</button>
-        `;
-        scanResult.style.background = "#ecfdf5";
-        scanResult.style.border = "2px solid #a7f3d0";
-        scanResult.style.color = "#065f46";
-    }
-
-    function verifyScannedCF(cfInputVal) {
-        const scanResult = document.getElementById('scan-result');
-        scanResult.style.display = 'block';
-        scanResult.innerHTML = `<div class="btn-loader" style="color: #d97706; width:100%; justify-content:center;"><div class="btn-spinner" style="border-top-color: #d97706; border-color: rgba(217,119,6,0.2);"></div><span style="font-weight:800; margin-left:8px;">Verifica in corso...</span></div>`;
-        scanResult.style.background = "#fffbeb";
-        scanResult.style.border = "1px solid #fde68a";
-        scanResult.style.color = "#d97706";
-
-        if(typeof window.db !== 'undefined' && typeof window.auth !== 'undefined') {
-            window.db.collection("studenti").where("cf", "==", cfInputVal).get().then((snap) => {
-                if (!snap.empty && snap.docs[0].data().email) {
-                    const dbEmail = snap.docs[0].data().email;
-                    window.auth.sendPasswordResetEmail(dbEmail).then(() => { mostraSuccessoRecuperoCIE(); }).catch(() => { showErrorScanner("Errore dal server email. Riprova."); });
-                } else { showErrorScanner("Documento non associato a nessun account attivo."); }
-            }).catch(() => { showErrorScanner("Errore di connessione al database. Riprova."); });
-        } else { showErrorScanner("Database non raggiungibile al momento."); }
-    }
 
     async function checkVPN() {
         try {
@@ -687,17 +597,12 @@ document.addEventListener("DOMContentLoaded", function() {
         } else { container.innerHTML = '<div style="color:var(--warning); text-align:center; padding:20px; font-weight:700;">Dati temporaneamente offline.</div>'; }
     }
 
-    let targetCollectionOTP = 'studenti';
 
-    const selectionView = document.getElementById('student-selection-view');
+    let targetCollectionOTP = 'studenti';
     const sharedOtpView = document.getElementById('shared-otp-view');
-    const studentCieView = document.getElementById('student-cie-view');
-    
     const otpStep1 = document.getElementById('otp-step-1');
-    const otpStep2 = document.getElementById('otp-step-2');
     const otpStep3 = document.getElementById('otp-step-3');
     const otpEmailInput = document.getElementById('otp-email-input');
-    const otpInputs = document.querySelectorAll('.otp-box');
 
     window.chiudiModaleRecuperoEAproLogin = function() {
         document.getElementById('forgot-sheet-modal').classList.remove('active');
@@ -705,61 +610,26 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function setupForgotView() {
-        stopScannerSafe();
-        
-        selectionView.style.display = 'none';
-        sharedOtpView.style.display = 'none';
-        studentCieView.style.display = 'none';
-        document.getElementById('scan-result').style.display = 'none';
-        
+        // Mostriamo direttamente il modulo Email bypassando altre selezioni
         otpStep1.style.display = 'block'; otpStep1.style.opacity = '1';
-        otpStep2.style.display = 'none'; otpStep2.style.opacity = '0';
         otpStep3.style.display = 'none'; otpStep3.style.opacity = '0';
         otpEmailInput.value = '';
-        otpInputs.forEach(i => { i.value = ''; i.classList.remove('error', 'success'); });
+        document.getElementById('otp-error-msg').style.display = 'none';
 
         if(selectedRole === 'studente') { 
-            selectionView.style.display = 'block';
+            document.getElementById('otp-role-title').innerText = 'Area Studenti';
             targetCollectionOTP = 'studenti';
         } else { 
-            sharedOtpView.style.display = 'block';
             document.getElementById('otp-role-title').innerText = 'Area Docenti';
             targetCollectionOTP = 'docenti';
         }
     }
 
-    document.querySelectorAll('.btn-back-to-login-global').forEach(btn => { btn.addEventListener('click', chiudiModaleRecuperoEAproLogin); });
-    
     document.getElementById('btn-otp-back-selection').addEventListener('click', () => {
-        if(selectedRole === 'studente') { sharedOtpView.style.display = 'none'; selectionView.style.display = 'block'; } 
-        else { chiudiModaleRecuperoEAproLogin(); }
-    });
-    
-    document.getElementById('btn-cie-back-selection').addEventListener('click', () => {
-        stopScannerSafe(); studentCieView.style.display = 'none'; selectionView.style.display = 'block';
+        chiudiModaleRecuperoEAproLogin();
     });
 
-    document.getElementById('btn-select-otp').addEventListener('click', () => {
-        selectionView.style.display = 'none'; sharedOtpView.style.display = 'block';
-        document.getElementById('otp-role-title').innerText = 'Area Studenti';
-    });
-
-    document.getElementById('btn-select-cie').addEventListener('click', () => {
-        selectionView.style.display = 'none'; studentCieView.style.display = 'block';
-        
-        document.getElementById('scanner-container').style.display = 'flex';
-        document.getElementById('scan-result').style.display = 'none';
-        const backBtn = document.getElementById('btn-cie-back-selection');
-        if(backBtn) backBtn.style.display = 'block';
-        
-        const cieAnimContainer = document.getElementById('cie-anim-container');
-        cieAnimContainer.classList.remove('flipped');
-        setTimeout(() => { if(studentCieView.style.display === 'block') cieAnimContainer.classList.add('flipped'); }, 2000);
-        
-        startCIEScanner();
-    });
-
-    // SISTEMA RECUPERO PASSWORD NATIVO FIREBASE (SICUREZZA 100%)
+    // SISTEMA RECUPERO PASSWORD TRAMITE BREVO + FIREBASE ADMIN
     document.getElementById('btn-send-otp').addEventListener('click', async function() {
         const emailVal = otpEmailInput.value.trim().toLowerCase();
         const errorDiv = document.getElementById('otp-error-msg');
@@ -780,15 +650,14 @@ document.addEventListener("DOMContentLoaded", function() {
             const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
             if(snapshot.empty) throw new Error("Email non trovata a sistema.");
 
-            // Usa la funzione nativa di Firebase per inviare il link sicuro
-            await window.auth.sendPasswordResetEmail(emailVal);
+            // CHIAMA IL BACKEND SERVER (Genera link + invia tramite Brevo)
+            const inviaResetBrevo = firebase.functions().httpsCallable('inviaResetBrevo');
+            await inviaResetBrevo({ email: emailVal });
 
-            // Nascondiamo il Form Email e saltiamo direttamente alla schermata finale (Step 3)
+            // Animazione di successo verso l'ultimo Step (La schermata Verde)
             otpStep1.style.opacity = '0';
             setTimeout(() => {
                 otpStep1.style.display = 'none'; 
-                otpStep2.style.display = 'none'; // Salta completamente l'OTP falso a 6 cifre
-                
                 otpStep3.style.display = 'block';
                 setTimeout(() => { otpStep3.style.opacity = '1'; }, 50);
             }, 400);
@@ -805,14 +674,10 @@ document.addEventListener("DOMContentLoaded", function() {
             this.disabled = false;
         }
     });
-    
-    document.getElementById('btn-cie-avviso').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.add('active'); });
-    document.getElementById('close-avviso-modal').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
-    document.getElementById('btn-close-avviso-full').addEventListener('click', () => { document.getElementById('avviso-cie-modal').classList.remove('active'); });
 
+    // Event listeners extra di chiusura
     document.getElementById('close-disclaimer-modal').addEventListener('click', () => { 
         document.getElementById('disclaimer-ministero-modal').classList.remove('active'); 
-        
         const dash = document.getElementById('app-dashboard');
         if(dash) { dash.style.display = 'block'; dash.style.opacity = '1'; }
         document.body.style.overflow = '';
