@@ -650,8 +650,9 @@ document.addEventListener("DOMContentLoaded", function() {
             const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
             if(snapshot.empty) throw new Error("Email non trovata a sistema.");
 
-            // Sistema nativo di Firebase: sicuro e funzionante senza backend
-            await window.auth.sendPasswordResetEmail(emailVal);
+            // CHIAMA IL BACKEND SERVER (Genera link + invia tramite Brevo)
+            const inviaResetBrevo = firebase.functions().httpsCallable('inviaResetBrevo');
+            await inviaResetBrevo({ email: emailVal });
 
 
             // Animazione di successo verso l'ultimo Step (La schermata Verde)
