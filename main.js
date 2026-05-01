@@ -508,18 +508,46 @@ document.addEventListener("DOMContentLoaded", function() {
         if (isVpn) { googleErrorMsg.innerText = "Disattivare la VPN per continuare."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
         if(typeof window.auth === 'undefined') { googleErrorMsg.innerText = "Servizio di autenticazione offline."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
         
-        window.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((result) => {
-            const email = result.user.email.toLowerCase();
-            if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
-                inviaEmail(email, 2, { 
-                    nome_utente: result.user.displayName || "Utente", 
-                    email_utente: email, 
-                    orario_accesso: new Date().toLocaleString('it-IT') 
-                });
-                entraNelPortale(result.user.displayName || "Utente"); googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; 
-            } else { window.auth.signOut().then(() => { googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; }); }
-        }).catch(() => { googleErrorMsg.innerText = "Accesso annullato. Riprova."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; });
-    });
+        // Prepariamo il provider di Google
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+// OPZIONALE: Se la maggior parte degli utenti usa questo dominio, 
+// forziamo la schermata di Google a filtrare (graficamente) per questo dominio.
+googleProvider.setCustomParameters({
+    hd: 'studenti.itisavogadro.it'
+});
+
+window.auth.signInWithPopup(googleProvider).then((result) => {
+    const email = result.user.email.toLowerCase();
+    
+    // Il controllo JS rimane come strato visivo (per mostrare l'errore rosso a schermo)
+    if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
+        inviaEmail(email, 2, { 
+            nome_utente: result.user.displayName || "Utente", 
+            email_utente: email, 
+            orario_accesso: new Date().toLocaleString('it-IT') 
+        });
+        entraNelPortale(result.user.displayName || "Utente"); 
+        googleBtn.innerHTML = originalGoogleBtn; 
+        googleBtn.disabled = false; 
+    } else { 
+        // L'utente ha usato un'email non valida. Anche se avesse manomesso questo step, 
+        // le regole Firestore lo bloccherebbero al 100%.
+        window.auth.signOut().then(() => { 
+            // Mostriamo l'errore a schermo per avvisare l'utente del suo sbaglio
+            googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; 
+            googleErrorMsg.style.display = 'block'; 
+            googleBtn.innerHTML = originalGoogleBtn; 
+            googleBtn.disabled = false; 
+        }); 
+    }
+}).catch((err) => { 
+    console.error(err);
+    googleErrorMsg.innerText = "Accesso annullato. Riprova."; 
+    googleErrorMsg.style.display = 'block'; 
+    googleBtn.innerHTML = originalGoogleBtn; 
+    googleBtn.disabled = false; 
+});
 
     document.getElementById('btn-harzafi-id').addEventListener('click', () => { hidModal.classList.add('active'); if (document.activeElement) document.activeElement.blur(); });
     document.getElementById('hid-close-btn').addEventListener('click', () => { hidModal.classList.remove('active'); });
