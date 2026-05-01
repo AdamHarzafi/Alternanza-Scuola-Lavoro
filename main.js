@@ -650,10 +650,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
             if(snapshot.empty) throw new Error("Email non trovata a sistema.");
 
-            // CHIAMA IL BACKEND SERVER (Genera link + invia tramite Brevo)
-            const inviaResetBrevo = firebase.functions().httpsCallable('inviaResetBrevo');
-            await inviaResetBrevo({ email: emailVal });
-
+            await window.auth.sendPasswordResetEmail(emailVal);
 
             // Animazione di successo verso l'ultimo Step (La schermata Verde)
             otpStep1.style.opacity = '0';
