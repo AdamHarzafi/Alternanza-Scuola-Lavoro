@@ -509,45 +509,45 @@ document.addEventListener("DOMContentLoaded", function() {
         if(typeof window.auth === 'undefined') { googleErrorMsg.innerText = "Servizio di autenticazione offline."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
         
         // Prepariamo il provider di Google
-const googleProvider = new firebase.auth.GoogleAuthProvider();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-// OPZIONALE: Se la maggior parte degli utenti usa questo dominio, 
-// forziamo la schermata di Google a filtrare (graficamente) per questo dominio.
-googleProvider.setCustomParameters({
-    hd: 'studenti.itisavogadro.it'
-});
-
-window.auth.signInWithPopup(googleProvider).then((result) => {
-    const email = result.user.email.toLowerCase();
-    
-    // Il controllo JS rimane come strato visivo (per mostrare l'errore rosso a schermo)
-    if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
-        inviaEmail(email, 2, { 
-            nome_utente: result.user.displayName || "Utente", 
-            email_utente: email, 
-            orario_accesso: new Date().toLocaleString('it-IT') 
+        // OPZIONALE: Se la maggior parte degli utenti usa questo dominio, 
+        // forziamo la schermata di Google a filtrare (graficamente) per questo dominio.
+        googleProvider.setCustomParameters({
+            hd: 'studenti.itisavogadro.it'
         });
-        entraNelPortale(result.user.displayName || "Utente"); 
-        googleBtn.innerHTML = originalGoogleBtn; 
-        googleBtn.disabled = false; 
-    } else { 
-        // L'utente ha usato un'email non valida. Anche se avesse manomesso questo step, 
-        // le regole Firestore lo bloccherebbero al 100%.
-        window.auth.signOut().then(() => { 
-            // Mostriamo l'errore a schermo per avvisare l'utente del suo sbaglio
-            googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; 
+
+        window.auth.signInWithPopup(googleProvider).then((result) => {
+            const email = result.user.email.toLowerCase();
+            
+            // Il controllo JS rimane come strato visivo
+            if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
+                inviaEmail(email, 2, { 
+                    nome_utente: result.user.displayName || "Utente", 
+                    email_utente: email, 
+                    orario_accesso: new Date().toLocaleString('it-IT') 
+                });
+                entraNelPortale(result.user.displayName || "Utente"); 
+                googleBtn.innerHTML = originalGoogleBtn; 
+                googleBtn.disabled = false; 
+            } else { 
+                // L'utente ha usato un'email non valida. Le regole Firestore lo bloccherebbero comunque al 100%.
+                window.auth.signOut().then(() => { 
+                    // Mostriamo l'errore a schermo per avvisare l'utente
+                    googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; 
+                    googleErrorMsg.style.display = 'block'; 
+                    googleBtn.innerHTML = originalGoogleBtn; 
+                    googleBtn.disabled = false; 
+                }); 
+            }
+        }).catch((err) => { 
+            console.error(err);
+            googleErrorMsg.innerText = "Accesso annullato. Riprova."; 
             googleErrorMsg.style.display = 'block'; 
             googleBtn.innerHTML = originalGoogleBtn; 
             googleBtn.disabled = false; 
-        }); 
-    }
-}).catch((err) => { 
-    console.error(err);
-    googleErrorMsg.innerText = "Accesso annullato. Riprova."; 
-    googleErrorMsg.style.display = 'block'; 
-    googleBtn.innerHTML = originalGoogleBtn; 
-    googleBtn.disabled = false; 
-});
+        });
+    });
 
     document.getElementById('btn-harzafi-id').addEventListener('click', () => { hidModal.classList.add('active'); if (document.activeElement) document.activeElement.blur(); });
     document.getElementById('hid-close-btn').addEventListener('click', () => { hidModal.classList.remove('active'); });
@@ -688,8 +688,6 @@ window.auth.signInWithPopup(googleProvider).then((result) => {
     }
 
     let targetCollectionOTP = 'studenti';
-    let activeOTP = null;
-    let activeOTPEmail = null;
 
     const selectionView = document.getElementById('student-selection-view');
     const sharedOtpView = document.getElementById('shared-otp-view');
@@ -761,106 +759,50 @@ window.auth.signInWithPopup(googleProvider).then((result) => {
         startCIEScanner();
     });
 
+    // SISTEMA RECUPERO PASSWORD NATIVO FIREBASE (SICUREZZA 100%)
     document.getElementById('btn-send-otp').addEventListener('click', async function() {
         const emailVal = otpEmailInput.value.trim().toLowerCase();
         const errorDiv = document.getElementById('otp-error-msg');
         const originalBtnText = this.innerHTML;
         
-        if(!emailVal || !emailVal.includes('@')) { errorDiv.innerText = "Inserisci un'email valida."; errorDiv.style.display = 'block'; return; }
+        if(!emailVal || !emailVal.includes('@')) { 
+            errorDiv.innerText = "Inserisci un'email valida."; 
+            errorDiv.style.display = 'block'; 
+            return; 
+        }
         
         errorDiv.style.display = 'none';
-        this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Verifica in corso...</span></div>';
+        this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Invio in corso...</span></div>';
         this.disabled = true;
 
         try {
+            // Controlliamo se l'utente esiste nel database
             const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
             if(snapshot.empty) throw new Error("Email non trovata a sistema.");
 
-            activeOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            activeOTPEmail = emailVal;
+            // Usa la funzione nativa di Firebase per inviare il link sicuro
+            await window.auth.sendPasswordResetEmail(emailVal);
 
-            await inviaEmail(activeOTPEmail, 3, {
-                otp_code: activeOTP, 
-                orario_richiesta: new Date().toLocaleString('it-IT')
-            });
-
-            document.getElementById('display-target-email').innerText = activeOTPEmail;
+            // Nascondiamo il Form Email e saltiamo direttamente alla schermata finale (Step 3)
             otpStep1.style.opacity = '0';
             setTimeout(() => {
-                otpStep1.style.display = 'none'; otpStep2.style.display = 'block';
-                setTimeout(() => { otpStep2.style.opacity = '1'; otpInputs[0].focus(); }, 50);
+                otpStep1.style.display = 'none'; 
+                otpStep2.style.display = 'none'; // Salta completamente l'OTP falso a 6 cifre
+                
+                otpStep3.style.display = 'block';
+                setTimeout(() => { otpStep3.style.opacity = '1'; }, 50);
             }, 400);
 
         } catch (err) {
             console.error(err);
-            errorDiv.innerText = err.message || "Errore di connessione.";
-            errorDiv.style.display = 'block'; errorDiv.style.animation = 'none'; void errorDiv.offsetWidth; errorDiv.style.animation = 'shake 0.4s';
+            errorDiv.innerText = err.message || "Errore di connessione. Riprova.";
+            errorDiv.style.display = 'block'; 
+            errorDiv.style.animation = 'none'; 
+            void errorDiv.offsetWidth; 
+            errorDiv.style.animation = 'shake 0.4s';
         } finally {
-            this.innerHTML = originalBtnText; this.disabled = false;
-        }
-    });
-
-    otpInputs.forEach((input, index) => {
-        input.addEventListener('focus', (e) => e.target.select());
-        input.addEventListener('input', (e) => {
-            input.value = input.value.replace(/[^0-9]/g, '');
-            if (input.value !== '' && index < otpInputs.length - 1) otpInputs[index + 1].focus();
-        });
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && input.value === '' && index > 0) otpInputs[index - 1].focus();
-        });
-        input.addEventListener('paste', (e) => {
-            e.preventDefault();
-            const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').substring(0, 6);
-            for (let i = 0; i < pastedData.length; i++) otpInputs[i].value = pastedData[i];
-            if (pastedData.length > 0) {
-                const focusIndex = Math.min(5, pastedData.length);
-                if(focusIndex < 6) otpInputs[focusIndex].focus(); else otpInputs[5].blur();
-            }
-        });
-    });
-
-    document.getElementById('btn-back-to-email').addEventListener('click', () => {
-        otpStep2.style.opacity = '0';
-        setTimeout(() => {
-            otpStep2.style.display = 'none'; otpStep1.style.display = 'block';
-            setTimeout(() => { otpStep1.style.opacity = '1'; }, 50);
-        }, 400);
-    });
-
-    document.getElementById('btn-verify-otp').addEventListener('click', async function() {
-        const enteredOTP = Array.from(otpInputs).map(i => i.value).join('');
-        const errorDiv = document.getElementById('otp-verify-error');
-        const originalBtnText = this.innerHTML;
-
-        if (enteredOTP.length !== 6) { errorDiv.innerText = "Inserisci tutte le 6 cifre."; errorDiv.style.display = 'block'; return; }
-
-        this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Conferma...</span></div>';
-        this.disabled = true;
-
-        if (enteredOTP === activeOTP) {
-            errorDiv.style.display = 'none';
-            otpInputs.forEach(i => i.classList.add('success'));
-            
-            try {
-                await window.auth.sendPasswordResetEmail(activeOTPEmail);
-                setTimeout(() => {
-                    otpStep2.style.opacity = '0';
-                    setTimeout(() => {
-                        otpStep2.style.display = 'none'; otpStep3.style.display = 'block';
-                        setTimeout(() => { otpStep3.style.opacity = '1'; }, 50);
-                    }, 400);
-                }, 800);
-            } catch (err) {
-                errorDiv.innerText = "Errore durante l'invio del link. Riprova."; errorDiv.style.display = 'block';
-                this.innerHTML = originalBtnText; this.disabled = false;
-                otpInputs.forEach(i => { i.classList.remove('success'); i.classList.add('error'); });
-            }
-        } else {
-            errorDiv.innerText = "Codice OTP errato. Riprova."; errorDiv.style.display = 'block';
-            this.innerHTML = originalBtnText; this.disabled = false;
-            otpInputs.forEach(i => i.classList.add('error'));
-            setTimeout(() => { otpInputs.forEach(i => i.classList.remove('error')); }, 500);
+            this.innerHTML = originalBtnText; 
+            this.disabled = false;
         }
     });
     
