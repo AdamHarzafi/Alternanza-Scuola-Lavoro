@@ -544,9 +544,19 @@ document.addEventListener("DOMContentLoaded", function() {
         errorMsg.style.display = 'none';
 
         if (typeof window.db !== 'undefined') {
-            window.db.collection("studenti").where("HID", "==", inputHidVal).get().then((snap) => {
+            window.db.collection("studenti").where("HID", "==", inputHidVal).get().then(async (snap) => {
                 if (!snap.empty) {
                     const userData = snap.docs[0].data();
+
+                    // Avviamo una sessione anonima su Firebase per ottenere i permessi di lettura
+                    if (typeof window.auth !== 'undefined') {
+                        try {
+                            await window.auth.signInAnonymously();
+                        } catch (err) {
+                            console.warn("Autenticazione anonima fallita, potrebbero mancare i permessi:", err);
+                        }
+                    }
+
                     hidModal.classList.remove('active'); 
                     submitBtn.innerHTML = originalBtnText;
                     submitBtn.disabled = false;
