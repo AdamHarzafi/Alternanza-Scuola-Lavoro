@@ -65,8 +65,9 @@ function waitForFirebase(callback) {
         try {
             const appCheck = firebase.appCheck();
             appCheck.activate(
-                new firebase.appCheck.ReCaptchaEnterpriseProvider('6LejpcksAAAAAEQEVZ602t2PL78MzHE73T4a608-'),
-                true
+    new firebase.appCheck.ReCaptchaV3Provider('6LejpcksAAAAAEQEVZ602t2PL78MzHE73T4a608-'),
+    true
+);
             );
             console.log("App Check inizializzato correttamente.");
         } catch (error) {
