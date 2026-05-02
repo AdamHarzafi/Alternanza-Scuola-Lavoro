@@ -62,18 +62,6 @@ function waitForFirebase(callback) {
             self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
         }
 
-        try {
-            const appCheck = firebase.appCheck();
-            appCheck.activate(
-    new firebase.appCheck.ReCaptchaV3Provider('6LejpcksAAAAAEQEVZ602t2PL78MzHE73T4a608-'),
-    true
-);
-            );
-            console.log("App Check inizializzato correttamente.");
-        } catch (error) {
-            console.error("Attenzione: App Check non caricato.", error);
-        }
-
         window.auth = firebase.auth();
         window.db = firebase.firestore();
         callback();
