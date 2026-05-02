@@ -33,7 +33,11 @@ window.globalTurnstileToken = "";
 window.isWaitingForToken = false;
 window.onTurnstileSuccess = function(token) {
     window.globalTurnstileToken = token;
-    if (window.isWaitingForToken) { window.isWaitingForToken = false; if(typeof window.eseguiAccessoServer === 'function') window.eseguiAccessoServer(); }
+    if (window.isWaitingForToken) {
+        window.isWaitingForToken = false;
+        window.turnstileCallbackFired = true;
+        if (typeof window.eseguiAccessoServer === 'function') window.eseguiAccessoServer();
+    }
 };
 window.onTurnstileExpired = function() { window.globalTurnstileToken = ""; };
 window.onTurnstileError = function() { 
@@ -41,8 +45,8 @@ window.onTurnstileError = function() {
     if (window.isWaitingForToken) { window.isWaitingForToken = false; if(typeof window.eseguiAccessoServer === 'function') window.eseguiAccessoServer(); }
 };
 
-window.addEventListener('load', () => {
-    if(typeof firebase !== 'undefined') {
+function waitForFirebase(callback) {
+    if (typeof firebase !== 'undefined') {
         const firebaseConfig = {
             apiKey: "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
             authDomain: "harzafi---fsl.firebaseapp.com",
@@ -51,7 +55,7 @@ window.addEventListener('load', () => {
             messagingSenderId: "743942918497",
             appId: "1:743942918497:web:6d6e44ba348760ce137520"
         };
-        
+
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
         if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
@@ -66,14 +70,31 @@ window.addEventListener('load', () => {
             );
             console.log("App Check inizializzato correttamente.");
         } catch (error) {
-            console.error("Attenzione: App Check non caricato (normale se manca lo script o sei in locale).", error);
+            console.error("Attenzione: App Check non caricato.", error);
         }
-        
+
         window.auth = firebase.auth();
         window.db = firebase.firestore();
+        callback();
+    } else {
+        let attempts = 0;
+        const interval = setInterval(() => {
+            attempts++;
+            if (typeof firebase !== 'undefined') {
+                clearInterval(interval);
+                waitForFirebase(callback);
+            } else if (attempts > 50) {
+                clearInterval(interval);
+                console.error("Firebase non disponibile dopo 5 secondi.");
+            }
+        }, 100);
     }
-    
-    if(typeof populateUserDropdown === 'function') populateUserDropdown('studente');
+}
+
+window.addEventListener('load', () => {
+    waitForFirebase(() => {
+        if (typeof populateUserDropdown === 'function') populateUserDropdown('studente');
+    });
 });
 
 const scrollBtn = document.getElementById('scrollToTop');
@@ -107,16 +128,17 @@ function applyTracking(isAnalyticsAllowed) {
             const counterRef = window.db.collection('statistiche').doc('visualizzazioni');
             
             if (!sessionStorage.getItem('view_counted')) {
-                counterRef.update({
-                    count: firebase.firestore.FieldValue.increment(1)
-                }).then(() => {
-                    sessionStorage.setItem('view_counted', 'true');
-                    return counterRef.get();
-                }).then((doc) => {
-                    if(doc.exists) trackerText.innerText = doc.data().count;
-                }).catch(err => {
-                    trackerText.innerText = "Non disponibile";
-                });
+    sessionStorage.setItem('view_counted', 'true');
+    counterRef.update({
+        count: firebase.firestore.FieldValue.increment(1)
+    }).then(() => {
+        return counterRef.get();
+    }).then((doc) => {
+        if(doc.exists) trackerText.innerText = doc.data().count;
+    }).catch(err => {
+        sessionStorage.removeItem('view_counted');
+        trackerText.innerText = "Non disponibile";
+    });
             } else {
                 counterRef.get().then((doc) => {
                     if(doc.exists) trackerText.innerText = doc.data().count;
@@ -397,11 +419,18 @@ document.addEventListener("DOMContentLoaded", function() {
         const isVpn = await checkVPN();
         if (isVpn) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; return; }
         
-        if (window.globalTurnstileToken) { window.eseguiAccessoServer(); } 
-        else { 
-            window.isWaitingForToken = true; 
+       if (window.globalTurnstileToken) {
+            window.eseguiAccessoServer();
+        } else {
+            window.isWaitingForToken = true;
+            window.turnstileCallbackFired = false;
             if (typeof turnstile !== 'undefined') { try { turnstile.execute(); } catch(err) {} }
-            setTimeout(() => { if (window.isWaitingForToken) { window.isWaitingForToken = false; window.eseguiAccessoServer(); } }, 2500);
+            setTimeout(() => {
+                if (window.isWaitingForToken && !window.turnstileCallbackFired) {
+                    window.isWaitingForToken = false;
+                    window.eseguiAccessoServer();
+                }
+            }, 2500);
         }
     });
 
@@ -557,22 +586,38 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 500);
     }
 
-    document.getElementById('btn-logout-dash').addEventListener('click', () => { 
-        if(typeof window.auth !== 'undefined') window.auth.signOut();
-        window.globalTurnstileToken = "";
-        if(typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
+    document.getElementById('btn-logout-dash').addEventListener('click', async () => { 
+    const dash = document.getElementById('app-dashboard');
+    const landing = document.getElementById('landing-view');
 
-        const dash = document.getElementById('app-dashboard'); const landing = document.getElementById('landing-view'); 
-        dash.style.opacity = '0'; window.scrollTo({ top: 0, behavior: 'smooth' }); 
-        
-        passInput.value = ''; hiddenUsernameInput.value = ''; resetDropdownDisplay('username-display', 'Seleziona Utente');
-        errorMsg.style.display = 'none'; document.querySelectorAll('.stat-segment').forEach(el=> el.style.transform='scaleX(0)');
-        document.getElementById('timeline-container').innerHTML = '';
-        submitBtn.innerText = "ENTRA"; submitBtn.disabled = false;
+    dash.style.opacity = '0';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        setTimeout(() => { dash.style.display = 'none'; landing.style.display = 'block'; void landing.offsetWidth; landing.style.opacity = '1'; }, 500); 
-    });
+    try {
+        if (typeof window.auth !== 'undefined') await window.auth.signOut();
+    } catch(err) {
+        console.error("Errore durante il logout:", err);
+    }
 
+    window.globalTurnstileToken = "";
+    if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
+
+    passInput.value = '';
+    hiddenUsernameInput.value = '';
+    resetDropdownDisplay('username-display', 'Seleziona Utente');
+    errorMsg.style.display = 'none';
+    document.querySelectorAll('.stat-segment').forEach(el => el.style.transform = 'scaleX(0)');
+    document.getElementById('timeline-container').innerHTML = '';
+    submitBtn.innerText = "ENTRA";
+    submitBtn.disabled = false;
+
+    setTimeout(() => {
+        dash.style.display = 'none';
+        landing.style.display = 'block';
+        void landing.offsetWidth;
+        landing.style.opacity = '1';
+    }, 500);
+});
     function scaricaECostruisciCronologia() {
         const container = document.getElementById('timeline-container');
         container.innerHTML = '<div style="text-align:center; padding:20px; font-weight:bold; color:var(--primary);">Sincronizzazione dati in corso...</div>';
