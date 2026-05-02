@@ -54,22 +54,21 @@ function initLegal() {
                     }]
                 };
 
-                fetch(commitUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                })
-                .then(res => {
-                    if (!res.ok) throw new Error("Write blocked or failed");
-                    return res.json();
-                })
-                .then(data => {
-                    sessionStorage.setItem('view_counted', 'true');
-                    try {
-                        trackerText.innerText = data.writeResults[0].transformResults[0].integerValue;
-                    } catch(e) { fetchCountOnly(); }
-                })
-                .catch(() => { fetchCountOnly(); });
+                sessionStorage.setItem('view_counted', 'true');
+fetch(commitUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)})
+.then(res => {
+    if (!res.ok) throw new Error("Write blocked or failed");
+    return res.json();
+})
+.then(data => {
+    try {
+        trackerText.innerText = data.writeResults[0].transformResults[0].integerValue;
+    } catch(e) { fetchCountOnly(); }
+})
+.catch(() => {
+    sessionStorage.removeItem('view_counted');
+    fetchCountOnly();
+});
             } else {
                 fetchCountOnly();
             }
