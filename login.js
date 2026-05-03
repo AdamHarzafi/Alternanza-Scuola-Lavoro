@@ -335,13 +335,18 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.setCustomParameters({ hd: 'studenti.itisavogadro.it' });
+const provider = new firebase.auth.GoogleAuthProvider();
+        
+        // Seleziona il dominio dinamicamente
+        const targetDomain = selectedRole === 'studente' ? 'studenti.itisavogadro.it' : 'itisavogadro.it';
+        provider.setCustomParameters({ hd: targetDomain });
 
         window.auth.signInWithPopup(provider)
             .then(result => {
                 const email = result.user.email.toLowerCase();
-                if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) {
+                
+                // Controlla dinamicamente che finisca con il dominio corretto in base al ruolo
+                if (email.endsWith("@" + targetDomain)) {
                     inviaEmail(email, 2, {
                         nome_utente:    result.user.displayName || "Utente",
                         email_utente:   email,
@@ -352,7 +357,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     entraNelPortale(result.user.displayName || "Utente");
                 } else {
                     window.auth.signOut().then(() => {
-                        googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica.";
+                        googleErrorMsg.innerText = `Accesso negato. Usa l'email corretta per il tuo ruolo (@${targetDomain}).`;
                         googleErrorMsg.style.display = 'block';
                         googleBtn.innerHTML = originalHTML;
                         googleBtn.disabled  = false;
