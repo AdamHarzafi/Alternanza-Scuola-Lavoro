@@ -582,55 +582,83 @@
         const container = document.getElementById('timeline-container');
         const countEl   = document.getElementById('timeline-count');
 
-        db.collection('attivita_pcto').orderBy('ordine', 'desc').get()
-            .then(snapshot => {
-                container.innerHTML = '';
-                if (snapshot.empty) {
-                    container.innerHTML = '<p style="color:var(--text-light);text-align:center;padding:30px 0;font-weight:700;">Nessuna attività registrata.</p>';
-                    countEl.textContent = '0 attività';
-                    return;
-                }
+        function caricaTimeline() {
+            db.collection('attivita_pcto').orderBy('ordine', 'desc').get()
+                .then(snapshot => {
+                    container.innerHTML = '';
+                    if (snapshot.empty) {
+                        container.innerHTML = '<p style="color:var(--text-light);text-align:center;padding:30px 0;font-weight:700;">Nessuna attività registrata.</p>';
+                        countEl.textContent = '0 attività';
+                        return;
+                    }
 
-                countEl.textContent = snapshot.size + ' attività registrate';
+                    countEl.textContent = snapshot.size + ' attività registrate';
 
-                snapshot.forEach((doc, idx) => {
-                    const a = doc.data();
-                    const isCert  = !!a.certificato;
-                    const certCls = isCert ? 'ac-cert' : '';
-                    const dateCls = isCert ? 'special-badge-date' : '';
-                    const bgInfo  = isCert ? 'background:#ecfdf5; border-color:#a7f3d0;' : '';
+                    snapshot.forEach((doc, idx) => {
+                        const a = doc.data();
+                        const isCert  = !!a.certificato;
+                        const certCls = isCert ? 'ac-cert' : '';
+                        const dateCls = isCert ? 'special-badge-date' : '';
+                        const bgInfo  = isCert ? 'background:#ecfdf5; border-color:#a7f3d0;' : '';
 
-                    const item = document.createElement('div');
-                    item.className = `timeline-item ${certCls}`;
-                    item.setAttribute('aria-expanded', 'false');
-                    item.style.animationDelay = (idx * 0.08) + 's';
-                    item.innerHTML = `
-                        <div class="tl-header">
-                            <div class="tl-content">
-                                <span class="tl-date ${dateCls}">${a.data || ''}</span>
-                                <h3>${a.titolo || 'Attività FSL'}</h3>
-                                <p class="tl-meta">${a.meta || ''}</p>
+                        const item = document.createElement('div');
+                        item.className = `timeline-item ${certCls}`;
+                        item.setAttribute('aria-expanded', 'false');
+                        item.style.animationDelay = (idx * 0.08) + 's';
+                        item.innerHTML = `
+                            <div class="tl-header">
+                                <div class="tl-content">
+                                    <span class="tl-date ${dateCls}">${a.data || ''}</span>
+                                    <h3>${a.titolo || 'Attività FSL'}</h3>
+                                    <p class="tl-meta">${a.meta || ''}</p>
+                                </div>
+                                <div class="tl-hours">${a.ore || '—'}</div>
                             </div>
-                            <div class="tl-hours">${a.ore || '—'}</div>
-                        </div>
-                        <div class="tl-dropdown">
-                            <div class="tl-dropdown-inner">
-                                <div class="tl-ext-info" style="${bgInfo}">${a.descrizione || 'Dettagli non disponibili.'}</div>
-                            </div>
-                        </div>`;
+                            <div class="tl-dropdown">
+                                <div class="tl-dropdown-inner">
+                                    <div class="tl-ext-info" style="${bgInfo}">${a.descrizione || 'Dettagli non disponibili.'}</div>
+                                </div>
+                            </div>`;
 
-                    item.addEventListener('click', function () {
-                        const open = this.getAttribute('aria-expanded') === 'true';
-                        this.setAttribute('aria-expanded', String(!open));
+                        item.addEventListener('click', function () {
+                            const open = this.getAttribute('aria-expanded') === 'true';
+                            this.setAttribute('aria-expanded', String(!open));
+                        });
+
+                        container.appendChild(item);
                     });
-
-                    container.appendChild(item);
+                })
+                .catch(err => {
+                    console.error('Firestore error:', err);
+                    container.innerHTML = '<p style="color:var(--danger);text-align:center;padding:30px 0;font-weight:700;">Errore durante il caricamento dei dati. Verifica la connessione.</p>';
+                    countEl.textContent = 'Errore';
                 });
-            })
-            .catch(() => {
-                container.innerHTML = '<p style="color:var(--danger);text-align:center;padding:30px 0;font-weight:700;">Errore durante il caricamento dei dati. Verifica la connessione.</p>';
-                countEl.textContent = 'Errore';
-            });
+        }
+
+        // Aspetta che Firebase Auth ripristini la sessione, poi carica i dati.
+        // Se dopo 4s non c'è utente autenticato, fa signIn anonimo come fallback.
+        let authResolved = false;
+        const authTimeout = setTimeout(async () => {
+            if (!authResolved) {
+                authResolved = true;
+                try { await auth.signInAnonymously(); } catch(e) {}
+                caricaTimeline();
+            }
+        }, 4000);
+
+        auth.onAuthStateChanged(user => {
+            if (authResolved) return;
+            authResolved = true;
+            clearTimeout(authTimeout);
+            if (user) {
+                caricaTimeline();
+            } else {
+                // Nessuna sessione attiva: prova signIn anonimo
+                auth.signInAnonymously()
+                    .then(() => caricaTimeline())
+                    .catch(() => caricaTimeline()); // tenta comunque (regole potrebbero permetterlo)
+            }
+        });
 
         // ── Disclaimer modal ──
         setTimeout(() => {
