@@ -82,10 +82,23 @@
         .back-link:hover { color: var(--primary); }
         .back-link:hover svg { transform: translateX(-3px); }
 
-        /* ── Responsivo mobile ── */
-        @media (max-width: 600px) {
-            #login-page-wrapper { padding: 30px 16px; align-items: flex-start; }
-            .login-card { padding: 32px 22px 28px; border-radius: 28px; }
+/* ── Responsivo mobile (esclusi tablet e PC) ── */
+        @media (max-width: 767px) {
+            #login-page-wrapper { 
+                padding: 0; /* Rimuove lo spazio esterno */
+                align-items: flex-start; 
+            }
+            .login-card { 
+                padding: 40px 24px 30px; 
+                border-radius: 0; /* Rimuove gli angoli arrotondati */
+                box-shadow: none; /* Rimuove i bordi sottili e l'ombra */
+                max-width: 100%; /* Fa occupare alla scheda tutta la larghezza */
+                min-height: 100vh; /* Fa occupare alla scheda tutta l'altezza */
+                min-height: 100dvh;
+            }
+            .login-bg-mesh {
+                display: none; /* Rimuove i pallini sfumati di sfondo su mobile per non creare stacchi */
+            }
         }
     </style>
 </head>
