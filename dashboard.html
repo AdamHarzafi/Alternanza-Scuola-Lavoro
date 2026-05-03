@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Dashboard — Registro FSL Harzafi</title>
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Harzafi FSL">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --primary-light: #e0f2fe;
+            --accent: #0ea5e9;
+            --bg-body: #f8fafc;
+            --surface: rgba(255, 255, 255, 0.75);
+            --surface-solid: #ffffff;
+            --text-dark: #0f172a;
+            --text-gray: #475569;
+            --text-light: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border-color: #e2e8f0;
+            --radius-md: 20px;
+            --radius-lg: 32px;
+            --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
+            --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+            --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+
+        :focus-visible { outline: 3px solid var(--primary) !important; outline-offset: 3px !important; border-radius: 8px; }
+        :focus:not(:focus-visible) { outline: none !important; }
+
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { background-color: var(--bg-body); color: var(--text-dark); min-height: 100vh; overflow-x: hidden; }
+
+        /* ── TOPBAR ── */
+        .dash-topbar {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: saturate(200%) blur(30px);
+            -webkit-backdrop-filter: saturate(200%) blur(30px);
+            border-bottom: 1px solid rgba(2,132,199,0.08);
+            padding: 14px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            animation: slideDown 0.5s var(--apple-ease) both;
+        }
+        @keyframes slideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+
+        .topbar-left { display: flex; align-items: center; gap: 18px; }
+        .topbar-logo { height: 38px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.06)); }
+        .topbar-divider { width: 1px; height: 30px; background: var(--border-color); }
+        .topbar-school { display: flex; flex-direction: column; }
+        .topbar-school strong { font-size: 0.95rem; font-weight: 900; color: var(--text-dark); line-height: 1.2; }
+        .topbar-school span { font-size: 0.78rem; font-weight: 700; color: var(--primary); letter-spacing: 0.3px; }
+
+        .topbar-right { display: flex; align-items: center; gap: 14px; }
+
+        .year-badge {
+            font-weight: 900;
+            background: var(--primary-light);
+            color: var(--primary-hover);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            letter-spacing: 0.3px;
+            cursor: default;
+            user-select: none;
+        }
+
+        .btn-logout {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s var(--apple-ease);
+        }
+        .btn-logout svg { width: 16px; fill: currentColor; }
+        .btn-logout:hover { background: #fca5a5; color: #991b1b; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(220,38,38,0.15); }
+        .btn-logout:active { transform: scale(0.96); }
+
+        /* ── LAYOUT ── */
+        .dash-layout {
+            max-width: 1400px;
+            margin: 36px auto 80px;
+            padding: 0 5%;
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* ── SIDEBAR ── */
+        .dash-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; }
+
+        .card {
+            background: var(--surface-solid);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(2,132,199,0.05);
+            border: 1px solid rgba(2,132,199,0.06);
+            animation: fadeUp 0.6s var(--apple-ease) both;
+        }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(24px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+
+        /* Welcome card */
+        .welcome-card { animation-delay: 0.05s; }
+        .welcome-label { font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 6px; }
+        .welcome-name { font-size: 1.9rem; font-weight: 900; color: var(--text-dark); letter-spacing: -1px; line-height: 1.1; margin-bottom: 4px; }
+        .welcome-class { font-size: 0.95rem; font-weight: 600; color: var(--text-gray); }
+        .welcome-class span { color: var(--primary); font-weight: 800; }
+
+        /* Hours card */
+        .hours-card { animation-delay: 0.12s; text-align: center; }
+        .hours-title { font-size: 0.78rem; font-weight: 900; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .cert-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--success); background: #ecfdf5; padding: 5px 12px;
+            border-radius: 20px; margin-bottom: 18px;
+        }
+        .cert-badge svg { width: 14px; fill: currentColor; }
+        .hours-value {
+            font-size: 4.2rem; font-weight: 900; color: var(--primary);
+            display: flex; justify-content: center; align-items: baseline;
+            gap: 8px; line-height: 1; margin-bottom: 28px;
+        }
+        .hours-value span { font-size: 1.2rem; font-weight: 800; color: var(--text-gray); }
+
+        .stat-bar-container {
+            width: 100%; height: 12px; border-radius: 10px;
+            display: flex; overflow: hidden;
+            background: #f1f5f9; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            margin-bottom: 22px;
+        }
+        .stat-segment {
+            height: 100%; transform-origin: left; transform: scaleX(0);
+            transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .stat-legend { display: flex; flex-direction: column; gap: 10px; }
+        .legend-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 5px 0; border-bottom: 1px solid #f8fafc;
+            font-size: 0.88rem; font-weight: 700; color: var(--text-gray);
+            transition: transform 0.3s var(--apple-ease), color 0.3s;
+        }
+        .legend-item:hover { transform: translateX(4px); color: var(--text-dark); }
+        .legend-item-left { display: flex; align-items: center; gap: 10px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0; }
+        .legend-value { font-weight: 900; color: var(--text-dark); }
+
+        /* ID card */
+        .id-card { animation-delay: 0.2s; }
+        .id-card-label { font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 14px; }
+        .id-display {
+            background: linear-gradient(135deg, var(--text-dark), #1e3a5f);
+            border-radius: 20px; padding: 20px 22px;
+            display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 10px 25px rgba(2,132,199,0.15);
+        }
+        .id-display img { height: 32px; filter: brightness(0) invert(1); }
+        .id-display-text { flex: 1; }
+        .id-display-text strong { color: white; font-size: 0.95rem; font-weight: 900; display: block; line-height: 1.2; }
+        .id-display-text small { color: rgba(255,255,255,0.55); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3px; }
+        .id-pill {
+            background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8);
+            border-radius: 10px; padding: 4px 10px; font-size: 0.7rem; font-weight: 900;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .dash-main { display: flex; flex-direction: column; gap: 22px; }
+
+        .section-card { animation-delay: 0.08s; }
+        .section-card:nth-child(2) { animation-delay: 0.14s; }
+
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 28px;
+        }
+        .section-tag {
+            font-size: 1.3rem; font-weight: 900; color: var(--text-dark);
+            display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px;
+        }
+        .section-tag svg { width: 24px; fill: var(--primary); }
+        .section-meta { font-size: 0.82rem; font-weight: 700; color: var(--text-light); }
+
+        /* ── TIMELINE ── */
+        .timeline-wrapper {
+            position: relative; padding-left: 28px;
+            border-left: 3px solid var(--primary-light);
+        }
+        .timeline-item {
+            position: relative; margin-bottom: 40px; cursor: pointer;
+            transition: transform 0.3s var(--apple-ease);
+            opacity: 0; transform: translateX(-15px);
+            animation: tlFadeIn 0.5s var(--apple-ease) forwards;
+        }
+        @keyframes tlFadeIn { to { opacity:1; transform:translateX(0); } }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -38px; top: 6px;
+            width: 16px; height: 16px; background: #fff;
+            border: 3px solid var(--primary); border-radius: 50%;
+            transition: transform 0.4s var(--apple-ease), background 0.4s, box-shadow 0.4s;
+            z-index: 2;
+        }
+        .timeline-item.ac-cert::before { border-color: var(--success); }
+        .timeline-item:hover { transform: translateX(5px); }
+        .timeline-item:hover::before { background: var(--primary); transform: scale(1.3); box-shadow: 0 0 16px rgba(2,132,199,0.35); }
+        .timeline-item.ac-cert:hover::before { background: var(--success); box-shadow: 0 0 16px rgba(16,185,129,0.35); }
+
+        .tl-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+        .tl-content { flex: 1; }
+        .tl-date { color: var(--text-light); font-weight: 900; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 6px; display: inline-block; letter-spacing: 0.5px; }
+        .special-badge-date { background: var(--success); color: #fff; padding: 3px 10px; border-radius: 6px; box-shadow: 0 4px 10px rgba(16,185,129,0.2); }
+        .tl-content h3 { font-size: 1.2rem; font-weight: 900; color: var(--text-dark); line-height: 1.3; margin-bottom: 5px; transition: color 0.3s; }
+        .timeline-item:hover .tl-content h3 { color: var(--primary); }
+        .timeline-item.ac-cert .tl-content h3 { color: var(--success); }
+        .tl-meta { font-size: 0.92rem; color: var(--text-gray); font-weight: 600; }
+        .tl-hours {
+            background: var(--primary-light); color: var(--primary-hover);
+            padding: 8px 16px; border-radius: 12px; font-weight: 900;
+            font-size: 1.05rem; flex-shrink: 0; text-align: center;
+            box-shadow: 0 4px 10px rgba(2,132,199,0.08);
+        }
+        .ac-cert .tl-hours { background: #d1fae5; color: #065f46; box-shadow: 0 4px 10px rgba(16,185,129,0.08); }
+
+        .tl-dropdown {
+            display: grid; grid-template-rows: 0fr;
+            transition: grid-template-rows 0.4s var(--apple-ease), opacity 0.4s;
+            opacity: 0;
+        }
+        .timeline-item[aria-expanded="true"] .tl-dropdown { grid-template-rows: 1fr; margin-top: 14px; opacity: 1; }
+        .tl-dropdown-inner { overflow: hidden; }
+        .tl-ext-info {
+            font-size: 0.92rem; color: var(--text-gray); line-height: 1.65; font-weight: 500;
+            background: #f8fafc; padding: 16px 20px; border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* ── ATTESTATI CARD ── */
+        .attestati-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+        .attestato-card {
+            background: #f8fafc; border-radius: 18px; padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s var(--apple-ease);
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .attestato-card:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(2,132,199,0.1); border-color: rgba(2,132,199,0.2); background: white; }
+        .attestato-icon {
+            width: 44px; height: 44px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .attestato-icon svg { width: 22px; }
+        .attestato-title { font-size: 0.92rem; font-weight: 800; color: var(--text-dark); line-height: 1.3; }
+        .attestato-meta { font-size: 0.78rem; font-weight: 600; color: var(--text-light); }
+        .attestato-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 0.72rem; font-weight: 900; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 20px; width: fit-content;
+        }
+
+        /* ── LOADING ── */
+        .timeline-loading {
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* ── DISCLAIMER MODAL ── */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            z-index: 99999; display: flex; align-items: flex-end; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s var(--apple-ease);
+            padding: 0;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-sheet {
+            background: #ffffff; width: 100%; max-width: 620px;
+            border-radius: 36px 36px 0 0;
+            padding: 40px 40px calc(40px + env(safe-area-inset-bottom, 0px));
+            box-shadow: 0 -20px 60px rgba(0,0,0,0.15);
+            transform: translateY(100%);
+            transition: transform 0.5s var(--apple-smooth);
+            max-height: 85vh; overflow-y: auto;
+        }
+        .modal-overlay.active .modal-sheet { transform: translateY(0); }
+        .modal-sheet-handle { width: 40px; height: 4px; background: #e2e8f0; border-radius: 4px; margin: 0 auto 28px; }
+        .disclaimer-icon {
+            width: 64px; height: 64px; background: #fef3c7; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+        }
+        .disclaimer-icon svg { width: 32px; fill: #d97706; }
+        .disclaimer-title { text-align: center; font-size: 1.6rem; font-weight: 900; color: var(--text-dark); margin-bottom: 12px; letter-spacing: -0.5px; }
+        .disclaimer-body { font-size: 0.95rem; line-height: 1.7; color: var(--text-gray); font-weight: 500; text-align: center; margin-bottom: 28px; }
+        .disclaimer-body strong { color: var(--text-dark); }
+        .btn-disclaimer-close {
+            width: 100%; height: 52px; background: var(--primary); color: white;
+            border: none; border-radius: 30px; font-size: 1.05rem; font-weight: 800;
+            cursor: pointer; transition: all 0.3s var(--apple-ease);
+            box-shadow: 0 8px 24px rgba(2,132,199,0.25);
+        }
+        .btn-disclaimer-close:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(2,132,199,0.35); }
+
+        /* ── FOOTER ── */
+        .dash-footer {
+            background: var(--surface-solid);
+            border-top: 1px solid rgba(2,132,199,0.08);
+            border-radius: 48px 48px 0 0;
+            padding: 60px 5% 40px;
+            margin-top: 40px;
+        }
+        .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid var(--border-color); }
+        .footer-copyright { font-size: 0.85rem; color: var(--text-light); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 14px; }
+        .footer-links { display: flex; justify-content: center; align-items: center; gap: 15px; }
+        .footer-links a { color: var(--text-light); font-size: 0.82rem; font-weight: 700; text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--primary); }
+        .footer-links span { color: var(--border-color); font-size: 0.82rem; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1100px) {
+            .dash-layout { grid-template-columns: 320px 1fr; }
+        }
+        @media (max-width: 900px) {
+            .dash-layout { grid-template-columns: 1fr; }
+            .dash-sidebar { position: relative; top: 0; }
+        }
+        @media (max-width: 640px) {
+            .dash-layout { margin: 20px auto 60px; padding: 0 4%; gap: 16px; }
+            .card { padding: 22px 18px; border-radius: 24px; }
+            .welcome-name { font-size: 1.6rem; }
+            .hours-value { font-size: 3.5rem; }
+            .topbar-school strong { font-size: 0.85rem; }
+            .topbar-school span { font-size: 0.72rem; }
+            .year-badge { display: none; }
+            .tl-header { flex-direction: column; gap: 10px; }
+            .tl-hours { align-self: flex-start; padding: 6px 14px; font-size: 0.95rem; }
+            .attestati-grid { grid-template-columns: 1fr 1fr; }
+            .modal-sheet { padding: 30px 22px calc(35px + env(safe-area-inset-bottom, 0px)); }
+            .footer-links { flex-direction: column; gap: 12px; }
+            .footer-links span { display: none; }
+        }
+        @media (max-width: 400px) {
+            .attestati-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── TOPBAR ── -->
+    <header class="dash-topbar">
+        <div class="topbar-left">
+            <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi" class="topbar-logo">
+            <div class="topbar-divider"></div>
+            <div class="topbar-school">
+                <strong>ITIS Amedeo Avogadro</strong>
+                <span>Registro FSL — A.S. 2025/2026</span>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <div class="year-badge">A.S. 2025/2026</div>
+            <button class="btn-logout" id="btn-logout" aria-label="Esci dall'area riservata">
+                <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                Esci
+            </button>
+        </div>
+    </header>
+
+    <!-- ── LAYOUT PRINCIPALE ── -->
+    <div class="dash-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="dash-sidebar">
+
+            <!-- Benvenuto -->
+            <div class="card welcome-card">
+                <div class="welcome-label">Area Riservata</div>
+                <div class="welcome-name" id="greeting-name">Caricamento...</div>
+                <div class="welcome-class">Classe <span>3°A Informatica</span></div>
+            </div>
+
+            <!-- Ore FSL -->
+            <div class="card hours-card">
+                <div class="hours-title">Ore FSL Accumulate</div>
+                <div class="cert-badge">
+                    <svg viewBox="0 0 24 24"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>
+                    Sicurezza validata
+                </div>
+                <div class="hours-value">
+                    <span id="hour-counter">0</span>
+                    <span>ore</span>
+                </div>
+
+                <div class="stat-bar-container" role="progressbar" aria-label="Progresso ore FSL" aria-valuenow="113" aria-valuemin="0" aria-valuemax="150">
+                    <div class="stat-segment" style="width: 48%; background: linear-gradient(90deg, #0284c7, #38bdf8);" title="Ore scolastiche"></div>
+                    <div class="stat-segment" style="width: 28%; background: linear-gradient(90deg, #10b981, #34d399);" title="Ore extrascolastiche"></div>
+                    <div class="stat-segment" style="width: 10%; background: linear-gradient(90deg, #f59e0b, #fbbf24);" title="Sicurezza"></div>
+                    <div class="stat-segment" style="width: 14%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);" title="Certificazioni"></div>
+                </div>
+
+                <div class="stat-legend">
+                    <div class="legend-item">
+                        <div class="legend-item-left">
+                            <div class="legend-dot" style="background: linear-gradient(135deg, #0284c7, #38bdf8);"></div>
+                            Ore Scolastiche
+                        </div>
+                        <span class="legend-value">54.45</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-item-left">
+                            <div class="legend-dot" style="background: linear-gradient(135deg, #10b981, #34d399);"></div>
+                            Extrascolastiche
+                        </div>
+                        <span class="legend-value">32.30</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-item-left">
+                            <div class="legend-dot" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div>
+                            Sicurezza D.Lgs
+                        </div>
+                        <span class="legend-value">11.00</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-item-left">
+                            <div class="legend-dot" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);"></div>
+                            Certificazioni
+                        </div>
+                        <span class="legend-value">15.15</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Harzafi ID -->
+            <div class="card id-card">
+                <div class="id-card-label">Harzafi ID — Accesso Fisico</div>
+                <div class="id-display">
+                    <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
+                    <div class="id-display-text">
+                        <strong id="id-display-name">—</strong>
+                        <small>Identificativo Studente Verificato</small>
+                    </div>
+                    <div class="id-pill">ATTIVO</div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- CONTENUTO PRINCIPALE -->
+        <main class="dash-main">
+
+            <!-- Timeline -->
+            <div class="card section-card">
+                <div class="section-header">
+                    <div class="section-tag">
+                        <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.9L16.2,16.2Z"/></svg>
+                        Timeline Formativa
+                    </div>
+                    <div class="section-meta" id="timeline-count">Caricamento…</div>
+                </div>
+
+                <div class="timeline-wrapper" id="timeline-container">
+                    <!-- Skeleton loading -->
+                    <div class="timeline-loading">
+                        <div class="skeleton" style="height:80px;"></div>
+                        <div class="skeleton" style="height:70px;width:90%;"></div>
+                        <div class="skeleton" style="height:80px;"></div>
+                        <div class="skeleton" style="height:70px;width:85%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attestati -->
+            <div class="card section-card">
+                <div class="section-header">
+                    <div class="section-tag">
+                        <svg viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L7,16L8.41,14.58L10,16.17L15.59,10.58L17,12L10,19Z"/></svg>
+                        Attestati & Certificazioni
+                    </div>
+                </div>
+
+                <div class="attestati-grid">
+                    <div class="attestato-card">
+                        <div class="attestato-icon" style="background:#fef3c7;">
+                            <svg viewBox="0 0 24 24" style="fill:#d97706;"><path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M17.13,17C15.92,18.85 14.11,20.24 12,20.92C9.89,20.24 8.08,18.85 6.87,17C6.53,16.5 6.24,15.96 6,15.4C6,13.82 8.71,12.5 12,12.5C15.29,12.5 18,13.82 18,15.4C17.76,15.96 17.47,16.5 17.13,17Z"/></svg>
+                        </div>
+                        <div>
+                            <div class="attestato-title">Sicurezza sul Lavoro</div>
+                            <div class="attestato-meta">D.Lgs 81/08 — 2024</div>
+                        </div>
+                        <div class="attestato-badge" style="background:#fef3c7; color:#d97706;">
+                            <svg viewBox="0 0 24 24" style="width:12px;fill:currentColor;"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>
+                            Valido
+                        </div>
+                    </div>
+
+                    <div class="attestato-card">
+                        <div class="attestato-icon" style="background:#e0f2fe;">
+                            <svg viewBox="0 0 24 24" style="fill:#0284c7;"><path d="M8,3A2,2 0 0,0 6,5V9A2,2 0 0,0 4,11H3V13H4A2,2 0 0,0 6,15V19A2,2 0 0,0 8,21H10V19H8V14A2,2 0 0,0 6,12A2,2 0 0,0 8,10V5H10V3M16,3A2,2 0 0,1 18,5V9A2,2 0 0,1 20,11H21V13H20A2,2 0 0,1 18,15V19A2,2 0 0,1 16,21H14V19H16V14A2,2 0 0,1 18,12A2,2 0 0,1 16,10V5H14V3H16Z"/></svg>
+                        </div>
+                        <div>
+                            <div class="attestato-title">Cisco Networking</div>
+                            <div class="attestato-meta">NetAcad — 2025</div>
+                        </div>
+                        <div class="attestato-badge" style="background:#e0f2fe; color:#0284c7;">
+                            <svg viewBox="0 0 24 24" style="width:12px;fill:currentColor;"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>
+                            Valido
+                        </div>
+                    </div>
+
+                    <div class="attestato-card">
+                        <div class="attestato-icon" style="background:#f3e8ff;">
+                            <svg viewBox="0 0 24 24" style="fill:#7c3aed;"><path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z"/></svg>
+                        </div>
+                        <div>
+                            <div class="attestato-title">HackersGen</div>
+                            <div class="attestato-meta">Cybersecurity — 2025</div>
+                        </div>
+                        <div class="attestato-badge" style="background:#f3e8ff; color:#7c3aed;">
+                            <svg viewBox="0 0 24 24" style="width:12px;fill:currentColor;"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>
+                            Valido
+                        </div>
+                    </div>
+
+                    <div class="attestato-card">
+                        <div class="attestato-icon" style="background:#ecfdf5;">
+                            <svg viewBox="0 0 24 24" style="fill:#10b981;"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,6A4,4 0 0,0 8,10A4,4 0 0,0 12,14A4,4 0 0,0 16,10A4,4 0 0,0 12,6Z"/></svg>
+                        </div>
+                        <div>
+                            <div class="attestato-title">ITS Academy</div>
+                            <div class="attestato-meta">Orientamento — 2025</div>
+                        </div>
+                        <div class="attestato-badge" style="background:#ecfdf5; color:#10b981;">
+                            <svg viewBox="0 0 24 24" style="width:12px;fill:currentColor;"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>
+                            Valido
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="dash-footer">
+        <div class="footer-bottom">
+            <div class="footer-copyright">Registro FSL Harzafi — Portale Ufficiale © 2026 — Tutti i diritti riservati</div>
+            <div class="footer-links">
+                <a href="accessibilita.html">Dichiarazione di Accessibilità</a>
+                <span>|</span>
+                <a href="privacy.html">Privacy Policy</a>
+                <span>|</span>
+                <a href="termini.html">Termini di Servizio</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ── DISCLAIMER MODAL ── -->
+    <div id="disclaimer-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="disclaimer-title">
+        <div class="modal-sheet">
+            <div class="modal-sheet-handle"></div>
+            <div class="disclaimer-icon">
+                <svg viewBox="0 0 24 24"><path d="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16"/></svg>
+            </div>
+            <h2 class="disclaimer-title" id="disclaimer-title">Nota Informativa</h2>
+            <p class="disclaimer-body">
+                I dati visualizzati in questa dashboard hanno <strong>valore indicativo</strong> e sono aggiornati in tempo reale dal database scolastico. Per la <strong>validazione ufficiale</strong> delle ore FSL ai fini dell'Esame di Stato, fare riferimento esclusivamente alla documentazione rilasciata dalla Segreteria dell'ITIS Amedeo Avogadro.<br><br>
+                Eventuali discrepanze devono essere segnalate al docente tutor entro 7 giorni lavorativi.
+            </p>
+            <button class="btn-disclaimer-close" id="btn-close-disclaimer">Ho capito — Continua</button>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
+    <script>
+    (function () {
+        // ── Protezione accesso: solo utenti loggati ──
+        const nomeUtente = sessionStorage.getItem('harzafi_user');
+        if (!nomeUtente) {
+            window.location.replace('login.html');
+            return;
+        }
+
+        // ── Firebase init ──
+        const firebaseConfig = {
+            apiKey:            "AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc",
+            authDomain:        "harzafi---fsl.firebaseapp.com",
+            projectId:         "harzafi---fsl",
+            storageBucket:     "harzafi---fsl.firebasestorage.app",
+            messagingSenderId: "743942918497",
+            appId:             "1:743942918497:web:6d6e44ba348760ce137520"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db   = firebase.firestore();
+        const auth = firebase.auth();
+
+        // ── Imposta nome ──
+        const formattedName = nomeUtente
+            .split(' ')
+            .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+            .join(' ');
+
+        document.getElementById('greeting-name').textContent  = 'Ciao, ' + formattedName.split(' ')[0] + '.';
+        document.getElementById('id-display-name').textContent = formattedName;
+
+        // ── Animazione contatore ore ──
+        const finalHours = "113.30";
+        const hourEl = document.getElementById('hour-counter');
+        let start = 0;
+        const target = parseFloat(finalHours);
+        const duration = 1400;
+        const startTime = performance.now();
+        function animateCounter(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const ease = 1 - Math.pow(1 - progress, 3);
+            const current = (ease * target).toFixed(2);
+            hourEl.textContent = current.replace('.', ',');
+            if (progress < 1) requestAnimationFrame(animateCounter);
+            else hourEl.textContent = finalHours.replace('.', ',');
+        }
+
+        // ── Animazione barre stat (dopo 300ms) ──
+        setTimeout(() => {
+            requestAnimationFrame(animateCounter);
+            document.querySelectorAll('.stat-segment').forEach((el, i) => {
+                setTimeout(() => { el.style.transform = 'scaleX(1)'; }, i * 150);
+            });
+        }, 350);
+
+        // ── Carica timeline da Firestore ──
+        const container = document.getElementById('timeline-container');
+        const countEl   = document.getElementById('timeline-count');
+
+        db.collection('attivita_pcto').orderBy('ordine', 'desc').get()
+            .then(snapshot => {
+                container.innerHTML = '';
+                if (snapshot.empty) {
+                    container.innerHTML = '<p style="color:var(--text-light);text-align:center;padding:30px 0;font-weight:700;">Nessuna attività registrata.</p>';
+                    countEl.textContent = '0 attività';
+                    return;
+                }
+
+                countEl.textContent = snapshot.size + ' attività registrate';
+
+                snapshot.forEach((doc, idx) => {
+                    const a = doc.data();
+                    const isCert  = !!a.certificato;
+                    const certCls = isCert ? 'ac-cert' : '';
+                    const dateCls = isCert ? 'special-badge-date' : '';
+                    const bgInfo  = isCert ? 'background:#ecfdf5; border-color:#a7f3d0;' : '';
+
+                    const item = document.createElement('div');
+                    item.className = `timeline-item ${certCls}`;
+                    item.setAttribute('aria-expanded', 'false');
+                    item.style.animationDelay = (idx * 0.08) + 's';
+                    item.innerHTML = `
+                        <div class="tl-header">
+                            <div class="tl-content">
+                                <span class="tl-date ${dateCls}">${a.data || ''}</span>
+                                <h3>${a.titolo || 'Attività FSL'}</h3>
+                                <p class="tl-meta">${a.meta || ''}</p>
+                            </div>
+                            <div class="tl-hours">${a.ore || '—'}</div>
+                        </div>
+                        <div class="tl-dropdown">
+                            <div class="tl-dropdown-inner">
+                                <div class="tl-ext-info" style="${bgInfo}">${a.descrizione || 'Dettagli non disponibili.'}</div>
+                            </div>
+                        </div>`;
+
+                    item.addEventListener('click', function () {
+                        const open = this.getAttribute('aria-expanded') === 'true';
+                        this.setAttribute('aria-expanded', String(!open));
+                    });
+
+                    container.appendChild(item);
+                });
+            })
+            .catch(() => {
+                container.innerHTML = '<p style="color:var(--danger);text-align:center;padding:30px 0;font-weight:700;">Errore durante il caricamento dei dati. Verifica la connessione.</p>';
+                countEl.textContent = 'Errore';
+            });
+
+        // ── Disclaimer modal ──
+        setTimeout(() => {
+            document.getElementById('disclaimer-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }, 800);
+
+        document.getElementById('btn-close-disclaimer').addEventListener('click', () => {
+            document.getElementById('disclaimer-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // ── Logout ──
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            try { await auth.signOut(); } catch (e) { /* ignora */ }
+            sessionStorage.removeItem('harzafi_user');
+            window.location.replace('login.html');
+        });
+
+    })();
+    </script>
+
+</body>
+</html>
