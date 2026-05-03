@@ -30,7 +30,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 100px 20px 40px;
+            padding: 40px 20px;
             position: relative;
             background: #ffffff;
         }
@@ -84,28 +84,12 @@
 
         /* ── Responsivo mobile ── */
         @media (max-width: 600px) {
-            #login-page-wrapper { padding: 80px 16px 40px; align-items: flex-start; }
+            #login-page-wrapper { padding: 30px 16px; align-items: flex-start; }
             .login-card { padding: 32px 22px 28px; border-radius: 28px; }
         }
     </style>
 </head>
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar-wrapper glass">
-        <div class="nav-logo">
-            <a href="index.html" aria-label="Torna alla home page">
-                <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Logo Harzafi">
-            </a>
-        </div>
-        <div class="nav-links">
-            <a href="index.html#features">Funzionalità</a>
-            <a href="index.html#footer">Contatti Ufficiali</a>
-        </div>
-        <a href="index.html" style="text-decoration:none;">
-            <button class="btn-premium">← Torna alla Home</button>
-        </a>
-    </nav>
 
     <!-- Sfondo -->
     <div class="login-bg-mesh" aria-hidden="true"></div>
@@ -113,7 +97,7 @@
     <!-- Pagina -->
     <div id="login-page-wrapper">
 
-        <!-- Card login (stesso contenuto del vecchio #login-modal .modal-content) -->
+        <!-- Card login -->
         <div class="login-card">
 
             <a href="index.html" class="back-link" aria-label="Torna alla home page">
@@ -265,7 +249,7 @@
         </div>
     </div>
 
-    <!-- ── Modali rimasti (HID, Recupero Password) ── -->
+    <!-- ── Modali (HID, Recupero Password) ── -->
     <iframe name="dummyframe" id="dummyframe" style="display:none;"></iframe>
 
     <!-- Modale Harzafi ID -->
