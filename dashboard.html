@@ -521,6 +521,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-check-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-functions-compat.js"></script>
 
     <script>
     (function () {
@@ -551,7 +553,12 @@
             .join(' ');
 
         document.getElementById('greeting-name').textContent  = 'Ciao, ' + formattedName.split(' ')[0] + '.';
-        //document.getElementById('id-display-name').textContent = formattedName;
+        
+        // Verifica di sicurezza: aggiorna l'id-display-name SOLO se esiste nella pagina
+        const idDisplayEl = document.getElementById('id-display-name');
+        if (idDisplayEl) {
+            idDisplayEl.textContent = formattedName;
+        }
 
         // ── Animazione contatore ore ──
         const finalHours = "113.30";
