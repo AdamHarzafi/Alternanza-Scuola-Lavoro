@@ -439,17 +439,18 @@ document.addEventListener("DOMContentLoaded", function() {
         // Prepariamo il provider di Google
         const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-        // OPZIONALE: Se la maggior parte degli utenti usa questo dominio, 
-        // forziamo la schermata di Google a filtrare (graficamente) per questo dominio.
+        // Imposta il dominio dinamicamente
+        const targetDomain = selectedRole === 'studente' ? 'studenti.itisavogadro.it' : 'itisavogadro.it';
+        
         googleProvider.setCustomParameters({
-            hd: 'studenti.itisavogadro.it'
+            hd: targetDomain
         });
 
         window.auth.signInWithPopup(googleProvider).then((result) => {
             const email = result.user.email.toLowerCase();
             
-            // Il controllo JS rimane come strato visivo
-            if (email.endsWith("@studenti.itisavogadro.it") || email.endsWith("@itisavogadro.it")) { 
+            // Il controllo JS accetta solo il dominio specifico del ruolo
+            if (email.endsWith("@" + targetDomain)) {
                 inviaEmail(email, 2, { 
                     nome_utente: result.user.displayName || "Utente", 
                     email_utente: email, 
