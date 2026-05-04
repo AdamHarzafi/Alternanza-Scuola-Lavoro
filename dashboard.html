@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Dashboard — Registro FSL Harzafi</title>
+    <title>Harzafi FSL — Registro Ufficiale ITIS Avogadro</title>
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,30 +14,29 @@
     <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
 
+    <!-- FONT INTER IMPORTATO ESATTAMENTE COME IN INDEX -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* Palette Colori Premium */
-            --primary: #0071e3; /* Apple Blue */
+            --primary: #0071e3;
             --primary-hover: #0077ED;
             --primary-light: #e8f2fc;
             --bg-body: #f4f5f7;
             --surface: rgba(255, 255, 255, 0.65);
             --surface-solid: #ffffff;
-            --text-dark: #1d1d1f;
-            --text-gray: #515154;
-            --text-light: #86868b;
-            --success: #34c759; /* Apple Green */
-            --danger: #ff3b30; /* Apple Red */
-            --warning: #ff9f0a; /* Apple Orange */
-            --purple: #af52de; /* Apple Purple */
+            --text-dark: #0f172a; /* Colore più scuro e marcato */
+            --text-gray: #475569;
+            --text-light: #64748b;
+            --success: #34c759;
+            --danger: #ff3b30;
+            --warning: #ff9f0a;
+            --purple: #af52de;
             
-            /* Bordi, Ombre e Curve iOS */
-            --border-subtle: rgba(0, 0, 0, 0.04);
-            --border-glass: rgba(255, 255, 255, 0.7);
+            --border-subtle: rgba(0, 0, 0, 0.05);
+            --border-glass: rgba(255, 255, 255, 0.8);
             --radius-md: 20px;
             --radius-lg: 32px;
             --shadow-glass: 0 10px 40px rgba(0, 0, 0, 0.03), 0 2px 10px rgba(0, 0, 0, 0.02);
@@ -45,8 +44,8 @@
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* FONT AGGIORNATO: Inter come principale per riprendere la homepage */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; -webkit-tap-highlight-color: transparent; }
+        /* FONT IMPOSTATO SOLO SU INTER COME INDEX */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; -webkit-tap-highlight-color: transparent; }
 
         :focus-visible { outline: 3px solid var(--primary-light) !important; outline-offset: 2px !important; border-radius: 12px; }
         :focus:not(:focus-visible) { outline: none !important; }
@@ -85,8 +84,8 @@
         .topbar-logo { height: 38px; object-fit: contain; }
         .topbar-divider { width: 1px; height: 28px; background: rgba(0,0,0,0.1); }
         .topbar-school { display: flex; flex-direction: column; justify-content: center; }
-        .topbar-school strong { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); letter-spacing: -0.2px; }
-        .topbar-school span { font-size: 0.7rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
+        .topbar-school strong { font-size: 0.95rem; font-weight: 900; color: var(--text-dark); letter-spacing: -0.2px; }
+        .topbar-school span { font-size: 0.7rem; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
 
         .topbar-right { display: flex; align-items: center; gap: 16px; }
 
@@ -98,10 +97,10 @@
         .btn-logout {
             background: rgba(255, 59, 48, 0.08); color: var(--danger);
             border: none; padding: 8px 16px; border-radius: 20px;
-            font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
             transition: all 0.2s var(--apple-ease);
         }
-        .btn-logout svg { width: 16px; fill: currentColor; font-weight: bold; }
+        .btn-logout svg { width: 16px; fill: currentColor; }
         .btn-logout:hover { background: rgba(255, 59, 48, 0.15); transform: scale(1.02); }
         .btn-logout:active { transform: scale(0.96); }
 
@@ -135,23 +134,19 @@
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             border: 2px solid #fff;
-            overflow: hidden; /* IMPORTANTE: Nasconde i bordi della foto quadrata */
+            overflow: hidden;
         }
-        .welcome-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .welcome-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
         .welcome-label-group { display: flex; flex-direction: column; }
-        .welcome-label { font-size: 0.75rem; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+        .welcome-label { font-size: 0.75rem; font-weight: 900; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
         .welcome-name { font-size: 1.5rem; font-weight: 900; color: var(--text-dark); letter-spacing: -0.5px; line-height: 1.1; }
         .badge-class { display: inline-flex; align-items: center; background: rgba(0,0,0,0.04); color: var(--text-dark); padding: 6px 14px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; }
 
         /* Hours Card */
         .hours-card { animation-delay: 0.1s; }
         .hours-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .hours-title { font-size: 0.8rem; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; }
+        .hours-title { font-size: 0.8rem; font-weight: 900; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; }
         
         /* TESTO ORE GRADIENTE ANIMATO */
         .hours-value {
@@ -170,7 +165,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        .hours-value span.hours-unit { font-size: 1.4rem; font-weight: 800; color: var(--text-light); -webkit-text-fill-color: var(--text-light); letter-spacing: -0.5px; }
+        .hours-value span.hours-unit { font-size: 1.4rem; font-weight: 900; color: var(--text-light); -webkit-text-fill-color: var(--text-light); letter-spacing: -0.5px; }
 
         /* Barra stile iOS Widget */
         .stat-bar-container { display: flex; gap: 3px; height: 12px; margin-bottom: 24px; }
@@ -180,13 +175,13 @@
         .legend-item {
             display: flex; align-items: center; justify-content: space-between;
             padding: 10px 12px; border-radius: 12px;
-            font-size: 0.9rem; font-weight: 700; color: var(--text-gray);
+            font-size: 0.9rem; font-weight: 800; color: var(--text-gray);
             transition: background 0.2s;
         }
         .legend-item:hover { background: rgba(0,0,0,0.03); }
         .legend-item-left { display: flex; align-items: center; gap: 10px; }
         .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-        .legend-value { font-weight: 800; color: var(--text-dark); font-size: 0.95rem; }
+        .legend-value { font-weight: 900; color: var(--text-dark); font-size: 0.95rem; }
 
         /* ── MAIN CONTENT (TIMELINE) ── */
         .dash-main { display: flex; flex-direction: column; gap: 24px; }
@@ -196,14 +191,14 @@
         .section-tag { font-size: 1.4rem; font-weight: 900; color: var(--text-dark); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px; }
         .section-icon-bg { width: 36px; height: 36px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary); }
         .section-icon-bg svg { width: 20px; fill: currentColor; }
-        .section-meta { background: rgba(0,0,0,0.04); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; color: var(--text-gray); }
+        .section-meta { background: rgba(0,0,0,0.04); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 900; color: var(--text-gray); }
 
         .timeline-wrapper { position: relative; padding-left: 32px; }
         .timeline-wrapper::before { content: ''; position: absolute; left: 6px; top: 10px; bottom: 20px; width: 2px; background: rgba(0,0,0,0.06); border-radius: 2px; }
         
         .timeline-item {
             position: relative; margin-bottom: 24px; cursor: pointer;
-            background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 20px; padding: 20px 24px;
+            background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s var(--apple-ease);
             opacity: 0; transform: translateY(15px); animation: tlFadeIn 0.5s var(--apple-spring) forwards;
         }
@@ -216,22 +211,32 @@
             border: 2px solid var(--primary); border-radius: 50%; box-shadow: 0 0 0 4px var(--bg-body); transition: all 0.3s ease; z-index: 2;
         }
         .timeline-item.ac-cert::after { border-color: var(--success); }
-        .timeline-item:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.05); transform: translateY(-2px); border-color: rgba(0,113,227,0.1); }
-        .timeline-item:hover::after { background: var(--primary); transform: scale(1.2); }
-        .timeline-item.ac-cert:hover::after { background: var(--success); }
-
-        .tl-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-        .tl-content { flex: 1; }
-        .tl-date { color: var(--primary); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 8px; display: inline-block; letter-spacing: 0.5px; background: var(--primary-light); padding: 4px 10px; border-radius: 8px; }
-        .special-badge-date { background: #e5f9eb; color: var(--success); }
-        .tl-content h3 { font-size: 1.1rem; font-weight: 800; color: var(--text-dark); line-height: 1.3; margin-bottom: 4px; }
-        .tl-meta { font-size: 0.85rem; color: var(--text-light); font-weight: 600; }
-
-        .tl-hours-wrapper { display: flex; align-items: center; gap: 12px; }
-        .tl-hours { background: rgba(0,0,0,0.03); color: var(--text-dark); padding: 8px 16px; border-radius: 12px; font-weight: 800; font-size: 1rem; letter-spacing: -0.3px; }
         
-        .tl-chevron { width: 28px; height: 28px; border-radius: 50%; background: rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-        .tl-chevron svg { width: 16px; fill: var(--text-gray); transition: transform 0.3s ease; }
+        /* HOVER GESTITO CORRETTAMENTE PER NON BLOCCARSI SU MOBILE */
+        @media (hover: hover) {
+            .timeline-item:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.05); transform: translateY(-2px); border-color: rgba(0,113,227,0.1); }
+            .timeline-item:hover::after { background: var(--primary); transform: scale(1.2); }
+            .timeline-item.ac-cert:hover::after { background: var(--success); }
+        }
+
+        /* PALLINO APERTO */
+        .timeline-item[aria-expanded="true"]::after { background: var(--primary); transform: scale(1.2); }
+        .timeline-item.ac-cert[aria-expanded="true"]::after { background: var(--success); }
+
+        /* LAYOUT CARD IDENTICO ALLO SCREENSHOT */
+        .tl-header { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+        .tl-content { width: 100%; }
+        .tl-date { color: var(--primary); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 12px; display: inline-block; letter-spacing: 0.5px; background: var(--primary-light); padding: 6px 12px; border-radius: 8px; }
+        .special-badge-date { background: #e5f9eb; color: var(--success); }
+        
+        .tl-content h3 { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); line-height: 1.3; margin-bottom: 6px; letter-spacing: -0.5px; }
+        .tl-meta { font-size: 0.95rem; color: var(--text-light); font-weight: 600; line-height: 1.4; }
+
+        .tl-hours-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 6px; }
+        .tl-hours { background: rgba(0,0,0,0.03); color: var(--text-dark); padding: 8px 18px; border-radius: 14px; font-weight: 800; font-size: 1.05rem; letter-spacing: -0.3px; }
+        
+        .tl-chevron { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .tl-chevron svg { width: 18px; fill: var(--text-gray); transition: transform 0.3s ease; }
         
         .timeline-item[aria-expanded="true"] .tl-chevron { background: var(--primary); }
         .timeline-item[aria-expanded="true"] .tl-chevron svg { fill: #fff; transform: rotate(180deg); }
@@ -239,14 +244,14 @@
         .tl-dropdown { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s var(--apple-ease); opacity: 0; }
         .timeline-item[aria-expanded="true"] .tl-dropdown { grid-template-rows: 1fr; opacity: 1; }
         .tl-dropdown-inner { overflow: hidden; }
-        .tl-ext-info { font-size: 0.9rem; color: var(--text-gray); line-height: 1.6; font-weight: 500; background: rgba(0,0,0,0.02); padding: 16px 20px; border-radius: 12px; margin-top: 16px; border: 1px solid rgba(0,0,0,0.03); }
+        .tl-ext-info { font-size: 0.95rem; color: var(--text-gray); line-height: 1.6; font-weight: 600; background: rgba(0,0,0,0.02); padding: 16px 20px; border-radius: 12px; margin-top: 20px; border: 1px solid rgba(0,0,0,0.03); }
 
         /* ── LOADING SKELETON ── */
         .timeline-loading { display: flex; flex-direction: column; gap: 20px; }
         .skeleton { background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 16px; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* ── DISCLAIMER MODAL (Bottom Sheet stile iOS) ── */
+        /* ── DISCLAIMER MODAL ── */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .modal-sheet { background: #ffffff; width: 100%; max-width: 500px; border-radius: 32px 32px 0 0; padding: 32px 32px calc(32px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 40px rgba(0,0,0,0.1); transform: translateY(100%); transition: transform 0.5s var(--apple-spring); }
@@ -254,16 +259,40 @@
         .modal-sheet-handle { width: 40px; height: 5px; background: rgba(0,0,0,0.1); border-radius: 5px; margin: 0 auto 24px; }
         .disclaimer-icon { width: 56px; height: 56px; background: rgba(255, 159, 10, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
         .disclaimer-icon svg { width: 28px; fill: var(--warning); }
-        .disclaimer-title { text-align: center; font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-bottom: 12px; }
-        .disclaimer-body { font-size: 0.95rem; line-height: 1.5; font-weight: 500; color: var(--text-gray); text-align: center; margin-bottom: 24px; }
-        .btn-disclaimer-close { width: 100%; height: 50px; background: var(--primary); color: white; border: none; border-radius: 14px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .disclaimer-title { text-align: center; font-size: 1.4rem; font-weight: 900; color: var(--text-dark); margin-bottom: 12px; }
+        .disclaimer-body { font-size: 0.95rem; line-height: 1.5; font-weight: 600; color: var(--text-gray); text-align: center; margin-bottom: 24px; }
+        .btn-disclaimer-close { width: 100%; height: 50px; background: var(--primary); color: white; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s; }
         .btn-disclaimer-close:active { background: var(--primary-hover); transform: scale(0.98); }
+
+        /* ── BOTTONE SCROLL TO TOP ── */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), #38bdf8);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.4);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 999;
+        }
+        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .scroll-to-top svg { width: 24px; height: 24px; stroke: white; }
 
         /* ── FOOTER ── */
         .dash-footer { padding: 40px 5% 60px; text-align: center; }
-        .footer-copyright { font-size: 0.85rem; color: var(--text-light); font-weight: 700; margin-bottom: 12px; }
+        .footer-copyright { font-size: 0.85rem; color: var(--text-light); font-weight: 800; margin-bottom: 12px; }
         .footer-links { display: flex; justify-content: center; gap: 16px; }
-        .footer-links a { color: var(--text-gray); font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+        .footer-links a { color: var(--text-gray); font-size: 0.85rem; font-weight: 700; text-decoration: none; }
         .footer-links a:hover { color: var(--primary); }
 
         /* ── RESPONSIVE ── */
@@ -273,8 +302,6 @@
             .card { padding: 24px; border-radius: 24px; }
             .hours-value { font-size: 4rem; }
             .section-card { padding: 24px; }
-            .tl-header { align-items: flex-start; flex-direction: column; gap: 12px; }
-            .tl-hours-wrapper { width: 100%; justify-content: space-between; }
         }
         @media (max-width: 500px) {
             .topbar-school strong { font-size: 0.85rem; }
@@ -284,6 +311,7 @@
             .timeline-wrapper::before { left: 4px; }
             .timeline-item::after { left: -21px; top: 30px; width: 8px; height: 8px; }
             .footer-links { flex-direction: column; gap: 8px; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
         }
     </style>
 </head>
@@ -321,7 +349,6 @@
             <div class="card welcome-card">
                 <div class="welcome-header">
                     <div class="welcome-avatar">
-                        <!-- Immagine Fallback di Base -->
                         <img id="avatar-img" src="IMMAGINI/PROFILO-UTENTE-LOGO.png" alt="Avatar">
                     </div>
                     <div class="welcome-label-group">
@@ -401,13 +428,18 @@
                 <div class="timeline-wrapper" id="timeline-container">
                     <!-- Skeleton Loader -->
                     <div class="timeline-loading">
-                        <div class="skeleton" style="height:90px;"></div>
-                        <div class="skeleton" style="height:90px;width:95%;"></div>
-                        <div class="skeleton" style="height:90px;"></div>
+                        <div class="skeleton" style="height:120px;"></div>
+                        <div class="skeleton" style="height:120px;width:95%;"></div>
+                        <div class="skeleton" style="height:120px;"></div>
                     </div>
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Bottone Scroll to Top IDENTICO A INDEX -->
+    <div id="scrollToTop" class="scroll-to-top" title="Torna su">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
     </div>
 
     <!-- Footer -->
@@ -467,10 +499,8 @@
         // Controllo Login Firebase e Immagine del Profilo
         auth.onAuthStateChanged(user => {
             if (user) {
-                // Se c'è un'immagine utente (es. tramite login Google), aggiorna l'avatar
                 if (user.photoURL) {
                     let highResPhoto = user.photoURL;
-                    // Se è un URL di Google, richiede un'immagine a risoluzione più alta (s192 invece di s96)
                     if(highResPhoto.includes('googleusercontent.com')) {
                         highResPhoto = highResPhoto.replace('=s96-c', '=s192-c');
                     }
@@ -478,7 +508,6 @@
                 }
                 loadTimeline();
             } else {
-                // Utente non autenticato lato server ma presente nel sessionStorage, accede in anonimo come fallback
                 auth.signInAnonymously().finally(loadTimeline);
             }
         });
@@ -512,7 +541,7 @@
             db.collection('attivita_pcto').orderBy('ordine', 'desc').get().then(snap => {
                 container.innerHTML = '';
                 if (snap.empty) {
-                    container.innerHTML = '<p style="text-align:center; color:var(--text-light); font-weight: 600; padding:20px;">Nessuna attività registrata.</p>';
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-light); font-weight: 800; padding:20px;">Nessuna attività registrata.</p>';
                     countEl.textContent = '0 attività';
                     return;
                 }
@@ -528,7 +557,7 @@
                     item.setAttribute('aria-expanded', 'false');
                     item.style.animationDelay = (idx * 0.05) + 's';
                     
-                    /* HO TOLTO LA DOPPIA H (<span class="tl-hours">H</span>) PERCHÉ È GIÀ PRESENTE NEL DATABASE */
+                    /* NUOVO LAYOUT CARD IDENTICO ALLO SCREENSHOT */
                     item.innerHTML = `
                         <div class="tl-header">
                             <div class="tl-content">
@@ -536,7 +565,7 @@
                                 <h3>${a.titolo || 'Attività FSL'}</h3>
                                 <p class="tl-meta">${a.meta || ''}</p>
                             </div>
-                            <div class="tl-hours-wrapper">
+                            <div class="tl-hours-row">
                                 <div class="tl-hours">${a.ore || '—'}</div> 
                                 <div class="tl-chevron"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
                             </div>
@@ -554,10 +583,23 @@
                     container.appendChild(item);
                 });
             }).catch(() => {
-                container.innerHTML = '<p style="color:var(--danger); font-weight: bold; text-align:center;">Errore di connessione al Database.</p>';
+                container.innerHTML = '<p style="color:var(--danger); font-weight: 900; text-align:center;">Errore di connessione al Database.</p>';
                 countEl.textContent = 'Errore';
             });
         }
+
+        // Logic Scroll to top
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
         // Modale Iniziale
         setTimeout(() => document.getElementById('disclaimer-modal').classList.add('active'), 600);
