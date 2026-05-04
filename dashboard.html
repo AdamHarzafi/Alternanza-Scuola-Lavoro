@@ -14,40 +14,42 @@
     <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
 
-    <!-- FONT INTER IMPORTATO ESATTAMENTE COME IN INDEX -->
+    <!-- FONT INTER COME IN INDEX -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #0071e3;
-            --primary-hover: #0077ED;
-            --primary-light: #e8f2fc;
-            --bg-body: #f4f5f7;
-            --surface: rgba(255, 255, 255, 0.65);
+            --primary: #0284c7;        
+            --primary-hover: #0369a1;  
+            --primary-light: #e0f2fe;  
+            --accent: #0ea5e9;         
+            --bg-body: #f8fafc;
+            --surface: rgba(255, 255, 255, 0.75);
             --surface-solid: #ffffff;
-            --text-dark: #0f172a; /* Colore più scuro e marcato */
+            --text-dark: #0f172a;
             --text-gray: #475569;
-            --text-light: #64748b;
-            --success: #34c759;
-            --danger: #ff3b30;
-            --warning: #ff9f0a;
+            --text-light: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
             --purple: #af52de;
-            
+            --border-color: #e2e8f0;
             --border-subtle: rgba(0, 0, 0, 0.05);
             --border-glass: rgba(255, 255, 255, 0.8);
             --radius-md: 20px;
             --radius-lg: 32px;
             --shadow-glass: 0 10px 40px rgba(0, 0, 0, 0.03), 0 2px 10px rgba(0, 0, 0, 0.02);
-            --apple-ease: cubic-bezier(0.25, 1, 0.5, 1);
+            --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
+            --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1);
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* FONT IMPOSTATO SOLO SU INTER COME INDEX */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; -webkit-tap-highlight-color: transparent; }
+        /* IDENTICO A INDEX.HTML */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
 
-        :focus-visible { outline: 3px solid var(--primary-light) !important; outline-offset: 2px !important; border-radius: 12px; }
+        :focus-visible { outline: 3px solid var(--primary) !important; outline-offset: 3px !important; border-radius: 12px; }
         :focus:not(:focus-visible) { outline: none !important; }
 
         ::-webkit-scrollbar { width: 8px; }
@@ -58,12 +60,12 @@
         html { scroll-behavior: smooth; }
         body { background-color: var(--bg-body); color: var(--text-dark); font-weight: 500; min-height: 100vh; overflow-x: hidden; }
 
-        /* ── SFONDO MESH ULTRA-SOFT ── */
+        /* ── SFONDO MESH ── */
         .dashboard-bg-mesh {
             position: fixed; inset: 0;
             background: 
-                radial-gradient(circle at 10% 10%, rgba(0, 113, 227, 0.04) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(52, 199, 89, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 10% 10%, rgba(2, 132, 199, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
                 radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
             filter: blur(60px); pointer-events: none; z-index: -1;
         }
@@ -95,13 +97,13 @@
         }
 
         .btn-logout {
-            background: rgba(255, 59, 48, 0.08); color: var(--danger);
+            background: #fee2e2; color: #dc2626;
             border: none; padding: 8px 16px; border-radius: 20px;
             font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
             transition: all 0.2s var(--apple-ease);
         }
         .btn-logout svg { width: 16px; fill: currentColor; }
-        .btn-logout:hover { background: rgba(255, 59, 48, 0.15); transform: scale(1.02); }
+        .btn-logout:hover { background: #fca5a5; color: #991b1b; transform: scale(1.02); }
         .btn-logout:active { transform: scale(0.96); }
 
         /* ── LAYOUT ── */
@@ -148,10 +150,9 @@
         .hours-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .hours-title { font-size: 0.8rem; font-weight: 900; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; }
         
-        /* TESTO ORE GRADIENTE ANIMATO */
         .hours-value {
             font-size: 5rem; font-weight: 900;
-            background: linear-gradient(270deg, #0ea5e9, #3b82f6, #8b5cf6, #0ea5e9);
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 25%, #0ea5e9 50%, #0369a1 75%, #0284c7 100%);
             background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -167,7 +168,6 @@
 
         .hours-value span.hours-unit { font-size: 1.4rem; font-weight: 900; color: var(--text-light); -webkit-text-fill-color: var(--text-light); letter-spacing: -0.5px; }
 
-        /* Barra stile iOS Widget */
         .stat-bar-container { display: flex; gap: 3px; height: 12px; margin-bottom: 24px; }
         .stat-segment { height: 100%; border-radius: 6px; transform-origin: left; transform: scaleX(0); transition: transform 1.2s var(--apple-spring); }
 
@@ -212,18 +212,17 @@
         }
         .timeline-item.ac-cert::after { border-color: var(--success); }
         
-        /* HOVER GESTITO CORRETTAMENTE PER NON BLOCCARSI SU MOBILE */
+        /* HOVER GESTITO (Così su mobile non si blocca il pallino) */
         @media (hover: hover) {
-            .timeline-item:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.05); transform: translateY(-2px); border-color: rgba(0,113,227,0.1); }
+            .timeline-item:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.05); transform: translateY(-2px); border-color: rgba(2, 132, 199, 0.1); }
             .timeline-item:hover::after { background: var(--primary); transform: scale(1.2); }
             .timeline-item.ac-cert:hover::after { background: var(--success); }
         }
 
-        /* PALLINO APERTO */
         .timeline-item[aria-expanded="true"]::after { background: var(--primary); transform: scale(1.2); }
         .timeline-item.ac-cert[aria-expanded="true"]::after { background: var(--success); }
 
-        /* LAYOUT CARD IDENTICO ALLO SCREENSHOT */
+        /* LAYOUT CARD SCREENSHOT */
         .tl-header { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
         .tl-content { width: 100%; }
         .tl-date { color: var(--primary); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 12px; display: inline-block; letter-spacing: 0.5px; background: var(--primary-light); padding: 6px 12px; border-radius: 8px; }
@@ -251,11 +250,29 @@
         .skeleton { background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 16px; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* ── DISCLAIMER MODAL ── */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); }
+        /* ── DISCLAIMER MODAL IDENTICO ALLA BOTTOM SHEET DI INDEX ── */
+        .modal-overlay { 
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); 
+            z-index: 99999; display: flex; align-items: flex-end; justify-content: center; 
+            opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); 
+            padding: 0; transform: translateZ(0);
+        }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-sheet { background: #ffffff; width: 100%; max-width: 500px; border-radius: 32px 32px 0 0; padding: 32px 32px calc(32px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 40px rgba(0,0,0,0.1); transform: translateY(100%); transition: transform 0.5s var(--apple-spring); }
+        
+        .modal-sheet { 
+            background: #ffffff; width: 100%; max-width: 500px; 
+            border-radius: 36px 36px 0 0; 
+            padding: 35px 35px calc(35px + env(safe-area-inset-bottom, 0px)); 
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.15); 
+            transform: translateY(100%); 
+            transition: transform 0.4s var(--apple-smooth); 
+            margin: 0 auto; border-bottom: none; 
+            max-height: 92vh; overflow: hidden; overflow-y: auto; overflow-x: hidden; 
+            -webkit-overflow-scrolling: touch; -webkit-mask-image: -webkit-radial-gradient(white, black);
+        }
         .modal-overlay.active .modal-sheet { transform: translateY(0); }
+        
         .modal-sheet-handle { width: 40px; height: 5px; background: rgba(0,0,0,0.1); border-radius: 5px; margin: 0 auto 24px; }
         .disclaimer-icon { width: 56px; height: 56px; background: rgba(255, 159, 10, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
         .disclaimer-icon svg { width: 28px; fill: var(--warning); }
@@ -264,29 +281,24 @@
         .btn-disclaimer-close { width: 100%; height: 50px; background: var(--primary); color: white; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s; }
         .btn-disclaimer-close:active { background: var(--primary-hover); transform: scale(0.98); }
 
-        /* ── BOTTONE SCROLL TO TOP ── */
+        /* ── BOTTONE SCROLL TO TOP IDENTICO A INDEX ── */
         .scroll-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary), #38bdf8);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.4);
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 999;
+            position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px;
+            border-radius: 50%; background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary); cursor: pointer; z-index: 9900;
+            opacity: 0; pointer-events: none; transform: translateY(20px);
+            transition: all 0.5s var(--apple-spring);
         }
-        .scroll-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
-        .scroll-to-top svg { width: 24px; height: 24px; stroke: white; }
+        .scroll-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .scroll-to-top svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: transform 0.3s; }
+        
+        @media (hover: hover) {
+            .scroll-to-top:hover { transform: translateY(-6px) scale(1.05); color: var(--primary-hover); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); }
+            .scroll-to-top:hover svg { transform: translateY(-2px); }
+        }
 
         /* ── FOOTER ── */
         .dash-footer { padding: 40px 5% 60px; text-align: center; }
@@ -311,7 +323,7 @@
             .timeline-wrapper::before { left: 4px; }
             .timeline-item::after { left: -21px; top: 30px; width: 8px; height: 8px; }
             .footer-links { flex-direction: column; gap: 8px; }
-            .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+            .scroll-to-top { bottom: 20px; right: 20px; width: 50px; height: 50px; }
         }
     </style>
 </head>
@@ -439,7 +451,7 @@
 
     <!-- Bottone Scroll to Top IDENTICO A INDEX -->
     <div id="scrollToTop" class="scroll-to-top" title="Torna su">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
     </div>
 
     <!-- Footer -->
@@ -451,7 +463,7 @@
         </div>
     </footer>
 
-    <!-- Modale Informativa -->
+    <!-- Modale Informativa (Identica ad Harzafi ID) -->
     <div id="disclaimer-modal" class="modal-overlay" role="dialog" aria-modal="true">
         <div class="modal-sheet">
             <div class="modal-sheet-handle"></div>
@@ -557,7 +569,6 @@
                     item.setAttribute('aria-expanded', 'false');
                     item.style.animationDelay = (idx * 0.05) + 's';
                     
-                    /* NUOVO LAYOUT CARD IDENTICO ALLO SCREENSHOT */
                     item.innerHTML = `
                         <div class="tl-header">
                             <div class="tl-content">
@@ -588,13 +599,13 @@
             });
         }
 
-        // Logic Scroll to top
+        // Logic Scroll to top IDENTICA A INDEX
         const scrollToTopBtn = document.getElementById('scrollToTop');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
-                scrollToTopBtn.classList.add('show');
+                scrollToTopBtn.classList.add('visible');
             } else {
-                scrollToTopBtn.classList.remove('show');
+                scrollToTopBtn.classList.remove('visible');
             }
         });
         scrollToTopBtn.addEventListener('click', () => {
@@ -607,11 +618,11 @@
             document.getElementById('disclaimer-modal').classList.remove('active');
         });
 
-        // Logout
+        // Logout => ORA PORTA AD INDEX.HTML
         document.getElementById('btn-logout').addEventListener('click', () => {
             auth.signOut().finally(() => {
                 sessionStorage.removeItem('harzafi_user');
-                window.location.replace('login.html');
+                window.location.replace('index.html');
             });
         });
     })();
