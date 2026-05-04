@@ -14,7 +14,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
 
-    <!-- FONT INTER COME IN INDEX -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -41,12 +40,11 @@
             --radius-md: 20px;
             --radius-lg: 32px;
             --shadow-glass: 0 10px 40px rgba(0, 0, 0, 0.03), 0 2px 10px rgba(0, 0, 0, 0.02);
-            --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
+            --apple-ease: cubic-bezier(0.25, 1, 0.5, 1);
             --apple-smooth: cubic-bezier(0.25, 1, 0.5, 1);
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* IDENTICO A INDEX.HTML */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
 
         :focus-visible { outline: 3px solid var(--primary) !important; outline-offset: 3px !important; border-radius: 12px; }
@@ -168,8 +166,9 @@
 
         .hours-value span.hours-unit { font-size: 1.4rem; font-weight: 900; color: var(--text-light); -webkit-text-fill-color: var(--text-light); letter-spacing: -0.5px; }
 
-        .stat-bar-container { display: flex; gap: 3px; height: 12px; margin-bottom: 24px; }
-        .stat-segment { height: 100%; border-radius: 6px; transform-origin: left; transform: scaleX(0); transition: transform 1.2s var(--apple-spring); }
+        /* Barra stile iOS animata in width */
+        .stat-bar-container { display: flex; gap: 3px; height: 12px; margin-bottom: 24px; border-radius: 6px; overflow: hidden;}
+        .stat-segment { height: 100%; width: 0%; border-radius: 6px; transition: width 1.5s var(--apple-spring); }
 
         .stat-legend { display: flex; flex-direction: column; gap: 8px; }
         .legend-item {
@@ -212,7 +211,6 @@
         }
         .timeline-item.ac-cert::after { border-color: var(--success); }
         
-        /* HOVER GESTITO (Così su mobile non si blocca il pallino) */
         @media (hover: hover) {
             .timeline-item:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.05); transform: translateY(-2px); border-color: rgba(2, 132, 199, 0.1); }
             .timeline-item:hover::after { background: var(--primary); transform: scale(1.2); }
@@ -222,7 +220,6 @@
         .timeline-item[aria-expanded="true"]::after { background: var(--primary); transform: scale(1.2); }
         .timeline-item.ac-cert[aria-expanded="true"]::after { background: var(--success); }
 
-        /* LAYOUT CARD SCREENSHOT */
         .tl-header { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
         .tl-content { width: 100%; }
         .tl-date { color: var(--primary); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 12px; display: inline-block; letter-spacing: 0.5px; background: var(--primary-light); padding: 6px 12px; border-radius: 8px; }
@@ -250,7 +247,7 @@
         .skeleton { background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 16px; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* ── DISCLAIMER MODAL IDENTICO ALLA BOTTOM SHEET DI INDEX ── */
+        /* ── DISCLAIMER MODAL ── */
         .modal-overlay { 
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); 
             backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); 
@@ -281,7 +278,7 @@
         .btn-disclaimer-close { width: 100%; height: 50px; background: var(--primary); color: white; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s; }
         .btn-disclaimer-close:active { background: var(--primary-hover); transform: scale(0.98); }
 
-        /* ── BOTTONE SCROLL TO TOP IDENTICO A INDEX ── */
+        /* ── BOTTONE SCROLL TO TOP ── */
         .scroll-to-top {
             position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px;
             border-radius: 50%; background: rgba(255, 255, 255, 0.85);
@@ -383,12 +380,12 @@
                     <span class="hours-unit">ore</span>
                 </div>
 
-                <!-- Widget Bar iOS Style -->
+                <!-- Widget Bar iOS Style (Width dynamically set via JS) -->
                 <div class="stat-bar-container" role="progressbar">
-                    <div class="stat-segment" style="width: 48%; background: var(--primary);" title="Scolastiche"></div>
-                    <div class="stat-segment" style="width: 28%; background: var(--success);" title="Extrascolastiche"></div>
-                    <div class="stat-segment" style="width: 10%; background: var(--warning);" title="Sicurezza"></div>
-                    <div class="stat-segment" style="width: 14%; background: var(--purple);" title="Certificazioni"></div>
+                    <div class="stat-segment" id="seg-scolastiche" style="background: var(--primary);" title="Scolastiche"></div>
+                    <div class="stat-segment" id="seg-extra" style="background: var(--success);" title="Extrascolastiche"></div>
+                    <div class="stat-segment" id="seg-sicurezza" style="background: var(--warning);" title="Sicurezza"></div>
+                    <div class="stat-segment" id="seg-certificazioni" style="background: var(--purple);" title="Certificazioni"></div>
                 </div>
 
                 <div class="stat-legend">
@@ -397,28 +394,28 @@
                             <div class="legend-dot" style="background: var(--primary);"></div>
                             Scolastiche
                         </div>
-                        <span class="legend-value">54.45</span>
+                        <span class="legend-value" id="val-scolastiche">0.00</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-item-left">
                             <div class="legend-dot" style="background: var(--success);"></div>
                             Extrascolastiche
                         </div>
-                        <span class="legend-value">32.30</span>
+                        <span class="legend-value" id="val-extra">0.00</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-item-left">
                             <div class="legend-dot" style="background: var(--warning);"></div>
                             Sicurezza D.Lgs
                         </div>
-                        <span class="legend-value">11.00</span>
+                        <span class="legend-value" id="val-sicurezza">0.00</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-item-left">
                             <div class="legend-dot" style="background: var(--purple);"></div>
                             Certificazioni
                         </div>
-                        <span class="legend-value">15.15</span>
+                        <span class="legend-value" id="val-certificazioni">0.00</span>
                     </div>
                 </div>
             </div>
@@ -449,7 +446,7 @@
         </main>
     </div>
 
-    <!-- Bottone Scroll to Top IDENTICO A INDEX -->
+    <!-- Bottone Scroll to Top -->
     <div id="scrollToTop" class="scroll-to-top" title="Torna su">
         <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
     </div>
@@ -463,7 +460,7 @@
         </div>
     </footer>
 
-    <!-- Modale Informativa (Identica ad Harzafi ID) -->
+    <!-- Modale Informativa -->
     <div id="disclaimer-modal" class="modal-overlay" role="dialog" aria-modal="true">
         <div class="modal-sheet">
             <div class="modal-sheet-handle"></div>
@@ -518,49 +515,83 @@
                     }
                     document.getElementById('avatar-img').src = highResPhoto;
                 }
-                loadTimeline();
+                loadTimelineAndCalculateStats();
             } else {
-                auth.signInAnonymously().finally(loadTimeline);
+                auth.signInAnonymously().finally(loadTimelineAndCalculateStats);
             }
         });
 
-        // Animazione Statistiche
-        const finalHours = "113.30";
-        const hourEl = document.getElementById('hour-counter');
-        const duration = 1200;
-        const startT = performance.now();
-        
-        function animCounters(now) {
-            const p = Math.min((now - startT) / duration, 1);
-            const ease = 1 - Math.pow(1 - p, 4);
-            hourEl.textContent = (ease * parseFloat(finalHours)).toFixed(2).replace('.', ',');
-            if (p < 1) requestAnimationFrame(animCounters);
-            else hourEl.textContent = finalHours.replace('.', ',');
+        // Funzione per animare il contatore totale (ora dinamico)
+        function animateTotalHours(finalValue) {
+            const hourEl = document.getElementById('hour-counter');
+            const duration = 1500;
+            const startT = performance.now();
+            
+            function anim(now) {
+                const p = Math.min((now - startT) / duration, 1);
+                const ease = 1 - Math.pow(1 - p, 4); // Quartic ease out
+                const currentValue = (ease * finalValue).toFixed(2);
+                hourEl.textContent = currentValue.replace('.', ',');
+                if (p < 1) {
+                    requestAnimationFrame(anim);
+                } else {
+                    hourEl.textContent = finalValue.toFixed(2).replace('.', ',');
+                }
+            }
+            requestAnimationFrame(anim);
         }
 
-        setTimeout(() => {
-            requestAnimationFrame(animCounters);
-            document.querySelectorAll('.stat-segment').forEach((el, i) => {
-                setTimeout(() => { el.style.transform = 'scaleX(1)'; }, i * 100);
-            });
-        }, 300);
-
-        // Fetch Timeline
+        // Recupero, Calcolo Matematico Dinamico e Creazione Timeline
         const container = document.getElementById('timeline-container');
         const countEl = document.getElementById('timeline-count');
 
-        function loadTimeline() {
+        function loadTimelineAndCalculateStats() {
             db.collection('attivita_pcto').orderBy('ordine', 'desc').get().then(snap => {
                 container.innerHTML = '';
+                
                 if (snap.empty) {
                     container.innerHTML = '<p style="text-align:center; color:var(--text-light); font-weight: 800; padding:20px;">Nessuna attività registrata.</p>';
                     countEl.textContent = '0 attività';
+                    animateTotalHours(0);
                     return;
                 }
+
                 countEl.textContent = snap.size + ' attività';
                 
+                // Variabili per il calcolo matematico
+                let sumScolastiche = 0;
+                let sumExtra = 0;
+                let sumSicurezza = 0;
+                let sumCertificazioni = 0;
+
                 snap.forEach((doc, idx) => {
                     const a = doc.data();
+                    
+                    // --- 1. CALCOLO MATEMATICO DELLE ORE E CATEGORIE ---
+                    let oreStr = a.ore ? String(a.ore).replace(',', '.') : "0";
+                    let oreVal = parseFloat(oreStr) || 0;
+
+                    // Logica di assegnazione categorie (Controlla prima la categoria esplicita se esiste, altrimenti analizza il testo)
+                    let cat = (a.categoria || "").toLowerCase();
+                    let meta = (a.meta || "").toLowerCase();
+                    let titolo = (a.titolo || "").toLowerCase();
+
+                    let isCert = a.certificato === true || cat.includes('certifica') || meta.includes('certificazion') || titolo.includes('certificazion');
+                    let isSicurezza = cat.includes('sicurezza') || meta.includes('sicurezza') || titolo.includes('sicurezza');
+                    let isExtra = cat.includes('extra') || meta.includes('extra') || meta.includes('universit') || titolo.includes('extra');
+
+                    if (isCert) {
+                        sumCertificazioni += oreVal;
+                    } else if (isSicurezza) {
+                        sumSicurezza += oreVal;
+                    } else if (isExtra) {
+                        sumExtra += oreVal;
+                    } else {
+                        // Default
+                        sumScolastiche += oreVal;
+                    }
+
+                    // --- 2. COSTRUZIONE INTERFACCIA TIMELINE ---
                     const certCls = a.certificato ? 'ac-cert' : '';
                     const dateCls = a.certificato ? 'special-badge-date' : '';
                     
@@ -593,13 +624,37 @@
                     });
                     container.appendChild(item);
                 });
-            }).catch(() => {
+
+                // --- 3. AGGIORNAMENTO DELLA SIDEBAR (MATEMATICA AUTOMATICA) ---
+                let totalHours = sumScolastiche + sumExtra + sumSicurezza + sumCertificazioni;
+
+                // Aggiornamento Valori Leggenda
+                document.getElementById('val-scolastiche').textContent = sumScolastiche.toFixed(2);
+                document.getElementById('val-extra').textContent = sumExtra.toFixed(2);
+                document.getElementById('val-sicurezza').textContent = sumSicurezza.toFixed(2);
+                document.getElementById('val-certificazioni').textContent = sumCertificazioni.toFixed(2);
+
+                // Calcolo e Aggiornamento Percentuali Barra (con timeout per animazione fluida)
+                setTimeout(() => {
+                    if(totalHours > 0) {
+                        document.getElementById('seg-scolastiche').style.width = ((sumScolastiche / totalHours) * 100) + '%';
+                        document.getElementById('seg-extra').style.width = ((sumExtra / totalHours) * 100) + '%';
+                        document.getElementById('seg-sicurezza').style.width = ((sumSicurezza / totalHours) * 100) + '%';
+                        document.getElementById('seg-certificazioni').style.width = ((sumCertificazioni / totalHours) * 100) + '%';
+                    }
+                }, 100);
+
+                // Avvia l'animazione del grande contatore totale
+                animateTotalHours(totalHours);
+
+            }).catch((err) => {
+                console.error(err);
                 container.innerHTML = '<p style="color:var(--danger); font-weight: 900; text-align:center;">Errore di connessione al Database.</p>';
                 countEl.textContent = 'Errore';
             });
         }
 
-        // Logic Scroll to top IDENTICA A INDEX
+        // Logic Scroll to top
         const scrollToTopBtn = document.getElementById('scrollToTop');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
@@ -618,7 +673,7 @@
             document.getElementById('disclaimer-modal').classList.remove('active');
         });
 
-        // Logout => ORA PORTA AD INDEX.HTML
+        // Logout
         document.getElementById('btn-logout').addEventListener('click', () => {
             auth.signOut().finally(() => {
                 sessionStorage.removeItem('harzafi_user');
