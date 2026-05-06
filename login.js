@@ -239,12 +239,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (typeof window.auth !== 'undefined') {
             window.auth.signInWithEmailAndPassword(selectedUserEmail, pass)
-                .then(() => {
-                    inviaEmail(selectedUserEmail, 2, {
+                .then(async () => { // <--- AGGIUNTO async
+                    
+                    // <--- AGGIUNTO await: aspetta l'invio della mail prima di ricaricare la pagina
+                    await inviaEmail(selectedUserEmail, 2, {
                         nome_utente:    uName,
                         email_utente:   selectedUserEmail,
                         orario_accesso: new Date().toLocaleString('it-IT')
                     });
+                    
                     submitBtn.innerText = "ENTRA";
                     submitBtn.disabled  = false;
                     entraNelPortale(uName);
@@ -349,16 +352,19 @@ document.addEventListener("DOMContentLoaded", function () {
         provider.setCustomParameters({ hd: targetDomain });
 
         window.auth.signInWithPopup(provider)
-            .then(result => {
+            .then(async result => { // <--- AGGIUNTO async
                 const email = result.user.email.toLowerCase();
                 
                 // Controlla dinamicamente che finisca con il dominio corretto in base al ruolo
                 if (email.endsWith("@" + targetDomain)) {
-                    inviaEmail(email, 2, {
+                    
+                    // <--- AGGIUNTO await: aspetta l'invio della mail
+                    await inviaEmail(email, 2, {
                         nome_utente:    result.user.displayName || "Utente",
                         email_utente:   email,
                         orario_accesso: new Date().toLocaleString('it-IT')
                     });
+                    
                     googleBtn.innerHTML = originalHTML;
                     googleBtn.disabled  = false;
                     entraNelPortale(result.user.displayName || "Utente");
