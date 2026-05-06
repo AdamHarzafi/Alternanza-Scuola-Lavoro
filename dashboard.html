@@ -573,14 +573,8 @@
 
     <script>
     (function () {
-        // Recupero utente locale
-        const rawUser = sessionStorage.getItem('harzafi_user');
-        if (!rawUser) {
-            window.location.replace('login.html');
-            return;
-        }
-
-        // Formattazione nome per il saluto
+        // Mantiene la cache del nome SOLO a scopo estetico e non per validazione della sicurezza
+        let rawUser = sessionStorage.getItem('harzafi_user') || "Utente";
         let formattedName = rawUser.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
         let firstName = formattedName.split(' ')[0];
         document.getElementById('greeting-name').textContent = 'Ciao, ' + firstName + '.';
@@ -595,9 +589,17 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // Controllo Login Firebase e Immagine del Profilo
+        // 🛡️ GUARDIA DI SICUREZZA ASSOLUTA: CONTROLLO SERVER SIDE FIREBASE 🛡️
         auth.onAuthStateChanged(user => {
             if (user) {
+                // Autenticazione Server-Side confermata. Carica i dati sensibili.
+                
+                // Aggiorna il nome reale dell'account Google/Auth per evitare manipolazioni
+                if (user.displayName) {
+                    let fbName = user.displayName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+                    document.getElementById('greeting-name').textContent = 'Ciao, ' + fbName.split(' ')[0] + '.';
+                }
+
                 if (user.photoURL) {
                     let highResPhoto = user.photoURL;
                     if(highResPhoto.includes('googleusercontent.com')) {
@@ -605,9 +607,12 @@
                     }
                     document.getElementById('avatar-img').src = highResPhoto;
                 }
+                
                 loadTimelineAndCalculateStats();
             } else {
-                auth.signInAnonymously().finally(loadTimelineAndCalculateStats);
+                // ⛔ Accesso Negato: l'utente ha manomesso il sistema o il token è scaduto
+                sessionStorage.removeItem('harzafi_user');
+                window.location.replace('login.html');
             }
         });
 
