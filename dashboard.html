@@ -144,10 +144,99 @@
         .badge-class { display: inline-flex; align-items: center; background: rgba(0,0,0,0.04); color: var(--text-dark); padding: 6px 14px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; }
 
         /* Hours Card */
-        .hours-card { animation-delay: 0.1s; }
-        .hours-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .hours-card { animation-delay: 0.1s; overflow: visible;}
+        .hours-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; position: relative;}
         .hours-title { font-size: 0.8rem; font-weight: 900; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; }
         
+        /* ── ICONA INFO E POPOVER ── */
+        .info-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .info-icon {
+            width: 20px;
+            fill: var(--text-light);
+            transition: fill 0.3s ease;
+        }
+
+        .info-wrapper:hover .info-icon,
+        .info-wrapper.active .info-icon {
+            fill: var(--primary);
+        }
+
+        .info-popover {
+            position: absolute;
+            top: 35px;
+            right: 0;
+            width: 320px;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            padding: 24px;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transform-origin: top right;
+            transition: all 0.4s var(--apple-spring);
+            pointer-events: none;
+            cursor: default;
+        }
+
+        /* Hover per PC, classe .active per mobile */
+        @media (hover: hover) {
+            .info-wrapper:hover .info-popover {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0) scale(1);
+                pointer-events: auto;
+            }
+        }
+        
+        .info-wrapper.active .info-popover {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .info-popover p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .btn-cie {
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            transition: transform 0.2s var(--apple-ease);
+        }
+
+        .btn-cie:active {
+            transform: scale(0.96);
+        }
+
+        .btn-cie img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Hours Value */
         .hours-value {
             font-size: 5rem; font-weight: 900;
             background: linear-gradient(135deg, #0284c7 0%, #38bdf8 25%, #0ea5e9 50%, #0369a1 75%, #0284c7 100%);
@@ -247,37 +336,6 @@
         .skeleton { background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 16px; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* ── DISCLAIMER MODAL ── */
-        .modal-overlay { 
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); 
-            z-index: 99999; display: flex; align-items: flex-end; justify-content: center; 
-            opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); 
-            padding: 0; transform: translateZ(0);
-        }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        
-        .modal-sheet { 
-            background: #ffffff; width: 100%; max-width: 500px; 
-            border-radius: 36px 36px 0 0; 
-            padding: 35px 35px calc(35px + env(safe-area-inset-bottom, 0px)); 
-            box-shadow: 0 -15px 40px rgba(0,0,0,0.15); 
-            transform: translateY(100%); 
-            transition: transform 0.4s var(--apple-smooth); 
-            margin: 0 auto; border-bottom: none; 
-            max-height: 92vh; overflow: hidden; overflow-y: auto; overflow-x: hidden; 
-            -webkit-overflow-scrolling: touch; -webkit-mask-image: -webkit-radial-gradient(white, black);
-        }
-        .modal-overlay.active .modal-sheet { transform: translateY(0); }
-        
-        .modal-sheet-handle { width: 40px; height: 5px; background: rgba(0,0,0,0.1); border-radius: 5px; margin: 0 auto 24px; }
-        .disclaimer-icon { width: 56px; height: 56px; background: rgba(255, 159, 10, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
-        .disclaimer-icon svg { width: 28px; fill: var(--warning); }
-        .disclaimer-title { text-align: center; font-size: 1.4rem; font-weight: 900; color: var(--text-dark); margin-bottom: 12px; }
-        .disclaimer-body { font-size: 0.95rem; line-height: 1.5; font-weight: 600; color: var(--text-gray); text-align: center; margin-bottom: 24px; }
-        .btn-disclaimer-close { width: 100%; height: 50px; background: var(--primary); color: white; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s; }
-        .btn-disclaimer-close:active { background: var(--primary-hover); transform: scale(0.98); }
-
         /* ── BOTTONE SCROLL TO TOP ── */
         .scroll-to-top {
             position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px;
@@ -321,6 +379,12 @@
             .timeline-item::after { left: -21px; top: 30px; width: 8px; height: 8px; }
             .footer-links { flex-direction: column; gap: 8px; }
             .scroll-to-top { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+            
+            /* Responsive popover per schermi molto piccoli */
+            .info-popover {
+                width: 270px;
+                right: -10px;
+            }
         }
     </style>
 </head>
@@ -372,7 +436,19 @@
             <div class="card hours-card">
                 <div class="hours-header">
                     <div class="hours-title">Ore FSL Accumulate</div>
-                    <svg viewBox="0 0 24 24" style="width:20px; fill:var(--text-light);"><path d="M12 2A10 10 0 002 12a10 10 0 0010 10 10 10 0 0010-10A10 10 0 0012 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    
+                    <!-- Nuovo Widget Info Interattivo -->
+                    <div class="info-wrapper" id="info-widget" tabindex="0">
+                        <svg class="info-icon" viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12a10 10 0 0010 10 10 10 0 0010-10A10 10 0 0012 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        
+                        <!-- Riquadro che si espande -->
+                        <div class="info-popover">
+                            <p>Si precisa che i dati qui riportati hanno valore puramente indicativo e sono aggiornati in tempo reale a cura di Harzafi Adam. Per procedere con la validazione ufficiale ai fini dell'Esame di Stato, è necessario autenticarsi mediante la propria identità digitale. Tale operazione comporterà il reindirizzamento a un portale esterno.</p>
+                            <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/samlv2?idpCode=cie" class="btn-cie" target="_blank" rel="noopener noreferrer">
+                                <img src="IMMAGINI/LOGO-ENTRA-CON-CIE.png" alt="Accedi con CIE">
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="hours-value">
@@ -459,22 +535,6 @@
             <a href="privacy.html">Privacy</a>
         </div>
     </footer>
-
-    <!-- Modale Informativa -->
-    <div id="disclaimer-modal" class="modal-overlay" role="dialog" aria-modal="true">
-        <div class="modal-sheet">
-            <div class="modal-sheet-handle"></div>
-            <div class="disclaimer-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-            </div>
-            <h2 class="disclaimer-title">Nota Informativa</h2>
-            <p class="disclaimer-body">
-                I dati visualizzati hanno <strong>valore indicativo</strong> e sono aggiornati in tempo reale. Per la validazione ufficiale ai fini dell'Esame di Stato, fare riferimento alla Segreteria.<br><br>
-                Segnalare eventuali discrepanze al tutor.
-            </p>
-            <button class="btn-disclaimer-close" id="btn-close-disclaimer">Ho capito</button>
-        </div>
-    </div>
 
     <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -666,11 +726,26 @@
         scrollToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+        
+        // --- LOGICA WIDGET INFO (Supporto Mobile Tap & Desktop Clic) ---
+        const infoWidget = document.getElementById('info-widget');
+        const infoPopover = infoWidget.querySelector('.info-popover');
+        
+        infoWidget.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evita che il clic si propaghi chiudendo subito
+            infoWidget.classList.toggle('active');
+        });
 
-        // Modale Iniziale
-        setTimeout(() => document.getElementById('disclaimer-modal').classList.add('active'), 600);
-        document.getElementById('btn-close-disclaimer').addEventListener('click', () => {
-            document.getElementById('disclaimer-modal').classList.remove('active');
+        // Cliccare all'interno del popover (sul testo o sul bottone) non lo chiude
+        infoPopover.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Chiude il popover cliccando fuori dallo schermo su mobile
+        document.addEventListener('click', (e) => {
+            if (!infoWidget.contains(e.target)) {
+                infoWidget.classList.remove('active');
+            }
         });
 
         // Logout
