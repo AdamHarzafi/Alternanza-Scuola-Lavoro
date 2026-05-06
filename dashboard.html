@@ -594,12 +594,8 @@
             if (user) {
                 // Autenticazione Server-Side confermata. Carica i dati sensibili.
                 
-                // Aggiorna il nome reale dell'account Google/Auth per evitare manipolazioni
-                if (user.displayName) {
-                    let fbName = user.displayName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-                    document.getElementById('greeting-name').textContent = 'Ciao, ' + fbName.split(' ')[0] + '.';
-                }
-
+                // Lasciamo il nome preso dal SessionStorage (es. Harzafi Adam)
+                // e carichiamo SOLO la foto profilo da Firebase se esiste!
                 if (user.photoURL) {
                     let highResPhoto = user.photoURL;
                     if(highResPhoto.includes('googleusercontent.com')) {
