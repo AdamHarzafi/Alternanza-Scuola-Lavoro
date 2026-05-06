@@ -89,7 +89,7 @@ async function checkVPN() {
 
 // ── Redirect alla dashboard dopo login riuscito ───────────────
 function entraNelPortale(nomeUtente) {
-    // Salviamo il nome in sessionStorage così dashboard.html può leggerlo
+    // Salviamo il nome in sessionStorage (SOLO A SCOPO ESTETICO: la vera sicurezza ora è in dashboard.html via Firebase Auth)
     sessionStorage.setItem('harzafi_user', nomeUtente);
     window.location.href = 'dashboard.html';
 }
@@ -249,13 +249,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     submitBtn.disabled  = false;
                     entraNelPortale(uName);
                 })
-                .catch(() => {
+                .catch((error) => {
                     submitBtn.innerText = "ENTRA";
                     submitBtn.disabled  = false;
                     passInput.value = '';
                     window.globalTurnstileToken = "";
                     if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch (e) {} }
-                    errorMsg.innerText = "Credenziali errate. Riprova.";
+                    
+                    // Gestione rate-limit nativo di Firebase Auth per bloccare gli attacchi brute-force
+                    if(error.code === 'auth/too-many-requests') {
+                        errorMsg.innerText = "Troppi tentativi falliti. Riprova più tardi.";
+                    } else {
+                        errorMsg.innerText = "Credenziali errate. Riprova.";
+                    }
+                    
                     errorMsg.style.display = 'block';
                     errorMsg.style.animation = 'none';
                     void errorMsg.offsetWidth;
@@ -335,7 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-const provider = new firebase.auth.GoogleAuthProvider();
+        const provider = new firebase.auth.GoogleAuthProvider();
         
         // Seleziona il dominio dinamicamente
         const targetDomain = selectedRole === 'studente' ? 'studenti.itisavogadro.it' : 'itisavogadro.it';
