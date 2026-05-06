@@ -82,22 +82,22 @@
         .back-link:hover { color: var(--primary); }
         .back-link:hover svg { transform: translateX(-3px); }
 
-/* ── Responsivo mobile (esclusi tablet e PC) ── */
+        /* ── Responsivo mobile ── */
         @media (max-width: 767px) {
             #login-page-wrapper { 
-                padding: 0; /* Rimuove lo spazio esterno */
+                padding: 0; 
                 align-items: flex-start; 
             }
             .login-card { 
                 padding: 40px 24px 30px; 
-                border-radius: 0; /* Rimuove gli angoli arrotondati */
-                box-shadow: none; /* Rimuove i bordi sottili e l'ombra */
-                max-width: 100%; /* Fa occupare alla scheda tutta la larghezza */
-                min-height: 100vh; /* Fa occupare alla scheda tutta l'altezza */
+                border-radius: 0; 
+                box-shadow: none; 
+                max-width: 100%; 
+                min-height: 100vh; 
                 min-height: 100dvh;
             }
             .login-bg-mesh {
-                display: none; /* Rimuove i pallini sfumati di sfondo su mobile per non creare stacchi */
+                display: none; 
             }
         }
     </style>
@@ -135,6 +135,7 @@
                     Leggi le regole di accesso dal 25/04/2026
                 </div>
 
+                <!-- Turnstile Cloudflare per sicurezza anti-bot -->
                 <div id="cf-turnstile-widget"
                      class="cf-turnstile"
                      data-sitekey="0x4AAAAAAC6Galn1mtnng7_P"
@@ -187,7 +188,6 @@
                             </button>
                         </div>
                         <div class="error-msg" id="login-error">Credenziali errate. Riprova.</div>
-                        <div class="attempts-msg" id="login-attempts">Ti rimangono 3 tentativi.</div>
                     </div>
 
                     <div class="privacy-disclaimer">
