@@ -26,7 +26,6 @@
             --accent: #0ea5e9;         
             --bg-body: #f8fafc;
             --surface: rgba(255, 255, 255, 0.75);
-            --surface-solid: #ffffff;
             --text-dark: #0f172a;
             --text-gray: #475569;
             --text-light: #94a3b8;
@@ -34,10 +33,8 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --purple: #af52de;
-            --border-color: #e2e8f0;
             --border-subtle: rgba(0, 0, 0, 0.05);
             --border-glass: rgba(255, 255, 255, 0.8);
-            --radius-md: 20px;
             --radius-lg: 32px;
             --shadow-glass: 0 10px 40px rgba(0, 0, 0, 0.03), 0 2px 10px rgba(0, 0, 0, 0.02);
             --apple-ease: cubic-bezier(0.25, 1, 0.5, 1);
@@ -45,31 +42,15 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
-        :focus-visible { outline: 3px solid var(--primary) !important; outline-offset: 3px !important; border-radius: 12px; }
-        :focus:not(:focus-visible) { outline: none !important; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 10px; border: 2px solid var(--bg-body); }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
-
         html { scroll-behavior: smooth; }
         body { background-color: var(--bg-body); color: var(--text-dark); font-weight: 500; min-height: 100vh; overflow-x: hidden; }
 
-        .dashboard-bg-mesh {
-            position: fixed; inset: 0;
-            background: radial-gradient(circle at 10% 10%, rgba(2, 132, 199, 0.04) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
-                        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
-            filter: blur(60px); pointer-events: none; z-index: -1;
-        }
+        .dashboard-bg-mesh { position: fixed; inset: 0; background: radial-gradient(circle at 10% 10%, rgba(2, 132, 199, 0.04) 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.03) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0%, transparent 100%); filter: blur(60px); pointer-events: none; z-index: -1; }
 
-        .dash-topbar {
-            background: rgba(255, 255, 255, 0.75); backdrop-filter: saturate(180%) blur(30px);
-            -webkit-backdrop-filter: saturate(180%) blur(30px); border-bottom: 1px solid rgba(0,0,0,0.05);
-            padding: 14px 5%; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 100; transition: all 0.3s var(--apple-ease);
-        }
-
+        .dash-topbar { background: rgba(255, 255, 255, 0.75); backdrop-filter: saturate(180%) blur(30px); -webkit-backdrop-filter: saturate(180%) blur(30px); border-bottom: 1px solid rgba(0,0,0,0.05); padding: 14px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; transition: all 0.3s var(--apple-ease); }
         .topbar-left { display: flex; align-items: center; gap: 18px; }
         .topbar-logo { height: 38px; object-fit: contain; }
         .topbar-divider { width: 1px; height: 28px; background: rgba(0,0,0,0.1); }
@@ -82,14 +63,12 @@
         .btn-logout { background: #fee2e2; color: #dc2626; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s var(--apple-ease); }
         .btn-logout svg { width: 16px; fill: currentColor; }
         .btn-logout:hover { background: #fca5a5; color: #991b1b; transform: scale(1.02); }
-        .btn-logout:active { transform: scale(0.96); }
 
         .dash-layout { max-width: 1200px; margin: 40px auto 80px; padding: 0 5%; display: grid; grid-template-columns: 340px 1fr; gap: 32px; align-items: start; }
-        .card { background: var(--surface); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-glass); animation: fadeUp 0.6s var(--apple-spring) both; }
+        .card { background: var(--surface); backdrop-filter: blur(40px) saturate(200%); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-glass); animation: fadeUp 0.6s var(--apple-spring) both; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
         .dash-sidebar { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 100px; }
-        .welcome-card { animation-delay: 0.05s; }
         .welcome-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
         .welcome-avatar { width: 56px; height: 56px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border: 2px solid #fff; overflow: hidden; }
         .welcome-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -98,23 +77,8 @@
         .welcome-name { font-size: 1.5rem; font-weight: 900; color: var(--text-dark); letter-spacing: -0.5px; line-height: 1.1; }
         .badge-class { display: inline-flex; align-items: center; background: rgba(0,0,0,0.04); color: var(--text-dark); padding: 6px 14px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; }
 
-        .hours-card { animation-delay: 0.1s; overflow: visible;}
-        .hours-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; position: relative;}
+        .hours-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .hours-title { font-size: 0.8rem; font-weight: 900; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; }
-        
-        .info-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 5px; border-radius: 50%; transition: background 0.2s; }
-        .info-icon { width: 20px; fill: var(--text-light); transition: fill 0.3s ease; }
-        .info-wrapper:hover .info-icon, .info-wrapper.active .info-icon { fill: var(--primary); }
-        .info-popover { position: absolute; top: 35px; right: 0; width: 320px; background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 24px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15); padding: 24px; z-index: 9999; opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.95); transform-origin: top right; transition: all 0.4s var(--apple-spring); pointer-events: none; cursor: default; }
-        @media (hover: hover) { .info-wrapper:hover .info-popover { opacity: 1; visibility: visible; transform: translateY(0) scale(1); pointer-events: auto; } }
-        .info-wrapper.active .info-popover { opacity: 1; visibility: visible; transform: translateY(0) scale(1); pointer-events: auto; }
-        .info-popover p { font-size: 0.85rem; line-height: 1.6; color: var(--text-gray); margin-bottom: 20px; font-weight: 600; text-align: left; }
-        .auth-buttons-container { display: flex; flex-direction: column; gap: 12px; }
-        .btn-auth { display: block; width: 100%; text-decoration: none; transition: transform 0.2s var(--apple-ease), filter 0.2s ease; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); }
-        .btn-auth:active { transform: scale(0.96); }
-        .btn-auth:hover { filter: brightness(0.95); }
-        .btn-auth img { width: 100%; height: auto; display: block; border-radius: 12px; }
-
         .hours-value { font-size: 5rem; font-weight: 900; background: linear-gradient(135deg, #0284c7 0%, #38bdf8 25%, #0ea5e9 50%, #0369a1 75%, #0284c7 100%); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientText 6s ease infinite; letter-spacing: -2px; display: flex; justify-content: flex-start; align-items: baseline; gap: 6px; line-height: 1; margin-bottom: 24px; }
         @keyframes gradientText { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .hours-value span.hours-unit { font-size: 1.4rem; font-weight: 900; color: var(--text-light); -webkit-text-fill-color: var(--text-light); letter-spacing: -0.5px; }
@@ -129,73 +93,57 @@
         .legend-value { font-weight: 900; color: var(--text-dark); font-size: 0.95rem; }
 
         .dash-main { display: flex; flex-direction: column; gap: 24px; }
-        .section-card { animation-delay: 0.15s; padding: 40px; }
-        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 15px; }
         .section-tag { font-size: 1.4rem; font-weight: 900; color: var(--text-dark); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px; }
         .section-icon-bg { width: 36px; height: 36px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary); }
         .section-icon-bg svg { width: 20px; fill: currentColor; }
-        .section-meta { background: rgba(0,0,0,0.04); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 900; color: var(--text-gray); }
 
         .timeline-wrapper { position: relative; padding-left: 32px; }
         .timeline-wrapper::before { content: ''; position: absolute; left: 6px; top: 10px; bottom: 20px; width: 2px; background: rgba(0,0,0,0.06); border-radius: 2px; }
         .timeline-item { position: relative; margin-bottom: 24px; cursor: pointer; background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s var(--apple-ease); opacity: 0; transform: translateY(15px); animation: tlFadeIn 0.5s var(--apple-spring) forwards; }
-        @keyframes tlFadeIn { to { opacity:1; transform:translateY(0); } }
-        .timeline-item:last-child { margin-bottom: 0; }
         .timeline-item::after { content: ''; position: absolute; left: -31px; top: 38px; width: 10px; height: 10px; background: #fff; border: 2px solid var(--primary); border-radius: 50%; box-shadow: 0 0 0 4px var(--bg-body); transition: all 0.3s ease; z-index: 2; }
         .timeline-item.ac-cert::after { border-color: var(--success); }
-        @media (hover: hover) { .timeline-item:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.05); transform: translateY(-2px); border-color: rgba(2, 132, 199, 0.1); } .timeline-item:hover::after { background: var(--primary); transform: scale(1.2); } .timeline-item.ac-cert:hover::after { background: var(--success); } }
-        .timeline-item[aria-expanded="true"]::after { background: var(--primary); transform: scale(1.2); }
-        .timeline-item.ac-cert[aria-expanded="true"]::after { background: var(--success); }
+        .timeline-item[aria-expanded="true"] .tl-dropdown { grid-template-rows: 1fr; opacity: 1; }
+        .timeline-item[aria-expanded="true"] .tl-chevron svg { transform: rotate(180deg); }
 
         .tl-header { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
         .tl-content { width: 100%; }
-        .tl-date { color: var(--primary); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 12px; display: inline-block; letter-spacing: 0.5px; background: var(--primary-light); padding: 6px 12px; border-radius: 8px; }
+        .tl-date { color: var(--primary); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 12px; display: inline-block; padding: 6px 12px; border-radius: 8px; background: var(--primary-light); }
         .special-badge-date { background: #e5f9eb; color: var(--success); }
-        .tl-content h3 { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); line-height: 1.3; margin-bottom: 6px; letter-spacing: -0.5px; }
-        .tl-meta { font-size: 0.95rem; color: var(--text-light); font-weight: 600; line-height: 1.4; }
+        .tl-content h3 { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); line-height: 1.3; margin-bottom: 6px; }
+        .tl-meta { font-size: 0.95rem; color: var(--text-light); font-weight: 600; }
         .tl-hours-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 6px; }
-        .tl-hours { background: rgba(0,0,0,0.03); color: var(--text-dark); padding: 8px 18px; border-radius: 14px; font-weight: 800; font-size: 1.05rem; letter-spacing: -0.3px; }
-        
-        .tl-chevron { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .tl-hours { background: rgba(0,0,0,0.03); color: var(--text-dark); padding: 8px 18px; border-radius: 14px; font-weight: 800; font-size: 1.05rem; }
+        .tl-chevron { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; }
         .tl-chevron svg { width: 18px; fill: var(--text-gray); transition: transform 0.3s ease; }
-        .timeline-item[aria-expanded="true"] .tl-chevron { background: var(--primary); }
-        .timeline-item[aria-expanded="true"] .tl-chevron svg { fill: #fff; transform: rotate(180deg); }
-
+        
         .tl-dropdown { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s var(--apple-ease); opacity: 0; }
-        .timeline-item[aria-expanded="true"] .tl-dropdown { grid-template-rows: 1fr; opacity: 1; }
         .tl-dropdown-inner { overflow: hidden; }
         .tl-ext-info { font-size: 0.95rem; color: var(--text-gray); line-height: 1.6; font-weight: 600; background: rgba(0,0,0,0.02); padding: 16px 20px; border-radius: 12px; margin-top: 20px; border: 1px solid rgba(0,0,0,0.03); }
 
-        .timeline-loading { display: flex; flex-direction: column; gap: 20px; }
-        .skeleton { background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 16px; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-        .scroll-to-top { position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); cursor: pointer; z-index: 9900; opacity: 0; pointer-events: none; transform: translateY(20px); transition: all 0.5s var(--apple-spring); }
-        .scroll-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .scroll-to-top svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: transform 0.3s; }
-        @media (hover: hover) { .scroll-to-top:hover { transform: translateY(-6px) scale(1.05); color: var(--primary-hover); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); } .scroll-to-top:hover svg { transform: translateY(-2px); } }
-
-        .dash-footer { padding: 40px 5% 60px; text-align: center; }
-        .footer-copyright { font-size: 0.85rem; color: var(--text-light); font-weight: 800; margin-bottom: 12px; }
-        .footer-links { display: flex; justify-content: center; gap: 16px; }
-        .footer-links a { color: var(--text-gray); font-size: 0.85rem; font-weight: 700; text-decoration: none; }
-        .footer-links a:hover { color: var(--primary); }
-
-        @media (max-width: 900px) { .dash-layout { grid-template-columns: 1fr; gap: 20px; margin-top: 20px; } .dash-sidebar { position: static; gap: 16px; } .card { padding: 24px; border-radius: 24px; } .hours-value { font-size: 4rem; } .section-card { padding: 24px; } }
-        @media (max-width: 500px) { .topbar-school strong { font-size: 0.85rem; } .year-badge, .btn-logout span { display: none; } .btn-logout { padding: 8px; } .timeline-wrapper { padding-left: 20px; } .timeline-wrapper::before { left: 4px; } .timeline-item::after { left: -21px; top: 30px; width: 8px; height: 8px; } .footer-links { flex-direction: column; gap: 8px; } .scroll-to-top { bottom: 20px; right: 20px; width: 50px; height: 50px; } .info-popover { width: 280px; right: -10px; } }
-        
-        .btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; border: none; }
+        .btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; border: none; }
         .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .btn-action:active { transform: translateY(0); }
         .btn-upload { background: var(--primary); color: white; }
         .btn-delete { background: #fee2e2; color: var(--danger); }
-        .btn-delete:hover { background: #fca5a5; color: #991b1b; }
-        .btn-view-pdf { background: var(--success); color: white; text-decoration: none; }
+        .btn-trash-main { background: #f1f5f9; color: var(--text-dark); border: 1px solid rgba(0,0,0,0.05); }
+        
+        /* Modale Cestino */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(5px); z-index: 9999; display: flex; justify-content: center; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: #fff; width: 100%; max-width: 600px; max-height: 85vh; border-radius: 30px 30px 0 0; padding: 30px; position: relative; transform: translateY(100%); transition: transform 0.4s var(--apple-spring); overflow-y: auto; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .close-btn { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; border: none; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        .trash-item { background: #f8fafc; border: 1px dashed var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .trash-info h4 { margin:0; color:var(--text-dark); font-size: 1.1rem; }
+        .trash-info p { margin: 5px 0 0 0; font-size: 0.85rem; color: var(--text-gray); }
+
+        @media (max-width: 900px) { .dash-layout { grid-template-columns: 1fr; gap: 20px; } .dash-sidebar { position: static; } }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-bg-mesh" aria-hidden="true"></div>
+    <div class="dashboard-bg-mesh"></div>
 
     <header class="dash-topbar">
         <div class="topbar-left">
@@ -208,7 +156,7 @@
         </div>
         <div class="topbar-right">
             <div class="year-badge">A.S. 2025/2026</div>
-            <button class="btn-logout" id="btn-logout" aria-label="Esci">
+            <button class="btn-logout" id="btn-logout">
                 <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
                 <span>Esci</span>
             </button>
@@ -217,11 +165,9 @@
 
     <div class="dash-layout">
         <aside class="dash-sidebar">
-            <div class="card welcome-card">
+            <div class="card">
                 <div class="welcome-header">
-                    <div class="welcome-avatar">
-                        <img id="avatar-img" src="IMMAGINI/PROFILO-UTENTE-LOGO.png" alt="Avatar">
-                    </div>
+                    <div class="welcome-avatar"><img id="avatar-img" src="IMMAGINI/PROFILO-UTENTE-LOGO.png" alt="Avatar"></div>
                     <div class="welcome-label-group">
                         <div class="welcome-label">Area Riservata</div>
                         <div class="welcome-name" id="greeting-name">Caricamento...</div>
@@ -230,32 +176,19 @@
                 <div class="badge-class">3°A Informatica</div>
             </div>
 
-            <div class="card hours-card">
+            <div class="card">
                 <div class="hours-header">
                     <div class="hours-title">Ore FSL Accumulate</div>
-                    <div class="info-wrapper" id="info-widget" tabindex="0">
-                        <svg class="info-icon" viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12a10 10 0 0010 10 10 10 0 0010-10A10 10 0 0012 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                        <div class="info-popover">
-                            <p>Si precisa che i dati qui riportati hanno valore puramente indicativo e sono aggiornati in tempo reale.</p>
-                            <div class="auth-buttons-container">
-                                <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/samlv2?idpCode=cie" class="btn-auth" target="_blank" rel="noopener noreferrer"><img src="IMMAGINI/LOGO-ENTRA-CON-CIE.png" alt="Accedi con CIE"></a>
-                                <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/samlv2?idpCode=cns" class="btn-auth" rel="noopener noreferrer"><img src="IMMAGINI/LOGO-ENTRA-CON-CNS.png" alt="Accedi con CNS"></a>
-                                <a href="https://iam.pubblica.istruzione.it/iam-ssum/sso/samlv2?idpCode=eIDAS" class="btn-auth" target="_blank" rel="noopener noreferrer"><img src="IMMAGINI/LOGO-ENTRA-CON-EIDAS.png" alt="Accedi con eIDAS"></a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-
                 <div class="hours-value">
-                    <span id="hour-counter">0</span>
-                    <span class="hours-unit">ore</span>
+                    <span id="hour-counter">0</span><span class="hours-unit">ore</span>
                 </div>
 
-                <div class="stat-bar-container" role="progressbar">
-                    <div class="stat-segment" id="seg-scolastiche" style="background: var(--primary);" title="Scolastiche"></div>
-                    <div class="stat-segment" id="seg-extra" style="background: var(--success);" title="Extrascolastiche"></div>
-                    <div class="stat-segment" id="seg-sicurezza" style="background: var(--warning);" title="Sicurezza"></div>
-                    <div class="stat-segment" id="seg-certificazioni" style="background: var(--purple);" title="Certificazioni"></div>
+                <div class="stat-bar-container">
+                    <div class="stat-segment" id="seg-scolastiche" style="background: var(--primary);"></div>
+                    <div class="stat-segment" id="seg-extra" style="background: var(--success);"></div>
+                    <div class="stat-segment" id="seg-sicurezza" style="background: var(--warning);"></div>
+                    <div class="stat-segment" id="seg-certificazioni" style="background: var(--purple);"></div>
                 </div>
 
                 <div class="stat-legend">
@@ -268,48 +201,49 @@
         </aside>
 
         <main class="dash-main">
-            <div class="card section-card">
+            <div class="card">
                 <div class="section-header">
                     <div class="section-tag">
-                        <div class="section-icon-bg">
-                            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-                        </div>
+                        <div class="section-icon-bg"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg></div>
                         Timeline Formativa
                     </div>
-                    <div class="section-meta" id="timeline-count">...</div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button id="btn-open-trash" class="btn-action btn-trash-main">
+                            🗑️ Cestino (<span id="trash-count-badge">0</span>)
+                        </button>
+                    </div>
                 </div>
 
                 <div class="timeline-wrapper" id="timeline-container">
-                    <div class="timeline-loading">
-                        <div class="skeleton" style="height:120px;"></div>
-                        <div class="skeleton" style="height:120px;width:95%;"></div>
-                        <div class="skeleton" style="height:120px;"></div>
-                    </div>
+                    <p style="color:var(--text-light); text-align:center;">Caricamento attività...</p>
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="scrollToTop" class="scroll-to-top" title="Torna su">
-        <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+    <!-- Modale Cestino -->
+    <div id="trash-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" id="close-trash">&times;</button>
+            <h2 style="margin-bottom: 20px; font-weight: 900;">Cestino Attività</h2>
+            <p style="color: var(--text-gray); margin-bottom: 20px; font-size: 0.9rem;">Le attività qui presenti non vengono contate nel totale delle ore. Puoi ripristinarle in qualsiasi momento.</p>
+            <div id="trash-list-container"></div>
+        </div>
     </div>
 
-    <!-- Firebase Scripts (SOLO I MODULI BASE, NO STORAGE) -->
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <script>
-    // --- IMPOSTAZIONI CLOUDINARY ---
-    // Sostituisci queste due variabili con i dati presi dal tuo account Cloudinary gratuito
+    // ✅ HO INSERITO IO I TUOI CODICI CORRETTI DI CLOUDINARY DALLE TUE FOTO
     const CLOUDINARY_CLOUD_NAME = "dktk05kaa"; 
     const CLOUDINARY_UPLOAD_PRESET = "nzuvpqwd"; 
-    // --------------------------------
 
     (function () {
         let rawUser = sessionStorage.getItem('harzafi_user') || "Utente";
-        let formattedName = rawUser.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-        let firstName = formattedName.split(' ')[0];
+        let firstName = rawUser.split(' ')[0];
         document.getElementById('greeting-name').textContent = 'Ciao, ' + firstName + '.';
 
         const firebaseConfig = {
@@ -324,13 +258,7 @@
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                if (user.photoURL) {
-                    let highResPhoto = user.photoURL;
-                    if(highResPhoto.includes('googleusercontent.com')) {
-                        highResPhoto = highResPhoto.replace('=s96-c', '=s192-c');
-                    }
-                    document.getElementById('avatar-img').src = highResPhoto;
-                }
+                if (user.photoURL) document.getElementById('avatar-img').src = user.photoURL.replace('=s96-c', '=s192-c');
                 loadTimelineAndCalculateStats();
             } else {
                 sessionStorage.removeItem('harzafi_user');
@@ -340,75 +268,81 @@
 
         function animateTotalHours(finalValue) {
             const hourEl = document.getElementById('hour-counter');
-            const duration = 1500;
+            const duration = 1000;
             const startT = performance.now();
             function anim(now) {
                 const p = Math.min((now - startT) / duration, 1);
-                const ease = 1 - Math.pow(1 - p, 4);
-                const currentValue = (ease * finalValue).toFixed(2);
-                hourEl.textContent = currentValue.replace('.', ',');
-                if (p < 1) { requestAnimationFrame(anim); } 
-                else { hourEl.textContent = finalValue.toFixed(2).replace('.', ','); }
+                hourEl.textContent = (p * finalValue).toFixed(2).replace('.', ',');
+                if (p < 1) requestAnimationFrame(anim);
             }
             requestAnimationFrame(anim);
         }
 
         const container = document.getElementById('timeline-container');
-        const countEl = document.getElementById('timeline-count');
+        const trashContainer = document.getElementById('trash-list-container');
+        const trashBadge = document.getElementById('trash-count-badge');
 
         function loadTimelineAndCalculateStats() {
             db.collection('attivita_pcto').orderBy('ordine', 'desc').get().then(snap => {
                 container.innerHTML = '';
-                
+                trashContainer.innerHTML = '';
+                let trashCount = 0;
+                let sumScolastiche = 0, sumExtra = 0, sumSicurezza = 0, sumCertificazioni = 0;
+
                 if (snap.empty) {
-                    container.innerHTML = '<p style="text-align:center; color:var(--text-light); font-weight: 800; padding:20px;">Nessuna attività registrata.</p>';
-                    countEl.textContent = '0 attività';
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-light); font-weight: 800;">Nessuna attività registrata.</p>';
                     animateTotalHours(0);
                     return;
                 }
-
-                countEl.textContent = snap.size + ' attività';
-                
-                let sumScolastiche = 0, sumExtra = 0, sumSicurezza = 0, sumCertificazioni = 0;
 
                 snap.forEach((doc, idx) => {
                     const a = doc.data();
                     const docId = doc.id;
                     
-                    let oreStr = a.ore ? String(a.ore).replace(',', '.') : "0";
-                    let oreVal = parseFloat(oreStr) || 0;
+                    let oreVal = parseFloat(String(a.ore).replace(',', '.')) || 0;
 
-                    let cat = (a.categoria || "").toLowerCase();
-                    let meta = (a.meta || "").toLowerCase();
-                    let titolo = (a.titolo || "").toLowerCase();
+                    // GESTIONE DEL CESTINO (SOFT-DELETE)
+                    if (a.cestino === true) {
+                        trashCount++;
+                        trashContainer.innerHTML += `
+                            <div class="trash-item">
+                                <div class="trash-info">
+                                    <h4>${a.titolo}</h4>
+                                    <p>${a.data} • ${a.ore} ore</p>
+                                </div>
+                                <button class="btn-action btn-ripristina" data-id="${docId}" style="background:var(--success); color:white;">
+                                    ♻️ Ripristina
+                                </button>
+                            </div>
+                        `;
+                        return; // Ferma qui il ciclo per questa attività: non la mostra nella dashboard e non somma le ore
+                    }
 
-                    let isCert = a.certificato === true || cat.includes('certifica') || meta.includes('certificazion') || titolo.includes('certificazion');
-                    let isSicurezza = cat.includes('sicurezza') || meta.includes('sicurezza') || titolo.includes('sicurezza');
-                    let isExtra = cat.includes('extra') || meta.includes('extra') || meta.includes('universit') || titolo.includes('extra');
+                    // Se non è nel cestino, somma le ore normalmente
+                    let cat = (a.categoria || "").toLowerCase(), meta = (a.meta || "").toLowerCase(), tit = (a.titolo || "").toLowerCase();
+                    let isCert = a.certificato === true || cat.includes('certifica') || meta.includes('certifica') || tit.includes('certifica');
+                    let isSicurezza = cat.includes('sicurezza') || meta.includes('sicurezza') || tit.includes('sicurezza');
+                    let isExtra = cat.includes('extra') || meta.includes('universit') || tit.includes('extra');
 
-                    if (isCert) { sumCertificazioni += oreVal; } 
-                    else if (isSicurezza) { sumSicurezza += oreVal; } 
-                    else if (isExtra) { sumExtra += oreVal; } 
-                    else { sumScolastiche += oreVal; }
+                    if (isCert) sumCertificazioni += oreVal;
+                    else if (isSicurezza) sumSicurezza += oreVal;
+                    else if (isExtra) sumExtra += oreVal;
+                    else sumScolastiche += oreVal;
 
-                    const certCls = a.certificato ? 'ac-cert' : '';
-                    const dateCls = a.certificato ? 'special-badge-date' : '';
-                    
+                    // HTML per l'attività normale
+                    const certCls = isCert ? 'ac-cert' : '';
+                    const dateCls = isCert ? 'special-badge-date' : '';
+                    let pdfLinkHTML = a.pdfCloudinaryUrl ? `<a href="${a.pdfCloudinaryUrl}" target="_blank" style="display:inline-block; margin: 10px 0; color:var(--primary); font-weight:800; text-decoration:none;">📄 Visualizza PDF Caricato</a><br>` : '';
+
                     const item = document.createElement('div');
                     item.className = `timeline-item ${certCls}`;
                     item.setAttribute('aria-expanded', 'false');
-                    item.style.animationDelay = (idx * 0.05) + 's';
                     
-                    // Mostra il pulsante PDF se il link è stato salvato da Cloudinary in Firestore
-                    let pdfLinkHTML = a.pdfCloudinaryUrl 
-                        ? `<a href="${a.pdfCloudinaryUrl}" target="_blank" class="btn-action btn-view-pdf" style="margin-top:10px; margin-bottom:10px;">📄 Apri PDF Allegato</a><br>` 
-                        : '';
-
                     item.innerHTML = `
                         <div class="tl-header">
                             <div class="tl-content">
                                 <span class="tl-date ${dateCls}">${a.data || ''}</span>
-                                <h3>${a.titolo || 'Attività FSL'}</h3>
+                                <h3>${a.titolo || 'Attività'}</h3>
                                 <p class="tl-meta">${a.meta || ''}</p>
                             </div>
                             <div class="tl-hours-row">
@@ -421,14 +355,10 @@
                                 <div class="tl-ext-info">
                                     ${a.descrizione || 'Nessun dettaglio extra.'}<br>
                                     ${pdfLinkHTML}
-                                    
-                                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-                                        <button class="btn-action btn-delete btn-elimina" data-id="${docId}">
-                                            🗑️ Elimina Ore
-                                        </button>
-                                        <label class="btn-action btn-upload">
-                                            📎 Allega PDF
-                                            <input type="file" class="input-pdf" data-id="${docId}" accept="application/pdf" style="display: none;">
+                                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                                        <button class="btn-action btn-delete btn-soft-delete" data-id="${docId}">🗑️ Sposta nel Cestino</button>
+                                        <label class="btn-action btn-upload">📎 Allega PDF
+                                            <input type="file" class="input-pdf" data-id="${docId}" accept="application/pdf" style="display:none;">
                                         </label>
                                     </div>
                                 </div>
@@ -436,128 +366,99 @@
                         </div>`;
                         
                     item.addEventListener('click', function(e) {
-                        if(e.target.closest('button') || e.target.closest('label') || e.target.tagName === 'INPUT' || e.target.tagName === 'A') return;
-                        const open = this.getAttribute('aria-expanded') === 'true';
-                        this.setAttribute('aria-expanded', String(!open));
+                        if(e.target.closest('.btn-action') || e.target.tagName === 'INPUT' || e.target.tagName === 'A') return;
+                        this.setAttribute('aria-expanded', String(this.getAttribute('aria-expanded') !== 'true'));
                     });
-                    
                     container.appendChild(item);
                 });
 
-                // 1. GESTIONE ELIMINAZIONE 
-                document.querySelectorAll('.btn-elimina').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        if(confirm("Sei sicuro di voler eliminare questa attività? Le ore verranno sottratte.")) {
-                            const docIdToDel = this.getAttribute('data-id');
-                            db.collection('attivita_pcto').doc(docIdToDel).delete().then(() => {
-                                loadTimelineAndCalculateStats(); 
-                            }).catch(err => alert("Errore nell'eliminazione: " + err.message));
-                        }
+                // Aggiorna conteggio cestino
+                trashBadge.textContent = trashCount;
+                if(trashCount === 0) trashContainer.innerHTML = '<p style="color:var(--text-gray); font-style:italic;">Il cestino è vuoto.</p>';
+
+                // EVENTO 1: SPOSTA NEL CESTINO (Soft Delete) - Non dà più errore!
+                document.querySelectorAll('.btn-soft-delete').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        db.collection('attivita_pcto').doc(id).update({ cestino: true })
+                          .then(() => loadTimelineAndCalculateStats())
+                          .catch(err => alert("Errore: " + err.message));
                     });
                 });
 
-                // 2. GESTIONE UPLOAD CON CLOUDINARY (GRATUITO, NO CARTA CREDITO, NO LIMITI ESTREMI)
-                document.querySelectorAll('.input-pdf').forEach(input => {
-                    input.addEventListener('change', async function(e) {
-                        e.stopPropagation();
-                        const file = this.files[0];
-                        if(!file || file.type !== "application/pdf") {
-                            alert("Seleziona un file in formato PDF.");
-                            this.value = ''; 
-                            return;
-                        }
+                // EVENTO 2: RIPRISTINA DAL CESTINO
+                document.querySelectorAll('.btn-ripristina').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        // Rimuove il flag "cestino" per ripristinarlo
+                        db.collection('attivita_pcto').doc(id).update({ cestino: firebase.firestore.FieldValue.delete() })
+                          .then(() => loadTimelineAndCalculateStats())
+                          .catch(err => alert("Errore: " + err.message));
+                    });
+                });
 
-                        if(CLOUDINARY_CLOUD_NAME === "dktk05kaa") {
-                            alert("ERRORE: Devi prima inserire i codici di Cloudinary nel codice della pagina!");
-                            this.value = '';
-                            return;
-                        }
+                // EVENTO 3: UPLOAD PDF SU CLOUDINARY
+                document.querySelectorAll('.input-pdf').forEach(input => {
+                    input.addEventListener('change', async function() {
+                        const file = this.files[0];
+                        if(!file || file.type !== "application/pdf") return alert("Devi selezionare un PDF.");
                         
-                        const docIdToUpdate = this.getAttribute('data-id');
-                        const labelEl = this.parentElement;
-                        const origText = labelEl.innerHTML;
-                        labelEl.innerHTML = "⏳ Caricamento...";
+                        const id = this.getAttribute('data-id');
+                        const label = this.parentElement;
+                        const oldText = label.innerHTML;
+                        label.innerHTML = "⏳ Invio in corso...";
 
                         try {
-                            // Creiamo i dati per la richiesta a Cloudinary
                             const formData = new FormData();
                             formData.append("file", file);
                             formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
-                            // Invia il PDF ai server gratuiti di Cloudinary
-                            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
-                                method: 'POST',
-                                body: formData
+                            // API di cloudinary impostata su /auto/upload per file misti come i PDF
+                            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+                                method: 'POST', body: formData
                             });
-
                             const data = await res.json();
                             
                             if (data.secure_url) {
-                                // Salviamo solo il LINK Sicuro generato da Cloudinary dentro Firestore
-                                await db.collection('attivita_pcto').doc(docIdToUpdate).update({
-                                    pdfCloudinaryUrl: data.secure_url,
-                                    certificato: true
-                                });
+                                await db.collection('attivita_pcto').doc(id).update({ pdfCloudinaryUrl: data.secure_url, certificato: true });
                                 loadTimelineAndCalculateStats();
-                            } else {
-                                throw new Error(data.error?.message || "Errore sconosciuto da Cloudinary.");
-                            }
-
+                            } else { throw new Error("Errore durante la generazione del link."); }
                         } catch (err) {
-                            labelEl.innerHTML = origText;
-                            alert("Errore durante il caricamento del PDF: " + err.message);
+                            label.innerHTML = oldText;
+                            alert("Errore upload: Assicurati di essere connesso a internet e che il preset Cloudinary sia configurato su Unsigned.");
                         }
                     });
                 });
 
+                // Aggiorna barre e statistiche finali
                 let totalHours = sumScolastiche + sumExtra + sumSicurezza + sumCertificazioni;
                 document.getElementById('val-scolastiche').textContent = sumScolastiche.toFixed(2);
                 document.getElementById('val-extra').textContent = sumExtra.toFixed(2);
                 document.getElementById('val-sicurezza').textContent = sumSicurezza.toFixed(2);
                 document.getElementById('val-certificazioni').textContent = sumCertificazioni.toFixed(2);
 
-                setTimeout(() => {
-                    if(totalHours > 0) {
-                        document.getElementById('seg-scolastiche').style.width = ((sumScolastiche / totalHours) * 100) + '%';
-                        document.getElementById('seg-extra').style.width = ((sumExtra / totalHours) * 100) + '%';
-                        document.getElementById('seg-sicurezza').style.width = ((sumSicurezza / totalHours) * 100) + '%';
-                        document.getElementById('seg-certificazioni').style.width = ((sumCertificazioni / totalHours) * 100) + '%';
-                    } else {
-                        document.getElementById('seg-scolastiche').style.width = '0%';
-                        document.getElementById('seg-extra').style.width = '0%';
-                        document.getElementById('seg-sicurezza').style.width = '0%';
-                        document.getElementById('seg-certificazioni').style.width = '0%';
-                    }
-                }, 100);
-
+                if(totalHours > 0) {
+                    document.getElementById('seg-scolastiche').style.width = ((sumScolastiche / totalHours) * 100) + '%';
+                    document.getElementById('seg-extra').style.width = ((sumExtra / totalHours) * 100) + '%';
+                    document.getElementById('seg-sicurezza').style.width = ((sumSicurezza / totalHours) * 100) + '%';
+                    document.getElementById('seg-certificazioni').style.width = ((sumCertificazioni / totalHours) * 100) + '%';
+                }
                 animateTotalHours(totalHours);
-
-            }).catch((err) => {
-                console.error(err);
-                container.innerHTML = '<p style="color:var(--danger); font-weight: 900; text-align:center;">Errore di connessione al Database.</p>';
-            });
+            }).catch(() => container.innerHTML = '<p style="color:var(--danger); text-align:center;">Errore di rete.</p>');
         }
 
-        const scrollToTopBtn = document.getElementById('scrollToTop');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) { scrollToTopBtn.classList.add('visible'); } 
-            else { scrollToTopBtn.classList.remove('visible'); }
+        // Gestione Modale Cestino
+        document.getElementById('btn-open-trash').addEventListener('click', () => {
+            document.getElementById('trash-modal').classList.add('active');
         });
-        scrollToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
-        
-        const infoWidget = document.getElementById('info-widget');
-        const infoPopover = infoWidget.querySelector('.info-popover');
-        infoWidget.addEventListener('click', (e) => { e.stopPropagation(); infoWidget.classList.toggle('active'); });
-        infoPopover.addEventListener('click', (e) => { e.stopPropagation(); });
-        document.addEventListener('click', (e) => { if (!infoWidget.contains(e.target)) { infoWidget.classList.remove('active'); } });
+        document.getElementById('close-trash').addEventListener('click', () => {
+            document.getElementById('trash-modal').classList.remove('active');
+        });
 
         document.getElementById('btn-logout').addEventListener('click', () => {
-            auth.signOut().finally(() => {
-                sessionStorage.removeItem('harzafi_user');
-                window.location.replace('index.html');
-            });
+            auth.signOut().finally(() => window.location.replace('index.html'));
         });
+
     })();
     </script>
 </body>
