@@ -100,7 +100,7 @@
 
         .timeline-wrapper { position: relative; padding-left: 32px; }
         .timeline-wrapper::before { content: ''; position: absolute; left: 6px; top: 10px; bottom: 20px; width: 2px; background: rgba(0,0,0,0.06); border-radius: 2px; }
-        .timeline-item { position: relative; margin-bottom: 24px; cursor: pointer; background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s var(--apple-ease); opacity: 0; transform: translateY(15px); animation: tlFadeIn 0.5s var(--apple-spring) forwards; }
+        .timeline-item { position: relative; margin-bottom: 24px; cursor: pointer; background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s var(--apple-ease); opacity: 0; transform: translateY(15px); animation: fadeUp 0.5s var(--apple-spring) forwards; }
         .timeline-item::after { content: ''; position: absolute; left: -31px; top: 38px; width: 10px; height: 10px; background: #fff; border: 2px solid var(--primary); border-radius: 50%; box-shadow: 0 0 0 4px var(--bg-body); transition: all 0.3s ease; z-index: 2; }
         .timeline-item.ac-cert::after { border-color: var(--success); }
         .timeline-item[aria-expanded="true"] .tl-dropdown { grid-template-rows: 1fr; opacity: 1; }
