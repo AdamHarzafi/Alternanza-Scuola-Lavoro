@@ -97,16 +97,26 @@ function entraNelPortale(nomeUtente) {
 // ── DOMContentLoaded ─────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Navbar scroll
+    // 1. Blocca lo scatto del browser durante i ricaricamenti (Scroll Restoration)
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    // 2. Fix animazione Navbar (verifica che esista per non creare errori nel Login)
     const navbar = document.querySelector('.navbar-wrapper');
-    let isScrolled = false;
-    window.addEventListener('scroll', () => {
-        const should = window.scrollY > 40;
-        if (should !== isScrolled) {
-            isScrolled = should;
-            navbar.classList.toggle('scrolled', isScrolled);
-        }
-    }, { passive: true });
+    if (navbar) {
+        let isScrolled = false;
+        const handleScroll = () => {
+            const should = window.scrollY > 40;
+            if (should !== isScrolled) {
+                isScrolled = should;
+                navbar.classList.toggle('scrolled', isScrolled);
+            }
+        };
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+    }
 
     // ── Dropdown utenti ──────────────────────────────────────
     let selectedRole       = 'studente';
