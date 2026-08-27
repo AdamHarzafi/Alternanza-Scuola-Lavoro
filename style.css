@@ -54,8 +54,8 @@
         body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; width: 100%; min-height: 100vh; margin: 0; }
 
         .glass { background: var(--surface); backdrop-filter: saturate(180%) blur(25px); -webkit-backdrop-filter: saturate(180%) blur(25px); box-shadow: 0 8px 32px rgba(2, 132, 199, 0.05); transform: translateZ(0); }
-        .reveal { opacity: 0; transform: translateY(30px) scale(0.96) translateZ(0); transition: opacity 0.8s var(--apple-ease), transform 0.8s var(--apple-ease); will-change: opacity, transform; }
-        .reveal.active { opacity: 1; transform: translateY(0) scale(1) translateZ(0); }
+        .reveal { opacity: 0; filter: blur(12px); transform: translateY(40px) scale(0.95) translateZ(0); transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1), transform 1s cubic-bezier(0.22, 1, 0.36, 1), filter 1s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform, filter; }
+        .reveal.active { opacity: 1; filter: blur(0); transform: translateY(0) scale(1) translateZ(0); }
 
         h1, h2, h3 { letter-spacing: -0.04em; font-weight: 800; }
         p { line-height: 1.6; color: var(--text-gray); font-size: 1.05rem; }
@@ -97,8 +97,16 @@
         .hero-text-col { flex: 1; max-width: 580px; text-align: left; }
         .hero-text-col h1 { font-size: clamp(3rem, 5.5vw, 4.8rem); line-height: 1.05; margin-bottom: 24px; color: var(--text-dark); letter-spacing: -2px; }
         
-        .animated-gradient-text { background: linear-gradient(135deg, #0284c7 0%, #38bdf8 25%, #0ea5e9 50%, #0369a1 75%, #0284c7 100%); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textPulseColor 5s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
-        @keyframes textPulseColor { 0% { background-position: 0% 50%; } 20% { background-position: 100% 50%; } 60% { background-position: 50% 50%; } 100% { background-position: 0% 50%; } }
+        .animated-gradient-text { 
+            background: linear-gradient(to right, #4ade80, #06b6d4, #4ade80); 
+            background-size: 200% auto; 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            animation: textPulseColor 2s linear infinite; 
+        }
+        @keyframes textPulseColor { 
+            to { background-position: -200% center; } 
+        }
 
         .hero-text-col p { font-size: 1.25rem; font-weight: 500; color: var(--text-gray); margin-bottom: 40px; line-height: 1.6; }
         .hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }

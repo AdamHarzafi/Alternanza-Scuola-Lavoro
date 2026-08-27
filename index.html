@@ -54,13 +54,13 @@
         <header class="hero-wrapper">
             <div class="hero-mesh"></div>
             <div class="hero-container">
-                <div class="hero-text-col reveal">
-                    <h1>
+                <div class="hero-text-col">
+                    <h1 class="reveal">
                         Il tuo percorso formativo,<br>
                         <span class="animated-gradient-text">ridisegnato.</span>
                     </h1>
-                    <p>Un ambiente digitale straordinariamente fluido e sicuro per monitorare le tue ore di alternanza, i certificati e il tuo futuro professionale.</p>
-                    <div class="hero-actions">
+                    <p class="reveal" style="transition-delay: 0.15s;">Un ambiente digitale straordinariamente fluido e sicuro per monitorare le tue ore di alternanza, i certificati e il tuo futuro professionale.</p>
+                    <div class="hero-actions reveal" style="transition-delay: 0.3s;">
                         <!-- ▶ MODIFICA: link diretto a login.html invece di aprire il modal -->
                         <a href="login.html" style="text-decoration:none;">
                             <button class="btn-gradient" style="width:auto;">Accedi al Portale</button>
@@ -99,7 +99,10 @@
         </section>
 
         <section id="features" class="bento-section content-lazy">
-            <h2 class="reveal">Tutto ciò che ti serve.<br><span style="color: var(--text-light);">In un unico posto.</span></h2>
+            <h2>
+                <div class="reveal">Tutto ciò che ti serve.</div>
+                <div class="reveal" style="color: var(--text-light); transition-delay: 0.15s; margin-top: 5px;">In un unico posto.</div>
+            </h2>
             <div class="bento-grid">
                 <div class="bento-card large reveal">
                     <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
