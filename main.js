@@ -87,11 +87,13 @@ window.addEventListener('load', () => {
 });
 
 const scrollBtn = document.getElementById('scrollToTop');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) scrollBtn.classList.add('visible'); 
-    else scrollBtn.classList.remove('visible');
-});
-scrollBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+if (scrollBtn) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) scrollBtn.classList.add('visible'); 
+        else scrollBtn.classList.remove('visible');
+    });
+    scrollBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+}
 
 const cookieBanner = document.getElementById('apple-cookie-banner');
 const btnAccetto = document.getElementById('btn-accetto-cookie');
@@ -99,8 +101,8 @@ const btnRifiuto = document.getElementById('btn-rifiuto-cookie');
 
 function initCookies() {
     const consent = localStorage.getItem('harzafi_cookie_consent');
-    if (!consent) setTimeout(() => cookieBanner.classList.add('active'), 500); 
-    else applyTracking(JSON.parse(consent).analytics); 
+    if (!consent && cookieBanner) setTimeout(() => cookieBanner.classList.add('active'), 500); 
+    else if (consent) applyTracking(JSON.parse(consent).analytics); 
 }
 
 function applyTracking(isAnalyticsAllowed) {
@@ -147,15 +149,21 @@ function applyTracking(isAnalyticsAllowed) {
     }
 }
 
-btnAccetto.addEventListener('click', () => {
-    localStorage.setItem('harzafi_cookie_consent', JSON.stringify({ technical: true, analytics: true }));
-    cookieBanner.classList.remove('active'); applyTracking(true);
-});
+if (btnAccetto) {
+    btnAccetto.addEventListener('click', () => {
+        localStorage.setItem('harzafi_cookie_consent', JSON.stringify({ technical: true, analytics: true }));
+        if (cookieBanner) cookieBanner.classList.remove('active'); 
+        applyTracking(true);
+    });
+}
 
-btnRifiuto.addEventListener('click', () => {
-    localStorage.setItem('harzafi_cookie_consent', JSON.stringify({ technical: true, analytics: false }));
-    cookieBanner.classList.remove('active'); applyTracking(false);
-});
+if (btnRifiuto) {
+    btnRifiuto.addEventListener('click', () => {
+        localStorage.setItem('harzafi_cookie_consent', JSON.stringify({ technical: true, analytics: false }));
+        if (cookieBanner) cookieBanner.classList.remove('active'); 
+        applyTracking(false);
+    });
+}
 
 document.addEventListener("DOMContentLoaded", function() {
     initCookies();
@@ -184,6 +192,115 @@ document.addEventListener("DOMContentLoaded", function() {
             if (targetElement) { const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 80; window.scrollTo({ top: offsetPosition, behavior: 'smooth' }); }
         });
     });
+
+    // Carosello funzionalità: indicatori e sfocatura sui bordi
+    const featuresCarousel = document.getElementById('apple-features-carousel');
+    const featuresTrack = document.getElementById('apple-features-track');
+    const featureDots = Array.from(document.querySelectorAll('.apple-feature-dot'));
+    const featureBtnPrev = document.getElementById('apple-features-prev');
+    const featureBtnNext = document.getElementById('apple-features-next');
+
+    if (featuresCarousel && featuresTrack && featureDots.length) {
+        let featureScrollFrame = null;
+
+        const getFeatureState = () => {
+            const maxScroll = Math.max(0, featuresTrack.scrollWidth - featuresTrack.clientWidth);
+            const currentScroll = Math.max(0, featuresTrack.scrollLeft);
+            const lastIndex = featureDots.length - 1;
+            const activeIndex = maxScroll > 0
+                ? Math.round((currentScroll / maxScroll) * lastIndex)
+                : 0;
+            return { maxScroll, currentScroll, activeIndex, lastIndex };
+        };
+
+        const scrollFeaturesToIndex = (index) => {
+            const { maxScroll, lastIndex } = getFeatureState();
+            const safeIndex = Math.max(0, Math.min(lastIndex, index));
+            const targetLeft = lastIndex > 0 ? maxScroll * (safeIndex / lastIndex) : 0;
+            featuresTrack.scrollTo({ left: targetLeft, behavior: 'smooth' });
+        };
+
+        const updateFeaturesCarousel = () => {
+            const { maxScroll, currentScroll, activeIndex, lastIndex } = getFeatureState();
+            featuresCarousel.classList.toggle('can-scroll-left', currentScroll > 8);
+            featuresCarousel.classList.toggle('can-scroll-right', currentScroll < maxScroll - 8);
+
+            if (featureBtnPrev) featureBtnPrev.disabled = activeIndex <= 0;
+            if (featureBtnNext) featureBtnNext.disabled = activeIndex >= lastIndex;
+
+            featureDots.forEach((dot, index) => {
+                const isActive = index === activeIndex;
+                dot.classList.toggle('active', isActive);
+                dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+            });
+        };
+
+        const requestFeaturesUpdate = () => {
+            if (featureScrollFrame) cancelAnimationFrame(featureScrollFrame);
+            featureScrollFrame = requestAnimationFrame(updateFeaturesCarousel);
+        };
+
+        featureDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => scrollFeaturesToIndex(index));
+        });
+
+        if (featureBtnPrev) {
+            featureBtnPrev.addEventListener('click', () => {
+                const { activeIndex } = getFeatureState();
+                scrollFeaturesToIndex(activeIndex - 1);
+            });
+        }
+
+        if (featureBtnNext) {
+            featureBtnNext.addEventListener('click', () => {
+                const { activeIndex } = getFeatureState();
+                scrollFeaturesToIndex(activeIndex + 1);
+            });
+        }
+
+        featuresTrack.addEventListener('keydown', (event) => {
+            if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+            event.preventDefault();
+            const direction = event.key === 'ArrowRight' ? 1 : -1;
+            const { activeIndex } = getFeatureState();
+            scrollFeaturesToIndex(activeIndex + direction);
+        });
+
+        featuresTrack.addEventListener('scroll', requestFeaturesUpdate, { passive: true });
+        window.addEventListener('resize', requestFeaturesUpdate, { passive: true });
+        setTimeout(updateFeaturesCarousel, 100);
+    }
+
+    // Inizializzazione Carosello Riquadri di supporto
+    const appleCarousel = document.getElementById('apple-cards-carousel');
+    const appleBtnPrev = document.getElementById('apple-carousel-prev');
+    const appleBtnNext = document.getElementById('apple-carousel-next');
+
+    if (appleCarousel && appleBtnPrev && appleBtnNext) {
+        const updateCarouselButtons = () => {
+            const scrollLeft = appleCarousel.scrollLeft;
+            const maxScroll = appleCarousel.scrollWidth - appleCarousel.clientWidth;
+            appleBtnPrev.disabled = scrollLeft <= 8;
+            appleBtnNext.disabled = scrollLeft >= maxScroll - 8;
+        };
+
+        const getScrollStep = () => {
+            const firstCard = appleCarousel.querySelector('.apple-card');
+            return firstCard ? (firstCard.offsetWidth + 24) : 400;
+        };
+
+        appleBtnPrev.addEventListener('click', () => {
+            appleCarousel.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+        });
+
+        appleBtnNext.addEventListener('click', () => {
+            appleCarousel.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
+        });
+
+        appleCarousel.addEventListener('scroll', updateCarouselButtons, { passive: true });
+        window.addEventListener('resize', updateCarouselButtons, { passive: true });
+        setTimeout(updateCarouselButtons, 100);
+    }
 
     function trapFocus(modal) {
         const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea,[tabindex]:not([tabindex="-1"])');
@@ -256,26 +373,46 @@ document.addEventListener("DOMContentLoaded", function() {
     const hidModal = document.getElementById('hid-modal');
     
     document.querySelectorAll('.btn-open-login').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault(); loginModal.classList.add('active');
-        window.globalTurnstileToken = "";
+        btn.addEventListener('click', (e) => {
+            if (loginModal) loginModal.classList.add('active');
+            window.globalTurnstileToken = "";
             if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
         });
     });
 
-    document.getElementById('btn-open-maps').addEventListener('click', (e) => { e.preventDefault(); mapsModal.classList.add('active'); });
-    document.getElementById('btn-forgot-pass').addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.remove('active'); forgotSheetModal.classList.add('active'); setupForgotView(); });
-    document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => { btn.closest('.modal-overlay').classList.remove('active'); }));
+    const btnOpenMaps = document.getElementById('btn-open-maps');
+    if (btnOpenMaps && mapsModal) {
+        btnOpenMaps.addEventListener('click', (e) => { e.preventDefault(); mapsModal.classList.add('active'); });
+    }
+
+    const btnForgotPass = document.getElementById('btn-forgot-pass');
+    if (btnForgotPass) {
+        btnForgotPass.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            if (loginModal) loginModal.classList.remove('active'); 
+            if (forgotSheetModal) forgotSheetModal.classList.add('active'); 
+            setupForgotView(); 
+        });
+    }
+
+    document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => { 
+        const parentModal = btn.closest('.modal-overlay');
+        if (parentModal) parentModal.classList.remove('active'); 
+    }));
     
-    document.getElementById('forgot-sheet-close').addEventListener('click', () => {
-        forgotSheetModal.classList.remove('active');
-    });
+    const forgotSheetClose = document.getElementById('forgot-sheet-close');
+    if (forgotSheetClose && forgotSheetModal) {
+        forgotSheetClose.addEventListener('click', () => {
+            forgotSheetModal.classList.remove('active');
+        });
+    }
 
     const usernameSelect = document.getElementById('username-select');
     const hiddenUsernameInput = document.getElementById('hidden-username');
     
     window.populateUserDropdown = function(role) {
         const optionsContainer = document.getElementById('username-options');
+        if (!optionsContainer) return;
         optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center;">Caricamento utenti...</div>';
         const collectionName = role === 'studente' ? 'studenti' : 'docenti';
         
@@ -288,26 +425,48 @@ document.addEventListener("DOMContentLoaded", function() {
             optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center;">In attesa di connessione...</div>';
         }
         resetDropdownDisplay('username-display', 'Seleziona Utente');
-    }
+    };
 
     function creaOpzioneDropdown(nome, datoExtra, container, tipo) {
+        if (!container) return;
         const option = document.createElement('div');
         option.className = 'custom-option'; option.textContent = nome;
         option.addEventListener('click', function(e) {
-            e.stopPropagation(); document.getElementById(`${tipo}-display`).textContent = nome; document.getElementById(`${tipo}-display`).parentElement.classList.add('selected');
-            if(tipo === 'username') { selectedUserValue = nome; selectedUserEmail = datoExtra; hiddenUsernameInput.value = nome; usernameSelect.classList.remove('open'); errorMsg.style.display = 'none'; }
-        }); container.appendChild(option);
+            e.stopPropagation(); 
+            const displayEl = document.getElementById(`${tipo}-display`);
+            if (displayEl) {
+                displayEl.textContent = nome; 
+                if (displayEl.parentElement) displayEl.parentElement.classList.add('selected');
+            }
+            if(tipo === 'username') { 
+                selectedUserValue = nome; 
+                selectedUserEmail = datoExtra; 
+                if (hiddenUsernameInput) hiddenUsernameInput.value = nome; 
+                if (usernameSelect) usernameSelect.classList.remove('open'); 
+                if (errorMsg) errorMsg.style.display = 'none'; 
+            }
+        }); 
+        container.appendChild(option);
     }
 
     function resetDropdownDisplay(id, testo) {
-        document.getElementById(id).textContent = testo; document.getElementById(id).parentElement.classList.remove('selected');
-        if(id === 'username-display') { selectedUserValue = ""; selectedUserEmail = ""; hiddenUsernameInput.value = ""; }
+        const displayEl = document.getElementById(id);
+        if (displayEl) {
+            displayEl.textContent = testo; 
+            if (displayEl.parentElement) displayEl.parentElement.classList.remove('selected');
+        }
+        if(id === 'username-display') { 
+            selectedUserValue = ""; 
+            selectedUserEmail = ""; 
+            if (hiddenUsernameInput) hiddenUsernameInput.value = ""; 
+        }
     }
 
     document.querySelectorAll('.custom-select-trigger').forEach(trigger => {
         trigger.addEventListener('click', function(e) { 
             e.stopPropagation(); 
             const parent = this.parentElement; 
+            if (!parent) return;
             const isOpen = parent.classList.contains('open');
             document.querySelectorAll('.custom-select').forEach(s => { if(s !== parent) s.classList.remove('open'); }); 
             parent.classList.toggle('open'); 
@@ -317,7 +476,8 @@ document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener('click', () => {
         document.querySelectorAll('.custom-select').forEach(sel => { 
             sel.classList.remove('open'); 
-            sel.querySelector('.custom-select-trigger').setAttribute('aria-expanded', 'false');
+            const trig = sel.querySelector('.custom-select-trigger');
+            if (trig) trig.setAttribute('aria-expanded', 'false');
         });
     });
 
@@ -328,26 +488,56 @@ document.addEventListener("DOMContentLoaded", function() {
 
     segBtns.forEach((btn, index) => btn.addEventListener('click', (e) => {
         segBtns.forEach(b => b.classList.remove('active')); e.target.classList.add('active');
-        selectedRole = e.target.dataset.role; segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
+        selectedRole = e.target.dataset.role; 
+        if (segSlider) segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
         if(typeof window.populateUserDropdown === 'function') window.populateUserDropdown(selectedRole);
-        document.getElementById('google-login-error').style.display = 'none';
+        const gErr = document.getElementById('google-login-error');
+        if (gErr) gErr.style.display = 'none';
     }));
 
-    document.getElementById('btn-rules-banner').addEventListener('click', () => { loginView.style.display = 'none'; rulesView.style.display = 'block'; });
-    document.querySelectorAll('.btn-back-login').forEach(btn => { btn.addEventListener('click', () => { rulesView.style.display = 'none'; loginView.style.display = 'block'; hidModal.classList.remove('active'); }); });
+    const btnRulesBanner = document.getElementById('btn-rules-banner');
+    if (btnRulesBanner) {
+        btnRulesBanner.addEventListener('click', () => { 
+            if (loginView) loginView.style.display = 'none'; 
+            if (rulesView) rulesView.style.display = 'block'; 
+        });
+    }
+
+    document.querySelectorAll('.btn-back-login').forEach(btn => { 
+        btn.addEventListener('click', () => { 
+            if (rulesView) rulesView.style.display = 'none'; 
+            if (loginView) loginView.style.display = 'block'; 
+            if (hidModal) hidModal.classList.remove('active'); 
+        }); 
+    });
 
     const togglePasswordBtn = document.getElementById('toggle-password');
     const eyeIcon = document.getElementById('eye-icon');
     const eyeSlashIcon = document.getElementById('eye-slash-icon');
-    togglePasswordBtn.addEventListener('click', () => {
-        if (passInput.type === 'password') { 
-            passInput.type = 'text'; passInput.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Inter', sans-serif"; passInput.style.letterSpacing = "normal"; eyeIcon.style.display = 'none'; eyeSlashIcon.style.display = 'block'; 
-        } else { 
-            passInput.type = 'password'; passInput.style.fontFamily = "Verdana, sans-serif"; passInput.style.letterSpacing = "2px"; eyeIcon.style.display = 'block'; eyeSlashIcon.style.display = 'none'; 
-        }
-    });
-    passInput.addEventListener('copy', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
-    passInput.addEventListener('paste', (e) => { e.preventDefault(); errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; });
+    if (togglePasswordBtn && passInput) {
+        togglePasswordBtn.addEventListener('click', () => {
+            if (passInput.type === 'password') { 
+                passInput.type = 'text'; passInput.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'Inter', sans-serif"; passInput.style.letterSpacing = "normal"; 
+                if (eyeIcon) eyeIcon.style.display = 'none'; 
+                if (eyeSlashIcon) eyeSlashIcon.style.display = 'block'; 
+            } else { 
+                passInput.type = 'password'; passInput.style.fontFamily = "Verdana, sans-serif"; passInput.style.letterSpacing = "2px"; 
+                if (eyeIcon) eyeIcon.style.display = 'block'; 
+                if (eyeSlashIcon) eyeSlashIcon.style.display = 'none'; 
+            }
+        });
+    }
+
+    if (passInput) {
+        passInput.addEventListener('copy', (e) => { 
+            e.preventDefault(); 
+            if (errorMsg) { errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; }
+        });
+        passInput.addEventListener('paste', (e) => { 
+            e.preventDefault(); 
+            if (errorMsg) { errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; }
+        });
+    }
 
 
     async function checkVPN() {
@@ -365,8 +555,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     window.eseguiAccessoServer = function() {
-        const pass = passInput.value.trim(); const uName = hiddenUsernameInput.value.trim();
-        submitBtn.innerText = "VERIFICA IN CORSO...";
+        const pass = passInput ? passInput.value.trim() : ''; 
+        const uName = hiddenUsernameInput ? hiddenUsernameInput.value.trim() : '';
+        if (submitBtn) submitBtn.innerText = "VERIFICA IN CORSO...";
         if(typeof window.auth !== 'undefined') {
             window.auth.signInWithEmailAndPassword(selectedUserEmail, pass).then(() => {
                 inviaEmail(selectedUserEmail, 2, { 
@@ -374,168 +565,223 @@ document.addEventListener("DOMContentLoaded", function() {
                     email_utente: selectedUserEmail, 
                     orario_accesso: new Date().toLocaleString('it-IT') 
                 });
-                submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; entraNelPortale(uName);
+                if (submitBtn) { submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; }
+                entraNelPortale(uName);
             }).catch(() => {
-                submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; passInput.value = ''; 
+                if (submitBtn) { submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; }
+                if (passInput) passInput.value = ''; 
                 window.globalTurnstileToken = "";
                 if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
 
-                errorMsg.innerText = "Credenziali errate. Riprova."; 
-                errorMsg.style.display = 'block'; 
-                attemptsMsgObj.style.display = 'none';
-                errorMsg.style.animation = 'none'; 
-                void errorMsg.offsetWidth; 
-                errorMsg.style.animation = 'shake 0.4s';
+                if (errorMsg) {
+                    errorMsg.innerText = "Credenziali errate. Riprova."; 
+                    errorMsg.style.display = 'block'; 
+                    errorMsg.style.animation = 'none'; 
+                    void errorMsg.offsetWidth; 
+                    errorMsg.style.animation = 'shake 0.4s';
+                }
+                if (attemptsMsgObj) attemptsMsgObj.style.display = 'none';
             });
         } else {
-            errorMsg.innerText = "Servizio temporaneamente offline."; errorMsg.style.display = 'block';
-            submitBtn.innerText = "ENTRA"; submitBtn.disabled = false;
+            if (errorMsg) { errorMsg.innerText = "Servizio temporaneamente offline."; errorMsg.style.display = 'block'; }
+            if (submitBtn) { submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; }
         }
     };
 
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-        e.preventDefault(); 
-        if (document.activeElement) document.activeElement.blur(); 
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            if (document.activeElement) document.activeElement.blur(); 
 
-        const pass = passInput.value.trim(); const uName = hiddenUsernameInput.value.trim();
-        if (typeof window.auth === 'undefined') { errorMsg.innerText = "Database offline."; errorMsg.style.display = 'block'; return; }
-        if (!uName || !selectedUserEmail) { errorMsg.innerText = "Seleziona prima un utente dalla lista."; errorMsg.style.display = 'block'; return; }
-        if (!pass) { errorMsg.innerText = "Il campo password è obbligatorio."; errorMsg.style.display = 'block'; return; }
+            const pass = passInput ? passInput.value.trim() : ''; 
+            const uName = hiddenUsernameInput ? hiddenUsernameInput.value.trim() : '';
+            if (typeof window.auth === 'undefined') { if (errorMsg) { errorMsg.innerText = "Database offline."; errorMsg.style.display = 'block'; } return; }
+            if (!uName || !selectedUserEmail) { if (errorMsg) { errorMsg.innerText = "Seleziona prima un utente dalla lista."; errorMsg.style.display = 'block'; } return; }
+            if (!pass) { if (errorMsg) { errorMsg.innerText = "Il campo password è obbligatorio."; errorMsg.style.display = 'block'; } return; }
 
-        errorMsg.style.display = 'none';
-        submitBtn.innerText = "VERIFICA SICUREZZA..."; submitBtn.disabled = true;
+            if (errorMsg) errorMsg.style.display = 'none';
+            if (submitBtn) { submitBtn.innerText = "VERIFICA SICUREZZA..."; submitBtn.disabled = true; }
 
-        const isVpn = await checkVPN();
-        if (isVpn) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; return; }
-        
-       if (window.globalTurnstileToken) {
-            window.eseguiAccessoServer();
-        } else {
-            window.isWaitingForToken = true;
-            window.turnstileCallbackFired = false;
-            if (typeof turnstile !== 'undefined') { try { turnstile.execute(); } catch(err) {} }
-            setTimeout(() => {
-                if (window.isWaitingForToken && !window.turnstileCallbackFired) {
-                    window.isWaitingForToken = false;
-                    window.eseguiAccessoServer();
-                }
-            }, 2500);
-        }
-    });
+            const isVpn = await checkVPN();
+            if (isVpn) { 
+                if (errorMsg) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; }
+                if (submitBtn) { submitBtn.innerText = "ENTRA"; submitBtn.disabled = false; }
+                return; 
+            }
+            
+            if (window.globalTurnstileToken) {
+                window.eseguiAccessoServer();
+            } else {
+                window.isWaitingForToken = true;
+                window.turnstileCallbackFired = false;
+                if (typeof turnstile !== 'undefined') { try { turnstile.execute(); } catch(err) {} }
+                setTimeout(() => {
+                    if (window.isWaitingForToken && !window.turnstileCallbackFired) {
+                        window.isWaitingForToken = false;
+                        window.eseguiAccessoServer();
+                    }
+                }, 2500);
+            }
+        });
+    }
 
     const googleBtn = document.getElementById('custom-google-btn');
     const googleErrorMsg = document.getElementById('google-login-error');
     
-    googleBtn.addEventListener('click', async () => {
-        if (document.activeElement) document.activeElement.blur();
-        const originalGoogleBtn = googleBtn.innerHTML;
-        googleBtn.innerHTML = `<div class="btn-loader"><div class="btn-spinner"></div><span class="btn-text-main" style="margin-left: 5px;">CARICO...</span></div>`; 
-        googleBtn.disabled = true; googleErrorMsg.style.display = 'none';
-        
-        const isVpn = await checkVPN();
-        if (isVpn) { googleErrorMsg.innerText = "Disattivare la VPN per continuare."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
-        if(typeof window.auth === 'undefined') { googleErrorMsg.innerText = "Servizio di autenticazione offline."; googleErrorMsg.style.display = 'block'; googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; }
-        
-        // Prepariamo il provider di Google
-        const googleProvider = new firebase.auth.GoogleAuthProvider();
-
-        // Imposta il dominio dinamicamente
-        const targetDomain = selectedRole === 'studente' ? 'studenti.itisavogadro.it' : 'itisavogadro.it';
-        
-        googleProvider.setCustomParameters({
-            hd: targetDomain
-        });
-
-        window.auth.signInWithPopup(googleProvider).then((result) => {
-            const email = result.user.email.toLowerCase();
+    if (googleBtn) {
+        googleBtn.addEventListener('click', async () => {
+            if (document.activeElement) document.activeElement.blur();
+            const originalGoogleBtn = googleBtn.innerHTML;
+            googleBtn.innerHTML = `<div class="btn-loader"><div class="btn-spinner"></div><span class="btn-text-main" style="margin-left: 5px;">CARICO...</span></div>`; 
+            googleBtn.disabled = true; 
+            if (googleErrorMsg) googleErrorMsg.style.display = 'none';
             
-            // Il controllo JS accetta solo il dominio specifico del ruolo
-            if (email.endsWith("@" + targetDomain)) {
-                inviaEmail(email, 2, { 
-                    nome_utente: result.user.displayName || "Utente", 
-                    email_utente: email, 
-                    orario_accesso: new Date().toLocaleString('it-IT') 
-                });
-                entraNelPortale(result.user.displayName || "Utente"); 
-                googleBtn.innerHTML = originalGoogleBtn; 
-                googleBtn.disabled = false; 
-            } else { 
-                // L'utente ha usato un'email non valida. Le regole Firestore lo bloccherebbero comunque al 100%.
-                window.auth.signOut().then(() => { 
-                    // Mostriamo l'errore a schermo per avvisare l'utente
-                    googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; 
-                    googleErrorMsg.style.display = 'block'; 
+            const isVpn = await checkVPN();
+            if (isVpn) { 
+                if (googleErrorMsg) { googleErrorMsg.innerText = "Disattivare la VPN per continuare."; googleErrorMsg.style.display = 'block'; }
+                googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; 
+            }
+            if(typeof window.auth === 'undefined') { 
+                if (googleErrorMsg) { googleErrorMsg.innerText = "Servizio di autenticazione offline."; googleErrorMsg.style.display = 'block'; }
+                googleBtn.innerHTML = originalGoogleBtn; googleBtn.disabled = false; return; 
+            }
+            
+            const googleProvider = new firebase.auth.GoogleAuthProvider();
+            const targetDomain = selectedRole === 'studente' ? 'studenti.itisavogadro.it' : 'itisavogadro.it';
+            
+            googleProvider.setCustomParameters({
+                hd: targetDomain
+            });
+
+            window.auth.signInWithPopup(googleProvider).then((result) => {
+                const email = result.user.email.toLowerCase();
+                
+                if (email.endsWith("@" + targetDomain)) {
+                    inviaEmail(email, 2, { 
+                        nome_utente: result.user.displayName || "Utente", 
+                        email_utente: email, 
+                        orario_accesso: new Date().toLocaleString('it-IT') 
+                    });
+                    entraNelPortale(result.user.displayName || "Utente"); 
                     googleBtn.innerHTML = originalGoogleBtn; 
                     googleBtn.disabled = false; 
-                }); 
-            }
-        }).catch((err) => { 
-            console.error(err);
-            googleErrorMsg.innerText = "Accesso annullato. Riprova."; 
-            googleErrorMsg.style.display = 'block'; 
-            googleBtn.innerHTML = originalGoogleBtn; 
-            googleBtn.disabled = false; 
-        });
-    });
-
-    document.getElementById('btn-harzafi-id').addEventListener('click', () => { hidModal.classList.add('active'); if (document.activeElement) document.activeElement.blur(); });
-    document.getElementById('hid-close-btn').addEventListener('click', () => { hidModal.classList.remove('active'); });
-    document.getElementById('hid-cancel-btn').addEventListener('click', () => { hidModal.classList.remove('active'); });
-    document.getElementById('hid-open-manual').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('hid-scan-view').style.display = 'none'; document.getElementById('hid-manual-view').style.display = 'block'; document.getElementById('hid-input').focus(); });
-    document.getElementById('hid-back-btn').addEventListener('click', () => { document.getElementById('hid-manual-view').style.display = 'none'; document.getElementById('hid-scan-view').style.display = 'block'; document.getElementById('hid-error').style.display = 'none'; });
-
-    document.getElementById('hid-submit-btn').addEventListener('click', async () => { 
-        if (document.activeElement) document.activeElement.blur();
-        const errorMsg = document.getElementById('hid-error');
-        const submitBtn = document.getElementById('hid-submit-btn');
-        const originalBtnText = submitBtn.innerHTML;
-        const inputHidVal = document.getElementById('hid-input').value.trim();
-
-        const isVpn = await checkVPN();
-        if (isVpn) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; return; }
-        
-        if (inputHidVal.length === 0) return;
-
-        submitBtn.innerHTML = "VERIFICA IN CORSO...";
-        submitBtn.disabled = true;
-        errorMsg.style.display = 'none';
-
-        if (typeof window.db !== 'undefined') {
-            window.db.collection("studenti").where("HID", "==", inputHidVal).get().then(async (snap) => {
-                if (!snap.empty) {
-                    const userData = snap.docs[0].data();
-
-                    // Avviamo una sessione anonima su Firebase per ottenere i permessi di lettura
-                    if (typeof window.auth !== 'undefined') {
-                        try {
-                            await window.auth.signInAnonymously();
-                        } catch (err) {
-                            console.warn("Autenticazione anonima fallita, potrebbero mancare i permessi:", err);
+                } else { 
+                    window.auth.signOut().then(() => { 
+                        if (googleErrorMsg) {
+                            googleErrorMsg.innerText = "Accesso negato. Devi utilizzare l'email scolastica."; 
+                            googleErrorMsg.style.display = 'block'; 
                         }
-                    }
-
-                    hidModal.classList.remove('active'); 
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.disabled = false;
-                    document.getElementById('hid-input').value = ""; 
-                    entraNelPortale(userData.nome); 
-                } else {
-                    throw new Error("HID non valido.");
+                        googleBtn.innerHTML = originalGoogleBtn; 
+                        googleBtn.disabled = false; 
+                    }); 
                 }
-            }).catch(() => {
-                errorMsg.innerText = "HID non valido. Riprova."; 
-                errorMsg.style.display = 'block'; 
-                errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s';
-                submitBtn.innerHTML = originalBtnText;
-                submitBtn.disabled = false;
+            }).catch((err) => { 
+                console.error(err);
+                if (googleErrorMsg) {
+                    googleErrorMsg.innerText = "Accesso annullato. Riprova."; 
+                    googleErrorMsg.style.display = 'block'; 
+                }
+                googleBtn.innerHTML = originalGoogleBtn; 
+                googleBtn.disabled = false; 
             });
-        } else {
-            errorMsg.innerText = "Database offline."; 
-            errorMsg.style.display = 'block';
-            submitBtn.innerHTML = originalBtnText;
-            submitBtn.disabled = false;
-        }
-    });
+        });
+    }
+
+    const btnHarzafiId = document.getElementById('btn-harzafi-id');
+    if (btnHarzafiId && hidModal) {
+        btnHarzafiId.addEventListener('click', () => { hidModal.classList.add('active'); if (document.activeElement) document.activeElement.blur(); });
+    }
+    const hidCloseBtn = document.getElementById('hid-close-btn');
+    if (hidCloseBtn && hidModal) {
+        hidCloseBtn.addEventListener('click', () => { hidModal.classList.remove('active'); });
+    }
+    const hidCancelBtn = document.getElementById('hid-cancel-btn');
+    if (hidCancelBtn && hidModal) {
+        hidCancelBtn.addEventListener('click', () => { hidModal.classList.remove('active'); });
+    }
+    const hidOpenManual = document.getElementById('hid-open-manual');
+    if (hidOpenManual) {
+        hidOpenManual.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            const scanView = document.getElementById('hid-scan-view');
+            const manualView = document.getElementById('hid-manual-view');
+            const hidInput = document.getElementById('hid-input');
+            if (scanView) scanView.style.display = 'none'; 
+            if (manualView) manualView.style.display = 'block'; 
+            if (hidInput) hidInput.focus(); 
+        });
+    }
+    const hidBackBtn = document.getElementById('hid-back-btn');
+    if (hidBackBtn) {
+        hidBackBtn.addEventListener('click', () => { 
+            const scanView = document.getElementById('hid-scan-view');
+            const manualView = document.getElementById('hid-manual-view');
+            const hidError = document.getElementById('hid-error');
+            if (manualView) manualView.style.display = 'none'; 
+            if (scanView) scanView.style.display = 'block'; 
+            if (hidError) hidError.style.display = 'none'; 
+        });
+    }
+
+    const hidSubmitBtn = document.getElementById('hid-submit-btn');
+    if (hidSubmitBtn) {
+        hidSubmitBtn.addEventListener('click', async () => { 
+            if (document.activeElement) document.activeElement.blur();
+            const errorMsg = document.getElementById('hid-error');
+            const originalBtnText = hidSubmitBtn.innerHTML;
+            const hidInputEl = document.getElementById('hid-input');
+            const inputHidVal = hidInputEl ? hidInputEl.value.trim() : '';
+
+            const isVpn = await checkVPN();
+            if (isVpn) { if (errorMsg) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; } return; }
+            
+            if (inputHidVal.length === 0) return;
+
+            hidSubmitBtn.innerHTML = "VERIFICA IN CORSO...";
+            hidSubmitBtn.disabled = true;
+            if (errorMsg) errorMsg.style.display = 'none';
+
+            if (typeof window.db !== 'undefined') {
+                window.db.collection("studenti").where("HID", "==", inputHidVal).get().then(async (snap) => {
+                    if (!snap.empty) {
+                        const userData = snap.docs[0].data();
+
+                        if (typeof window.auth !== 'undefined') {
+                            try {
+                                await window.auth.signInAnonymously();
+                            } catch (err) {
+                                console.warn("Autenticazione anonima fallita, potrebbero mancare i permessi:", err);
+                            }
+                        }
+
+                        if (hidModal) hidModal.classList.remove('active'); 
+                        hidSubmitBtn.innerHTML = originalBtnText;
+                        hidSubmitBtn.disabled = false;
+                        if (hidInputEl) hidInputEl.value = ""; 
+                        entraNelPortale(userData.nome); 
+                    } else {
+                        throw new Error("HID non valido.");
+                    }
+                }).catch(() => {
+                    if (errorMsg) {
+                        errorMsg.innerText = "HID non valido. Riprova."; 
+                        errorMsg.style.display = 'block'; 
+                        errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s';
+                    }
+                    hidSubmitBtn.innerHTML = originalBtnText;
+                    hidSubmitBtn.disabled = false;
+                });
+            } else {
+                if (errorMsg) {
+                    errorMsg.innerText = "Database offline."; 
+                    errorMsg.style.display = 'block';
+                }
+                hidSubmitBtn.innerHTML = originalBtnText;
+                hidSubmitBtn.disabled = false;
+            }
+        });
+    }
 
     const yearDropdownBtn = document.getElementById('year-dropdown-btn');
     const yearDropdownMenu = document.getElementById('year-dropdown-menu');
@@ -545,71 +791,86 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function entraNelPortale(nomeUtente) {
-        document.getElementById('login-modal').classList.remove('active');
+        if (loginModal) loginModal.classList.remove('active');
         const formattedName = nomeUtente.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-        document.getElementById('user-greeting-title').innerText = `Buongiorno, ${formattedName}.`;
+        const greetingEl = document.getElementById('user-greeting-title');
+        if (greetingEl) greetingEl.innerText = `Buongiorno, ${formattedName}.`;
         
         const landing = document.getElementById('landing-view'); 
         const dash = document.getElementById('app-dashboard');
         
         isScrolled = false; 
-        navbar.classList.remove('scrolled'); 
-        landing.style.opacity = '0'; 
+        if (navbar) navbar.classList.remove('scrolled'); 
+        if (landing) landing.style.opacity = '0'; 
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
         setTimeout(() => { 
-            landing.style.display = 'none'; 
+            if (landing) landing.style.display = 'none'; 
             
-            dash.style.display = 'block'; 
-            void dash.offsetWidth; 
-            dash.style.opacity = '1'; 
+            if (dash) {
+                dash.style.display = 'block'; 
+                void dash.offsetWidth; 
+                dash.style.opacity = '1'; 
+            }
             document.body.style.overflow = ''; 
             
-            document.getElementById('hour-counter').innerText = finalHoursValue; 
+            const hourCounter = document.getElementById('hour-counter');
+            if (hourCounter) hourCounter.innerText = finalHoursValue; 
             setTimeout(() => { document.querySelectorAll('.stat-segment').forEach((el, index) => { setTimeout(() => { el.style.transform = 'scaleX(1)'; }, index * 150); }); }, 100);
             scaricaECostruisciCronologia(); 
             
             setTimeout(() => {
-                document.getElementById('disclaimer-ministero-modal').classList.add('active');
+                const discModal = document.getElementById('disclaimer-ministero-modal');
+                if (discModal) discModal.classList.add('active');
             }, 800); 
             
         }, 500);
     }
 
-    document.getElementById('btn-logout-dash').addEventListener('click', async () => { 
-    const dash = document.getElementById('app-dashboard');
-    const landing = document.getElementById('landing-view');
+    const btnLogoutDash = document.getElementById('btn-logout-dash');
+    if (btnLogoutDash) {
+        btnLogoutDash.addEventListener('click', async () => { 
+            const dash = document.getElementById('app-dashboard');
+            const landing = document.getElementById('landing-view');
 
-    dash.style.opacity = '0';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (dash) dash.style.opacity = '0';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    try {
-        if (typeof window.auth !== 'undefined') await window.auth.signOut();
-    } catch(err) {
-        console.error("Errore durante il logout:", err);
+            try {
+                if (typeof window.auth !== 'undefined') await window.auth.signOut();
+            } catch(err) {
+                console.error("Errore durante il logout:", err);
+            }
+
+            window.globalTurnstileToken = "";
+            if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
+
+            if (passInput) passInput.value = '';
+            if (hiddenUsernameInput) hiddenUsernameInput.value = '';
+            resetDropdownDisplay('username-display', 'Seleziona Utente');
+            if (errorMsg) errorMsg.style.display = 'none';
+            document.querySelectorAll('.stat-segment').forEach(el => el.style.transform = 'scaleX(0)');
+            const tlContainer = document.getElementById('timeline-container');
+            if (tlContainer) tlContainer.innerHTML = '';
+            if (submitBtn) {
+                submitBtn.innerText = "ENTRA";
+                submitBtn.disabled = false;
+            }
+
+            setTimeout(() => {
+                if (dash) dash.style.display = 'none';
+                if (landing) {
+                    landing.style.display = 'block';
+                    void landing.offsetWidth;
+                    landing.style.opacity = '1';
+                }
+            }, 500);
+        });
     }
 
-    window.globalTurnstileToken = "";
-    if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
-
-    passInput.value = '';
-    hiddenUsernameInput.value = '';
-    resetDropdownDisplay('username-display', 'Seleziona Utente');
-    errorMsg.style.display = 'none';
-    document.querySelectorAll('.stat-segment').forEach(el => el.style.transform = 'scaleX(0)');
-    document.getElementById('timeline-container').innerHTML = '';
-    submitBtn.innerText = "ENTRA";
-    submitBtn.disabled = false;
-
-    setTimeout(() => {
-        dash.style.display = 'none';
-        landing.style.display = 'block';
-        void landing.offsetWidth;
-        landing.style.opacity = '1';
-    }, 500);
-});
     function scaricaECostruisciCronologia() {
         const container = document.getElementById('timeline-container');
+        if (!container) return;
         container.innerHTML = '<div style="text-align:center; padding:20px; font-weight:bold; color:var(--primary);">Sincronizzazione dati in corso...</div>';
 
         if (typeof window.db !== 'undefined') {
@@ -620,7 +881,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 querySnapshot.forEach((doc, index) => {
                     const att = doc.data(); const cssCertElement = att.certificato ? 'ac-cert' : ''; const cssDateElement = att.certificato ? 'special-badge-date' : ''; const bgCertInfo = att.certificato ? 'style="background:#ecfdf5; border-color:#a7f3d0;"' : '';
-                    const itemHTML = `<div class="timeline-item ${cssCertElement} reveal" style="transition-delay: ${index * 0.1}s;" aria-expanded="false"><div class="tl-header"><div class="tl-content"><span class="tl-date ${cssDateElement}">${att.data}</span><h3>${att.titolo}</h3><p class="tl-meta">${att.meta}</p></div><div class="tl-hours">${att.ore}</div></div><div class="tl-dropdown"><div class="tl-dropdown-inner"><div class="tl-ext-info" ${bgCertInfo}>${att.descrizione || "Dettagli non disponibili."}</div></div></div></div>`;
+                    const itemHTML = `<div class="timeline-item ${cssCertElement} reveal" aria-expanded="false"><div class="tl-header"><div class="tl-content"><span class="tl-date ${cssDateElement}">${att.data}</span><h3>${att.titolo}</h3><p class="tl-meta">${att.meta}</p></div><div class="tl-hours">${att.ore}</div></div><div class="tl-dropdown"><div class="tl-dropdown-inner"><div class="tl-ext-info" ${bgCertInfo}>${att.descrizione || "Dettagli non disponibili."}</div></div></div></div>`;
                     container.insertAdjacentHTML('beforeend', itemHTML);
                 });
 
@@ -640,80 +901,93 @@ document.addEventListener("DOMContentLoaded", function() {
     const otpEmailInput = document.getElementById('otp-email-input');
 
     window.chiudiModaleRecuperoEAproLogin = function() {
-        document.getElementById('forgot-sheet-modal').classList.remove('active');
-        document.getElementById('login-modal').classList.add('active');
-    }
+        if (forgotSheetModal) forgotSheetModal.classList.remove('active');
+        if (loginModal) loginModal.classList.add('active');
+    };
 
     function setupForgotView() {
-        // Mostriamo direttamente il modulo Email bypassando altre selezioni
-        otpStep1.style.display = 'block'; otpStep1.style.opacity = '1';
-        otpStep3.style.display = 'none'; otpStep3.style.opacity = '0';
-        otpEmailInput.value = '';
-        document.getElementById('otp-error-msg').style.display = 'none';
+        if (otpStep1) { otpStep1.style.display = 'block'; otpStep1.style.opacity = '1'; }
+        if (otpStep3) { otpStep3.style.display = 'none'; otpStep3.style.opacity = '0'; }
+        if (otpEmailInput) otpEmailInput.value = '';
+        const otpErr = document.getElementById('otp-error-msg');
+        if (otpErr) otpErr.style.display = 'none';
 
+        const roleTitle = document.getElementById('otp-role-title');
         if(selectedRole === 'studente') { 
-            document.getElementById('otp-role-title').innerText = 'Area Studenti';
+            if (roleTitle) roleTitle.innerText = 'Area Studenti';
             targetCollectionOTP = 'studenti';
         } else { 
-            document.getElementById('otp-role-title').innerText = 'Area Docenti';
+            if (roleTitle) roleTitle.innerText = 'Area Docenti';
             targetCollectionOTP = 'docenti';
         }
     }
 
-    document.getElementById('btn-otp-back-selection').addEventListener('click', () => {
-        chiudiModaleRecuperoEAproLogin();
-    });
+    const btnOtpBack = document.getElementById('btn-otp-back-selection');
+    if (btnOtpBack) {
+        btnOtpBack.addEventListener('click', () => {
+            chiudiModaleRecuperoEAproLogin();
+        });
+    }
 
-    // SISTEMA RECUPERO PASSWORD TRAMITE BREVO + FIREBASE ADMIN
-    document.getElementById('btn-send-otp').addEventListener('click', async function() {
-        const emailVal = otpEmailInput.value.trim().toLowerCase();
-        const errorDiv = document.getElementById('otp-error-msg');
-        const originalBtnText = this.innerHTML;
-        
-        if(!emailVal || !emailVal.includes('@')) { 
-            errorDiv.innerText = "Inserisci un'email valida."; 
-            errorDiv.style.display = 'block'; 
-            return; 
-        }
-        
-        errorDiv.style.display = 'none';
-        this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Invio in corso...</span></div>';
-        this.disabled = true;
+    const btnSendOtp = document.getElementById('btn-send-otp');
+    if (btnSendOtp && otpEmailInput) {
+        btnSendOtp.addEventListener('click', async function() {
+            const emailVal = otpEmailInput.value.trim().toLowerCase();
+            const errorDiv = document.getElementById('otp-error-msg');
+            const originalBtnText = this.innerHTML;
+            
+            if(!emailVal || !emailVal.includes('@')) { 
+                if (errorDiv) {
+                    errorDiv.innerText = "Inserisci un'email valida."; 
+                    errorDiv.style.display = 'block'; 
+                }
+                return; 
+            }
+            
+            if (errorDiv) errorDiv.style.display = 'none';
+            this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Invio in corso...</span></div>';
+            this.disabled = true;
 
-        try {
-            // Controlliamo se l'utente esiste nel database
-            const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
-            if(snapshot.empty) throw new Error("Email non trovata a sistema.");
+            try {
+                const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
+                if(snapshot.empty) throw new Error("Email non trovata a sistema.");
 
-            await window.auth.sendPasswordResetEmail(emailVal);
+                await window.auth.sendPasswordResetEmail(emailVal);
 
-            // Animazione di successo verso l'ultimo Step (La schermata Verde)
-            otpStep1.style.opacity = '0';
-            setTimeout(() => {
-                otpStep1.style.display = 'none'; 
-                otpStep3.style.display = 'block';
-                setTimeout(() => { otpStep3.style.opacity = '1'; }, 50);
-            }, 400);
+                if (otpStep1) otpStep1.style.opacity = '0';
+                setTimeout(() => {
+                    if (otpStep1) otpStep1.style.display = 'none'; 
+                    if (otpStep3) {
+                        otpStep3.style.display = 'block';
+                        setTimeout(() => { otpStep3.style.opacity = '1'; }, 50);
+                    }
+                }, 400);
 
-        } catch (err) {
-            console.error(err);
-            errorDiv.innerText = err.message || "Errore di connessione. Riprova.";
-            errorDiv.style.display = 'block'; 
-            errorDiv.style.animation = 'none'; 
-            void errorDiv.offsetWidth; 
-            errorDiv.style.animation = 'shake 0.4s';
-        } finally {
-            this.innerHTML = originalBtnText; 
-            this.disabled = false;
-        }
-    });
+            } catch (err) {
+                console.error(err);
+                if (errorDiv) {
+                    errorDiv.innerText = err.message || "Errore di connessione. Riprova.";
+                    errorDiv.style.display = 'block'; 
+                    errorDiv.style.animation = 'none'; 
+                    void errorDiv.offsetWidth; 
+                    errorDiv.style.animation = 'shake 0.4s';
+                }
+            } finally {
+                this.innerHTML = originalBtnText; 
+                this.disabled = false;
+            }
+        });
+    }
 
-    // Event listeners extra di chiusura
-    document.getElementById('close-disclaimer-modal').addEventListener('click', () => { 
-        document.getElementById('disclaimer-ministero-modal').classList.remove('active'); 
-        const dash = document.getElementById('app-dashboard');
-        if(dash) { dash.style.display = 'block'; dash.style.opacity = '1'; }
-        document.body.style.overflow = '';
-    });
+    const closeDiscModal = document.getElementById('close-disclaimer-modal');
+    if (closeDiscModal) {
+        closeDiscModal.addEventListener('click', () => { 
+            const discModal = document.getElementById('disclaimer-ministero-modal');
+            if (discModal) discModal.classList.remove('active'); 
+            const dash = document.getElementById('app-dashboard');
+            if(dash) { dash.style.display = 'block'; dash.style.opacity = '1'; }
+            document.body.style.overflow = '';
+        });
+    }
 
 });
