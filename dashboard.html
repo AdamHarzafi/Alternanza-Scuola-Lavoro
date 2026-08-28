@@ -46,7 +46,7 @@
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
 
         :focus-visible { outline: 3px solid var(--primary) !important; outline-offset: 3px !important; border-radius: 12px; }
         :focus:not(:focus-visible) { outline: none !important; }
@@ -78,7 +78,7 @@
             padding: 14px 5%;
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 100;
-            transition: all 0.3s var(--apple-ease);
+            transition: background-color 0.25s ease-out, border-color 0.25s ease-out, box-shadow 0.25s ease-out;
         }
 
         .topbar-left { display: flex; align-items: center; gap: 18px; }
@@ -99,7 +99,7 @@
             background: #fee2e2; color: #dc2626;
             border: none; padding: 8px 16px; border-radius: 20px;
             font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
-            transition: all 0.2s var(--apple-ease);
+            transition: background-color 0.2s ease-out, color 0.2s ease-out, transform 0.2s ease-out;
         }
         .btn-logout svg { width: 16px; fill: currentColor; }
         .btn-logout:hover { background: #fca5a5; color: #991b1b; transform: scale(1.02); }
@@ -111,15 +111,15 @@
             display: grid; grid-template-columns: 340px 1fr; gap: 32px; align-items: start;
         }
 
-        /* ── CARDS (EFFETTO APPLE) ── */
+        /* ── CARDS HARZAFI ── */
         .card {
             background: var(--surface);
-            backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            backdrop-filter: blur(16px) saturate(150%);
+            -webkit-backdrop-filter: blur(16px) saturate(150%);
             border: 1px solid var(--border-glass);
             border-radius: var(--radius-lg); padding: 32px;
             box-shadow: var(--shadow-glass);
-            animation: fadeUp 0.6s var(--apple-spring) both;
+            animation: fadeUp 0.45s ease-out both;
         }
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
@@ -187,7 +187,7 @@
             visibility: hidden;
             transform: translateY(-10px) scale(0.95);
             transform-origin: top right;
-            transition: all 0.4s var(--apple-spring);
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out, visibility 0.25s;
             pointer-events: none;
             cursor: default;
         }
@@ -259,21 +259,14 @@
             background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradientText 6s ease infinite;
             letter-spacing: -2px; display: flex; justify-content: flex-start; align-items: baseline; gap: 6px; line-height: 1; margin-bottom: 24px;
-        }
-        
-        @keyframes gradientText {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         .hours-value span.hours-unit { font-size: 1.4rem; font-weight: 900; color: var(--text-light); -webkit-text-fill-color: var(--text-light); letter-spacing: -0.5px; }
 
-        /* Barra stile iOS animata in width */
+        /* Barra avanzamento Harzafi */
         .stat-bar-container { display: flex; gap: 3px; height: 12px; margin-bottom: 24px; border-radius: 6px; overflow: hidden;}
-        .stat-segment { height: 100%; width: 0%; border-radius: 6px; transition: width 1.5s var(--apple-spring); }
+        .stat-segment { height: 100%; width: 0%; border-radius: 6px; transition: width 0.8s ease-out; }
 
         .stat-legend { display: flex; flex-direction: column; gap: 8px; }
         .legend-item {
@@ -303,8 +296,8 @@
         .timeline-item {
             position: relative; margin-bottom: 24px; cursor: pointer;
             background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 20px; padding: 24px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s var(--apple-ease);
-            opacity: 0; transform: translateY(15px); animation: tlFadeIn 0.5s var(--apple-spring) forwards;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: transform 0.25s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+            opacity: 0; transform: translateY(15px); animation: tlFadeIn 0.4s ease-out forwards;
         }
         @keyframes tlFadeIn { to { opacity:1; transform:translateY(0); } }
         .timeline-item:last-child { margin-bottom: 0; }
@@ -312,7 +305,7 @@
         /* Pallino sulla linea */
         .timeline-item::after {
             content: ''; position: absolute; left: -31px; top: 38px; width: 10px; height: 10px; background: #fff;
-            border: 2px solid var(--primary); border-radius: 50%; box-shadow: 0 0 0 4px var(--bg-body); transition: all 0.3s ease; z-index: 2;
+            border: 2px solid var(--primary); border-radius: 50%; box-shadow: 0 0 0 4px var(--bg-body); transition: transform 0.25s ease-out, background-color 0.25s ease-out; z-index: 2;
         }
         .timeline-item.ac-cert::after { border-color: var(--success); }
         
@@ -336,8 +329,8 @@
         .tl-hours-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 6px; }
         .tl-hours { background: rgba(0,0,0,0.03); color: var(--text-dark); padding: 8px 18px; border-radius: 14px; font-weight: 800; font-size: 1.05rem; letter-spacing: -0.3px; }
         
-        .tl-chevron { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-        .tl-chevron svg { width: 18px; fill: var(--text-gray); transition: transform 0.3s ease; }
+        .tl-chevron { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; transition: background-color 0.25s ease-out; }
+        .tl-chevron svg { width: 18px; fill: var(--text-gray); transition: transform 0.25s ease-out; }
         
         .timeline-item[aria-expanded="true"] .tl-chevron { background: var(--primary); }
         .timeline-item[aria-expanded="true"] .tl-chevron svg { fill: #fff; transform: rotate(180deg); }
@@ -361,7 +354,7 @@
             display: flex; align-items: center; justify-content: center;
             color: var(--primary); cursor: pointer; z-index: 9900;
             opacity: 0; pointer-events: none; transform: translateY(20px);
-            transition: all 0.5s var(--apple-spring);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out, color 0.3s ease-out, box-shadow 0.3s ease-out;
         }
         .scroll-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .scroll-to-top svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: transform 0.3s; }
@@ -372,7 +365,8 @@
         }
 
         /* ── FOOTER ── */
-        .dash-footer { padding: 40px 5% 60px; text-align: center; }
+        .dash-footer { width: 100%; margin: 0; padding: 112px 5% 60px; text-align: center; background: #f5f5f7; border-radius: 0; overflow: hidden; position: relative; }
+        .dash-footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 52px; background: #ffffff; border-radius: 0 0 36px 36px; pointer-events: none; }
         .footer-copyright { font-size: 0.85rem; color: var(--text-light); font-weight: 800; margin-bottom: 12px; }
         .footer-links { display: flex; justify-content: center; gap: 16px; }
         .footer-links a { color: var(--text-gray); font-size: 0.85rem; font-weight: 700; text-decoration: none; }
@@ -400,6 +394,16 @@
             .info-popover {
                 width: 280px;
                 right: -10px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
             }
         }
     </style>
@@ -748,45 +752,57 @@
 
         // Logic Scroll to top
         const scrollToTopBtn = document.getElementById('scrollToTop');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                scrollToTopBtn.classList.add('visible');
-            } else {
-                scrollToTopBtn.classList.remove('visible');
-            }
-        });
-        scrollToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        if (scrollToTopBtn) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollToTopBtn.classList.add('visible');
+                } else {
+                    scrollToTopBtn.classList.remove('visible');
+                }
+            });
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
         
         // --- LOGICA WIDGET INFO (Supporto Mobile Tap & Desktop Clic) ---
         const infoWidget = document.getElementById('info-widget');
-        const infoPopover = infoWidget.querySelector('.info-popover');
+        const infoPopover = infoWidget ? infoWidget.querySelector('.info-popover') : null;
         
-        infoWidget.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita che il clic si propaghi chiudendo subito
-            infoWidget.classList.toggle('active');
-        });
+        if (infoWidget) {
+            infoWidget.addEventListener('click', (e) => {
+                e.stopPropagation();
+                infoWidget.classList.toggle('active');
+            });
+        }
 
-        // Cliccare all'interno del popover (sul testo o sui bottoni) non lo chiude
-        infoPopover.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+        if (infoPopover) {
+            infoPopover.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
 
-        // Chiude il popover cliccando fuori dallo schermo su mobile
         document.addEventListener('click', (e) => {
-            if (!infoWidget.contains(e.target)) {
+            if (infoWidget && !infoWidget.contains(e.target)) {
                 infoWidget.classList.remove('active');
             }
         });
 
         // Logout
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            auth.signOut().finally(() => {
-                sessionStorage.removeItem('harzafi_user');
-                window.location.replace('index.html');
+        const btnLogout = document.getElementById('btn-logout');
+        if (btnLogout) {
+            btnLogout.addEventListener('click', () => {
+                if (typeof auth !== 'undefined') {
+                    auth.signOut().finally(() => {
+                        sessionStorage.removeItem('harzafi_user');
+                        window.location.replace('index.html');
+                    });
+                } else {
+                    sessionStorage.removeItem('harzafi_user');
+                    window.location.replace('index.html');
+                }
             });
-        });
+        }
     })();
     </script>
 </body>
