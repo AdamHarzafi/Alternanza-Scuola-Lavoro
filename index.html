@@ -3,125 +3,392 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Pagina non trovata - Registro FSL Harzafi</title>
+    <meta name="description" content="Registro FSL digitale per il percorso di alternanza scuola-lavoro - ITIS Avogadro Torino">
+    <title>Registro FSL Harzafi - Portale Ufficiale</title>
+    <link rel="preload" href="IMMAGINI/LOGO-HOMEPAGE.svg" as="image" type="image/svg+xml" fetchpriority="high">
     <meta name="robots" content="noimageindex">
+
+    <!-- TAG PER RISOLVERE IL PROBLEMA DI "GitHub Pages documentation" -->
+    <meta property="og:site_name" content="Harzafi FSL">
+    <meta property="og:title" content="Registro FSL Harzafi - Portale Ufficiale">
+    <meta property="og:description" content="Registro FSL digitale per il percorso di alternanza scuola-lavoro.">
+    <meta property="og:type" content="website">
+
+    <meta name="google-site-verification" content="sbEJOTIS_aeemOMbv_Alq3MKfx3Y9eryt8OcIdt8t3E" />
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="dns-prefetch" href="https://challenges.cloudflare.com">
+
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Harzafi FSL">
     <meta name="theme-color" content="#ffffff">
     
+    <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <nav class="navbar-wrapper glass">
-        <div class="nav-logo">
-            <a href="index.html" aria-label="Torna alla home page">
-                <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Logo Harzafi">
+    <div id="landing-view">
+        <nav class="navbar-wrapper glass">
+            <button class="nav-logo" onclick="window.scrollTo(0,0)" aria-label="Torna all'inizio della pagina">
+                <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Logo">
+            </button>
+            <div class="nav-links">
+                <a href="#features">Funzionalità</a>
+                <a href="#footer">Contatti Ufficiali</a>
+            </div>
+            <!-- ▶ MODIFICA: link diretto a login.html invece di aprire il modal -->
+            <a href="login.html" style="text-decoration:none;">
+                <button class="btn-premium">Area Riservata</button>
             </a>
-        </div>
-        <div class="nav-links">
-            <a href="index.html#features">Funzionalità</a>
-            <a href="index.html#footer">Contatti Ufficiali</a>
-        </div>
-        <a href="index.html" style="text-decoration: none;"><button class="btn-premium">Torna alla Home</button></a>
-    </nav>
+        </nav>
 
-    <!-- Main Content 404 -->
-    <div class="hero-wrapper" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative;">
-        <div class="hero-mesh"></div>
-        
-        <div class="hero-container" style="flex-direction: column; text-align: center; gap: 20px;">
-            <div class="reveal active" style="margin-bottom: 20px;">
-                <h1 style="font-size: clamp(6rem, 20vw, 12rem); color: var(--primary); margin-bottom: 0; line-height: 1; letter-spacing: -5px; font-weight: 900; background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                    404
-                </h1>
-                <h2 style="font-size: clamp(1.8rem, 5vw, 2.5rem); color: var(--text-dark); margin-bottom: 15px; font-weight: 900; letter-spacing: -1px;">
-                    Pagina non trovata
-                </h2>
-                <p style="font-size: 1.15rem; color: var(--text-gray); max-width: 500px; margin: 0 auto 35px; line-height: 1.6;">
-                    Sembra che tu ti sia perso. La pagina che stai cercando potrebbe essere stata spostata, eliminata oppure l'URL inserito non è corretto.
-                </p>
-                <div class="hero-actions" style="justify-content: center;">
-                    <a href="index.html" class="btn-gradient" style="text-decoration: none; display: inline-flex; width: auto; min-width: 200px;">TORNA AL PORTALE</a>
+        <header class="hero-wrapper">
+            <div class="hero-mesh"></div>
+            <div class="hero-container">
+                <div class="hero-text-col">
+                    <h1 class="reveal">
+                        Il tuo percorso formativo,<br>
+                        <span class="animated-gradient-text">ridisegnato.</span>
+                    </h1>
+                    <p class="reveal" style="transition-delay: 0.15s;">Un ambiente digitale straordinariamente fluido e sicuro per monitorare le tue ore di alternanza, i certificati e il tuo futuro professionale.</p>
+                    <div class="hero-actions reveal" style="transition-delay: 0.3s;">
+                        <!-- ▶ MODIFICA: link diretto a login.html invece di aprire il modal -->
+                        <a href="login.html" style="text-decoration:none;">
+                            <button class="btn-gradient" style="width:auto;">Accedi al Portale</button>
+                        </a>
+                        <a href="#features" class="btn-secondary">Esplora Funzionalità</a>
+                    </div>
+                </div>
+                <div class="hero-visual-col reveal" style="transition-delay: 0.1s;">
+                    <img src="IMMAGINI/LOGO-HOMEPAGE.svg" alt="Studenti in cerchio" class="hero-main-img" fetchpriority="high" decoding="async">
+                </div>
+            </div>
+        </header>
+
+        <section class="partners reveal content-lazy">
+            <h2 class="partners-title">In collaborazione con</h2>
+            <div class="partners-inner">
+                <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
+                    <img src="IMMAGINI/LOGO-MIM.png" loading="lazy" decoding="async" alt="MIM">
+                </a>
+                <a href="https://www.its-ictpiemonte.it/" target="_blank" rel="noopener noreferrer">
+                    <img src="IMMAGINI/ITS-ACADEMY.png" loading="lazy" decoding="async" alt="ITS Academy" style="height: 50px;">
+                </a>
+                <a href="https://www.netacad.com/" target="_blank" rel="noopener noreferrer">
+                    <img src="IMMAGINI/CISCO-LOGO.png" loading="lazy" decoding="async" alt="Cisco">
+                </a>
+                <a href="https://www.unito.it/" target="_blank" rel="noopener noreferrer">
+                    <img src="IMMAGINI/UNITO-LOGO.png" loading="lazy" decoding="async" alt="UniTo">
+                </a>
+                <a href="https://www.hackersgen.com/" target="_blank" rel="noopener noreferrer">
+                    <img src="IMMAGINI/HACKERSEN-LOGO.png" loading="lazy" decoding="async" alt="HackersGen">
+                </a>
+                <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
+                    <img src="IMMAGINI/GITHUB-LOGO.png" loading="lazy" decoding="async" alt="GitHub" style="height: 35px;">
+                </a>
+            </div>
+        </section>
+
+        <!-- Sezione Funzionalità FSL in stile Harzafi -->
+        <section id="features" class="apple-features-section content-lazy">
+            <div class="apple-features-container">
+                <div class="apple-features-header reveal">
+                    <h2 class="apple-features-title">
+                        <span class="apple-title-main">Tutto ciò che ti serve.</span>
+                        <span class="apple-title-sub">In un unico posto.</span>
+                    </h2>
+                </div>
+
+                <div class="apple-features-carousel" id="apple-features-carousel">
+                    <div class="apple-features-grid" id="apple-features-track" tabindex="0" role="region" aria-label="Funzionalità Harzafi">
+                    <!-- Riquadro 1: Monitoraggio in Tempo Reale -->
+                    <div class="apple-feat-card monitor-card reveal">
+                        <div class="apple-feat-content">
+                            <span class="apple-feat-tag">IL TUO PERCORSO</span>
+                            <h3 class="apple-feat-h3">Le tue ore. Sempre sotto controllo.</h3>
+                            <p class="apple-feat-p">Segui i progressi FSL in tempo reale, con dati chiari e immediati.</p>
+                        </div>
+                        <div class="apple-feat-visual monitor-visual">
+                            <div class="apple-mini-chart">
+                                <div class="chart-progress-bar">
+                                    <div class="chart-progress-fill" style="width: 78%;"></div>
+                                </div>
+                                <div class="chart-metrics-row">
+                                    <div class="chart-metric">
+                                        <span class="metric-num">117 / 150</span>
+                                        <span class="metric-lbl">Ore Validate</span>
+                                    </div>
+                                    <div class="chart-badge">78% Completato</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Riquadro 2: Archivio Sicurezza -->
+                    <div class="apple-feat-card safety-card reveal">
+                        <div class="apple-feat-content">
+                            <span class="apple-feat-tag">PRIVACY</span>
+                            <h3 class="apple-feat-h3">Tutto al sicuro. Tutto con te.</h3>
+                            <p class="apple-feat-p">Attestati e certificazioni sempre ordinati e disponibili quando servono.</p>
+                        </div>
+                        <div class="apple-feat-visual icon-badge-visual">
+                            <img src="IMMAGINI/LOGO-HARZAFI-PRIVACY.png" alt="Logo Harzafi Privacy" class="privacy-logo-visual" loading="lazy" decoding="async">
+                        </div>
+                    </div>
+
+                    <!-- Riquadro 3: Storico Incontri -->
+                    <div class="apple-feat-card events-card reveal">
+                        <div class="apple-feat-content">
+                            <span class="apple-feat-tag">ATTIVITÀ</span>
+                            <h3 class="apple-feat-h3">Ogni esperienza, in un unico posto.</h3>
+                            <p class="apple-feat-p">Ritrova incontri, seminari e attività svolte con scuole, università e aziende.</p>
+                        </div>
+                        <div class="apple-feat-visual icon-badge-visual">
+                            <img src="IMMAGINI/Scuola SVG.svg" alt="Scuola" class="school-visual-image" loading="lazy" decoding="async">
+                        </div>
+                    </div>
+
+                    <!-- Riquadro 4: Harzafi ID -->
+                    <div class="apple-feat-card id-card reveal">
+                        <div class="apple-feat-content">
+                            <span class="apple-feat-tag accent">HARZAFI ID</span>
+                            <h3 class="apple-feat-h3">Un tocco. E sei dentro.</h3>
+                            <p class="apple-feat-p">Avvicina la Harzafi Card al tuo smartphone per accedere e registrare le attività in un istante.</p>
+                        </div>
+                        <div class="apple-feat-visual nfc-visual">
+                            <img src="IMMAGINI/HARZAFI-CARD.png" alt="Harzafi Card" class="harzafi-card-image" loading="lazy" decoding="async">
+                        </div>
+                    </div>
+                </div>
+                    <div class="apple-feature-controls" aria-label="Controlli funzionalità">
+                        <button class="mobile-carousel-arrow prev" id="apple-features-prev" type="button" aria-label="Riquadro precedente" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <button class="mobile-carousel-arrow next" id="apple-features-next" type="button" aria-label="Riquadro successivo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="apple-features-dots" aria-label="Seleziona un riquadro">
+                    <button class="apple-feature-dot active" type="button" data-feature-index="0" aria-label="Mostra il riquadro 1" aria-current="true"></button>
+                    <button class="apple-feature-dot" type="button" data-feature-index="1" aria-label="Mostra il riquadro 2" aria-current="false"></button>
+                    <button class="apple-feature-dot" type="button" data-feature-index="2" aria-label="Mostra il riquadro 3" aria-current="false"></button>
+                    <button class="apple-feature-dot" type="button" data-feature-index="3" aria-label="Mostra il riquadro 4" aria-current="false"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sezione Serve Aiuto -->
+        <section id="support" class="apple-showcase-section content-lazy">
+            <div class="apple-showcase-container">
+                <div class="apple-showcase-header reveal">
+                    <h2 class="apple-showcase-title">
+                        <span class="apple-title-main">Serve aiuto?</span>
+                        <span class="apple-title-sub">Lo trovi qui, come e quando vuoi.</span>
+                    </h2>
+                </div>
+
+                <div class="apple-cards-carousel-shell">
+                    <div class="apple-cards-carousel" id="apple-cards-carousel" tabindex="0" role="region" aria-label="Riquadri di supporto Harzafi e servizi">
+                    <!-- Riquadro 1: Specialist Harzafi con foto IMMAGINI/SUPPORTO-PERSONA.png -->
+                    <div class="apple-card specialist-card reveal" id="apple-card-specialist">
+                        <div class="apple-card-top">
+                            <span class="apple-card-eyebrow">SPECIALIST HARZAFI</span>
+                            <h3 class="apple-card-heading">Ottieni l'aiuto di cui hai bisogno.</h3>
+                        </div>
+                        <div class="apple-card-media specialist-media">
+                            <img src="IMMAGINI/SUPPORTO-PERSONA.png" alt="Specialist Harzafi" class="apple-person-photo" loading="lazy" decoding="async">
+                        </div>
+                    </div>
+
+                    <!-- Riquadro 2: guide rapide Harzafi -->
+                    <div class="apple-card photo-card reveal" id="apple-card-intelligence">
+                        <div class="apple-card-top">
+                            <span class="apple-card-eyebrow">GUIDE RAPIDE</span>
+                            <h3 class="apple-card-heading">Impara a usare Harzafi in pochi minuti.</h3>
+                            <p class="apple-card-desc">Scopri come accedere, controllare le ore FSL, consultare le attività e usare Harzafi ID.</p>
+                        </div>
+                        <div class="apple-card-media photo-media guide-photo-media">
+                            <img src="IMMAGINI/PC-HARZAFI.png" alt="Computer con il portale Harzafi" class="harzafi-guide-photo" loading="lazy" decoding="async">
+                        </div>
+                    </div>
+
+                    <!-- Riquadro 3: configurazione accesso Harzafi -->
+                    <div class="apple-card setup-card reveal" id="apple-card-setup">
+                        <div class="apple-card-top">
+                            <span class="apple-card-eyebrow">PRIMO ACCESSO</span>
+                            <h3 class="apple-card-heading">Configura il tuo accesso a Harzafi.</h3>
+                            <p class="apple-card-desc">Scegli il metodo di autenticazione, verifica le credenziali e scopri come usare Harzafi ID in sicurezza.</p>
+                        </div>
+                        <div class="apple-card-media setup-media">
+                            <div class="apple-setup-graphics" aria-hidden="true">
+                                <div class="setup-icon-item icon-cloud">
+                                    <svg viewBox="0 0 64 64" fill="none" stroke="#0071e3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M48 44h4a10 10 0 0 0 0-20 15 15 0 0 0-29-5A11 11 0 0 0 12 30a10 10 0 0 0 2 20h34" />
+                                        <polyline points="26 36 32 42 42 30" stroke-width="4" />
+                                    </svg>
+                                </div>
+                                <div class="setup-icon-item icon-touchid">
+                                    <svg viewBox="0 0 64 64" fill="none" stroke="#0071e3" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M32 10a18 18 0 0 1 18 18c0 10-3 18-9 24" />
+                                        <path d="M23 13a18 18 0 0 0-9 15c0 12 4 20 11 26" />
+                                        <path d="M32 20a10 10 0 0 1 10 10c0 8-2 15-6 19" />
+                                        <path d="M27 22a10 10 0 0 0-5 8c0 9 3 16 8 20" />
+                                        <path d="M32 30a3 3 0 0 1 3 3c0 6-1 11-4 15" />
+                                    </svg>
+                                </div>
+                                <div class="setup-icon-item icon-phone">
+                                    <svg viewBox="0 0 64 64" fill="none" stroke="#0071e3" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="18" y="8" width="28" height="48" rx="7" />
+                                        <line x1="28" y1="13" x2="36" y2="13" stroke-width="2.5" />
+                                        <path d="M25 24v-2h2M37 22h2v2M25 38v2h2M37 40h2v-2M29 31h.01M35 31h.01M32 29v4M29 35a4 4 0 0 0 6 0" stroke-width="2" />
+                                    </svg>
+                                </div>
+                                <div class="setup-icon-item icon-macbook">
+                                    <svg viewBox="0 0 90 64" fill="none" stroke="#0071e3" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="15" y="10" width="60" height="40" rx="4" />
+                                        <path d="M40 26v12M50 26v12M40 32h10" stroke="#0071e3" stroke-width="3" />
+                                        <path d="M6 50h78a3 3 0 0 1 3 3v1H3v-1a3 3 0 0 1 3-3z" />
+                                        <line x1="40" y1="50" x2="50" y2="50" stroke-width="2.5" />
+                                    </svg>
+                                </div>
+                                <div class="setup-icon-item icon-cable">
+                                    <svg viewBox="0 0 40 64" fill="none" stroke="#0071e3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="12" y="24" width="16" height="22" rx="4" fill="#0071e3" />
+                                        <rect x="15" y="14" width="10" height="10" rx="2" />
+                                        <path d="M20 46v16" stroke-width="4" />
+                                    </svg>
+                                </div>
+                                <div class="setup-icon-item icon-battery">
+                                    <svg viewBox="0 0 64 36" fill="none" stroke="#0071e3" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="4" y="6" width="50" height="24" rx="6" />
+                                        <path d="M57 14v8" stroke-width="3.5" />
+                                        <rect x="10" y="11" width="30" height="14" rx="3" fill="#0071e3" />
+                                    </svg>
+                                </div>
+                                <div class="setup-icon-item icon-power">
+                                    <svg viewBox="0 0 40 40" fill="none" stroke="#0071e3" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 12a12 12 0 1 0 12 0" />
+                                        <line x1="20" y1="6" x2="20" y2="18" stroke-width="3.5" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="apple-carousel-controls" aria-label="Controlli carosello">
+                        <button class="apple-nav-arrow prev" id="apple-carousel-prev" aria-label="Riquadro precedente" title="Precedente" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <button class="apple-nav-arrow next" id="apple-carousel-next" aria-label="Riquadro successivo" title="Successivo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="footer" class="footer-wrapper content-lazy">
+            <div class="mim-footer-wrap reveal">
+                <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
+                    <img src="IMMAGINI/LOGO-MIM.png" loading="lazy" decoding="async" class="footer-logo-mim" alt="Logo Ministero">
+                </a>
+            </div>
+            <div class="grid-infos">
+                <div class="col-info reveal" style="transition-delay: 0.1s;">
+                    <h4><svg viewBox="0 0 24 24"><path d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7Z"/></svg>Struttura Operativa Scuola</h4>
+                    <p>ITIS Amedeo Avogadro</p>
+                    <p><a href="#" id="btn-open-maps" class="address-link">Corso San Maurizio, 8 - 10124 Torino</a></p>
+                    <p>Tel: <a href="tel:+390118153611" class="tel-link">+39 011 815 3611</a></p>
+                </div>
+                <div class="col-info reveal" style="transition-delay: 0.2s;">
+                    <h4><svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>Servizi Dati & Finanziari</h4>
+                    <p>Email Segreteria:<br> <a href="mailto:tois05100c@istruzione.it" class="hi">tois05100c@istruzione.it</a></p>
+                    <p>Rete PEC:<br> <a href="mailto:tois05100c@pec.istruzione.it" class="hi">tois05100c@pec.istruzione.it</a></p>
+                </div>
+                <div class="col-info reveal" style="transition-delay: 0.3s;">
+                    <h4><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>Informazioni Contatto</h4>
+                    <p>Il sito è gestito da Harzafi Adam</p>
+                    <p>Classe 3°A Informatica</p>
+                    <p>Anno di Corso: 2025/2026</p>
+                    <p>Richiesta di assistenza:<br> <a href="mailto:harzafi.support@gmail.com" class="hi">harzafi.support@gmail.com</a></p>
+                </div>
+            </div>
+            <div class="bottom-branding reveal" style="transition-delay: 0.4s;">
+                <div class="badge-views">
+                    <svg style="width:20px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/></svg> 
+                    Letture Tracciate: <strong id="dynamic-counter-tracker">...</strong>
+                </div>
+                <p class="copyright-text">Registro FSL Harzafi - Portale Ufficiale © - Tutti i diritti riservati</p>
+                <div class="legal-links">
+                    <a href="accessibilita.html">Dichiarazione di Accessibilità</a>
+                    <span class="desktop-divider">|</span>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <span class="desktop-divider">|</span>
+                    <a href="termini.html">Termini di Servizio</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+
+    <!-- Modale Mappa (rimasto in index) -->
+    <div id="maps-modal" class="modal-overlay bottom-sheet">
+        <div class="modal-content">
+            <button class="close-btn" aria-label="Chiudi">&times;</button>
+            <div class="bottom-sheet-body">
+                <h2 style="font-size: 1.4rem; margin-bottom: 25px; color: var(--text-dark); text-align:center; font-weight: 900;">Scegli un'app per aprire.</h2>
+                <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Corso+San+Maurizio,+8+-+10124+Torino" target="_blank" class="map-app-btn">
+                        <img src="IMMAGINI/GOOGLE-MAPS-LOGO.png" loading="lazy" decoding="async" alt="Google Maps">
+                        <span>Google Maps</span>
+                    </a>
+                    <a href="https://waze.com/ul?q=Corso+San+Maurizio+8+Torino" target="_blank" class="map-app-btn">
+                        <img src="IMMAGINI/WAZE-LOGO.png" loading="lazy" decoding="async" alt="Waze">
+                        <span>Waze</span>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer id="footer" class="footer-wrapper" style="margin-top: auto;">
-        <div class="mim-footer-wrap reveal">
-            <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
-                <img src="IMMAGINI/LOGO-MIM.png" class="footer-logo-mim" alt="Logo Ministero">
-            </a>
+    <!-- Cookie banner -->
+    <div id="apple-cookie-banner" class="cookie-banner">
+        <div class="cookie-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.06 0 2.08-.16 3.03-.46.33-.11.58-.39.64-.73.06-.35-.05-.71-.31-.95-.69-.64-1.12-1.54-1.12-2.54 0-1.93 1.57-3.5 3.5-3.5.34 0 .66.05.97.13.31.08.64.01.89-.2.24-.22.37-.53.33-.86-.13-.98.24-1.97.94-2.61.26-.24.37-.6.31-.95-.06-.34-.31-.62-.64-.73C18.6 3.19 15.48 2 12 2zm-3 5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 6c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm5 5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm3-7c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm1-4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
+            </svg>
         </div>
-
-        <div class="grid-infos">
-            <div class="col-info reveal">
-                <h4>
-                    <svg viewBox="0 0 24 24"><path d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,13.6 14.1,15.3 12,15.3C9.9,15.3 8.2,13.6 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7Z"/></svg>
-                    Struttura Operativa Scuola
-                </h4>
-                <p>ITIS Amedeo Avogadro</p>
-                <p><a href="https://www.google.com/maps/search/?api=1&query=Corso+San+Maurizio,+8+-+10124+Torino" target="_blank" class="address-link" style="color:var(--text-gray); border-bottom:1px dashed #cbd5e1; text-decoration:none;">Corso San Maurizio, 8 - 10124 Torino</a></p>
-                <p>Tel: <a href="tel:+390118153611" class="tel-link" style="color:var(--text-dark); font-weight:800; text-decoration:none;">+39 011 815 3611</a></p>
-            </div>
-            
-            <div class="col-info reveal">
-                <h4>
-                    <svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
-                    Servizi Dati & Finanziari
-                </h4>
-                <p>Email Segreteria:<br> <a href="mailto:tois05100c@istruzione.it" style="color:var(--text-dark); font-weight:800; text-decoration:none;">tois05100c@istruzione.it</a></p>
-                <p>Rete PEC:<br> <a href="mailto:tois05100c@pec.istruzione.it" style="color:var(--text-dark); font-weight:800; text-decoration:none;">tois05100c@pec.istruzione.it</a></p>
-            </div>
-            
-            <div class="col-info reveal">
-                <h4>
-                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                    Informazioni Contatto
-                </h4>
-                <p>Il sito è gestito da Harzafi Adam</p>
-                <p>Classe 3°A Informatica</p>
-                <p>Richiesta di assistenza:<br> <a href="mailto:harzafi.support@gmail.com" style="color:var(--text-dark); font-weight:800; text-decoration:none;">harzafi.support@gmail.com</a></p>
-            </div>
+        <div class="cookie-content">
+            <h4>La tua Privacy è Importante</h4>
+            <p>Utilizziamo cookie tecnici strettamente necessari per il funzionamento sicuro del sito e cookie di misurazione (tracciamento) per analizzare il traffico in forma aggregata, in conformità con il GDPR. Puoi scegliere se acconsentire all'uso dei cookie di tracciamento.</p>
         </div>
-
-        <div class="bottom-branding reveal">
-            <p class="copyright-text" style="font-size: 1rem; color: var(--text-gray); font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;">Registro FSL Harzafi - Portale Ufficiale © - Tutti i diritti riservati</p>
-            <div class="legal-links" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px;">
-                <a href="accessibilita.html" style="color: var(--text-light); font-size: 0.9rem; font-weight: 700; text-decoration: none;">Dichiarazione di Accessibilità</a>
-                <span class="desktop-divider" style="color: var(--border-color); font-size: 0.9rem;">|</span>
-                <a href="privacy.html" style="color: var(--text-light); font-size: 0.9rem; font-weight: 700; text-decoration: none;">Privacy Policy</a>
-                <span class="desktop-divider" style="color: var(--border-color); font-size: 0.9rem;">|</span>
-                <a href="termini.html" style="color: var(--text-light); font-size: 0.9rem; font-weight: 700; text-decoration: none;">Termini di Servizio</a>
-            </div>
+        <div class="cookie-actions">
+            <button id="btn-rifiuto-cookie" class="cookie-btn btn-rifiuto">Rifiuto</button>
+            <button id="btn-accetto-cookie" class="cookie-btn btn-accetto">Acconsento</button>
         </div>
-    </footer>
+    </div>
 
-    <script>
-        // Effetto Navbar allo scroll
-        const navbar = document.querySelector('.navbar-wrapper');
-        let isScrolled = false;
-        window.addEventListener('scroll', () => {
-            const shouldBeScrolled = window.scrollY > 40;
-            if (shouldBeScrolled !== isScrolled) {
-                isScrolled = shouldBeScrolled;
-                if (isScrolled) navbar.classList.add('scrolled');
-                else navbar.classList.remove('scrolled');
-            }
-        }, { passive: true });
-        
-        // Attivazione comparsa fluida
-        document.addEventListener("DOMContentLoaded", () => {
-            setTimeout(() => {
-                const reveals = document.querySelectorAll('.reveal');
-                reveals.forEach(el => el.classList.add('active'));
-            }, 100);
-        });
-    </script>
+    <div id="scrollToTop" class="scroll-to-top" title="Torna su">
+        <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+    </div>
+
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-check-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-functions-compat.js"></script>
+
+    <script defer src="main.js"></script>
 </body>
 </html>
