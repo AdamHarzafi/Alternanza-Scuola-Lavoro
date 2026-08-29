@@ -398,24 +398,30 @@
             }
         }
     </style>
-    <link rel="stylesheet" href="modern.css?v=20260829-footer-system">
+    <link rel="stylesheet" href="modern.css?v=20260829-white-v3">
 </head>
 <body class="dashboard-page">
 
     <!-- Sfondo Ultra-Soft -->
     <div class="dashboard-bg-mesh" aria-hidden="true"></div>
 
-    <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
-        <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
-            <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
-        </a>
-        <div class="nav-links">
-            <a href="index.html#features">Funzionalità</a>
-            <a href="index.html#collaborazioni">Collaborazioni</a>
-            <a href="index.html#footer">Contatti</a>
+    <header class="dash-topbar">
+        <div class="topbar-left">
+            <img class="topbar-logo" src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
+            <div class="topbar-divider" aria-hidden="true"></div>
+            <div class="topbar-school">
+                <strong>Harzafi FSL</strong>
+                <span>Area riservata · 2026/2027</span>
+            </div>
         </div>
-        <button type="button" class="btn-premium nav-login" id="btn-logout">Esci</button>
-    </nav>
+        <div class="topbar-right">
+            <div class="year-badge">A.S. 2026/2027</div>
+            <button type="button" class="btn-logout" id="btn-logout" aria-label="Esci dall’area riservata">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                <span>Esci</span>
+            </button>
+        </div>
+    </header>
 
     <!-- Main Layout -->
     <div class="dash-layout">
@@ -571,8 +577,6 @@
             </div>
         </div>
     </footer>
-
-    <script defer src="navbar.js?v=20260829-shared-nav"></script>
 
     <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
