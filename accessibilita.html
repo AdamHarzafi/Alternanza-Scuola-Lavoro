@@ -3,27 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Dichiarazione di Accessibilità - Harzafi FSL</title>
+    <title>Accessibilità - Harzafi FSL</title>
     <meta name="robots" content="noimageindex">
-    
-    <!-- Mobile Web App Meta Tags -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#ffffff">
-    
-    <!-- Apple Touch Icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="accessibilita.css">
-    <link rel="stylesheet" href="modern.css?v=20260829-footer-system">
+    <link rel="stylesheet" href="modern.css?v=20260829-accessibility-v5">
 </head>
 <body class="accessibility-page">
-
     <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
         <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
             <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
@@ -31,107 +23,180 @@
         <div class="nav-links">
             <a href="index.html#features">Funzionalità</a>
             <a href="index.html#collaborazioni">Collaborazioni</a>
+            <a href="supporto.html">Supporto</a>
             <a href="index.html#footer">Contatti</a>
         </div>
         <a href="login.html" class="btn-premium nav-login">Accedi</a>
     </nav>
 
-    <!-- CONTENUTO PRINCIPALE -->
     <main class="page-content">
-        
-        <div class="header-section reveal">
-            <div class="badge-gov">
-                <svg viewBox="0 0 24 24"><path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,10.99H19C18.47,14.61 15.82,17.75 12,18.91V11H5V6.3L12,3.19V10.99Z"/></svg>
-                Documento Ufficiale
+        <header class="accessibility-hero reveal">
+            <img class="accessibility-hero-logo" src="IMMAGINI/ACCESSIBILITA-LOGO.png" alt="Accessibilità Harzafi">
+            <h1>
+                <span>L'accessibilità non è un'opzione.</span>
+                <span>È il punto di partenza.</span>
+            </h1>
+        </header>
+
+        <section class="access-editorial-section" aria-labelledby="access-features-title">
+            <header class="access-section-header reveal">
+                <h2 id="access-features-title">
+                    <span class="access-title-main">Bellezza e funzionalità,</span>
+                    <span class="access-title-sub">naturalmente accessibili.</span>
+                </h2>
+            </header>
+
+            <div class="access-card-track" id="access-features-track" tabindex="0" role="region" aria-label="Funzioni di accessibilità del portale">
+                <article class="access-info-card access-info-card--blue reveal is-current">
+                    <span class="access-card-eyebrow">PERCEZIONE</span>
+                    <h3>Disabilità visive.</h3>
+                    <p class="access-card-summary">Descrizioni alternative, compatibilità con screen reader, contrasto elevato e zoom fino al 200%.</p>
+                    <button class="access-card-more" type="button" data-access-detail="access-detail-vision" data-modal-eyebrow="PERCEZIONE" data-modal-title="Disabilità visive." aria-label="Apri tutti i dettagli sulle funzioni per le disabilità visive">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                    <template id="access-detail-vision">
+                        <p class="access-detail-intro">Il portale mantiene contenuti e comandi leggibili, riconoscibili e utilizzabili anche quando la vista è ridotta o assente.</p>
+                        <ul class="access-detail-list">
+                            <li><strong>Testo alternativo.</strong><span>Le immagini non testuali possiedono descrizioni accurate per essere interpretate dai software assistivi.</span></li>
+                            <li><strong>Screen reader.</strong><span>La struttura HTML5 è semantica e ottimizzata per VoiceOver, NVDA e JAWS.</span></li>
+                            <li><strong>Contrasto elevato.</strong><span>Testi e sfondi mantengono un rapporto minimo di luminanza pari a 4.5:1.</span></li>
+                            <li><strong>Testo ridimensionabile.</strong><span>Il layout può essere ingrandito fino al 200% senza sovrapposizioni o perdita di informazioni.</span></li>
+                        </ul>
+                    </template>
+                </article>
+
+                <article class="access-info-card access-info-card--violet reveal">
+                    <span class="access-card-eyebrow">INTERAZIONE</span>
+                    <h3>Disabilità motorie.</h3>
+                    <p class="access-card-summary">Navigazione completa da tastiera, focus sempre visibile e interazioni semplici e prevedibili.</p>
+                    <button class="access-card-more" type="button" data-access-detail="access-detail-motor" data-modal-eyebrow="INTERAZIONE" data-modal-title="Disabilità motorie." aria-label="Apri tutti i dettagli sulle funzioni per le disabilità motorie">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                    <template id="access-detail-motor">
+                        <p class="access-detail-intro">Ogni funzione essenziale è raggiungibile senza dipendere da movimenti precisi o dall'uso del mouse.</p>
+                        <ul class="access-detail-list">
+                            <li><strong>Navigazione da tastiera.</strong><span>Il sito, compresi modali, popup e menu, è utilizzabile con TAB, INVIO e frecce direzionali.</span></li>
+                            <li><strong>Focus visibile.</strong><span>Ogni elemento selezionato presenta un'indicazione chiara e coerente durante la navigazione.</span></li>
+                        </ul>
+                    </template>
+                </article>
+
+                <article class="access-info-card access-info-card--green reveal">
+                    <span class="access-card-eyebrow">COMPRENSIONE</span>
+                    <h3>Accessibilità cognitiva e uditiva.</h3>
+                    <p class="access-card-summary">Struttura ordinata, sottotitoli e trascrizioni, linguaggio semplice e contenuti immediati.</p>
+                    <button class="access-card-more" type="button" data-access-detail="access-detail-cognitive" data-modal-eyebrow="COMPRENSIONE" data-modal-title="Accessibilità cognitiva e uditiva." aria-label="Apri tutti i dettagli sull'accessibilità cognitiva e uditiva">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                    <template id="access-detail-cognitive">
+                        <p class="access-detail-intro">Una struttura prevedibile e un linguaggio diretto rendono le informazioni più facili da seguire, ascoltare e comprendere.</p>
+                        <ul class="access-detail-list">
+                            <li><strong>Struttura ordinata.</strong><span>Intestazioni, sezioni e menu seguono una gerarchia logica e coerente.</span></li>
+                            <li><strong>Sottotitoli e trascrizioni.</strong><span>I contenuti multimediali prevedono equivalenti testuali quando necessari.</span></li>
+                            <li><strong>Linguaggio semplice.</strong><span>I testi sono immediati e privi di elementi lampeggianti potenzialmente dannosi.</span></li>
+                        </ul>
+                    </template>
+                </article>
             </div>
-            <h1>Dichiarazione di Accessibilità</h1>
-            <p class="lead-text">La piattaforma <strong>Registro FSL Harzafi</strong> si impegna a rendere il proprio portale web accessibile, conformemente al D.lgs 10 agosto 2018, n. 106 che ha recepito la direttiva UE 2016/2102 del Parlamento europeo e del Consiglio.</p>
+
+            <div class="carousel-player access-carousel-player" id="access-features-player" style="--carousel-duration: 6500ms;" aria-label="Riproduzione automatica delle funzioni di accessibilità">
+                <div class="carousel-timeline" role="group" aria-label="Seleziona una funzione di accessibilità">
+                    <button class="carousel-timeline-step is-active" type="button" data-carousel-index="0" aria-label="Mostra disabilità visive" aria-current="true"></button>
+                    <button class="carousel-timeline-step" type="button" data-carousel-index="1" aria-label="Mostra disabilità motorie" aria-current="false"></button>
+                    <button class="carousel-timeline-step" type="button" data-carousel-index="2" aria-label="Mostra accessibilità cognitiva e uditiva" aria-current="false"></button>
+                </div>
+                <button class="carousel-play-toggle" type="button" aria-label="Metti in pausa il carosello" aria-pressed="false">
+                    <span class="carousel-pause-symbol" aria-hidden="true"><i></i><i></i></span>
+                    <svg class="carousel-play-symbol" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z" fill="currentColor"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <section class="access-editorial-section access-editorial-section--standards" aria-labelledby="access-standards-title">
+            <header class="access-section-header reveal">
+                <h2 id="access-standards-title">
+                    <span class="access-title-main">Standard chiari,</span>
+                    <span class="access-title-sub">impegno continuo.</span>
+                </h2>
+            </header>
+
+            <div class="access-card-track" id="access-standards-track" tabindex="0" role="region" aria-label="Conformità e impegni per l'accessibilità">
+                <article class="access-info-card access-info-card--neutral reveal is-current">
+                    <span class="access-card-eyebrow">WCAG 2.1</span>
+                    <h3>Conforme al livello AA.</h3>
+                    <p class="access-card-summary">Requisiti tecnici verificati, eccezioni documentate e miglioramento continuo del portale.</p>
+                    <button class="access-card-more" type="button" data-access-detail="access-detail-wcag" data-modal-eyebrow="WCAG 2.1" data-modal-title="Conforme al livello AA." aria-label="Apri tutti i dettagli sulla conformità WCAG 2.1">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                    <template id="access-detail-wcag">
+                        <p class="access-detail-intro">Il Portale Registro FSL Harzafi rispetta i requisiti tecnici WCAG 2.1, Livello AA, con alcune eccezioni documentate.</p>
+                        <span class="access-status-pill">Conforme con eccezioni</span>
+                        <div class="access-detail-callout">
+                            <strong>Un processo continuo.</strong>
+                            <p>La conformità non viene considerata un traguardo definitivo: controlli, correzioni e miglioramenti accompagnano l'evoluzione del portale.</p>
+                        </div>
+                    </template>
+                </article>
+
+                <article class="access-info-card access-info-card--warm reveal">
+                    <span class="access-card-eyebrow">STATO</span>
+                    <h3>Dichiarazione trasparente.</h3>
+                    <p class="access-card-summary">Nessun onere sproporzionato, nessun contenuto escluso e stato dichiarato con chiarezza.</p>
+                    <button class="access-card-more" type="button" data-access-detail="access-detail-status" data-modal-eyebrow="STATO" data-modal-title="Dichiarazione trasparente." aria-label="Apri tutti i dettagli sullo stato della dichiarazione">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                    <template id="access-detail-status">
+                        <p class="access-detail-intro">Le condizioni che incidono sulla conformità vengono esposte in modo diretto e verificabile.</p>
+                        <dl class="access-detail-status-list">
+                            <div><dt>Inosservanza della Legge 4/2004</dt><dd>No</dd></div>
+                            <div><dt>Onere sproporzionato</dt><dd>No</dd></div>
+                            <div><dt>Contenuto escluso dalla legislazione</dt><dd>No</dd></div>
+                        </dl>
+                    </template>
+                </article>
+
+                <article class="access-info-card access-info-card--dark reveal">
+                    <span class="access-card-eyebrow">ITALIA · UE</span>
+                    <h3>Un impegno anche legale.</h3>
+                    <p class="access-card-summary">Dichiarazione sempre raggiungibile, conformità ufficiale e riferimenti italiani ed europei.</p>
+                    <button class="access-card-more" type="button" data-access-detail="access-detail-legal" data-modal-eyebrow="ITALIA · UE" data-modal-title="Un impegno anche legale." aria-label="Apri tutti i dettagli sull'impegno legale">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                    <template id="access-detail-legal">
+                        <p class="access-detail-intro">La dichiarazione di accessibilità è presente nel footer delle pagine pubbliche e descrive ufficialmente lo stato di conformità del portale.</p>
+                        <div class="access-detail-callout">
+                            <strong>Riferimento normativo.</strong>
+                            <p>Contenuti redatti in ottemperanza alla Decisione di esecuzione UE 2018/1523.</p>
+                        </div>
+                    </template>
+                </article>
+            </div>
+
+            <div class="carousel-player access-carousel-player" id="access-standards-player" style="--carousel-duration: 6500ms;" aria-label="Riproduzione automatica degli standard di accessibilità">
+                <div class="carousel-timeline" role="group" aria-label="Seleziona uno standard di accessibilità">
+                    <button class="carousel-timeline-step is-active" type="button" data-carousel-index="0" aria-label="Mostra conformità WCAG" aria-current="true"></button>
+                    <button class="carousel-timeline-step" type="button" data-carousel-index="1" aria-label="Mostra dichiarazione trasparente" aria-current="false"></button>
+                    <button class="carousel-timeline-step" type="button" data-carousel-index="2" aria-label="Mostra impegno legale" aria-current="false"></button>
+                </div>
+                <button class="carousel-play-toggle" type="button" aria-label="Metti in pausa il carosello" aria-pressed="false">
+                    <span class="carousel-pause-symbol" aria-hidden="true"><i></i><i></i></span>
+                    <svg class="carousel-play-symbol" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z" fill="currentColor"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <div class="access-modal-overlay" id="access-detail-modal" aria-hidden="true">
+            <section class="access-modal-panel" role="dialog" aria-modal="true" aria-labelledby="access-modal-title" aria-describedby="access-modal-content">
+                <button class="access-modal-close" type="button" aria-label="Chiudi i dettagli">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+                </button>
+                <div class="access-modal-scroll">
+                    <span class="access-modal-eyebrow" id="access-modal-eyebrow"></span>
+                    <h2 id="access-modal-title"></h2>
+                    <div class="access-modal-content" id="access-modal-content"></div>
+                </div>
+            </section>
         </div>
-
-        <div class="compliance-banner reveal">
-            <h2>Conforme WCAG 2.1 AA</h2>
-            <p>Il Portale Registro FSL Harzafi rispetta i requisiti tecnici WCAG 2.1 (Livello AA) con alcune eccezioni documentate. Stiamo lavorando per risolvere le lacune identificate.</p>
-        </div>
-
-        <div class="status-card reveal">
-            <div class="status-header">
-                <div class="status-circle">
-                    <svg viewBox="0 0 24 24" style="width: 26px; fill: currentColor;"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                </div>
-                <h3>Sezione 1 - Contenuti in ottemperanza alla Decisione di esecuzione UE 2018/1523</h3>
-            </div>
-            
-            <div class="status-grid">
-                <div class="status-item">
-                    <span>Stato di conformità:</span>
-                    <span class="status-value partial">CONFORME CON ECCEZIONI</span>
-                </div>
-                <div class="status-item">
-                    <span>Inosservanza della Legge 4/2004:</span>
-                    <span class="status-value no">NO</span>
-                </div>
-                <div class="status-item">
-                    <span>Onere sproporzionato:</span>
-                    <span class="status-value no">NO</span>
-                </div>
-                <div class="status-item">
-                    <span>Il contenuto non rientra nell'ambito della legislazione applicabile:</span>
-                    <span class="status-value no">NO</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="technical-section">
-            <h2 class="reveal">Misure Tecniche Applicate (WCAG 2.1)</h2>
-            <p class="reveal">Di seguito si elencano le soluzioni architetturali e di design implementate all'interno del codice sorgente del sito Harzafi per garantire l'accessibilità universale, affinché i contenuti siano percepibili, utilizzabili, comprensibili e robusti.</p>
-
-            <div class="doc-section reveal">
-                <h3>
-                    <svg viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
-                    Disabilità Visive (Ciechi/Ipovedenti)
-                </h3>
-                <ul class="req-list">
-                    <li><strong>Testo alternativo (ALT tag):</strong> <span>Tutte le immagini non testuali (inclusi loghi scolastici, icone partner e schede) possiedono descrizioni testuali accurate nel codice per essere lette dai software assistivi.</span></li>
-                    <li><strong>Compatibilità con Screen Reader:</strong> <span>Il portale presenta una struttura del codice HTML5 semantica e validata, corretta e ottimizzata per la piena interpretazione da parte dei lettori di schermo (VoiceOver, NVDA, JAWS).</span></li>
-                    <li><strong>Contrasto elevato:</strong> <span>L'interfaccia utente è disegnata per garantire sempre un contrasto netto tra testo e sfondo. I colori rispettano un rapporto minimo di luminanza di 4.5:1.</span></li>
-                    <li><strong>Ridimensionamento testo:</strong> <span>Il layout fluido permette la possibilità di ingrandire i caratteri (fino al 200%) tramite gli strumenti nativi del browser senza generare sovrapposizioni o perdere informazioni.</span></li>
-                </ul>
-            </div>
-
-            <div class="doc-section reveal">
-                <h3>
-                    <svg viewBox="0 0 24 24"><path d="M21 9h-4c-.55 0-1-.45-1-1s.45-1 1-1h4c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2h-4c-.55 0-1-.45-1-1s.45-1 1-1h4V9zM7 9H3v4h4c.55 0 1 .45 1 1s-.45 1-1 1H3c-1.1 0-2-.9-2-2V9c0-1.1.9-2 2-2h4c.55 0 1 .45 1 1s-.45 1-1 1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-                    Disabilità Motorie
-                </h3>
-                <ul class="req-list">
-                    <li><strong>Navigazione da tastiera:</strong> <span>Tutto il sito, compresi modali, popup e menu a tendina, è esplorabile e pienamente operabile usando solo i tasti TAB, INVIO e le frecce direzionali, senza necessità di un mouse.</span></li>
-                    <li><strong>Focus visibile:</strong> <span>Forniamo un'indicazione chiara, evidente e standardizzata (focus ring) dell'elemento selezionato durante l'intera fase di navigazione.</span></li>
-                </ul>
-            </div>
-
-            <div class="doc-section reveal">
-                <h3>
-                    <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c2.12 0 4.07-.74 5.61-1.97l-1.42-1.42C14.33 18.49 13.22 19 12 19c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7c0 1.5-.47 2.89-1.28 4.02l1.42 1.42C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9zM11 7v6h6v-2h-4V7h-2z"/></svg>
-                    Disabilità Cognitive e Uditive
-                </h3>
-                <ul class="req-list">
-                    <li><strong>Struttura ordinata:</strong> <span>Uso gerarchico rigoroso di intestazioni (H1-H6), sezioni ben distinte e menu di navigazione logici e coerenti in tutto l'applicativo.</span></li>
-                    <li><strong>Sottotitoli e trascrizioni:</strong> <span>Laddove presenti contenuti multimediali formativi (per audio e video), sono previsti sottotitoli testuali o trascrizioni equivalenti.</span></li>
-                    <li><strong>Linguaggio semplice:</strong> <span>I testi d'uso comune sono redatti per essere immediati. È stato appositamente evitato l'inserimento di contenuti complessi e di elementi grafici lampeggianti che possano causare o innescare crisi di epilessia fotosensibile.</span></li>
-                </ul>
-            </div>
-
-            <div class="doc-section reveal">
-                <h3>
-                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-                    Adempimenti Legali (Italia/UE)
-                </h3>
-                <ul class="req-list">
-                    <li><strong>Dichiarazione di accessibilità:</strong> <span>La dichiarazione è obbligatoriamente presente nel footer di tutte le pagine pubbliche, e descrive ufficialmente il nostro totale stato di conformità.</span></li>
-                </ul>
-            </div>
-        </div>
-
     </main>
 
     <footer id="footer" class="harzafi-footer">
@@ -154,13 +219,11 @@
                     <a href="accessibilita.html" aria-current="page">Accessibilità</a>
                     <a href="privacy.html">Privacy</a>
                     <a href="termini.html">Termini</a>
+                    <a href="supporto.html">Supporto</a>
                 </nav>
             </div>
         </div>
     </footer>
-
-    <!-- Script per le animazioni e lo scroll (Identico al sito principale) -->
-    
 
     <script src="accessibilita.js"></script>
 </body>
