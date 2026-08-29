@@ -1822,10 +1822,19 @@
     height: 100%;
 }
 
+.hero-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
 .hero-cover-image {
     max-width: none;
     max-height: none;
     object-fit: cover;
+    opacity: 1;
+    visibility: visible;
     background: transparent;
 }
 
@@ -1908,18 +1917,82 @@
 }
 
 .support-effort-box {
+    position: relative;
+    isolation: isolate;
     width: 100%;
     height: 480px;
     min-height: 0;
     padding: 0;
-    border: 1px solid rgba(29, 29, 31, .06);
+    border: 1px solid rgba(29, 29, 31, .1);
     border-radius: clamp(30px, 4vw, 52px);
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     overflow: hidden;
     background: #ffffff;
-    box-shadow: 0 16px 48px rgba(15,23,42,.045), inset 0 1px 0 rgba(255,255,255,.8);
+    box-shadow: 0 18px 54px rgba(15,23,42,.06), inset 0 1px 0 rgba(255,255,255,.9);
 }
+
+.support-effort-confetti {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.support-effort-content,
+.support-effort-empty {
+    position: relative;
+    z-index: 2;
+}
+
+.confetti {
+    position: absolute;
+    display: block;
+    color: #b332d6;
+    background: linear-gradient(145deg, #ff4f8b, #8739e6);
+    filter: drop-shadow(0 5px 9px rgba(157, 43, 190, .12));
+}
+
+.confetti-dot {
+    width: 14px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
+.confetti-star {
+    width: 26px;
+    aspect-ratio: 1;
+    clip-path: polygon(50% 0, 61% 35%, 98% 36%, 68% 57%, 79% 94%, 50% 72%, 21% 94%, 32% 57%, 2% 36%, 39% 35%);
+}
+
+.confetti-triangle {
+    width: 22px;
+    height: 20px;
+    border-radius: 8px;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.confetti-loop {
+    width: auto;
+    height: auto;
+    background: none;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.confetti-1 { top: 9%; left: 5%; }
+.confetti-2 { top: 4%; left: 31%; transform: rotate(12deg); }
+.confetti-3 { top: 8%; right: 27%; transform: rotate(28deg); }
+.confetti-4 { top: 7%; right: 5%; transform: rotate(22deg); }
+.confetti-5 { top: 48%; left: 2.5%; width: 10px; }
+.confetti-6 { top: 45%; right: 2.5%; transform: rotate(-13deg); }
+.confetti-7 { bottom: 4%; left: 8%; transform: rotate(-23deg); }
+.confetti-8 { bottom: 5%; left: 37%; transform: rotate(-17deg); }
+.confetti-9 { right: 31%; bottom: 5%; width: 11px; }
+.confetti-10 { right: 7%; bottom: 4%; transform: rotate(14deg); }
 
 .support-effort-content {
     grid-column: 1;
@@ -1979,6 +2052,9 @@
 }
 
 .support-effort-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-width: 124px;
     height: 48px;
     margin-top: 28px;
@@ -1987,6 +2063,7 @@
     border-radius: 999px;
     background: #0071e3;
     color: #fff;
+    text-decoration: none;
     font-family: inherit;
     font-size: .98rem;
     font-weight: 650;
@@ -2058,6 +2135,16 @@
         grid-template-columns: 1fr;
         grid-template-rows: 52% 48%;
     }
+
+    .support-effort-confetti .confetti-star { width: 19px; }
+    .support-effort-confetti .confetti-loop { font-size: 31px; }
+    .support-effort-confetti .confetti-triangle { width: 17px; height: 15px; }
+    .support-effort-confetti .confetti-dot { width: 9px; }
+    .confetti-2 { left: 42%; }
+    .confetti-3 { right: 18%; }
+    .confetti-5 { top: 43%; left: 1.5%; }
+    .confetti-6 { top: 44%; right: 1.5%; }
+    .confetti-8 { left: 42%; }
 
     .support-effort-empty {
         grid-column: 1;
@@ -2155,12 +2242,31 @@
     }
 
     .hero-stage {
+        position: relative;
         width: 100%;
         max-width: none;
+        min-height: clamp(560px, 150vw, 760px);
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .hero-cover {
+        position: absolute;
+        inset: 0;
+        display: block !important;
+        width: 100%;
+        height: 100%;
     }
 
     .hero-cover-image {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        object-fit: cover !important;
         object-position: center top;
+        opacity: 1 !important;
+        visibility: visible !important;
         -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 86%, transparent 100%);
         mask-image: linear-gradient(to bottom, #000 0%, #000 86%, transparent 100%);
     }
