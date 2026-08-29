@@ -95,78 +95,48 @@ if (scrollBtn) {
     scrollBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 }
 
-const cookieBanner = document.getElementById('apple-cookie-banner');
-const btnAccetto = document.getElementById('btn-accetto-cookie');
-const btnRifiuto = document.getElementById('btn-rifiuto-cookie');
-
-function initCookies() {
-    const consent = localStorage.getItem('harzafi_cookie_consent');
-    if (!consent && cookieBanner) setTimeout(() => cookieBanner.classList.add('active'), 500); 
-    else if (consent) applyTracking(JSON.parse(consent).analytics); 
-}
-
-function applyTracking(isAnalyticsAllowed) {
-    const trackerText = document.getElementById("dynamic-counter-tracker");
-    if (!trackerText) return;
-
-    if (!isAnalyticsAllowed) {
-        trackerText.innerText = "Non tracciato";
-        return;
-    }
-
-    const executeTracking = () => {
-        if (typeof window.db !== 'undefined' && typeof firebase !== 'undefined') {
-            const counterRef = window.db.collection('statistiche').doc('visualizzazioni');
-            
-            if (!sessionStorage.getItem('view_counted')) {
-    sessionStorage.setItem('view_counted', 'true');
-    counterRef.update({
-        count: firebase.firestore.FieldValue.increment(1)
-    }).then(() => {
-        return counterRef.get();
-    }).then((doc) => {
-        if(doc.exists) trackerText.innerText = doc.data().count;
-    }).catch(err => {
-        sessionStorage.removeItem('view_counted');
-        trackerText.innerText = "Non disponibile";
-    });
-            } else {
-                counterRef.get().then((doc) => {
-                    if(doc.exists) trackerText.innerText = doc.data().count;
-                }).catch(() => {
-                    trackerText.innerText = "Non disponibile";
-                });
-            }
-        } else {
-            trackerText.innerText = "Non disponibile";
-        }
-    };
-
-    if (typeof window.db !== 'undefined') {
-        executeTracking();
-    } else {
-        window.addEventListener('load', executeTracking);
-    }
-}
-
-if (btnAccetto) {
-    btnAccetto.addEventListener('click', () => {
-        localStorage.setItem('harzafi_cookie_consent', JSON.stringify({ technical: true, analytics: true }));
-        if (cookieBanner) cookieBanner.classList.remove('active'); 
-        applyTracking(true);
-    });
-}
-
-if (btnRifiuto) {
-    btnRifiuto.addEventListener('click', () => {
-        localStorage.setItem('harzafi_cookie_consent', JSON.stringify({ technical: true, analytics: false }));
-        if (cookieBanner) cookieBanner.classList.remove('active'); 
-        applyTracking(false);
-    });
-}
-
 document.addEventListener("DOMContentLoaded", function() {
-    initCookies();
+    const desktopHeroVideo = document.querySelector('.hero-desktop-video');
+    if (desktopHeroVideo) {
+        const heroVideoToggle = document.querySelector('.hero-video-toggle');
+        const desktopVideoQuery = window.matchMedia('(min-width: 761px)');
+        const updateHeroVideoToggle = () => {
+            if (!heroVideoToggle) return;
+            const isPaused = desktopHeroVideo.paused;
+            heroVideoToggle.classList.toggle('is-paused', isPaused);
+            heroVideoToggle.setAttribute('aria-pressed', String(isPaused));
+            heroVideoToggle.setAttribute('aria-label', isPaused ? 'Riproduci il video' : 'Metti in pausa il video');
+        };
+        const syncDesktopHeroVideo = () => {
+            if (desktopVideoQuery.matches) {
+                if (!desktopHeroVideo.getAttribute('src')) {
+                    desktopHeroVideo.src = desktopHeroVideo.dataset.desktopSrc;
+                    desktopHeroVideo.load();
+                }
+                desktopHeroVideo.play().catch(updateHeroVideoToggle);
+            } else {
+                desktopHeroVideo.pause();
+                desktopHeroVideo.removeAttribute('src');
+                desktopHeroVideo.load();
+            }
+            updateHeroVideoToggle();
+        };
+
+        if (heroVideoToggle) {
+            heroVideoToggle.addEventListener('click', () => {
+                if (desktopHeroVideo.paused) {
+                    desktopHeroVideo.play().catch(updateHeroVideoToggle);
+                } else {
+                    desktopHeroVideo.pause();
+                }
+            });
+        }
+        desktopHeroVideo.addEventListener('play', updateHeroVideoToggle);
+        desktopHeroVideo.addEventListener('pause', updateHeroVideoToggle);
+        syncDesktopHeroVideo();
+        desktopVideoQuery.addEventListener('change', syncDesktopHeroVideo);
+    }
+
     const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
     const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
@@ -193,114 +163,150 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Carosello funzionalità: indicatori e sfocatura sui bordi
-    const featuresCarousel = document.getElementById('apple-features-carousel');
-    const featuresTrack = document.getElementById('apple-features-track');
-    const featureDots = Array.from(document.querySelectorAll('.apple-feature-dot'));
-    const featureBtnPrev = document.getElementById('apple-features-prev');
-    const featureBtnNext = document.getElementById('apple-features-next');
+    // Controllo unificato in stile Apple: timeline, autoplay e pausa.
+    const setupCarouselPlayer = ({ trackId, itemSelector, playerId, edgeContainerId = null }) => {
+        const track = document.getElementById(trackId);
+        const player = document.getElementById(playerId);
+        const edgeContainer = edgeContainerId ? document.getElementById(edgeContainerId) : null;
+        if (!track || !player) return;
 
-    if (featuresCarousel && featuresTrack && featureDots.length) {
-        let featureScrollFrame = null;
+        const items = Array.from(track.querySelectorAll(itemSelector));
+        const steps = Array.from(player.querySelectorAll('.carousel-timeline-step'));
+        const toggle = player.querySelector('.carousel-play-toggle');
+        if (!items.length || items.length !== steps.length || !toggle) return;
 
-        const getFeatureState = () => {
-            const maxScroll = Math.max(0, featuresTrack.scrollWidth - featuresTrack.clientWidth);
-            const currentScroll = Math.max(0, featuresTrack.scrollLeft);
-            const lastIndex = featureDots.length - 1;
-            const activeIndex = maxScroll > 0
-                ? Math.round((currentScroll / maxScroll) * lastIndex)
-                : 0;
-            return { maxScroll, currentScroll, activeIndex, lastIndex };
+        const duration = parseFloat(getComputedStyle(player).getPropertyValue('--carousel-duration')) || 6500;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const playerName = playerId.includes('features') ? 'funzionalità' : 'riquadri di supporto';
+        let activeIndex = 0;
+        let cycleTimer = null;
+        let scrollTimer = null;
+        let programmaticScroll = false;
+        let isPaused = reducedMotion;
+
+        const maxScroll = () => Math.max(0, track.scrollWidth - track.clientWidth);
+        const targetForIndex = (index) => {
+            const firstOffset = items[0].offsetLeft;
+            return Math.min(maxScroll(), Math.max(0, items[index].offsetLeft - firstOffset));
         };
 
-        const scrollFeaturesToIndex = (index) => {
-            const { maxScroll, lastIndex } = getFeatureState();
-            const safeIndex = Math.max(0, Math.min(lastIndex, index));
-            const targetLeft = lastIndex > 0 ? maxScroll * (safeIndex / lastIndex) : 0;
-            featuresTrack.scrollTo({ left: targetLeft, behavior: 'smooth' });
+        const updateEdges = () => {
+            if (!edgeContainer) return;
+            const current = Math.max(0, track.scrollLeft);
+            const maximum = maxScroll();
+            edgeContainer.classList.toggle('can-scroll-left', current > 8);
+            edgeContainer.classList.toggle('can-scroll-right', current < maximum - 8);
         };
 
-        const updateFeaturesCarousel = () => {
-            const { maxScroll, currentScroll, activeIndex, lastIndex } = getFeatureState();
-            featuresCarousel.classList.toggle('can-scroll-left', currentScroll > 8);
-            featuresCarousel.classList.toggle('can-scroll-right', currentScroll < maxScroll - 8);
+        const syncToggle = () => {
+            player.classList.toggle('is-paused', isPaused);
+            toggle.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
+            toggle.setAttribute('aria-label', isPaused
+                ? `Riprendi il carosello delle ${playerName}`
+                : `Metti in pausa il carosello delle ${playerName}`);
+        };
 
-            if (featureBtnPrev) featureBtnPrev.disabled = activeIndex <= 0;
-            if (featureBtnNext) featureBtnNext.disabled = activeIndex >= lastIndex;
-
-            featureDots.forEach((dot, index) => {
+        const syncSteps = (restartProgress = false) => {
+            steps.forEach((step, index) => {
                 const isActive = index === activeIndex;
-                dot.classList.toggle('active', isActive);
-                dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+                step.classList.toggle('is-active', isActive);
+                step.setAttribute('aria-current', isActive ? 'true' : 'false');
             });
+
+            if (restartProgress) {
+                const activeStep = steps[activeIndex];
+                activeStep.classList.remove('is-active');
+                void activeStep.offsetWidth;
+                activeStep.classList.add('is-active');
+            }
         };
 
-        const requestFeaturesUpdate = () => {
-            if (featureScrollFrame) cancelAnimationFrame(featureScrollFrame);
-            featureScrollFrame = requestAnimationFrame(updateFeaturesCarousel);
+        const scheduleNext = () => {
+            clearTimeout(cycleTimer);
+            if (isPaused || items.length < 2) return;
+            cycleTimer = setTimeout(() => goTo((activeIndex + 1) % items.length), duration);
         };
 
-        featureDots.forEach((dot, index) => {
-            dot.addEventListener('click', () => scrollFeaturesToIndex(index));
+        const goTo = (index, behavior = 'smooth') => {
+            activeIndex = Math.max(0, Math.min(items.length - 1, index));
+            programmaticScroll = true;
+            track.scrollTo({ left: targetForIndex(activeIndex), behavior });
+            syncSteps(true);
+            scheduleNext();
+            window.setTimeout(() => { programmaticScroll = false; }, behavior === 'smooth' ? 750 : 0);
+        };
+
+        const updateFromManualScroll = () => {
+            if (programmaticScroll) return;
+            const current = Math.max(0, track.scrollLeft);
+            let nearestIndex = 0;
+            let nearestDistance = Infinity;
+            items.forEach((item, index) => {
+                const distance = Math.abs(targetForIndex(index) - current);
+                if (distance < nearestDistance) {
+                    nearestDistance = distance;
+                    nearestIndex = index;
+                }
+            });
+            if (nearestIndex !== activeIndex) {
+                activeIndex = nearestIndex;
+                syncSteps(true);
+            }
+            scheduleNext();
+        };
+
+        steps.forEach((step, index) => step.addEventListener('click', () => goTo(index)));
+
+        toggle.addEventListener('click', () => {
+            isPaused = !isPaused;
+            clearTimeout(cycleTimer);
+            syncToggle();
+            if (!isPaused) {
+                syncSteps(true);
+                scheduleNext();
+            }
         });
 
-        if (featureBtnPrev) {
-            featureBtnPrev.addEventListener('click', () => {
-                const { activeIndex } = getFeatureState();
-                scrollFeaturesToIndex(activeIndex - 1);
-            });
-        }
-
-        if (featureBtnNext) {
-            featureBtnNext.addEventListener('click', () => {
-                const { activeIndex } = getFeatureState();
-                scrollFeaturesToIndex(activeIndex + 1);
-            });
-        }
-
-        featuresTrack.addEventListener('keydown', (event) => {
+        track.addEventListener('pointerdown', () => { programmaticScroll = false; }, { passive: true });
+        track.addEventListener('wheel', () => { programmaticScroll = false; }, { passive: true });
+        track.addEventListener('scroll', () => {
+            updateEdges();
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(updateFromManualScroll, 140);
+        }, { passive: true });
+        track.addEventListener('keydown', (event) => {
             if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
             event.preventDefault();
-            const direction = event.key === 'ArrowRight' ? 1 : -1;
-            const { activeIndex } = getFeatureState();
-            scrollFeaturesToIndex(activeIndex + direction);
+            goTo(activeIndex + (event.key === 'ArrowRight' ? 1 : -1));
         });
 
-        featuresTrack.addEventListener('scroll', requestFeaturesUpdate, { passive: true });
-        window.addEventListener('resize', requestFeaturesUpdate, { passive: true });
-        setTimeout(updateFeaturesCarousel, 100);
-    }
-
-    // Inizializzazione Carosello Riquadri di supporto
-    const appleCarousel = document.getElementById('apple-cards-carousel');
-    const appleBtnPrev = document.getElementById('apple-carousel-prev');
-    const appleBtnNext = document.getElementById('apple-carousel-next');
-
-    if (appleCarousel && appleBtnPrev && appleBtnNext) {
-        const updateCarouselButtons = () => {
-            const scrollLeft = appleCarousel.scrollLeft;
-            const maxScroll = appleCarousel.scrollWidth - appleCarousel.clientWidth;
-            appleBtnPrev.disabled = scrollLeft <= 8;
-            appleBtnNext.disabled = scrollLeft >= maxScroll - 8;
-        };
-
-        const getScrollStep = () => {
-            const firstCard = appleCarousel.querySelector('.apple-card');
-            return firstCard ? (firstCard.offsetWidth + 24) : 400;
-        };
-
-        appleBtnPrev.addEventListener('click', () => {
-            appleCarousel.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+        window.addEventListener('resize', () => {
+            track.scrollTo({ left: targetForIndex(activeIndex), behavior: 'auto' });
+            updateEdges();
+        }, { passive: true });
+        document.addEventListener('visibilitychange', () => {
+            clearTimeout(cycleTimer);
+            if (!document.hidden) scheduleNext();
         });
 
-        appleBtnNext.addEventListener('click', () => {
-            appleCarousel.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
-        });
+        syncToggle();
+        syncSteps(true);
+        updateEdges();
+        scheduleNext();
+    };
 
-        appleCarousel.addEventListener('scroll', updateCarouselButtons, { passive: true });
-        window.addEventListener('resize', updateCarouselButtons, { passive: true });
-        setTimeout(updateCarouselButtons, 100);
-    }
+    setupCarouselPlayer({
+        trackId: 'apple-features-track',
+        itemSelector: '.apple-feat-card',
+        playerId: 'features-carousel-player',
+        edgeContainerId: 'apple-features-carousel'
+    });
+    setupCarouselPlayer({
+        trackId: 'apple-cards-carousel',
+        itemSelector: '.apple-card',
+        playerId: 'support-carousel-player',
+        edgeContainerId: 'apple-cards-carousel-shell'
+    });
 
     function trapFocus(modal) {
         const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea,[tabindex]:not([tabindex="-1"])');
