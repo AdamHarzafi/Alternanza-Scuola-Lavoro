@@ -96,47 +96,6 @@ if (scrollBtn) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    const desktopHeroVideo = document.querySelector('.hero-desktop-video');
-    if (desktopHeroVideo) {
-        const heroVideoToggle = document.querySelector('.hero-video-toggle');
-        const desktopVideoQuery = window.matchMedia('(min-width: 761px)');
-        const updateHeroVideoToggle = () => {
-            if (!heroVideoToggle) return;
-            const isPaused = desktopHeroVideo.paused;
-            heroVideoToggle.classList.toggle('is-paused', isPaused);
-            heroVideoToggle.setAttribute('aria-pressed', String(isPaused));
-            heroVideoToggle.setAttribute('aria-label', isPaused ? 'Riproduci il video' : 'Metti in pausa il video');
-        };
-        const syncDesktopHeroVideo = () => {
-            if (desktopVideoQuery.matches) {
-                if (!desktopHeroVideo.getAttribute('src')) {
-                    desktopHeroVideo.src = desktopHeroVideo.dataset.desktopSrc;
-                    desktopHeroVideo.load();
-                }
-                desktopHeroVideo.play().catch(updateHeroVideoToggle);
-            } else {
-                desktopHeroVideo.pause();
-                desktopHeroVideo.removeAttribute('src');
-                desktopHeroVideo.load();
-            }
-            updateHeroVideoToggle();
-        };
-
-        if (heroVideoToggle) {
-            heroVideoToggle.addEventListener('click', () => {
-                if (desktopHeroVideo.paused) {
-                    desktopHeroVideo.play().catch(updateHeroVideoToggle);
-                } else {
-                    desktopHeroVideo.pause();
-                }
-            });
-        }
-        desktopHeroVideo.addEventListener('play', updateHeroVideoToggle);
-        desktopHeroVideo.addEventListener('pause', updateHeroVideoToggle);
-        syncDesktopHeroVideo();
-        desktopVideoQuery.addEventListener('change', syncDesktopHeroVideo);
-    }
-
     const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
     const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
@@ -183,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let scrollTimer = null;
         let programmaticScroll = false;
         let isPaused = reducedMotion;
+        let isCarouselVisible = false;
 
         const maxScroll = () => Math.max(0, track.scrollWidth - track.clientWidth);
         const targetForIndex = (index) => {
@@ -199,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function() {
         };
 
         const syncToggle = () => {
-            player.classList.toggle('is-paused', isPaused);
+            player.classList.toggle('is-paused', isPaused || !isCarouselVisible || document.hidden);
             toggle.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
             toggle.setAttribute('aria-label', isPaused
                 ? `Riprendi il carosello delle ${playerName}`
@@ -223,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const scheduleNext = () => {
             clearTimeout(cycleTimer);
-            if (isPaused || items.length < 2) return;
+            if (isPaused || !isCarouselVisible || document.hidden || items.length < 2) return;
             cycleTimer = setTimeout(() => goTo((activeIndex + 1) % items.length), duration);
         };
 
@@ -286,8 +246,28 @@ document.addEventListener("DOMContentLoaded", function() {
         }, { passive: true });
         document.addEventListener('visibilitychange', () => {
             clearTimeout(cycleTimer);
+            syncToggle();
             if (!document.hidden) scheduleNext();
         });
+
+        if ('IntersectionObserver' in window) {
+            const carouselVisibilityObserver = new IntersectionObserver((entries) => {
+                const nextVisibility = entries.some(entry => entry.isIntersecting);
+                if (nextVisibility === isCarouselVisible) return;
+
+                isCarouselVisible = nextVisibility;
+                clearTimeout(cycleTimer);
+                syncToggle();
+
+                if (isCarouselVisible && !isPaused) {
+                    syncSteps(true);
+                    scheduleNext();
+                }
+            }, { threshold: 0.35 });
+            carouselVisibilityObserver.observe(edgeContainer || track);
+        } else {
+            isCarouselVisible = true;
+        }
 
         syncToggle();
         syncSteps(true);
@@ -374,7 +354,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const attemptsMsgObj = document.getElementById('login-attempts');
 
     const loginModal = document.getElementById('login-modal');
-    const mapsModal = document.getElementById('maps-modal');
     const forgotSheetModal = document.getElementById('forgot-sheet-modal');
     const hidModal = document.getElementById('hid-modal');
     
@@ -385,11 +364,6 @@ document.addEventListener("DOMContentLoaded", function() {
             if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch(err){} }
         });
     });
-
-    const btnOpenMaps = document.getElementById('btn-open-maps');
-    if (btnOpenMaps && mapsModal) {
-        btnOpenMaps.addEventListener('click', (e) => { e.preventDefault(); mapsModal.classList.add('active'); });
-    }
 
     const btnForgotPass = document.getElementById('btn-forgot-pass');
     if (btnForgotPass) {
