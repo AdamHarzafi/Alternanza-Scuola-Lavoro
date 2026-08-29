@@ -31,8 +31,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css?v=20260829-support-image">
-    <link rel="stylesheet" href="modern.css?v=20260829-footer-system">
+    <link rel="stylesheet" href="style.css?v=20260829-public-v2">
+    <link rel="stylesheet" href="modern.css?v=20260829-white-v3">
 </head>
 <body class="home-page">
 
@@ -44,6 +44,7 @@
             <div class="nav-links">
                 <a href="#features">Funzionalità</a>
                 <a href="#collaborazioni">Collaborazioni</a>
+                <a href="supporto.html">Supporto</a>
                 <a href="#footer">Contatti</a>
             </div>
             <a href="login.html" class="btn-premium nav-login">Accedi</a>
@@ -54,7 +55,7 @@
             <div class="hero-shell">
                 <div class="hero-stage reveal" style="transition-delay: 0.06s;">
                     <picture class="hero-cover">
-                        <source media="(max-width: 1024px) and (orientation: portrait)" srcset="IMMAGINI/HOMEPAGE-MOBILI.png">
+                        <source media="(max-width: 1024px)" srcset="IMMAGINI/HOMEPAGE-MOBILI.png">
                         <img class="hero-cover-image" src="IMMAGINI/HOMEPAGE-PC.png" alt="">
                     </picture>
                 </div>
@@ -298,13 +299,25 @@
 
         <section class="support-effort-section content-lazy" aria-labelledby="support-effort-title">
             <div class="support-effort-box reveal">
+                <div class="support-effort-confetti" aria-hidden="true">
+                    <span class="confetti confetti-dot confetti-1"></span>
+                    <span class="confetti confetti-star confetti-2"></span>
+                    <span class="confetti confetti-loop confetti-3">∿</span>
+                    <span class="confetti confetti-triangle confetti-4"></span>
+                    <span class="confetti confetti-dot confetti-5"></span>
+                    <span class="confetti confetti-star confetti-6"></span>
+                    <span class="confetti confetti-loop confetti-7">∿</span>
+                    <span class="confetti confetti-triangle confetti-8"></span>
+                    <span class="confetti confetti-dot confetti-9"></span>
+                    <span class="confetti confetti-star confetti-10"></span>
+                </div>
                 <div class="support-effort-content">
                     <h2 id="support-effort-title">
                         <span class="support-effort-title-line">Semplice da fare.</span>
                         <span class="support-effort-title-line">Impossibile da dimenticare.</span>
                     </h2>
                     <p>Il tuo sostegno ci aiuta a migliorare Harzafi e a mantenerlo utile, accessibile e gratuito.</p>
-                    <button class="support-effort-button" type="button">Prosegui</button>
+                    <a class="support-effort-button" href="#">Prosegui</a>
                 </div>
                 <div class="support-effort-empty">
                     <img class="support-effort-image" src="IMMAGINI/SUPPORTO.png" loading="lazy" decoding="async" alt="Cuore sostenuto da una mano">
@@ -331,9 +344,10 @@
                 <div class="harzafi-footer-bottom">
                     <p>© 2026 Harzafi FSL. Tutti i diritti riservati.</p>
                     <nav class="harzafi-footer-links" aria-label="Informazioni legali">
-                        <a href="accessibilita.html">Accessibilità</a>
-                        <a href="privacy.html">Privacy</a>
-                        <a href="termini.html">Termini</a>
+                    <a href="accessibilita.html">Accessibilità</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="termini.html">Termini</a>
+                    <a href="supporto.html">Supporto</a>
                     </nav>
                 </div>
             </div>
