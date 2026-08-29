@@ -364,14 +364,6 @@
             .scroll-to-top:hover svg { transform: translateY(-2px); }
         }
 
-        /* ── FOOTER ── */
-        .dash-footer { width: 100%; margin: 0; padding: 112px 5% 60px; text-align: center; background: #f5f5f7; border-radius: 0; overflow: hidden; position: relative; }
-        .dash-footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 52px; background: #ffffff; border-radius: 0 0 36px 36px; pointer-events: none; }
-        .footer-copyright { font-size: 0.85rem; color: var(--text-light); font-weight: 800; margin-bottom: 12px; }
-        .footer-links { display: flex; justify-content: center; gap: 16px; }
-        .footer-links a { color: var(--text-gray); font-size: 0.85rem; font-weight: 700; text-decoration: none; }
-        .footer-links a:hover { color: var(--primary); }
-
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
             .dash-layout { grid-template-columns: 1fr; gap: 20px; margin-top: 20px; }
@@ -387,7 +379,6 @@
             .timeline-wrapper { padding-left: 20px; }
             .timeline-wrapper::before { left: 4px; }
             .timeline-item::after { left: -21px; top: 30px; width: 8px; height: 8px; }
-            .footer-links { flex-direction: column; gap: 8px; }
             .scroll-to-top { bottom: 20px; right: 20px; width: 50px; height: 50px; }
             
             /* Responsive popover per schermi molto piccoli */
@@ -407,30 +398,24 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="modern.css?v=20260829-footer-system">
 </head>
-<body>
+<body class="dashboard-page">
 
     <!-- Sfondo Ultra-Soft -->
     <div class="dashboard-bg-mesh" aria-hidden="true"></div>
 
-    <!-- Topbar -->
-    <header class="dash-topbar">
-        <div class="topbar-left">
-            <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi" class="topbar-logo">
-            <div class="topbar-divider"></div>
-            <div class="topbar-school">
-                <strong>ITIS Amedeo Avogadro</strong>
-                <span>Registro FSL — A.S. 2025/2026</span>
-            </div>
+    <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
+        <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
+            <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
+        </a>
+        <div class="nav-links">
+            <a href="index.html#features">Funzionalità</a>
+            <a href="index.html#collaborazioni">Collaborazioni</a>
+            <a href="index.html#footer">Contatti</a>
         </div>
-        <div class="topbar-right">
-            <div class="year-badge">A.S. 2025/2026</div>
-            <button class="btn-logout" id="btn-logout" aria-label="Esci">
-                <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-                <span>Esci</span>
-            </button>
-        </div>
-    </header>
+        <button type="button" class="btn-premium nav-login" id="btn-logout">Esci</button>
+    </nav>
 
     <!-- Main Layout -->
     <div class="dash-layout">
@@ -562,14 +547,32 @@
         <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
     </div>
 
-    <!-- Footer -->
-    <footer class="dash-footer">
-        <div class="footer-copyright">Registro FSL Harzafi © 2026 — ITIS Amedeo Avogadro</div>
-        <div class="footer-links">
-            <a href="accessibilita.html">Accessibilità</a>
-            <a href="privacy.html">Privacy</a>
+    <footer class="harzafi-footer">
+        <div class="harzafi-footer-inner">
+            <div class="harzafi-footer-main">
+                <div class="harzafi-footer-brand">
+                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi"></a>
+                    <h2>Il tuo percorso, <span>in un unico posto.</span></h2>
+                </div>
+                <div class="harzafi-footer-profile">
+                    <p class="harzafi-footer-eyebrow">Progetto personale</p>
+                    <h3>Harzafi Adam</h3>
+                    <p>Classe 4AI · Anno scolastico 2026/2027</p>
+                    <a href="mailto:harzafi.support@gmail.com">harzafi.support@gmail.com</a>
+                </div>
+            </div>
+            <div class="harzafi-footer-bottom">
+                <p>© 2026 Harzafi FSL. Tutti i diritti riservati.</p>
+                <nav class="harzafi-footer-links" aria-label="Informazioni legali">
+                    <a href="accessibilita.html">Accessibilità</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="termini.html">Termini</a>
+                </nav>
+            </div>
         </div>
     </footer>
+
+    <script defer src="navbar.js?v=20260829-shared-nav"></script>
 
     <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
