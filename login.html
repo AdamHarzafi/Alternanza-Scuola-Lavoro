@@ -21,7 +21,7 @@
     <link rel="dns-prefetch" href="https://challenges.cloudflare.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20260829-support-image">
 
     <style>
         /* ── Layout pagina login ── */
@@ -551,8 +551,21 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="modern.css?v=20260829-footer-system">
 </head>
-<body>
+<body class="auth-page">
+
+    <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
+        <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
+            <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
+        </a>
+        <div class="nav-links">
+            <a href="index.html#features">Funzionalità</a>
+            <a href="index.html#collaborazioni">Collaborazioni</a>
+            <a href="index.html#footer">Contatti</a>
+        </div>
+        <a href="login.html" class="btn-premium nav-login" aria-current="page">Accedi</a>
+    </nav>
 
     <!-- Sfondo -->
     <div class="login-bg-mesh" aria-hidden="true"></div>
@@ -563,10 +576,6 @@
         <!-- Card login -->
         <div class="login-card">
             <section class="login-intro" aria-label="Presentazione Harzafi FSL">
-                <a href="index.html" class="back-link" aria-label="Torna alla home page">
-                    <svg viewBox="0 0 24 24"><path d="M20,11H7.83l5.59-5.59L12,4l-8,8 8,8 1.41-1.41L7.83,13H20v-2Z"/></svg>
-                    Torna al Portale
-                </a>
                 <div class="login-intro-content">
                     <img class="login-intro-logo" src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
                     <p class="login-intro-eyebrow">Registro FSL</p>
@@ -580,13 +589,6 @@
             </section>
 
             <section class="login-panel" aria-labelledby="login-title">
-                <div class="login-mobile-nav">
-                    <a href="index.html" class="back-link" aria-label="Torna alla home page">
-                        <svg viewBox="0 0 24 24"><path d="M20,11H7.83l5.59-5.59L12,4l-8,8 8,8 1.41-1.41L7.83,13H20v-2Z"/></svg>
-                        Torna al Portale
-                    </a>
-                    <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
-                </div>
                 <p class="auth-eyebrow">Account Harzafi</p>
                 <h2 class="auth-title" id="login-title">Bentornato.</h2>
                 <p class="auth-subtitle">Accedi per continuare nel Registro FSL.</p>
