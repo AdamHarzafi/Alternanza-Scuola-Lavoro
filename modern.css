@@ -1643,7 +1643,7 @@ body {
     }
 }
 
-/* ========================================================================== 
+/* ==========================================================================
    SISTEMA PUBBLICO 2026 — navbar, riquadri editoriali e supporto
    ========================================================================== */
 .home-page .navbar-wrapper,
@@ -2518,7 +2518,7 @@ body {
     }
 }
 
-/* ========================================================================== 
+/* ==========================================================================
    ACCESSIBILITÀ — pagina editoriale a quadranti
    ========================================================================== */
 .accessibility-page .page-content {
@@ -3348,5 +3348,287 @@ body.access-modal-open {
     .access-card-track {
         scroll-behavior: auto;
         transition-duration: .01ms;
+    }
+}
+
+/* Privacy — variante scura monocromatica */
+html.privacy-theme-dark,
+.privacy-page,
+.privacy-page .privacy-main {
+    background: #000;
+}
+
+.privacy-page .navbar-wrapper,
+.privacy-page .navbar-wrapper.scrolled {
+    border-bottom-color: rgba(255, 255, 255, .1);
+    background: rgba(13, 13, 15, .82);
+    box-shadow: none;
+}
+
+.privacy-page .nav-links a {
+    color: #d2d2d7;
+}
+
+.privacy-page .nav-links a:hover {
+    color: #fff;
+}
+
+.privacy-page .privacy-hero {
+    min-height: clamp(830px, 100vh, 980px);
+    padding-top: clamp(210px, 23vh, 270px);
+    padding-bottom: clamp(92px, 11vh, 126px);
+    justify-content: flex-start;
+}
+
+.privacy-page .privacy-hero h1 {
+    color: #f5f5f7;
+}
+
+.privacy-page .privacy-hero h1 span + span {
+    color: #86868b;
+}
+
+.privacy-page .privacy-hero > p {
+    color: #a1a1a6;
+}
+
+.privacy-page .privacy-date {
+    background: #1c1c1e;
+    color: #a1a1a6;
+}
+
+.privacy-page .privacy-introduction {
+    border-top-color: rgba(255, 255, 255, .14);
+}
+
+.privacy-page .privacy-introduction p {
+    color: #a1a1a6;
+}
+
+.privacy-page .privacy-introduction strong {
+    color: #f5f5f7;
+}
+
+.privacy-page .privacy-policy-card,
+.privacy-page .privacy-policy-card--blue,
+.privacy-page .privacy-policy-card--violet,
+.privacy-page .privacy-policy-card--gray,
+.privacy-page .privacy-policy-card--green,
+.privacy-page .privacy-policy-card--dark {
+    border-color: rgba(255, 255, 255, .09);
+    background: #121214;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .34);
+}
+
+.privacy-page .privacy-policy-card--gray,
+.privacy-page .privacy-policy-card--dark {
+    background: #1a1a1c;
+}
+
+.privacy-page .privacy-policy-card::after {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .045);
+}
+
+.privacy-page .privacy-card-number,
+.privacy-page .privacy-policy-card--dark .privacy-card-number {
+    border-color: rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .07);
+    color: #d2d2d7;
+}
+
+.privacy-page .privacy-card-heading h2,
+.privacy-page .privacy-policy-card--dark .privacy-card-heading h2,
+.privacy-page .privacy-policy-card strong,
+.privacy-page .privacy-policy-card--dark strong {
+    color: #f5f5f7;
+}
+
+.privacy-page .privacy-policy-card > p,
+.privacy-page .privacy-policy-card li,
+.privacy-page .privacy-policy-card--dark > p,
+.privacy-page .privacy-policy-card--dark li {
+    color: #a1a1a6;
+}
+
+.privacy-page .privacy-policy-card li,
+.privacy-page .privacy-policy-card--dark li {
+    border-top-color: rgba(255, 255, 255, .09);
+}
+
+.privacy-page .privacy-policy-card li::before,
+.privacy-page .privacy-policy-card--dark li::before {
+    background: #8e8e93;
+}
+
+.privacy-page .privacy-policy-card code {
+    background: rgba(255, 255, 255, .075);
+    color: #d2d2d7;
+}
+
+.privacy-page .privacy-policy-card a {
+    color: #f5f5f7;
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, .32);
+    text-underline-offset: 3px;
+}
+
+.privacy-page .harzafi-footer {
+    background: #0b0b0c;
+    color: #f5f5f7;
+}
+
+.privacy-page .harzafi-footer::before {
+    background: #000;
+}
+
+.privacy-page .harzafi-footer-brand h2,
+.privacy-page .harzafi-footer-profile h3 {
+    color: #f5f5f7;
+}
+
+.privacy-page .harzafi-footer-brand h2 span,
+.privacy-page .harzafi-footer-eyebrow,
+.privacy-page .harzafi-footer-profile p,
+.privacy-page .harzafi-footer-bottom p {
+    color: #86868b;
+}
+
+.privacy-page .harzafi-footer-profile {
+    border-color: rgba(255, 255, 255, .1);
+    background: #151517;
+}
+
+.privacy-page .harzafi-footer-bottom {
+    border-top-color: rgba(255, 255, 255, .12);
+}
+
+.privacy-page .harzafi-footer-links a {
+    color: #a1a1a6;
+}
+
+.privacy-page .harzafi-footer-links a[aria-current="page"] {
+    color: #fff;
+}
+
+.privacy-page .harzafi-footer-socials img {
+    filter: grayscale(1) brightness(0) invert(1);
+    opacity: .68;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .privacy-page .privacy-policy-card:hover,
+    .privacy-page .privacy-policy-card--dark:hover {
+        border-color: rgba(255, 255, 255, .18);
+        box-shadow: 0 34px 92px rgba(0, 0, 0, .48);
+    }
+
+    .privacy-page .privacy-policy-card a:hover {
+        color: #fff;
+        text-decoration-color: #fff;
+    }
+
+    .privacy-page .harzafi-footer-socials a:hover img {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 760px) {
+    .privacy-page .privacy-hero {
+        min-height: 740px;
+        padding-top: calc(154px + env(safe-area-inset-top));
+        padding-bottom: 82px;
+    }
+}
+
+.privacy-deep-dive {
+    grid-column: 1 / -1;
+    padding: clamp(84px, 10vw, 138px) 8px clamp(24px, 3vw, 42px);
+}
+
+.privacy-deep-dive > span {
+    display: block;
+    margin-bottom: 16px;
+    color: #86868b;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.privacy-deep-dive h2 {
+    max-width: 1020px;
+    margin: 0;
+    color: #f5f5f7;
+    font-size: clamp(3.25rem, 7vw, 6.6rem);
+    font-weight: 680;
+    line-height: .92;
+    letter-spacing: -.07em;
+}
+
+.privacy-deep-dive p {
+    max-width: 720px;
+    margin: 28px 0 0;
+    color: #a1a1a6;
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    font-weight: 430;
+    line-height: 1.55;
+    letter-spacing: -.02em;
+}
+
+.privacy-page .privacy-policy-card .privacy-card-note {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, .09);
+    color: #86868b;
+    font-size: .91rem;
+    line-height: 1.58;
+}
+
+.privacy-page .privacy-regulation-link {
+    min-height: 44px;
+    margin-top: 27px;
+    padding: 11px 16px 11px 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .065);
+    color: #f5f5f7;
+    font-size: .84rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background-color .25s ease, border-color .25s ease, transform .25s var(--harzafi-ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .privacy-page .privacy-regulation-link:hover {
+        border-color: rgba(255, 255, 255, .28);
+        background: rgba(255, 255, 255, .11);
+        color: #fff;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+}
+
+@media (max-width: 760px) {
+    .privacy-deep-dive {
+        padding: 72px 10px 22px;
+    }
+
+    .privacy-deep-dive > span {
+        margin-bottom: 13px;
+        font-size: .72rem;
+    }
+
+    .privacy-deep-dive h2 {
+        font-size: clamp(3rem, 14vw, 4.25rem);
+        line-height: .94;
+    }
+
+    .privacy-deep-dive p {
+        margin-top: 22px;
+        font-size: .98rem;
     }
 }
