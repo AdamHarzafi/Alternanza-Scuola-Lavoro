@@ -9,8 +9,8 @@
     <meta name="theme-color" content="#f5f5f7">
     <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20260829-public-v2">
-    <link rel="stylesheet" href="modern.css?v=20260829-white-v3">
+    <link rel="stylesheet" href="style.css?v=20260830-mobile-carousel-v3">
+    <link rel="stylesheet" href="modern.css?v=20260830-support-v13">
 </head>
 <body class="support-page">
     <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
@@ -28,41 +28,61 @@
 
     <main class="support-main">
         <header class="support-hero reveal active">
-            <span class="support-kicker">Supporto Harzafi</span>
-            <h1>Come possiamo<br>aiutarti?</h1>
-            <p>Due percorsi chiari per tornare subito a usare il Registro FSL.</p>
+            <img class="support-hero-logo" src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
+            <h1><span>Supporto Harzafi</span></h1>
+            <p>
+                <span>Ogni risposta che cerchi, esattamente dove dovrebbe essere.</span>
+                <span>Semplice, veloce, intuitivo.</span>
+            </p>
         </header>
 
-        <section class="support-card-grid" aria-label="Opzioni di supporto">
-            <article class="support-action-card support-action-card--password reveal active">
-                <div class="support-action-icon" aria-hidden="true">
-                    <svg viewBox="0 0 48 48"><path d="M18.5 22V16a5.5 5.5 0 0 1 11 0v6M14 22h20a4 4 0 0 1 4 4v13H10V26a4 4 0 0 1 4-4Z"/><circle cx="24" cy="30" r="2.5"/></svg>
-                </div>
-                <div class="support-action-copy">
-                    <span class="support-action-label">Account</span>
-                    <h2>Reimposta la password.</h2>
-                    <p>Apri la schermata di accesso e seleziona “Hai dimenticato la password?” per ricevere il link sicuro.</p>
-                </div>
-                <a class="support-action-link" href="login.html" aria-label="Vai al recupero della password">
-                    Vai al recupero
-                    <span aria-hidden="true">→</span>
-                </a>
-            </article>
+        <section class="support-experience" aria-labelledby="support-options-title">
+            <header class="support-section-heading reveal active">
+                <span>Hai bisogno di una mano?</span>
+                <h2 id="support-options-title">Partiamo da qui.</h2>
+            </header>
 
-            <article class="support-action-card support-action-card--email reveal active">
-                <div class="support-action-icon" aria-hidden="true">
-                    <svg viewBox="0 0 48 48"><path d="M8 13h32v22H8V13Zm1 2 15 12 15-12"/></svg>
-                </div>
-                <div class="support-action-copy">
-                    <span class="support-action-label">Assistenza</span>
-                    <h2>Invia un’email.</h2>
-                    <p>Descrivi il problema con poche informazioni utili. Ti risponderemo all’indirizzo da cui ci contatti.</p>
-                </div>
-                <a class="support-action-link" href="mailto:harzafi.support@gmail.com" aria-label="Invia un’email all’assistenza Harzafi">
-                    Scrivi all’assistenza
-                    <span aria-hidden="true">↗</span>
-                </a>
-            </article>
+            <div class="support-bento">
+                <article class="support-card support-card--password reveal active">
+                    <div class="support-card-copy">
+                        <span class="support-card-label">Account</span>
+                        <h3>Rientra nel tuo account.</h3>
+                        <p>Hai dimenticato la password? Apri la schermata di accesso e ricevi il link per impostarne una nuova.</p>
+                        <a class="support-card-link" href="login.html">
+                            Reimposta la password
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                    <div class="support-card-visual support-card-visual--identity" aria-hidden="true">
+                        <span class="support-visual-orbit"></span>
+                        <img src="IMMAGINI/ID HARZAFI.png" alt="" loading="lazy" decoding="async">
+                    </div>
+                </article>
+
+                <article class="support-card support-card--email reveal active">
+                    <div class="support-card-copy">
+                        <span class="support-card-label">Supporto diretto</span>
+                        <h3>Parliamone.</h3>
+                        <p>Raccontaci cosa è successo. Più il messaggio è chiaro, più sarà semplice capire subito come aiutarti.</p>
+                        <a class="support-card-link support-card-link--light" href="mailto:harzafi.support@gmail.com">
+                            Scrivi all’assistenza
+                            <span aria-hidden="true">↗</span>
+                        </a>
+                    </div>
+                    <div class="support-card-visual support-card-visual--person" aria-hidden="true">
+                        <span class="support-visual-glow"></span>
+                        <img src="IMMAGINI/SUPPORTO1.png" alt="" loading="lazy" decoding="async">
+                    </div>
+                </article>
+
+                <article class="support-card support-card--guide reveal active">
+                    <div class="support-card-copy">
+                        <span class="support-card-label">Prima di scriverci</span>
+                        <h3>Tre dettagli fanno la differenza.</h3>
+                        <p>Indica la pagina, il dispositivo e cosa stavi provando a fare. Non inviare mai password o codici di accesso.</p>
+                    </div>
+                </article>
+            </div>
         </section>
 
     </main>
