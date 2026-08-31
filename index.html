@@ -31,7 +31,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css?v=20260830-mobile-carousel-v3">
+    <link rel="stylesheet" href="style.css?v=20260831-donazioni-clean">
     <link rel="stylesheet" href="modern.css?v=20260830-footer-socials-v4">
 </head>
 <body class="home-page">
@@ -299,28 +299,25 @@
 
         <section class="support-effort-section" aria-labelledby="support-effort-title">
             <div class="support-effort-box reveal">
-                <div class="support-effort-confetti" aria-hidden="true">
-                    <span class="confetti confetti-dot confetti-1"></span>
-                    <span class="confetti confetti-star confetti-2"></span>
-                    <span class="confetti confetti-loop confetti-3">∿</span>
-                    <span class="confetti confetti-triangle confetti-4"></span>
-                    <span class="confetti confetti-dot confetti-5"></span>
-                    <span class="confetti confetti-star confetti-6"></span>
-                    <span class="confetti confetti-loop confetti-7">∿</span>
-                    <span class="confetti confetti-triangle confetti-8"></span>
-                    <span class="confetti confetti-dot confetti-9"></span>
-                    <span class="confetti confetti-star confetti-10"></span>
-                </div>
+                <img class="support-effort-backdrop" src="IMMAGINI/DONAZIONI.png" loading="eager" fetchpriority="low" decoding="async" alt="">
                 <div class="support-effort-content">
                     <h2 id="support-effort-title">
-                        <span class="support-effort-title-line">Semplice da fare.</span>
-                        <span class="support-effort-title-line">Impossibile da dimenticare.</span>
+                        <span class="support-effort-title-line">Le tue donazioni</span>
+                        <span class="support-effort-title-line">fanno la differenza,</span>
+                        <span class="support-effort-title-line">ogni giorno.</span>
                     </h2>
-                    <p>Il tuo sostegno ci aiuta a migliorare Harzafi e a mantenerlo utile, accessibile e gratuito.</p>
-                    <a class="support-effort-button" href="#">Disponibile dal 14/04</a>
-                </div>
-                <div class="support-effort-empty">
-                    <img class="support-effort-image" src="IMMAGINI/SUPPORTO-BOX.png" loading="eager" fetchpriority="low" decoding="async" alt="Cuore sostenuto da una mano">
+                    <button class="support-effort-button" type="button" disabled>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="donation-heart-gradient" x1="4" y1="3" x2="20" y2="21" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#ff4f9a"/>
+                                    <stop offset="1" stop-color="#8a54e8"/>
+                                </linearGradient>
+                            </defs>
+                            <path fill="url(#donation-heart-gradient)" d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.53L12 21.35Z"/>
+                        </svg>
+                        <span>DISPONIBILE DAL 14/04</span>
+                    </button>
                 </div>
             </div>
         </section>
