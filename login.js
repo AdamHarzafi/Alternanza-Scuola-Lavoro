@@ -68,9 +68,7 @@ function waitForFirebase(callback) {
 }
 
 window.addEventListener('load', () => {
-    waitForFirebase(() => {
-        if (typeof populateUserDropdown === 'function') populateUserDropdown('studente');
-    });
+    waitForFirebase(() => {});
 });
 
 // ── VPN check ────────────────────────────────────────────────
@@ -118,77 +116,152 @@ document.addEventListener("DOMContentLoaded", function () {
         window.addEventListener('scroll', handleScroll, { passive: true });
     }
 
-    // ── Dropdown utenti ──────────────────────────────────────
-    let selectedRole       = 'studente';
-    let selectedUserValue  = "";
-    let selectedUserEmail  = "";
+    // ── Accesso in due passaggi: email, poi password ─────────
+    let selectedRole      = 'studente';
+    let selectedUserEmail = "";
+    let emailVerificationAttempt = 0;
 
-    const submitBtn        = document.getElementById('login-submit');
-    const passInput        = document.getElementById('password-input');
-    const errorMsg         = document.getElementById('login-error');
-    const hiddenUsernameInput = document.getElementById('hidden-username');
-    const usernameSelect   = document.getElementById('username-select');
+    const submitBtn       = document.getElementById('login-submit');
+    const passInput       = document.getElementById('password-input');
+    const errorMsg        = document.getElementById('login-error');
+    const emailInput      = document.getElementById('email-input');
+    const emailError      = document.getElementById('email-error');
+    const continueBtn     = document.getElementById('login-continue');
+    const emailStep       = document.getElementById('login-email-step');
+    const passwordStep    = document.getElementById('login-password-step');
+    const selectedEmailEl = document.getElementById('selected-email-display');
+    const changeEmailBtn  = document.getElementById('change-email');
+    const loginPanel      = document.querySelector('#login-page-wrapper .login-panel');
+    const authSubtitle    = document.querySelector('#login-page-wrapper .auth-subtitle');
+    const emailSubtitleText = authSubtitle?.textContent || '';
 
-    window.populateUserDropdown = function (role) {
-        const optionsContainer = document.getElementById('username-options');
-        optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light);text-align:center;">Caricamento utenti...</div>';
-        const collectionName = role === 'studente' ? 'studenti' : 'docenti';
+    function isValidEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
 
-        if (typeof window.db !== 'undefined') {
-            window.db.collection(collectionName).orderBy("nome", "asc").get()
-                .then(snapshot => {
-                    optionsContainer.innerHTML = '';
-                    snapshot.forEach(doc => creaOpzioneDropdown(doc.data().nome, doc.data().email || "email_mancante@scuola.it", optionsContainer));
-                })
-                .catch(() => {
-                    optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--danger);">Errore di connessione al server</div>';
-                });
-        } else {
-            optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light);text-align:center;">In attesa di connessione...</div>';
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function getDatabaseWhenReady(timeoutMs = 3000) {
+        const startedAt = Date.now();
+        while (typeof window.db === 'undefined' && Date.now() - startedAt < timeoutMs) {
+            await delay(100);
         }
-        resetDropdownDisplay();
-    };
-
-    function creaOpzioneDropdown(nome, email, container) {
-        const option = document.createElement('div');
-        option.className  = 'custom-option';
-        option.textContent = nome;
-        option.addEventListener('click', function (e) {
-            e.stopPropagation();
-            document.getElementById('username-display').textContent = nome;
-            document.getElementById('username-display').parentElement.classList.add('selected');
-            selectedUserValue = nome;
-            selectedUserEmail = email;
-            hiddenUsernameInput.value = nome;
-            usernameSelect.classList.remove('open');
-            errorMsg.style.display = 'none';
-        });
-        container.appendChild(option);
+        return window.db;
     }
 
-    function resetDropdownDisplay() {
-        document.getElementById('username-display').textContent = 'Seleziona Utente';
-        document.getElementById('username-display').parentElement.classList.remove('selected');
-        selectedUserValue = "";
+    function setContinueLoading(isLoading) {
+        if (!continueBtn) return;
+        continueBtn.disabled = isLoading;
+        continueBtn.classList.toggle('is-loading', isLoading);
+        continueBtn.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+        continueBtn.innerHTML = isLoading
+            ? '<span class="login-button-loader"><span class="login-button-spinner" aria-hidden="true"></span><span>Verifica…</span></span>'
+            : 'Continua';
+    }
+
+    function showEmailStep({ keepEmail = true } = {}) {
+        emailVerificationAttempt++;
+        setContinueLoading(false);
         selectedUserEmail = "";
-        hiddenUsernameInput.value = "";
+        if (!keepEmail && emailInput) emailInput.value = "";
+        if (passInput) passInput.value = "";
+        if (errorMsg) errorMsg.style.display = 'none';
+        if (emailError) emailError.style.display = 'none';
+        if (passwordStep) {
+            passwordStep.hidden = true;
+            passwordStep.classList.remove('is-active');
+        }
+        loginPanel?.classList.remove('is-password-step');
+        if (authSubtitle) authSubtitle.textContent = emailSubtitleText;
+        if (emailStep) {
+            emailStep.hidden = false;
+            emailStep.classList.remove('is-active');
+            void emailStep.offsetWidth;
+            emailStep.classList.add('is-active');
+        }
+        setTimeout(() => emailInput?.focus(), 50);
     }
 
-    document.querySelectorAll('.custom-select-trigger').forEach(trigger => {
-        trigger.addEventListener('click', function (e) {
-            e.stopPropagation();
-            const parent = this.parentElement;
-            const isOpen = parent.classList.contains('open');
-            document.querySelectorAll('.custom-select').forEach(s => { if (s !== parent) s.classList.remove('open'); });
-            parent.classList.toggle('open');
-            this.setAttribute('aria-expanded', parent.classList.contains('open'));
-        });
+    async function showPasswordStep() {
+        if (continueBtn?.disabled) return;
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+        if (!isValidEmail(email)) {
+            if (emailError) {
+                emailError.innerText = "Inserisci un indirizzo email valido.";
+                emailError.style.display = 'block';
+            }
+            emailInput?.focus();
+            return;
+        }
+
+        if (emailError) emailError.style.display = 'none';
+        const currentAttempt = ++emailVerificationAttempt;
+        const roleAtStart = selectedRole;
+        setContinueLoading(true);
+
+        try {
+            const db = await getDatabaseWhenReady();
+            if (!db) throw new Error('database-unavailable');
+
+            const collectionName = roleAtStart === 'studente' ? 'studenti' : 'docenti';
+            const [snapshot] = await Promise.all([
+                db.collection(collectionName).where('email', '==', email).limit(1).get(),
+                delay(650)
+            ]);
+
+            if (currentAttempt !== emailVerificationAttempt || selectedRole !== roleAtStart) return;
+            if (snapshot.empty) {
+                const roleLabel = roleAtStart === 'studente' ? 'Studenti' : 'Docenti';
+                if (emailError) {
+                    emailError.innerText = `Questo indirizzo non è abilitato per l’area ${roleLabel}.`;
+                    emailError.style.display = 'block';
+                }
+                emailInput?.focus();
+                return;
+            }
+
+            selectedUserEmail = email;
+            if (emailInput) emailInput.value = email;
+            if (selectedEmailEl) selectedEmailEl.textContent = email;
+            if (emailStep) {
+                emailStep.hidden = true;
+                emailStep.classList.remove('is-active');
+            }
+            loginPanel?.classList.add('is-password-step');
+            if (authSubtitle) authSubtitle.textContent = 'Inserisci la password';
+            if (passwordStep) {
+                passwordStep.hidden = false;
+                passwordStep.classList.remove('is-active');
+                void passwordStep.offsetWidth;
+                passwordStep.classList.add('is-active');
+            }
+            setTimeout(() => passInput?.focus(), 80);
+        } catch (error) {
+            if (currentAttempt !== emailVerificationAttempt) return;
+            console.error('Verifica email non riuscita:', error);
+            if (emailError) {
+                emailError.innerText = "Non è possibile verificare l’indirizzo adesso. Riprova tra poco.";
+                emailError.style.display = 'block';
+            }
+        } finally {
+            if (currentAttempt === emailVerificationAttempt) setContinueLoading(false);
+        }
+    }
+
+    continueBtn?.addEventListener('click', showPasswordStep);
+    changeEmailBtn?.addEventListener('click', () => showEmailStep({ keepEmail: true }));
+    emailInput?.addEventListener('input', () => {
+        emailVerificationAttempt++;
+        setContinueLoading(false);
+        if (emailError) emailError.style.display = 'none';
     });
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.custom-select').forEach(sel => {
-            sel.classList.remove('open');
-            sel.querySelector('.custom-select-trigger').setAttribute('aria-expanded', 'false');
-        });
+    emailInput?.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            showPasswordStep();
+        }
     });
 
     // ── Segmented control ruolo ──────────────────────────────
@@ -206,7 +279,7 @@ document.addEventListener("DOMContentLoaded", function () {
         e.currentTarget.setAttribute('aria-pressed', 'true');
         selectedRole = e.currentTarget.dataset.role;
         if (segSlider) segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
-        if (typeof window.populateUserDropdown === 'function') window.populateUserDropdown(selectedRole);
+        showEmailStep({ keepEmail: true });
         const gErr = document.getElementById('google-login-error');
         if (gErr) gErr.style.display = 'none';
     }));
@@ -227,26 +300,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ── Toggle password visibilità ───────────────────────────
     const togglePasswordBtn = document.getElementById('toggle-password');
-    const eyeIcon      = document.getElementById('eye-icon');
-    const eyeSlashIcon = document.getElementById('eye-slash-icon');
 
     if (togglePasswordBtn && passInput) {
         togglePasswordBtn.addEventListener('click', () => {
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                togglePasswordBtn.setAttribute('aria-label', 'Nascondi password');
-                if (eyeIcon) eyeIcon.style.display      = 'none';
-                if (eyeSlashIcon) eyeSlashIcon.style.display = 'block';
-            } else {
-                passInput.type = 'password';
-                togglePasswordBtn.setAttribute('aria-label', 'Mostra password');
-                if (eyeIcon) eyeIcon.style.display      = 'block';
-                if (eyeSlashIcon) eyeSlashIcon.style.display = 'none';
-            }
+            const willShowPassword = passInput.type === 'password';
+            passInput.type = willShowPassword ? 'text' : 'password';
+            togglePasswordBtn.classList.toggle('is-visible', willShowPassword);
+            togglePasswordBtn.setAttribute('aria-label', willShowPassword ? 'Nascondi password' : 'Mostra password');
         });
     }
 
     if (passInput) {
+        const capsLockWarning = document.getElementById('caps-lock-warning');
+        let capsMotionTimer;
+        const updateCapsLock = event => {
+            if (capsLockWarning && typeof event.getModifierState === 'function') {
+                const capsIsActive = event.getModifierState('CapsLock');
+                capsLockWarning.hidden = !capsIsActive;
+                if (capsIsActive && event.type === 'keydown' && event.key.length === 1) {
+                    capsLockWarning.classList.remove('is-typing');
+                    void capsLockWarning.offsetWidth;
+                    capsLockWarning.classList.add('is-typing');
+                    clearTimeout(capsMotionTimer);
+                    capsMotionTimer = setTimeout(() => capsLockWarning.classList.remove('is-typing'), 170);
+                }
+            }
+        };
+        passInput.addEventListener('keydown', updateCapsLock);
+        passInput.addEventListener('keyup', updateCapsLock);
+        passInput.addEventListener('blur', () => {
+            if (capsLockWarning) {
+                capsLockWarning.hidden = true;
+                capsLockWarning.classList.remove('is-typing');
+            }
+        });
         passInput.addEventListener('copy',  e => { 
             e.preventDefault(); 
             if (errorMsg) { errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; }
@@ -260,12 +347,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // ── Login con credenziali ────────────────────────────────
     window.eseguiAccessoServer = function () {
         const pass  = passInput ? passInput.value.trim() : '';
-        const uName = hiddenUsernameInput ? hiddenUsernameInput.value.trim() : '';
         if (submitBtn) submitBtn.innerText = "Verifica in corso…";
 
         if (typeof window.auth !== 'undefined') {
             window.auth.signInWithEmailAndPassword(selectedUserEmail, pass)
-                .then(async () => {
+                .then(async credential => {
+                    const uName = credential.user.displayName || selectedUserEmail.split('@')[0] || 'Utente';
                     await inviaEmail(selectedUserEmail, 2, {
                         nome_utente:    uName,
                         email_utente:   selectedUserEmail,
@@ -318,10 +405,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (document.activeElement) document.activeElement.blur();
 
             const pass  = passInput ? passInput.value.trim() : '';
-            const uName = hiddenUsernameInput ? hiddenUsernameInput.value.trim() : '';
 
             if (typeof window.auth === 'undefined') { if (errorMsg) { errorMsg.innerText = "Database offline."; errorMsg.style.display = 'block'; } return; }
-            if (!uName || !selectedUserEmail)       { if (errorMsg) { errorMsg.innerText = "Seleziona prima un utente dalla lista."; errorMsg.style.display = 'block'; } return; }
+            if (!selectedUserEmail)                 { showEmailStep({ keepEmail: true }); return; }
             if (!pass)                              { if (errorMsg) { errorMsg.innerText = "Il campo password è obbligatorio."; errorMsg.style.display = 'block'; } return; }
 
             if (errorMsg) errorMsg.style.display = 'none';
@@ -539,7 +625,7 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             if (otpStep1) { otpStep1.style.display  = 'block'; otpStep1.style.opacity  = '1'; }
             if (otpStep3) { otpStep3.style.display  = 'none'; otpStep3.style.opacity  = '0'; }
-            if (otpEmailInput) otpEmailInput.value     = '';
+            if (otpEmailInput) otpEmailInput.value = selectedUserEmail || '';
             const otpErr = document.getElementById('otp-error-msg');
             if (otpErr) otpErr.style.display = 'none';
             const roleTitle = document.getElementById('otp-role-title');
@@ -644,4 +730,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     document.querySelectorAll('.modal-overlay').forEach(m => focusTrapObserver.observe(m, { attributes: true, attributeFilter: ['class'] }));
 
+
+    
 }); // fine DOMContentLoaded
