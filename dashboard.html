@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Dashboard — Harzafi FSL</title>
+    <meta name="description" content="La tua attività FSL, le ore e i traguardi in un unico spazio personale.">
+    <meta name="robots" content="noindex, nofollow, noimageindex">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
+    <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css?v=20260901b">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="sidebar-brand" href="index.html" aria-label="Harzafi FSL — Home">
+                <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi"><strong>FSL</strong>
+            </a>
+            <nav class="side-nav" aria-label="Navigazione principale">
+                <a class="active" href="#home"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9H6v-9"/></svg><span>Home</span></a>
+                <a href="#attivita"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4"/></svg><span>Attività</span></a>
+                <a href="#andamento"><svg viewBox="0 0 24 24"><path d="M4 19V9m6 10V5m6 14v-7m4 7H2"/></svg><span>Andamento</span></a>
+                <a href="#certificazioni"><svg viewBox="0 0 24 24"><path d="m12 3 7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3zM9 12l2 2 4-4"/></svg><span>Certificazioni</span></a>
+                <a href="supporto.html"><svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0 1 16 0v2M4 13h3v6H5a1 1 0 0 1-1-1v-5zm16 0h-3v6h2a1 1 0 0 0 1-1v-5z"/></svg><span>Supporto</span></a>
+                <a href="privacy.html"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Privacy</span></a>
+            </nav>
+            <button class="sidebar-logout" id="btn-logout" type="button">
+                <svg viewBox="0 0 24 24"><path d="M9 7V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2v-2M14 12H3m0 0 4-4m-4 4 4 4"/></svg><span>Esci</span>
+            </button>
+        </aside>
+
+        <div class="workspace">
+            <header class="workspace-header">
+                <h1>Dashboard</h1>
+                <div class="header-profile">
+                    <img id="header-avatar" src="IMMAGINI/PROFILO-UTENTE-LOGO.png" alt="">
+                    <div><strong id="header-name">Utente</strong><span><i></i> Studente</span></div>
+                </div>
+            </header>
+
+            <main id="home">
+                <section class="welcome-row">
+                    <div class="welcome-person">
+                        <div class="welcome-avatar"><img id="avatar-img" src="IMMAGINI/PROFILO-UTENTE-LOGO.png" alt="Foto del profilo"><i aria-hidden="true"></i></div>
+                        <div><h2>Bentornato, <span id="greeting-name">Utente</span></h2><p>Ecco il riepilogo della tua attività.<br>Continua così.</p></div>
+                    </div>
+                    <div class="quick-stats" aria-label="Riepilogo">
+                        <article><span class="stat-icon purple"><svg viewBox="0 0 24 24"><path d="m4 16 5-5 4 4 7-8M15 7h5v5"/></svg></span><div><strong id="hour-counter">0</strong><small>Ore registrate</small></div></article>
+                        <article><span class="stat-icon orange"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="14" rx="2"/><path d="M8 3v6M16 3v6M4 10h16"/></svg></span><div><strong id="activity-count">—</strong><small>Attività</small></div></article>
+                        <article><span class="stat-icon green"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg></span><div><strong id="certificate-count">—</strong><small>Certificazioni</small></div></article>
+                    </div>
+                </section>
+
+                <section class="feature-grid" aria-label="Aree principali">
+                    <a class="feature-card violet" href="#attivita">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4"/></svg></span>
+                        <div><h2>Le mie<br>attività</h2><p>Tieni traccia delle esperienze e delle ore registrate.</p></div><b>→</b>
+                    </a>
+                    <a class="feature-card amber" href="#andamento">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24"><path d="M4 19V9m6 10V5m6 14v-7m4 7H2"/></svg></span>
+                        <div><h2>Andamento</h2><p>Osserva come cresce il tuo percorso nel tempo.</p></div><b>→</b>
+                    </a>
+                    <a class="feature-card pink" href="#certificazioni">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="m9 13-1 8 4-2 4 2-1-8"/></svg></span>
+                        <div><h2>Certificazioni</h2><p>Ritrova i traguardi formativi già riconosciuti.</p></div><b>→</b>
+                    </a>
+                    <a class="feature-card aqua" href="supporto.html">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0 1 16 0v2M4 13h3v6H5a1 1 0 0 1-1-1v-5zm16 0h-3v6h2a1 1 0 0 0 1-1v-5z"/></svg></span>
+                        <div><h2>Supporto</h2><p>Consulta le risposte o chiedi aiuto quando serve.</p></div><b>→</b>
+                    </a>
+                </section>
+
+                <section class="activities-section" id="attivita">
+                    <header class="section-heading"><div><h2>Le mie attività</h2><span id="timeline-count">…</span></div><p>Dati aggiornati in tempo reale</p></header>
+                    <div class="activity-table-wrap">
+                        <table class="activity-table">
+                            <thead><tr><th>Attività</th><th>Categoria</th><th>Data</th><th>Ore</th><th>Dettagli</th></tr></thead>
+                            <tbody id="timeline-container">
+                                <tr class="loading-row"><td colspan="5"><span></span></td></tr>
+                                <tr class="loading-row"><td colspan="5"><span></span></td></tr>
+                                <tr class="loading-row"><td colspan="5"><span></span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="analytics-section" id="andamento">
+                    <header class="section-heading"><div><h2>Andamento</h2><span id="chart-range">Ultime attività</span></div><p>Una lettura semplice del tuo percorso</p></header>
+                    <div class="analytics-grid">
+                        <article class="analytics-card">
+                            <h3>Ore per attività</h3>
+                            <div class="trend-chart"><div class="chart-y-axis"><span id="axis-max">—</span><span id="axis-mid">—</span><span>0</span></div><div class="chart-bars" id="trend-bars"><em>Caricamento…</em></div></div>
+                        </article>
+                        <article class="analytics-card" id="certificazioni">
+                            <h3>Distribuzione delle ore</h3>
+                            <div class="distribution">
+                                <div class="donut" id="distribution-donut"><div><strong id="donut-total">0</strong><span>ore</span></div></div>
+                                <ul class="legend">
+                                    <li><i class="blue"></i><span>Scolastiche</span><strong id="val-scolastiche">0</strong></li>
+                                    <li><i class="green"></i><span>Extrascolastiche</span><strong id="val-extra">0</strong></li>
+                                    <li><i class="orange"></i><span>Sicurezza</span><strong id="val-sicurezza">0</strong></li>
+                                    <li><i class="pink-dot"></i><span>Certificazioni</span><strong id="val-certificazioni">0</strong></li>
+                                </ul>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="dashboard.js?v=20260901b"></script>
+</body>
+</html>
