@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Il mio percorso — Harzafi FSL</title>
+    <meta name="description" content="Ore ed esperienze del tuo percorso FSL, sempre ordinate e aggiornate.">
+    <meta name="robots" content="noindex, nofollow, noimageindex">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
+    <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="modern.css?v=20260830-footer-socials-v4">
+    <link rel="stylesheet" href="dashboard.css?v=20260901e">
+</head>
+<body class="dashboard-page">
+    <header class="dashboard-header">
+        <div class="header-inner">
+            <a class="dashboard-brand" href="index.html" aria-label="Harzafi FSL — Home">
+                <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi"><i aria-hidden="true"></i><span>FSL</span>
+            </a>
+            <nav aria-label="Navigazione dashboard">
+                <a href="#esperienze">Esperienze</a>
+                <button id="btn-logout" type="button">Esci</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <p class="eyebrow">Il tuo percorso FSL</p>
+                <h1 id="hero-title">Bentornato,<br><span id="hero-user-name">Utente</span></h1>
+                <p class="hero-lead">Qui trovi ciò che hai fatto, le ore maturate e tutti i dettagli che contano.</p>
+                <div class="summary-line" aria-label="Riepilogo del percorso">
+                    <div><strong id="activity-count">—</strong><span>esperienze registrate</span></div>
+                    <div><strong id="certificate-count">—</strong><span>con attestazione</span></div>
+                    <div><strong id="last-update">Ora</strong><span>dati aggiornati</span></div>
+                </div>
+            </div>
+
+            <div class="fitness-summary">
+                <div class="fitness-ring" id="fitness-ring" role="img" aria-label="Riepilogo delle ore del percorso">
+                    <svg class="activity-rings" viewBox="0 0 320 320" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="ring-pink-gradient" x1="38" y1="285" x2="285" y2="38" gradientUnits="userSpaceOnUse">
+                                <stop offset="0" stop-color="#c91942"/>
+                                <stop offset="0.52" stop-color="#f42167"/>
+                                <stop offset="1" stop-color="#ff79b7"/>
+                            </linearGradient>
+                            <linearGradient id="ring-lime-gradient" x1="48" y1="272" x2="276" y2="44" gradientUnits="userSpaceOnUse">
+                                <stop offset="0" stop-color="#137a39"/>
+                                <stop offset="0.5" stop-color="#39c95b"/>
+                                <stop offset="1" stop-color="#c1f738"/>
+                            </linearGradient>
+                            <linearGradient id="ring-aqua-gradient" x1="55" y1="265" x2="265" y2="55" gradientUnits="userSpaceOnUse">
+                                <stop offset="0" stop-color="#078bcf"/>
+                                <stop offset="0.5" stop-color="#14cfd5"/>
+                                <stop offset="1" stop-color="#77f0dc"/>
+                            </linearGradient>
+                            <filter id="activity-ring-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.13"/>
+                            </filter>
+                        </defs>
+                        <circle class="activity-track activity-track-outer" cx="160" cy="160" r="133"/>
+                        <circle class="activity-progress activity-progress-outer" cx="160" cy="160" r="133" pathLength="100"/>
+                        <circle class="activity-track activity-track-middle" cx="160" cy="160" r="94"/>
+                        <circle class="activity-progress activity-progress-middle" cx="160" cy="160" r="94" pathLength="100"/>
+                        <circle class="activity-track activity-track-inner" cx="160" cy="160" r="55"/>
+                        <circle class="activity-progress activity-progress-inner" cx="160" cy="160" r="55" pathLength="100"/>
+                    </svg>
+                    <div class="ring-center">
+                        <strong id="hour-counter">0</strong>
+                        <span>ore totali</span>
+                    </div>
+                </div>
+                <div class="ring-legend" aria-label="Ore per categoria">
+                    <div><i class="ring-blue"></i><span>Formazione</span><strong id="val-formazione">0 h</strong></div>
+                    <div><i class="ring-green"></i><span>Extrascolastiche</span><strong id="val-extra">0 h</strong></div>
+                    <div><i class="ring-orange"></i><span>Sicurezza</span><strong id="val-sicurezza">0 h</strong></div>
+                    <div><i class="ring-pink"></i><span>Certificazioni</span><strong id="val-certificazioni">0 h</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="experiences" id="esperienze">
+            <header class="section-header">
+                <div>
+                    <p class="eyebrow">Registro personale</p>
+                    <h2>Le tue esperienze.</h2>
+                </div>
+                <span id="timeline-count">Caricamento…</span>
+            </header>
+
+            <div class="experience-list" id="timeline-container">
+                <div class="experience-skeleton"></div>
+                <div class="experience-skeleton"></div>
+                <div class="experience-skeleton"></div>
+            </div>
+        </section>
+
+        <section class="official-note" aria-label="Informazioni sui dati">
+            <div>
+                <p class="eyebrow">Chiarezza prima di tutto</p>
+                <h2>Dati semplici da leggere.<br><span>Fonti sempre riconoscibili.</span></h2>
+            </div>
+            <p>I dati mostrati sono aggiornati dal registro Harzafi e hanno valore riepilogativo. Per la validazione ufficiale ai fini scolastici fanno fede i servizi dell’istituto.</p>
+        </section>
+    </main>
+
+    <footer class="harzafi-footer">
+        <div class="harzafi-footer-inner">
+            <div class="harzafi-footer-main">
+                <div class="harzafi-footer-brand">
+                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi"></a>
+                    <h2>Il tuo percorso, <span>in un unico posto.</span></h2>
+                </div>
+                <div class="harzafi-footer-profile">
+                    <p class="harzafi-footer-eyebrow">Progetto personale</p>
+                    <h3>Harzafi Adam</h3>
+                    <p class="harzafi-footer-school"><span>Classe 4AI</span><span>Anno scolastico 2026/2027</span></p>
+                    <ul class="harzafi-footer-socials" aria-label="Social Harzafi">
+                        <li><a href="https://www.instagram.com/adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="IMMAGINI/SOCIAL-INSTAGRAM.svg" alt=""></a></li>
+                        <li><a href="https://www.snapchat.com/@adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Snapchat"><img src="IMMAGINI/SOCIAL-SNAPCHAT.svg" alt=""></a></li>
+                        <li><a href="https://it.linkedin.com/in/adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><img src="IMMAGINI/SOCIAL-LINKEDIN.svg" alt=""></a></li>
+                        <li><a href="https://github.com/AdamHarzafi" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><img src="IMMAGINI/SOCIAL-GITHUB.svg" alt=""></a></li>
+                        <li><a href="https://t.me/AdamHarzafi" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><img src="IMMAGINI/SOCIAL-TELEGRAM.svg" alt=""></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="harzafi-footer-bottom">
+                <p>© 2026 Harzafi FSL. Tutti i diritti riservati.</p>
+                <nav class="harzafi-footer-links" aria-label="Informazioni legali">
+                    <a href="accessibilita.html">Accessibilità</a><a href="privacy.html">Privacy</a><a href="termini.html">Termini</a><a href="supporto.html">Supporto</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="dashboard.js?v=20260901e"></script>
+</body>
+</html>
