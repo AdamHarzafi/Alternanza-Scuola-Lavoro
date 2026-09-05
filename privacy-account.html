@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Privacy Account - Harzafi FSL</title>
+    <meta name="robots" content="noimageindex">
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+            --primary: #0284c7;        
+            --primary-hover: #0369a1;  
+            --primary-light: #e0f2fe;  
+            --bg-body: #ffffff; 
+            --surface: rgba(255, 255, 255, 0.75);
+            --text-dark: #0f172a; 
+            --text-gray: #475569; 
+            --text-light: #94a3b8;
+            --success: #10b981;
+            --border-color: #e2e8f0;
+            --apple-ease: cubic-bezier(0.32, 0.72, 0, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+        
+        body { background-color: var(--bg-body); color: var(--text-dark); overflow-x: hidden; width: 100%; min-height: 100vh; min-height: 100dvh; line-height: 1.5; font-weight: 500; }
+
+        .privacy-bg-mesh {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 15% 25%, rgba(14,165,233,0.12) 0%, transparent 40%),
+                radial-gradient(ellipse at 85% 70%, rgba(2,132,199,0.08) 0%, transparent 45%);
+            filter: blur(35px);
+            pointer-events: none;
+            z-index: 0;
+            transform: translateZ(0);
+        }
+
+        :focus-visible { outline: 3px solid var(--primary) !important; outline-offset: 3px !important; border-radius: 8px; transition: outline-offset 0.2s ease; }
+        :focus:not(:focus-visible) { outline: none !important; }
+
+        /* ========================================================
+           NAVBAR (Fix Animazione Perfetta + Hardware Acceleration)
+           ======================================================== */
+        .navbar-wrapper { 
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateZ(0); 
+            width: calc(100% - 40px); max-width: 1200px; z-index: 1000; border-radius: 100px; 
+            padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; 
+            border: 1px solid rgba(255, 255, 255, 0.8); background: var(--surface); 
+            backdrop-filter: saturate(180%) blur(25px); -webkit-backdrop-filter: saturate(180%) blur(25px);
+            transition: top 0.4s var(--apple-ease), width 0.4s var(--apple-ease), max-width 0.4s var(--apple-ease), border-radius 0.4s var(--apple-ease), background 0.4s var(--apple-ease), padding 0.4s var(--apple-ease), border-color 0.4s var(--apple-ease), box-shadow 0.4s var(--apple-ease); 
+        }
+        .navbar-wrapper.scrolled { 
+            top: 0; width: 100%; max-width: 2560px; border-radius: 0; padding: 15px 5vw; 
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: saturate(200%) blur(40px); 
+            -webkit-backdrop-filter: saturate(200%) blur(40px); border: 1px solid transparent; 
+            border-bottom-color: rgba(0, 0, 0, 0.08); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); 
+        }
+
+        /* Animazione Gradiente Testo */
+        .animated-gradient-text { 
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 25%, #0ea5e9 50%, #0369a1 75%, #0284c7 100%); 
+            background-size: 300% 300%; 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-position: center;
+        }
+
+        .nav-logo { background: transparent; border: none; padding: 0; margin: 0; display: inline-flex; align-items: center; justify-content: center; }
+        .nav-logo img { height: 36px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); transition: transform 0.3s var(--apple-ease); }
+        .nav-links { display: flex; gap: 35px; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 0.95rem; transition: color 0.3s, transform 0.3s var(--apple-ease); }
+        .nav-links a:hover { color: var(--primary); transform: translateY(-2px); }
+        
+        .btn-premium { background: var(--primary-light); color: var(--primary); border: none; padding: 10px 20px; border-radius: 30px; font-size: 0.95rem; font-weight: 800; cursor: pointer; text-decoration: none; transition: transform 0.28s ease-out, background-color 0.28s ease-out, color 0.28s ease-out, box-shadow 0.28s ease-out; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-premium:hover { background: var(--primary); color: white; transform: scale(1.04); box-shadow: 0 10px 20px rgba(2, 132, 199, 0.2); }
+
+        /* Contenuto */
+        .privacy-main { position: relative; z-index: 1; padding: 140px 20px 80px; display: flex; flex-direction: column; align-items: center; }
+        
+        .privacy-header { text-align: center; max-width: 800px; margin-bottom: 60px; animation: fadeUp 0.45s ease-out both; }
+        .privacy-icon { width: 80px; height: 80px; margin: 0 auto 24px; background: var(--primary-light); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--primary); box-shadow: 0 10px 25px rgba(2, 132, 199, 0.15); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .privacy-icon:hover { transform: scale(1.1) rotate(5deg); }
+        .privacy-icon svg { width: 44px; fill: currentColor; }
+        
+        .privacy-header h1 { font-size: clamp(2.2rem, 6vw, 3.5rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 20px; color: var(--text-dark); }
+        .privacy-header p.lead { font-size: clamp(1.1rem, 3vw, 1.3rem); color: var(--text-gray); font-weight: 500; line-height: 1.5; padding: 0 10px; }
+
+        /* Box Riassuntivo Bento Style */
+        .apple-summary-box { background: #ffffff; max-width: 800px; width: 100%; margin: 0 auto 60px; border-radius: 32px; padding: 45px 50px; box-shadow: 0 20px 50px rgba(2, 132, 199, 0.08), 0 0 0 1px rgba(2, 132, 199, 0.05); animation: fadeUp 0.45s 0.06s ease-out both; }
+        .summary-list { list-style: none; padding: 0; }
+        .summary-list li { position: relative; padding-left: 28px; margin-bottom: 24px; font-size: 1.1rem; color: var(--text-dark); font-weight: 600; line-height: 1.5; }
+        .summary-list li:last-child { margin-bottom: 0; }
+        .summary-list li::before { content: "•"; position: absolute; left: 0; top: -2px; color: var(--primary); font-weight: 900; font-size: 1.6rem; }
+
+        /* Sezioni Testo */
+        .privacy-content { max-width: 800px; width: 100%; margin: 0 auto; animation: fadeUp 0.45s 0.12s ease-out both; }
+        .privacy-section { margin-bottom: 55px; }
+        .privacy-section h2 { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 20px; color: var(--text-dark); border-bottom: 2px solid var(--border-color); padding-bottom: 12px; }
+        .privacy-section p { font-size: 1.05rem; color: var(--text-gray); margin-bottom: 20px; line-height: 1.7; font-weight: 500; }
+        
+        .privacy-section ul { padding-left: 28px; margin-bottom: 24px; list-style: none; }
+        .privacy-section ul li { position: relative; font-size: 1.05rem; color: var(--text-gray); margin-bottom: 12px; line-height: 1.6; font-weight: 500; }
+        .privacy-section ul li::before { content: "•"; position: absolute; left: -22px; top: -2px; color: var(--text-light); font-weight: 900; font-size: 1.4rem; }
+        .privacy-section strong { color: var(--text-dark); font-weight: 800; }
+
+        .privacy-link { color: var(--primary); font-weight: 700; text-decoration: none; transition: color 0.3s; }
+        .privacy-link:hover { text-decoration: underline; color: var(--primary-hover); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* OTTIMIZZAZIONE MOBILE (Fix NavBar Scroll) */
+        @media (max-width: 768px) {
+            .navbar-wrapper { width: 92%; padding: 12px 18px; top: 15px; }
+            .navbar-wrapper.scrolled { width: 100%; padding: 15px 20px; top: 0; }
+            .nav-links { display: none; }
+            .btn-premium { font-size: 0.9rem; padding: 10px 18px; }
+            
+            .privacy-main { padding: 110px 20px 40px; }
+            .privacy-icon { width: 65px; height: 65px; margin-bottom: 20px; }
+            .privacy-icon svg { width: 34px; }
+            
+            .apple-summary-box { padding: 30px 24px; border-radius: 24px; box-shadow: 0 15px 35px rgba(2, 132, 199, 0.06), 0 0 0 1px rgba(2, 132, 199, 0.05);}
+            
+            .summary-list li { font-size: 1rem; padding-left: 22px; }
+            .summary-list li::before { font-size: 1.4rem; top: -3px;}
+            
+            .privacy-section h2 { font-size: 1.4rem; }
+            .privacy-section p { font-size: 1rem; }
+            .privacy-section ul li { font-size: 1rem; }
+            
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
+</head>
+<body class="account-privacy-page">
+
+    <div class="privacy-bg-mesh" aria-hidden="true"></div>
+
+    <nav class="navbar-wrapper glass" id="navbar" aria-label="Navigazione principale">
+        <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
+            <img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
+        </a>
+        <div class="nav-links">
+            <a href="index.html#features">Funzionalità</a>
+            <a href="index.html#collaborazioni">Collaborazioni</a>
+            <a href="supporto.html">Supporto</a>
+            <a href="index.html#footer">Contatti</a>
+        </div>
+        <a href="login.html" class="btn-premium nav-login">Accedi</a>
+    </nav>
+
+    <main class="privacy-main">
+        <header class="privacy-header">
+            <img class="privacy-account-logo" src="IMMAGINI/LOGO-HARZAFI-PRIVACY.png" alt="Harzafi Privacy">
+            <h1 class="animated-gradient-text">Il tuo account.<br>Le informazioni essenziali.</h1>
+            <p class="lead">Come funziona l’accesso a Harzafi e quali dati vengono utilizzati.</p>
+        </header>
+        <section class="apple-summary-box" aria-label="Informazioni essenziali">
+            <ul class="summary-list">
+                <li>Harzafi è un progetto indipendente. L’accesso non attiva servizi ufficiali della scuola.</li>
+                <li>Firebase gestisce l’autenticazione; il portale utilizza dati del profilo, delle esperienze e della connessione.</li>
+                <li>Firebase protegge i dati in transito e a riposo. Questa cifratura non impedisce la lettura a chi dispone dei permessi e non equivale alla cifratura end-to-end.</li>
+                <li>Contatto unico: <a class="privacy-link" href="mailto:harzafi.support@gmail.com">harzafi.support@gmail.com</a>.</li>
+            </ul>
+        </section>
+        <article class="privacy-content">
+            <section class="privacy-section">
+                <h2>Una revisione ancora da completare</h2>
+                <p>Aggiornamento del <time datetime="2026-09-05">5 settembre 2026</time>. Il titolare è <strong>Harzafi Adam</strong>, contattabile a <a class="privacy-link" href="mailto:harzafi.support@gmail.com">harzafi.support@gmail.com</a>. Questa sintesi accompagna l’<a class="privacy-link" href="privacy.html">informativa estesa in revisione</a>: basi effettive del trattamento, tempi di conservazione e alcuni elementi operativi devono ancora essere definiti.</p>
+                <p>Le precedenti indicazioni di gestione per conto dell’Istituto, validazione ufficiale e nomina del gestore da parte della scuola sono rimosse. La modifica dei testi non autorizza il trattamento dei dati scolastici.</p>
+            </section>
+            <section class="privacy-section">
+                <h2>Email, password e sessione</h2>
+                <p>Per l’accesso con password, email e password vengono trasmesse a Firebase Authentication. Il recupero utilizza l’indirizzo associato all’account. Dopo l’accesso il nome visualizzato è salvato nella sessione del browser.</p>
+                <p>Le informazioni di autenticazione possono persistere sul dispositivo secondo la configurazione di Firebase. Usa «Esci» sui dispositivi condivisi: la disconnessione non equivale alla cancellazione dell’account o dei dati remoti.</p>
+            </section>
+            <section class="privacy-section">
+                <h2>Google e Harzafi ID</h2>
+                <p>Il pulsante Google richiama un servizio esterno e resta soggetto alle sue condizioni e alle decisioni dell’amministratore dell’account. La scuola non ha autorizzato l’integrazione istituzionale del progetto.</p>
+                <p>Il percorso Harzafi ID consulta il profilo associato al codice e richiama l’autenticazione anonima Firebase. Non viene presentato come una verifica certificata dell’identità o come una protezione equivalente a credenziali personali verificate.</p>
+            </section>
+            <section class="privacy-section">
+                <h2>Rete e comunicazioni di accesso</h2>
+                <p>Alcuni accessi richiamano ipapi.co per controllare la rete; il destinatario riceve l’IP della richiesta. Il criterio può bloccare anche connessioni legittime. Il widget Turnstile può elaborare segnali del browser e della connessione.</p>
+                <p>Il flusso con password invia nome, email e orario dell’accesso a una funzione esterna per recapitare un avviso. La configurazione finale del servizio email e la conservazione delle copie devono essere verificate. <a class="privacy-link" href="privacy.html#fornitori">Consulta i servizi esterni</a>.</p>
+            </section>
+            <section class="privacy-section">
+                <h2>Visibilità delle esperienze</h2>
+                <p>La dashboard richiede una raccolta condivisa di attività. Il codice della pagina non filtra i record in base al proprietario: non è garantito da questa revisione che ogni utente acceda soltanto ai propri dati.</p>
+                <p>Occorre verificare le regole del database e i permessi effettivi prima dell’uso con dati personali. Le etichette «studente» e «docente» non dimostrano da sole una separazione degli accessi. <a class="privacy-link" href="privacy.html#accessi">Chi può vedere i dati</a>.</p>
+            </section>
+            <section class="privacy-section">
+                <h2>Conservazione e diritti</h2>
+                <p>I dati sono conservati su Firebase. Il titolare dichiara di effettuare <strong>backup manuali settimanali e in occasione degli aggiornamenti, conservati su Firebase senza una scadenza prestabilita</strong>. La conservazione senza scadenza deve essere rivista in base alle finalità e alla necessità dei dati. Servizio e regione delle copie e protezione devono ancora essere precisati. <a class="privacy-link" href="privacy.html#sicurezza">Cifratura e backup</a>.</p>
+                <p>Non è confermata una cancellazione automatica alla fine dell’anno scolastico, al diploma o dopo 90 giorni. Account, profilo, esperienze, messaggi e copie dei fornitori richiedono verifiche e procedure distinte.</p>
+                <p>Puoi chiedere accesso, rettifica, cancellazione e gli altri diritti nei casi previsti dalla legge. Scrivi a <a class="privacy-link" href="mailto:harzafi.support@gmail.com?subject=Richiesta%20privacy%20account">harzafi.support@gmail.com</a> oppure consulta la <a class="privacy-link" href="supporto.html">pagina Supporto</a>. Non inviare password o codici.</p>
+                <p><a class="privacy-link" href="privacy.html#conservazione">Conservazione</a> · <a class="privacy-link" href="privacy.html#diritti">Diritti</a> · <a class="privacy-link" href="privacy.html#richieste">Tempi di risposta e reclamo</a></p>
+            </section>
+        </article>
+    </main>
+
+    <footer id="footer" class="harzafi-footer">
+        <div class="harzafi-footer-inner">
+            <div class="harzafi-footer-main">
+                <div class="harzafi-footer-brand">
+                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi"></a>
+                    <h2>Un registro più semplice. <span>Creato con cura.</span></h2>
+                </div>
+                <div class="harzafi-footer-profile">
+                    <img class="harzafi-footer-avatar" src="IMMAGINI/ADAM%20HARZAFI.png" alt="Adam Harzafi" width="64" height="64" loading="lazy" decoding="async">
+                    <p class="harzafi-footer-eyebrow">Progetto personale</p>
+                    <h3>Harzafi Adam</h3>
+                    <p class="harzafi-footer-school"><span>Classe 4AI</span><span>Anno scolastico 2026/2027</span></p>
+                    <ul class="harzafi-footer-socials" aria-label="Social Harzafi">
+                        <li><a href="https://www.instagram.com/adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri Instagram di Adam Harzafi"><img src="IMMAGINI/SOCIAL-INSTAGRAM.svg" alt=""></a></li>
+                        <li><a href="https://www.snapchat.com/@adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri Snapchat di Adam Harzafi"><img src="IMMAGINI/SOCIAL-SNAPCHAT.svg" alt=""></a></li>
+                        <li><a href="https://it.linkedin.com/in/adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri LinkedIn di Adam Harzafi"><img src="IMMAGINI/SOCIAL-LINKEDIN.svg" alt=""></a></li>
+                        <li><a href="https://github.com/AdamHarzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri GitHub di Adam Harzafi"><img src="IMMAGINI/SOCIAL-GITHUB.svg" alt=""></a></li>
+                        <li><a href="https://t.me/AdamHarzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri Telegram di Adam Harzafi"><img src="IMMAGINI/SOCIAL-TELEGRAM.svg" alt=""></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="harzafi-footer-bottom">
+                <p>© 2026 Harzafi FSL. Tutti i diritti riservati.</p>
+                <nav class="harzafi-footer-links" aria-label="Informazioni legali">
+                    <a href="accessibilita.html">Accessibilità</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="privacy-account.html" aria-current="page">Privacy account</a>
+                    <a href="termini.html">Termini</a>
+                    <a href="supporto.html">Supporto</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const navbar = document.getElementById('navbar');
+            let isScrolled = false;
+
+            // Funzione di gestione dello scroll ottimizzata
+            function handleScroll() {
+                const should = window.scrollY > 40;
+                if (should !== isScrolled) {
+                    isScrolled = should;
+                    navbar.classList.toggle('scrolled', isScrolled);
+                }
+            }
+
+            // Applica immediatamente all'apertura per prevenire scatti durante i refresh
+            handleScroll();
+            
+            // Applica durante lo scroll
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        });
+    </script>
+</body>
+</html>
