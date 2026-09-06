@@ -1,89 +1,139 @@
-# Security Policy — Registro FSL Harzafi
+# Sicurezza · Harzafi FSL
 
-## Versioni Supportate
+Come segnalare un problema e collaborare alla sua risoluzione senza esporre dati o interrompere il servizio.
 
-Il progetto **Registro FSL Harzafi** è un'applicazione web a singola release continuativa (rolling release), distribuita tramite GitHub Pages. Non esiste un sistema di versioni numeriche tradizionale: la versione attiva e supportata è sempre e unicamente quella attualmente pubblicata sul branch `main`.
+**Contatto dedicato:** [harzafi.support@gmail.com](mailto:harzafi.support@gmail.com)
 
-| Versione / Branch | Supportata         |
-| ----------------- | ------------------ |
-| `main` (live)     | :white_check_mark: |
-| Branch archiviati | :x:                |
-| Fork non ufficiali| :x:                |
+**Gestione del progetto:** Harzafi Adam
 
----
+> Non pubblicare vulnerabilità ancora sfruttabili, credenziali o dati personali in issue, commenti, repository o schermate condivise.
 
-## Segnalazione di una Vulnerabilità
+## Indice
 
-Se hai individuato una vulnerabilità di sicurezza all'interno del portale **Registro FSL Harzafi**, ti chiediamo di seguire la procedura di **Responsible Disclosure** descritta di seguito, astenendoti dal pubblicarla pubblicamente prima che il problema sia stato risolto.
+- [Segnalare un problema](#segnalare-un-problema)
+- [Informazioni utili](#informazioni-utili)
+- [Ambito della segnalazione](#ambito-della-segnalazione)
+- [Verifiche responsabili](#verifiche-responsabili)
+- [Presa in carico](#presa-in-carico)
+- [Versioni e distribuzioni](#versioni-e-distribuzioni)
+- [Limiti delle garanzie](#limiti-delle-garanzie)
+- [Assistenza e privacy](#assistenza-e-privacy)
 
-### Come segnalare
+## Segnalare un problema
 
-Invia una email all'indirizzo del responsabile tecnico del sistema:
+Inviare un’email a **harzafi.support@gmail.com** con oggetto:
 
-📧 **harzafi.support@gmail.com**
+```text
+[Sicurezza Harzafi] Breve descrizione del problema
+```
 
-### Cosa includere nella segnalazione
+Descrivere il problema con il minimo necessario per comprenderlo. Per una prima segnalazione non occorre dimostrarne l’impatto su dati reali né allegare un’esportazione del database.
 
-Per consentire una valutazione rapida ed efficace, includi nella tua email le seguenti informazioni:
+Se si incontrano accidentalmente dati non propri, interrompere la verifica. Comunicare la pagina, l’ora indicativa e il tipo di esposizione, senza continuare a consultare o copiare i dati.
 
-- **Descrizione della vulnerabilità:** una spiegazione chiara e dettagliata del problema riscontrato.
-- **Pagina o componente coinvolto:** indica la URL specifica o il file sorgente in cui hai identificato il problema (es. `index.html`, `main.js`, endpoint Firestore, ecc.).
-- **Passi per riprodurre il problema:** una sequenza di azioni che permetta di replicare la vulnerabilità in modo verificabile.
-- **Impatto stimato:** descrivi quale tipo di danno potrebbe causare l'exploit (es. accesso non autorizzato ai dati, bypass del login, esposizione di dati personali).
-- **Eventuali prove:** screenshot, log o Proof of Concept (PoC), se disponibili. Non è obbligatorio ma accelera la verifica.
+### Se sono coinvolte credenziali
 
-### Tempistiche di risposta
+Non incollare password, token o chiavi private nell’email. Indicare il tipo di credenziale e dove risulta esposta, oscurandone il valore. Se la credenziale appartiene al proprio account, provvedere alla sua revoca o sostituzione attraverso il servizio competente.
 
-| Fase                                     | Tempo stimato         |
-| ---------------------------------------- | --------------------- |
-| Conferma di ricezione della segnalazione | Entro **48 ore**      |
-| Valutazione iniziale della vulnerabilità | Entro **5 giorni**    |
-| Aggiornamento sullo stato (accettata/rifiutata) | Entro **10 giorni** |
-| Rilascio della correzione (se accettata) | Entro **30 giorni**   |
+## Informazioni utili
 
-### Cosa aspettarsi
+| Informazione | Cosa indicare |
+| --- | --- |
+| Componente | Pagina, file, URL o funzione coinvolta. |
+| Momento | Data, ora indicativa e fuso orario. |
+| Ambiente | Browser, sistema operativo e dispositivo, quando rilevanti. |
+| Comportamento | Risultato osservato e risultato atteso. |
+| Riproduzione | Passaggi minimi, preferibilmente su una copia locale con dati fittizi. |
+| Impatto | Quali dati o funzioni potrebbero essere coinvolti, distinguendo osservazioni e ipotesi. |
+| Prove | Schermate oscurate o un esempio minimo, senza dati personali o segreti. |
 
-- Se la vulnerabilità viene **accettata**, ti verrà comunicato l'aggiornamento di risoluzione non appena disponibile. Il tuo contributo potrà essere riconosciuto pubblicamente (previo tuo consenso) nel changelog o nella documentazione del progetto.
-- Se la vulnerabilità viene **rifiutata** (es. comportamento atteso, fuori scope, già noto), riceverai una spiegazione motivata entro i termini indicati.
+Non è necessario compilare ogni voce. Una descrizione breve e riproducibile è più utile di una grande quantità di log non filtrati.
 
----
+## Ambito della segnalazione
 
-## Ambito della Policy (Scope)
+Sono pertinenti i problemi nel codice di Harzafi o nella sua integrazione con i servizi utilizzati, per esempio:
 
-Questa policy di sicurezza si applica esclusivamente ai componenti sviluppati e mantenuti direttamente nell'ambito di questo progetto:
+- accesso o visualizzazione inattesa di dati;
+- gestione delle sessioni e percorsi di autenticazione;
+- trattamento degli input e inserimento dei contenuti nell’interfaccia;
+- esposizione involontaria di informazioni nelle risorse distribuite;
+- configurazioni dei servizi del progetto che sembrano consentire operazioni non previste.
 
-✅ **In scope:**
-- Codice HTML, CSS, JavaScript del frontend (`index.html`, `main.js`, `style.css`, ecc.)
-- Logica di autenticazione Firebase (login, reset password, gestione sessione)
-- Regole di sicurezza Firestore e Firebase Storage
-- Pagine legali e di sistema (`privacy.html`, `termini.html`, `accessibilita.html`, `404.html`)
+Il codice del Worker email e le regole Firebase non sono presenti in questo repository. Una segnalazione può riguardarli, ma la verifica richiede accesso autorizzato alle rispettive configurazioni.
 
-❌ **Fuori scope:**
-- Infrastruttura di Google Firebase / Firestore (segnalare direttamente a [Google](https://bughunters.google.com/))
-- Infrastruttura di GitHub Pages (segnalare a [GitHub](https://github.com/security))
-- Infrastruttura Cloudflare Turnstile (segnalare a [Cloudflare](https://www.cloudflare.com/disclosure/))
-- Vulnerabilità di terze parti non controllate da questo progetto
+### Servizi esterni
 
----
+Le infrastrutture dei fornitori non sono gestite da Harzafi. Per un difetto della piattaforma del fornitore utilizzare il suo canale ufficiale di sicurezza; per un dubbio sull’integrazione di Harzafi scrivere al contatto indicato sopra.
 
-## Comportamenti Vietati
+Questa procedura non autorizza test su infrastrutture esterne, domini scolastici o account di altre persone.
 
-Durante le attività di ricerca delle vulnerabilità, è severamente vietato:
+## Verifiche responsabili
 
-- Accedere, modificare o esfiltrare dati personali di studenti, docenti o personale scolastico.
-- Eseguire attacchi di tipo Denial of Service (DoS/DDoS) contro i servizi Firebase o GitHub Pages.
-- Effettuare test di sicurezza automatizzati (scanner, fuzzer) senza previo accordo scritto.
-- Sfruttare attivamente una vulnerabilità per ottenere accesso non autorizzato al sistema.
+Per lavorare su un problema:
 
----
+1. Preferire una copia locale con dati sintetici e servizi di test.
+2. Limitarsi alla verifica minima necessaria.
+3. Chiedere un accordo scritto prima di qualsiasi test attivo sul servizio pubblicato.
+4. Interrompere le prove se emergono dati non propri o un rischio per la disponibilità.
+5. Condividere privatamente la segnalazione e concordare l’eventuale divulgazione.
 
-## Informazioni sul Progetto
+Non effettuare:
 
-| Campo                  | Dettaglio                                      |
-| ---------------------- | ---------------------------------------------- |
-| **Progetto**           | Registro FSL Harzafi                           |
-| **Responsabile tecnico** | Harzafi Adam — Classe 3°A Informatica        |
-| **Istituto**           | ITIS Amedeo Avogadro, Torino                   |
-| **Anno scolastico**    | 2025/2026                                      |
-| **Distribuzione**      | GitHub Pages (sito statico + Firebase backend) |
-| **Licenza**            | Elastic License — © 2026 Adam Harzafi          |
+- accesso, modifica, cancellazione o esportazione di dati altrui;
+- tentativi ripetuti di password, abuso dei recuperi o invii massivi di email;
+- scansioni automatizzate, fuzzing o prove di carico senza accordo preventivo;
+- interruzioni del servizio o sfruttamento del problema oltre la verifica concordata;
+- aggiramento delle restrizioni imposte da un istituto o da un fornitore.
+
+La disponibilità pubblica del codice non costituisce autorizzazione a eseguire questi test sui sistemi collegati.
+
+## Presa in carico
+
+Il percorso previsto è:
+
+1. **Ricezione:** lettura della segnalazione ed eventuale richiesta di chiarimenti.
+2. **Valutazione:** verifica del comportamento e dell’impatto, con priorità alle esposizioni di dati e agli accessi non previsti.
+3. **Intervento:** individuazione della correzione o del contenimento appropriato.
+4. **Verifica:** controllo della soluzione nell’ambiente interessato.
+5. **Riscontro:** comunicazione dell’esito, nei limiti delle informazioni condivisibili.
+
+Gli obiettivi indicativi di presa in carico sono:
+
+| Fase | Obiettivo |
+| --- | --- |
+| Conferma di ricezione | Entro 48 ore. |
+| Prima valutazione | Entro 5 giorni. |
+| Primo aggiornamento sull’esito | Entro 10 giorni. |
+| Correzione, se confermata | Obiettivo di 30 giorni, da rivalutare in base a gravità e complessità. |
+
+Sono obiettivi organizzativi, non un SLA: dipendenze esterne e complessità possono richiedere tempi diversi. Se non arriva risposta, inviare un sollecito nella stessa conversazione, senza pubblicare le informazioni riservate.
+
+Un eventuale riconoscimento pubblico del contributo viene concordato con chi segnala. Non è previsto in questo documento un programma di ricompense.
+
+## Versioni e distribuzioni
+
+Il progetto viene aggiornato in modo continuativo. La revisione pubblicata può non coincidere con l’ultimo aggiornamento di `main`: indicare sempre l’URL interessato e, se disponibile, il riferimento della revisione.
+
+| Copia | Riferimento per la segnalazione |
+| --- | --- |
+| Distribuzione gestita da Harzafi | URL e momento in cui è stato osservato il problema. |
+| Sorgenti correnti | File coinvolto e revisione Git, se nota. |
+| Copia precedente | Revisione e indicazione se il problema compare anche nella versione corrente. |
+| Fork o installazione di terzi | Contattare chi li gestisce; segnalare a Harzafi l’eventuale difetto condiviso nei sorgenti. |
+
+## Limiti delle garanzie
+
+Questa procedura descrive come segnalare problemi: non certifica la sicurezza del portale.
+
+In particolare, non prova la presenza o l’efficacia di crittografia end-to-end, limitazione delle richieste lato server, verifica server dei token anti-bot, regole Firebase, backup o procedure di ripristino. Questi aspetti richiedono controlli specifici sui servizi e sui processi effettivamente utilizzati.
+
+La presenza di controlli nel frontend non basta a dimostrare che i dati siano protetti da accessi non autorizzati.
+
+## Assistenza e privacy
+
+- Per difficoltà di accesso o domande d’uso: [Supporto](supporto.html).
+- Per comprendere il trattamento dei dati: [Norme sulla privacy](privacy.html).
+- Per conoscere il progetto: [README.md](README.md).
+- Per le condizioni sul codice: [LICENSE.md](LICENSE.md).
+
+Harzafi è un progetto personale e indipendente. Questa policy non è una procedura ufficiale dell’istituto.

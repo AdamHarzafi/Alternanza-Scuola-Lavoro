@@ -1,9 +1,24 @@
 # Elastic License
+
 **Copyright (C) 2026 Adam Harzafi**
 
 ---
 
-> 🇮🇹 [Versione Italiana](#versione-italiana) | 🇬🇧 [English Version](#english-version)
+[Versione italiana](#versione-italiana) · [English version](#english-version)
+
+## Indice / Contents
+
+| Italiano | English |
+| --- | --- |
+| [Accettazione](#accettazione) | [Acceptance](#acceptance) |
+| [Licenza sul diritto d’autore](#licenza-sul-diritto-dautore) | [Copyright License](#copyright-license) |
+| [Limitazioni](#limitazioni) | [Limitations](#limitations) |
+| [Brevetti](#brevetti) | [Patents](#patents) |
+| [Avvisi](#avvisi) | [Notices](#notices) |
+| [Nessun altro diritto](#nessun-altro-diritto) | [No Other Rights](#no-other-rights) |
+| [Risoluzione](#risoluzione) | [Termination](#termination) |
+| [Nessuna responsabilità](#nessuna-responsabilità) | [No Liability](#no-liability) |
+| [Definizioni](#definizioni) | [Definitions](#definitions) |
 
 ---
 
@@ -15,13 +30,9 @@ Utilizzando il software, accetti integralmente tutti i termini e le condizioni r
 
 Il **"licenziante"** di questo software è il titolare del marchio e proprietario **"Adam Harzafi"**.
 
----
-
 ### Licenza sul Diritto d'Autore
 
 Il licenziante ti concede una licenza non esclusiva, esente da royalty, mondiale, non sublicenziabile e non trasferibile per utilizzare, copiare, distribuire, rendere disponibile e preparare opere derivate del software, in ogni caso soggetta alle limitazioni e alle condizioni di seguito riportate.
-
----
 
 ### Limitazioni
 
@@ -31,13 +42,9 @@ Il licenziante ti concede una licenza non esclusiva, esente da royalty, mondiale
 - Spostare, modificare, disabilitare o aggirare le funzionalità di gestione della chiave di licenza presenti nel software, né rimuovere od oscurare alcuna funzionalità protetta da chiave di licenza.
 - Alterare, rimuovere o oscurare qualsiasi avviso di licenza, copyright o altro avviso del licenziante presente nel software. Qualsiasi utilizzo dei marchi del licenziante è soggetto alla normativa applicabile.
 
----
-
 ### Brevetti
 
 Il licenziante ti concede una licenza, nell'ambito delle rivendicazioni brevettuali che il licenziante può concedere in licenza o che diventa in grado di concedere in licenza, per produrre, far produrre, utilizzare, vendere, offrire in vendita, importare e far importare il software, in ogni caso soggetta alle limitazioni e alle condizioni della presente licenza. La presente licenza non copre alcuna rivendicazione brevettuale che tu causi a essere violata da modifiche o aggiunte al software. Se tu o la tua azienda formulate per iscritto la dichiarazione che il software viola o contribuisce alla violazione di qualsiasi brevetto, la tua licenza brevettuale per il software concessa ai sensi di questi termini termina immediatamente. Se la tua azienda formula tale dichiarazione, la tua licenza brevettuale termina immediatamente per qualsiasi lavoro svolto per conto della tua azienda.
-
----
 
 ### Avvisi
 
@@ -45,25 +52,17 @@ Devi garantire che chiunque riceva da te una copia di qualsiasi parte del softwa
 
 Se modifichi il software, devi includere in qualsiasi copia modificata dello stesso un avviso ben visibile che dichiari che hai modificato il software.
 
----
-
 ### Nessun Altro Diritto
 
 I presenti termini non implicano licenze diverse da quelle espressamente concesse negli stessi.
-
----
 
 ### Risoluzione
 
 Se utilizzi il software in violazione di questi termini, tale utilizzo non è autorizzato e le tue licenze si estingueranno automaticamente. Se il licenziante ti notifica la violazione e tu cessi ogni violazione della presente licenza entro 30 giorni dal ricevimento di tale notifica, le tue licenze saranno ripristinate retroattivamente. Tuttavia, se violi i presenti termini dopo tale ripristino, qualsiasi ulteriore violazione causerà l'estinzione automatica e permanente delle tue licenze.
 
----
-
 ### Nessuna Responsabilità
 
 **Nella misura consentita dalla legge, il software viene fornito "così com'è", senza garanzie o condizioni di alcun tipo, e il licenziante non sarà responsabile nei tuoi confronti per danni di qualsiasi natura derivanti dai presenti termini o dall'uso o dalla natura del software, a prescindere dalla tipologia di azione legale.**
-
----
 
 ### Definizioni
 
@@ -81,8 +80,6 @@ Il **marchio** indica marchi commerciali, marchi di servizio e diritti analoghi.
 
 ---
 
----
-
 ## English Version
 
 ### Acceptance
@@ -91,13 +88,9 @@ By using the software, you agree to all of the terms and conditions below.
 
 The **"licensor"** for this software is the trademark and owner **"Adam Harzafi"**.
 
----
-
 ### Copyright License
 
 The licensor grants you a non-exclusive, royalty-free, worldwide, non-sublicensable, non-transferable license to use, copy, distribute, make available, and prepare derivative works of the software, in each case subject to the limitations and conditions below.
-
----
 
 ### Limitations
 
@@ -107,13 +100,9 @@ You may not move, change, disable, or circumvent the license key functionality i
 
 You may not alter, remove, or obscure any licensing, copyright, or other notices of the licensor in the software. Any use of the licensor's trademarks is subject to applicable law.
 
----
-
 ### Patents
 
 The licensor grants you a license, under any patent claims the licensor can license, or becomes able to license, to make, have made, use, sell, offer for sale, import and have imported the software, in each case subject to the limitations and conditions in this license. This license does not cover any patent claims that you cause to be infringed by modifications or additions to the software. If you or your company make any written claim that the software infringes or contributes to infringement of any patent, your patent license for the software granted under these terms ends immediately. If your company makes such a claim, your patent license ends immediately for work on behalf of your company.
-
----
 
 ### Notices
 
@@ -121,25 +110,17 @@ You must ensure that anyone who gets a copy of any part of the software from you
 
 If you modify the software, you must include in any modified copies of the software prominent notices stating that you have modified the software.
 
----
-
 ### No Other Rights
 
 These terms do not imply any licenses other than those expressly granted in these terms.
-
----
 
 ### Termination
 
 If you use the software in violation of these terms, such use is not licensed, and your licenses will automatically terminate. If the licensor provides you with a notice of your violation, and you cease all violation of this license no later than 30 days after you receive that notice, your licenses will be reinstated retroactively. However, if you violate these terms after such reinstatement, any additional violation of these terms will cause your licenses to terminate automatically and permanently.
 
----
-
 ### No Liability
 
 **As far as the law allows, the software comes as is, without any warranty or condition, and the licensor will not be liable to you for any damages arising out of these terms or the use or nature of the software, under any kind of legal claim.**
-
----
 
 ### Definitions
 

@@ -1,179 +1,175 @@
-# 📋 Registro FSL Harzafi
-### Portale Ufficiale per il Monitoraggio delle Ore di Alternanza Scuola-Lavoro
+# Harzafi FSL
 
-<div align="center">
+Un’interfaccia per consultare esperienze formative, ore e attestazioni. Un progetto personale, con attenzione alla chiarezza e alla cura dei dettagli.
 
-[![Stato](https://img.shields.io/badge/Stato-Online%20%F0%9F%9F%A2-brightgreen?style=for-the-badge)](https://adamharzafi.github.io/Alternanza-Scuola-Lavoro/)
-[![Licenza](https://img.shields.io/badge/Licenza-Elastic%20License-blue?style=for-the-badge)](#licenza)
-[![WCAG](https://img.shields.io/badge/Accessibilit%C3%A0-WCAG%202.1%20AA-orange?style=for-the-badge)](https://adamharzafi.github.io/Alternanza-Scuola-Lavoro/accessibilita.html)
-[![Firebase](https://img.shields.io/badge/Backend-Firebase-FFCA28?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
+**A cura di Harzafi Adam** · [Supporto](mailto:harzafi.support@gmail.com) · [Sicurezza](SECURITY.md) · [Licenza](LICENSE.md)
 
-</div>
+> Harzafi è un progetto personale e indipendente: non è il registro ufficiale dell’istituto e non ne sostituisce gli strumenti. La presenza di un accesso Google non implica l’approvazione della scuola né l’autorizzazione a usare account istituzionali.
 
----
+## In questa guida
 
-## 📖 Indice
-
-- [Panoramica](#panoramica)
-- [Funzionalità Principali](#funzionalità-principali)
-- [Tecnologie Utilizzate](#tecnologie-utilizzate)
-- [Struttura del Progetto](#struttura-del-progetto)
-- [Sicurezza](#sicurezza)
-- [Accessibilità](#accessibilità)
-- [Documentazione Legale](#documentazione-legale)
-- [Autore](#autore)
+- [Il progetto](#il-progetto)
+- [Le pagine](#le-pagine)
+- [Avvio locale](#avvio-locale)
+- [Servizi e configurazione](#servizi-e-configurazione)
+- [Struttura dei file](#struttura-dei-file)
+- [Verifiche e pubblicazione](#verifiche-e-pubblicazione)
+- [Accessibilità e movimento](#accessibilità-e-movimento)
+- [Dati e sicurezza](#dati-e-sicurezza)
+- [Contributi e contatti](#contributi-e-contatti)
 - [Licenza](#licenza)
 
----
+## Il progetto
 
-## 🎯 Panoramica
+Harzafi raccoglie in un’esperienza web la consultazione delle attività formative: riepilogo delle ore, categorie, dettagli espandibili e riferimenti alle attestazioni disponibili.
 
-Il **Registro FSL Harzafi** è un'applicazione web istituzionale sviluppata per l'**ITIS Amedeo Avogadro di Torino**, con lo scopo di digitalizzare e semplificare la gestione dei Percorsi per le Competenze Trasversali e l'Orientamento (PCTO, ex Alternanza Scuola-Lavoro) per l'anno scolastico **2025/2026**.
+L’interfaccia è realizzata in HTML, CSS e JavaScript, senza un framework frontend. Firebase è utilizzato per l’autenticazione e per la lettura dei dati. La disponibilità effettiva delle funzioni collegate ai servizi esterni dipende dalla loro configurazione.
 
-La piattaforma fornisce un'interfaccia moderna e intuitiva che permette a studenti, docenti tutor e personale amministrativo di accedere, monitorare e gestire in tempo reale le attività formative extrascolastiche richieste dal Ministero dell'Istruzione e del Merito (MIM).
+Per dimostrazioni e sviluppo, utilizzare esclusivamente account di test e dati fittizi in un ambiente separato. Questo repository non costituisce un’autorizzazione al trattamento di dati scolastici reali.
 
-> **Nota:** Questo è un progetto scolastico ufficiale, sviluppato come elaborato personale nell'ambito del percorso informatico della Classe 3°A dell'ITIS Avogadro.
+## Le pagine
 
----
+| Pagina | Contenuto |
+| --- | --- |
+| [Home](index.html) | Presentazione del progetto e sezioni informative. |
+| [Accesso](login.html) | Accesso all’account e percorsi di recupero. |
+| [Dashboard](dashboard.html) | Riepilogo delle ore ed esperienze con dettagli espandibili. |
+| [Il tuo account](privacy-account.html) | Spiegazioni semplici sull’account e collegamenti di approfondimento. |
+| [Norme sulla privacy](privacy.html) | Informativa sul trattamento dei dati. |
+| [Accessibilità](accessibilita.html) | Informazioni e riferimenti dedicati all’accessibilità. |
+| [Supporto](supporto.html) | Canali per domande e assistenza. |
+| [Termini](termini.html) | Condizioni d’uso del portale. |
+| [Reimpostazione password](reset-password.html) | Gestione del collegamento di recupero Firebase. |
+| [Pagina non trovata](404.html) | Pagina di errore dedicata. |
 
-## ✨ Funzionalità Principali
+“Il tuo account” è una guida introduttiva: non sostituisce l’informativa completa.
 
-### 👨‍🎓 Per gli Studenti
-- **Dashboard Personale** — Visualizzazione in tempo reale delle ore FSL accumulate e del progresso verso il target annuale
-- **Timeline Formativa** — Storico cronologico di tutti gli eventi e le attività validate
-- **Certificati & Attestati** — Consultazione e download degli attestati ottenuti (Cisco, Sicurezza D.Lgs 81/08, HackersGen, ecc.)
-- **Profilo Harzafi ID** — Identificativo personale per gli accessi fisici in azienda
+## Avvio locale
 
-### 👨‍🏫 Per i Docenti Tutor
-- **Gestione Classi** — Panoramica dello stato FSL di tutti gli studenti assegnati
-- **Validazione Ore** — Approvazione e registrazione delle attività formative completate
-- **Note Valutative** — Inserimento di feedback e commenti per ogni studente
+### Prima di iniziare
 
-### 🔐 Sistema di Sicurezza
-- **Autenticazione Firebase** — Login sicuro con Google Workspace for Education (SSO istituzionale)
-- **Protezione Anti-Bruteforce** — Rate limiting multi-livello (client + server Firebase)
-- **Cloudflare Turnstile** — Protezione avanzata contro bot e attacchi DDoS
-- **Reset Password via Email** — Flusso sicuro di recupero credenziali tramite Firebase
+Servono Node.js con npm e un browser aggiornato. Usare una versione LTS di Node.js che supporti il test runner integrato; il progetto non dichiara al momento una versione minima nel file `package.json`.
 
----
+**Prima di provare accessi o recuperi password**, configurare servizi di test: i file del frontend contengono riferimenti a servizi remoti e l’avvio locale non li isola automaticamente.
 
-## 🛠️ Tecnologie Utilizzate
+### Installazione e avvio
 
-| Categoria | Tecnologia | Scopo |
-|---|---|---|
-| **Frontend** | HTML5, CSS3, JavaScript (ES6+) | Interfaccia utente |
-| **Font** | Google Fonts (Inter) | Tipografia |
-| **Backend/DB** | Firebase Firestore | Database in tempo reale |
-| **Autenticazione** | Firebase Authentication | Login e gestione sessioni |
-| **Storage** | Firebase Storage | Archiviazione documenti/attestati |
-| **Sicurezza** | Cloudflare Turnstile | Protezione anti-bot |
-| **Email** | EmailJS | Notifiche e OTP transazionali |
-| **Hosting** | GitHub Pages | Distribuzione statica |
+Dalla cartella del progetto:
 
----
-
-## 📁 Struttura del Progetto
-
-```
-Alternanza-Scuola-Lavoro/
-│
-├── 📄 index.html              # Landing page + sistema di login
-├── 📄 privacy.html            # Informativa Privacy (GDPR)
-├── 📄 termini.html            # Termini di Servizio
-├── 📄 accessibilita.html      # Dichiarazione di Accessibilità WCAG 2.1
-├── 📄 reset-password.html     # Pagina di reset password Firebase
-├── 📄 404.html                # Pagina di errore personalizzata
-│
-├── 🎨 style.css               # Stili globali del portale principale
-├── 🎨 legal.css               # Stili pagine legali (Privacy, Termini)
-├── 🎨 accessibilita.css       # Stili pagina accessibilità
-├── 🎨 shared.css              # Stili principali identici (Privacy, Termini)
-│
-├── ⚙️ main.js                 # Logica principale (auth, dashboard, dati)
-├── ⚙️ legal.js                # Logica pagine legali (animazioni, counter)
-├── ⚙️ accessibilita.js        # Logica pagina accessibilità
-│
-├── 📁 IMMAGINI/               # Asset grafici e loghi istituzionali
-│   ├── LOGO-HARZAFI.png
-│   ├── HARZAFI-LOGO-FOR-APPLE.png
-│   ├── LOGO-MIM.png
-│   └── [loghi partner...]
-│
-├── 📋 README.md               # Questo file
-├── 📜 LICENSE.md              # Licenza Elastic — © 2026 Adam Harzafi
-└── 🔒 SECURITY.md             # Policy di Responsible Disclosure
+```sh
+npm install
+npm run dev
 ```
 
----
+Aprire [http://localhost:3000](http://localhost:3000). Interrompere il server con `Ctrl+C`.
 
-## 🔒 Sicurezza
+Il server di sviluppo usa attualmente la porta `3000`, definita in `server.js`. Il valore `PORT` presente in `.env.example` non viene letto automaticamente dal server.
 
-La sicurezza dei dati degli studenti è una priorità assoluta. Il progetto adotta le seguenti misure:
+> Il server locale espone la cartella del progetto ed è in ascolto su tutte le interfacce di rete. Usarlo solo per lo sviluppo in un ambiente fidato: non è il server di produzione e non deve contenere segreti o esportazioni di dati.
 
-- **Regole Firestore granulari** — Ogni collezione ha regole di accesso specifiche: i dati PCTO sono accessibili solo agli utenti autenticati; i dati anagrafici pubblici sono in sola lettura
-- **API Key con restrizioni di dominio** — La chiave API Firebase è limitata ai soli domini ufficiali del progetto tramite Google Cloud Console
-- **HTTPS obbligatorio** — GitHub Pages forza il protocollo sicuro su tutto il traffico
-- **Nessun dato sensibile in chiaro** — Le password non vengono mai gestite direttamente (delegate a Firebase Auth)
+## Servizi e configurazione
 
-Per segnalare una vulnerabilità, consulta [`SECURITY.md`](SECURITY.md) e segui la procedura di **Responsible Disclosure**.
+| Componente | Implementazione nel repository | Da configurare separatamente |
+| --- | --- | --- |
+| Interfaccia | HTML, CSS, JavaScript e risorse in `IMMAGINI/`. | Nessun framework frontend da inizializzare. |
+| Autenticazione | Client Firebase Authentication nelle pagine di accesso e dashboard. | Provider, domini autorizzati, account di test e impostazioni della console. |
+| Dati | Client Firestore e lettura delle attività in `dashboard.js`. | Database, dati di test e regole di autorizzazione. |
+| Accesso Google | Flusso con `GoogleAuthProvider`. | Configurazione OAuth e autorizzazioni del dominio, quando richieste. |
+| Controllo anti-bot | Integrazione client Cloudflare Turnstile. | Chiavi, domini e verifica server del token. |
+| Email | Chiamate a un Worker esterno da `login.js` e `main.js`. | Servizio di invio, segreti, autorizzazioni e limiti del Worker. |
+| Pubblicazione | Build statica con un Worker di instradamento per Sites. | Accesso al progetto di hosting e configurazione dei servizi remoti. |
 
----
+La configurazione Firebase compare in più file: prima di usare un ambiente di test, individuare tutti i riferimenti e mantenerli coerenti. La configurazione client non sostituisce le regole di accesso al database.
 
-## ♿ Accessibilità
+Il repository non include il codice del Worker email né le regole Firestore e Storage. Non è quindi una copia completa dell’infrastruttura remota. Il Worker generato dalla build gestisce gli URL del sito: è distinto dal servizio email.
 
-Il portale è progettato per essere conforme alle **WCAG 2.1 Livello AA** e alla **Legge 4/2004** (Legge Stanca):
+## Struttura dei file
 
-- ✅ Testo alternativo su tutte le immagini
-- ✅ Navigazione completa da tastiera
-- ✅ Rapporto di contrasto minimo 4.5:1
-- ✅ Struttura semantica HTML5 (H1-H6 gerarchici)
-- ✅ Compatibile con screen reader (VoiceOver, NVDA, JAWS)
-- ✅ Ridimensionamento testo fino al 200% senza perdita di contenuto
+```text
+.
+├── index.html, login.html, dashboard.html
+├── privacy-account.html, privacy.html, termini.html
+├── accessibilita.html, supporto.html
+├── reset-password.html, 404.html
+├── main.js, login.js, dashboard.js
+├── carousel-player.js        # Motore condiviso dei caroselli
+├── account-privacy.js        # Comportamento della pagina account
+├── site-motion.js            # Animazioni progressive condivise
+├── navbar.js                 # Navigazione condivisa
+├── *.css                     # Stili generali e delle singole pagine
+├── IMMAGINI/                 # Loghi, icone e immagini
+├── src/assets/images/        # Ulteriori risorse fotografiche
+├── tests/                    # Test dei caroselli e delle animazioni
+├── server.js                 # Server di sviluppo Express
+├── build-site.js             # Generazione della distribuzione
+├── .openai/hosting.json      # Collegamento al progetto Sites
+├── .env.example              # Esempio di configurazione
+├── package.json              # Dipendenze e comandi
+├── README.md                 # Guida al progetto
+├── SECURITY.md               # Segnalazioni di sicurezza
+└── LICENSE.md                # Testo della licenza in italiano e inglese
+```
 
-Per la dichiarazione completa: [`accessibilita.html`](https://adamharzafi.github.io/Alternanza-Scuola-Lavoro/accessibilita.html)
+La cartella `dist/` è generata e ignorata da Git. Modificare i sorgenti, non i file al suo interno.
 
----
+## Verifiche e pubblicazione
 
-## 📚 Documentazione Legale
+### Controlli disponibili
 
-| Documento | Descrizione |
-|---|---|
-| [Privacy Policy](https://adamharzafi.github.io/Alternanza-Scuola-Lavoro/privacy.html) | Informativa GDPR sul trattamento dei dati personali |
-| [Termini di Servizio](https://adamharzafi.github.io/Alternanza-Scuola-Lavoro/termini.html) | Condizioni generali d'uso della piattaforma |
-| [Dichiarazione di Accessibilità](https://adamharzafi.github.io/Alternanza-Scuola-Lavoro/accessibilita.html) | Conformità WCAG 2.1 e Legge 4/2004 |
-| [Security Policy](SECURITY.md) | Procedura di segnalazione vulnerabilità |
-| [Licenza](LICENSE.md) | Elastic License — tutti i diritti riservati |
+```sh
+npm run lint
+node --test tests/carousel-player.test.cjs tests/site-motion.test.cjs
+npm run build
+```
 
----
+- `lint` controlla esclusivamente la sintassi di `server.js`: non è un controllo completo di tutto il progetto.
+- I test coprono comportamenti dei caroselli e delle animazioni, incluse preferenze di movimento ridotto e navigazione nel carosello.
+- La build ricrea `dist/client/` e `dist/server/index.js`. Eseguirla solo dalla copia corretta del progetto: il precedente contenuto di `dist/` viene sostituito.
 
-## 👤 Autore
+Questi controlli non verificano le regole Firebase, i servizi esterni, l’intero flusso di autenticazione o la conformità dell’interfaccia.
 
-**Harzafi Adam**
-Classe 3°A Informatica — ITIS Amedeo Avogadro, Torino
-Anno Scolastico 2025/2026
+### Prima di distribuire un aggiornamento
 
-| Contatto | Riferimento |
-|---|---|
-| 📧 Email Supporto | [harzafi.support@gmail.com](mailto:harzafi.support@gmail.com) |
-| 🏫 Email Istituzionale | [s11205413d@studenti.itisavogadro.it](mailto:s11205413d@studenti.itisavogadro.it) |
-| 🌐 Portale Live | [adamharzafi.github.io/Alternanza-Scuola-Lavoro](https://adamharzafi.github.io/Alternanza-Scuola-Lavoro/) |
+1. Verificare testi, collegamenti e comportamento delle pagine modificate.
+2. Provare le funzioni interessate con account e dati di test.
+3. Controllare tastiera, schermi piccoli, ingrandimento del testo e preferenze di movimento ridotto.
+4. Eseguire i controlli pertinenti e la build.
+5. Verificare i file destinati alla pubblicazione: nessun segreto, backup o dato personale deve finire tra le risorse pubbliche.
+6. Pubblicare nell’ambiente previsto e controllare l’esito.
 
----
+La distribuzione Sites è collegata a `.openai/hosting.json`. L’accesso all’anteprima ospitata può essere limitato al proprietario. Pubblicare l’interfaccia non aggiorna automaticamente le impostazioni Firebase o il servizio email.
 
-## 📜 Licenza
+## Accessibilità e movimento
 
-Copyright © 2026 **Adam Harzafi** — Tutti i diritti riservati.
+L’interfaccia include accorgimenti per navigazione da tastiera, focus e riduzione del movimento. Le animazioni condivise rispettano la preferenza `prefers-reduced-motion`; i contenuti non devono dipendere dall’animazione per essere leggibili.
 
-Questo progetto è distribuito sotto **Elastic License**. È vietata la riproduzione, clonazione o redistribuzione del codice sorgente, dell'interfaccia grafica e delle architetture logiche senza il consenso esplicito e scritto dell'autore.
+Ogni modifica va controllata nel suo contesto, soprattutto per contrasto, testo ingrandito, ordine del focus, etichette e uso con tecnologie assistive.
 
-Consulta [`LICENSE.md`](LICENSE.md) per i termini completi.
+Queste scelte progettuali non equivalgono a una certificazione di conformità. Per informazioni e segnalazioni, consultare la [pagina Accessibilità](accessibilita.html).
 
----
+## Dati e sicurezza
 
-<div align="center">
+La documentazione distingue ciò che è presente nel codice da ciò che richiede verifiche sull’ambiente remoto.
 
-Sviluppato con ❤️ per l'**ITIS Amedeo Avogadro di Torino**
+- Un controllo nel browser o un reindirizzamento dopo il login non sostituisce l’autorizzazione ai dati sul server.
+- Non sono documentate qui garanzie di crittografia end-to-end né l’impossibilità di accesso ai dati da parte di chi gestisce i servizi.
+- Backup, conservazione e cancellazione sono processi operativi: non vengono implementati o verificati dai test di questo repository.
+- Non inserire credenziali, token, esportazioni Firebase o dati di altre persone nel repository, nelle issue o negli allegati pubblici.
 
-*Registro FSL Harzafi — Portale Ufficiale © 2026 — Tutti i diritti riservati*
+Per i dettagli sul trattamento consultare le [Norme sulla privacy](privacy.html). Per un problema tecnico di sicurezza seguire [SECURITY.md](SECURITY.md).
 
-</div>
+## Contributi e contatti
+
+Per assistenza, proposte o correzioni: [harzafi.support@gmail.com](mailto:harzafi.support@gmail.com).
+
+Una segnalazione utile indica la pagina, il comportamento osservato, quello atteso e i passaggi per riprodurlo. Eventuali schermate devono essere prive di dati personali.
+
+Prima di proporre modifiche, leggere la licenza. Mantenere gli interventi circoscritti, aggiornare la documentazione pertinente e aggiungere verifiche quando cambia un comportamento.
+
+**Una vulnerabilità va segnalata privatamente**, non in una discussione pubblica.
+
+## Licenza
+
+Copyright © 2026 Adam Harzafi.
+
+Il testo applicabile è riportato in [LICENSE.md](LICENSE.md), nelle versioni italiana e inglese. Questa guida non aggiunge divieti o autorizzazioni e non sostituisce le condizioni della licenza.
