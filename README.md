@@ -1,12 +1,63 @@
-# Harzafi FSL
+<p align="center">
+  <img src="IMMAGINI/LOGO-HARZAFI.png" width="200" alt="Harzafi">
+</p>
 
-Un’interfaccia per consultare esperienze formative, ore e attestazioni. Un progetto personale, con attenzione alla chiarezza e alla cura dei dettagli.
+<h1 align="center">Harzafi FSL</h1>
 
-**A cura di Harzafi Adam** · [Supporto](mailto:harzafi.support@gmail.com) · [Sicurezza](SECURITY.md) · [Licenza](LICENSE.md)
+<p align="center">
+  <strong>Ogni esperienza. Un passo avanti.</strong><br>
+  Esperienze formative, ore e attestazioni. In un unico spazio digitale.
+</p>
 
-> Harzafi è un progetto personale e indipendente: non è il registro ufficiale dell’istituto e non ne sostituisce gli strumenti. La presenza di un accesso Google non implica l’approvazione della scuola né l’autorizzazione a usare account istituzionali.
+<p align="center">
+  <a href="#il-progetto"><img src="https://img.shields.io/badge/Progetto-Personale-007AFF?style=flat-square&amp;labelColor=1D1D1F" alt="Progetto personale"></a>
+  <a href="LICENSE.md"><img src="https://img.shields.io/badge/Licenza-Elastic-007AFF?style=flat-square&amp;labelColor=1D1D1F" alt="Licenza: consulta il testo Elastic in LICENSE.md"></a>
+  <a href="#servizi-e-configurazione"><img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&amp;logo=html5&amp;logoColor=white" alt="HTML5"></a>
+  <a href="#servizi-e-configurazione"><img src="https://img.shields.io/badge/CSS-663399?style=flat-square&amp;logo=css&amp;logoColor=white" alt="CSS"></a>
+  <a href="#servizi-e-configurazione"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&amp;logo=javascript&amp;logoColor=222222" alt="JavaScript"></a>
+  <a href="#servizi-e-configurazione"><img src="https://img.shields.io/badge/Firebase-DD2C00?style=flat-square&amp;logo=firebase&amp;logoColor=white" alt="Firebase"></a>
+</p>
 
-## In questa guida
+<p align="center">
+  <a href="https://harzafi-fsl.allorasonoadam.chatgpt.site"><strong>Apri il sito</strong></a>
+  &nbsp; · &nbsp;
+  <a href="#avvio-locale">Inizia in locale</a>
+  &nbsp; · &nbsp;
+  <a href="#documentazione">Documentazione</a>
+  &nbsp; · &nbsp;
+  <a href="mailto:harzafi.support@gmail.com">Contattaci</a>
+</p>
+
+<p align="center"><sub>L’anteprima ospitata può richiedere l’autorizzazione del proprietario.</sub></p>
+
+<p align="center">
+  <img src="IMMAGINI/PC-HARZAFI-BOX.png" width="920" alt="Immagine di presentazione Harzafi: il portale illustrato sullo schermo di un portatile">
+</p>
+
+<p align="center"><sub>Immagine di presentazione del progetto, non una schermata live della versione corrente.</sub></p>
+
+---
+
+## Un percorso. Tutto da vedere.
+
+| Le tue esperienze | Il tuo account | Una lettura più semplice |
+| :--- | :--- | :--- |
+| <img src="IMMAGINI/LEZIONE.png" width="64" alt=""> | <img src="IMMAGINI/LOGO-HARZAFI-PRIVACY-BOX.png" width="64" alt=""> | <img src="IMMAGINI/LOGO-LIBRO-HARZAFI.png" width="64" alt=""> |
+| Ore, categorie e attestazioni, con dettagli che si aprono quando servono. | Spiegazioni comprensibili e collegamenti alle informazioni sul trattamento dei dati. | Pagine dedicate, testi leggibili e attenzione alle preferenze di movimento. |
+| [Esplora la dashboard](dashboard.html) | [Il tuo account](privacy-account.html) | [Accessibilità](accessibilita.html) |
+
+## Documentazione
+
+Una panoramica per conoscere Harzafi. I dettagli per chi vuole lavorarci.
+
+| Per iniziare | Per approfondire | Per chiedere aiuto |
+| --- | --- | --- |
+| [Avvio locale](#avvio-locale) | [Configurazione](#servizi-e-configurazione) | [Supporto](mailto:harzafi.support@gmail.com) |
+| [Mappa delle pagine](#le-pagine) | [Verifiche e pubblicazione](#verifiche-e-pubblicazione) | [Segnalare una vulnerabilità](SECURITY.md) |
+| [Struttura del progetto](#struttura-dei-file) | [Norme sulla privacy](privacy.html) | [Condizioni della licenza](LICENSE.md) |
+
+<details>
+<summary><strong>Esplora la guida completa</strong></summary>
 
 - [Il progetto](#il-progetto)
 - [Le pagine](#le-pagine)
@@ -19,7 +70,11 @@ Un’interfaccia per consultare esperienze formative, ore e attestazioni. Un pro
 - [Contributi e contatti](#contributi-e-contatti)
 - [Licenza](#licenza)
 
+</details>
+
 ## Il progetto
+
+> **Personale. Indipendente. Trasparente.** Harzafi è un progetto personale e indipendente: non è il registro ufficiale dell’istituto e non ne sostituisce gli strumenti. La presenza di un accesso Google non implica l’approvazione della scuola né l’autorizzazione a usare account istituzionali.
 
 Harzafi raccoglie in un’esperienza web la consultazione delle attività formative: riepilogo delle ore, categorie, dettagli espandibili e riferimenti alle attestazioni disponibili.
 
@@ -173,3 +228,19 @@ Prima di proporre modifiche, leggere la licenza. Mantenere gli interventi circos
 Copyright © 2026 Adam Harzafi.
 
 Il testo applicabile è riportato in [LICENSE.md](LICENSE.md), nelle versioni italiana e inglese. Questa guida non aggiunge divieti o autorizzazioni e non sostituisce le condizioni della licenza.
+
+---
+
+<p align="center">
+  <img src="IMMAGINI/LOGO-HARZAFI.png" width="110" alt="Harzafi"><br>
+  <strong>Un progetto di Harzafi Adam.</strong><br>
+  <sub>Esperienze al centro. Attenzione ai dettagli.</sub>
+</p>
+
+<p align="center">
+  <a href="mailto:harzafi.support@gmail.com">Supporto</a>
+  &nbsp; · &nbsp;
+  <a href="SECURITY.md">Sicurezza</a>
+  &nbsp; · &nbsp;
+  <a href="#harzafi-fsl">Torna all’inizio ↑</a>
+</p>
