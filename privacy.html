@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it" class="privacy-theme-dark">
+<html lang="it" class="legal-light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -11,17 +11,18 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Harzafi FSL">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#ffffff">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     
     <link rel="stylesheet" href="legal.css">
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="privacy-review.css?v=20260905-privacy-refinement">
-    <script defer src="site-motion.js?v=20260906"></script>
+    <link rel="stylesheet" href="legal-editorial.css?v=20260907-inter-bold">
+    <script defer src="site-motion.js?v=20260907-legal"></script>
 </head>
-<body class="legal-page privacy-page">
+<body class="legal-page legal-editorial-page">
+    <a class="legal-skip-link" href="#contenuto">Vai al contenuto</a>
 
     <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
         <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
@@ -40,10 +41,15 @@
         <header class="privacy-hero">
             <img class="privacy-hero-logo" src="IMMAGINI/LOGO-HARZAFI-PRIVACY.png" alt="Harzafi Privacy" loading="eager" fetchpriority="high" decoding="async">
             <h1><span>I tuoi dati restano tuoi.</span><span>Questo è Harzafi.</span></h1>
-            <p>Dati, scelte e responsabilità del progetto Harzafi.</p>
-            <div class="privacy-date"><span>Aggiornata il <time datetime="2026-09-05">5 settembre 2026</time></span></div>
         </header>
+        <div class="legal-overview">
+            <p>Dati, scelte e responsabilità del progetto Harzafi.</p>
+            <div class="privacy-date"><span>Aggiornata il <time datetime="2026-09-06">6 settembre 2026</time></span></div>
+        </div>
         <p class="privacy-status-note">Informativa in aggiornamento: la conservazione senza scadenza dichiarata dal titolare deve essere rivista; restano da completare alcune verifiche sulle basi giuridiche e sui fornitori. <a href="#revisione">Consulta lo stato dell’informativa</a>.</p>
+        <div class="legal-document-layout">
+        <details class="legal-index">
+            <summary>Trova le informazioni che cerchi</summary>
         <nav class="privacy-contents" aria-label="Indice dell’informativa">
             <h2>Trova le informazioni che cerchi.</h2>
             <ol><li><a href="#gestione"><span aria-hidden="true">01</span>Gestione e titolarità</a></li>
@@ -65,6 +71,7 @@
 <li><a href="#incidenti"><span aria-hidden="true">17</span>Incidenti e continuità</a></li>
 <li><a href="#revisione"><span aria-hidden="true">18</span>Stato della revisione e riferimenti</a></li></ol>
         </nav>
+        </details>
         <div class="privacy-card-grid">
             <section id="gestione" class="privacy-policy-card privacy-policy-card--twelve">
                 <header class="privacy-card-heading"><span class="privacy-card-number" aria-hidden="true">01</span><h2>Gestione e titolarità</h2></header>
@@ -90,7 +97,7 @@
 <li><strong>Assistenza:</strong> indirizzo del mittente, testo dei messaggi ed eventuali allegati scelti da chi scrive.</li>
 <li><strong>Navigazione:</strong> indirizzo IP, browser e informazioni delle richieste ricevute dai servizi esterni caricati dalle pagine.</li>
 </ul>
-<p>I dati possono provenire dall’interessato, dal fornitore di accesso o da record già inseriti dal gestore. Nome, email e ore riferibili a una persona sono dati personali anche quando non appartengono alle categorie particolari del GDPR.</p>
+<p>I dati possono provenire dall’interessato, dal fornitore di accesso o da record già inseriti dal gestore. Il nome della dashboard è ricercato nel campo <code>nome</code> del profilo Firestore associato all’email dell’utente autenticato, non nel nome Google. Se il profilo non è disponibile o è ambiguo viene mostrata l’email, quando presente. Nome, email e ore riferibili a una persona sono dati personali anche quando non appartengono alle categorie particolari del GDPR.</p>
 <p>Non sono necessari documenti d’identità, codice fiscale, informazioni sanitarie, giudiziarie o familiari per una richiesta ordinaria di supporto. Non inviarli senza una necessità specifica verificata.</p>
             </section>
             <section id="finalita" class="privacy-policy-card privacy-policy-card--twelve">
@@ -149,7 +156,7 @@
 <div><dt>Profili ed esperienze</dt><dd>I record del database richiedono una procedura di rimozione distinta. Eliminare un accesso non prova che siano stati eliminati anche profilo, esperienze, documenti o esportazioni.</dd></div>
 <div><dt>Messaggi e log</dt><dd>Il gestore deve definire tempi specifici per assistenza, avvisi, registri tecnici e copie dei servizi email. Questi tempi non sono ancora confermati.</dd></div>
 <div><dt>Backup manuali</dt><dd>Il titolare dichiara di eseguire copie settimanali e ulteriori backup in occasione degli aggiornamenti, conservandoli su Firebase senza una scadenza prestabilita. Non è dichiarata una rotazione che elimini le copie precedenti. La destinazione specifica all’interno della piattaforma e la procedura per applicare le cancellazioni anche dopo un ripristino restano da precisare.</dd></div>
-<div><dt>Sessione locale</dt><dd>Il nome visualizzato è salvato per la sessione della scheda. Le informazioni di autenticazione possono persistere nel browser secondo il servizio; «Esci» termina l’accesso, ma non cancella l’account remoto.</dd></div>
+<div><dt>Sessione locale</dt><dd>La scheda conserva un riferimento all’identificativo dell’account e al ruolo selezionato per individuare il profilo. Il nome della dashboard viene riletto dal database. Le informazioni di autenticazione possono persistere nel browser secondo il servizio; «Esci» termina l’accesso, ma non cancella l’account remoto.</dd></div>
 </dl>
 <p>I tempi devono essere limitati allo scopo documentato; un obbligo di legge o una controversia può giustificare la conservazione dei soli dati necessari per il periodo pertinente. Le copie di sicurezza devono avere cicli di scadenza definiti.</p>
 <p class="privacy-card-note"><strong>Conservazione da rivedere:</strong> devono essere definiti periodi o criteri motivati per account, esperienze e copie di sicurezza, con una procedura per eliminare i dati non più necessari. La frequenza dei backup non determina quanto sia lecito conservarli. La dichiarazione «per sempre» non sostituisce la valutazione di necessità richiesta dal <a href="https://www.garanteprivacy.it/home/principi-fondamentali-del-trattamento" target="_blank" rel="noopener noreferrer">principio di limitazione della conservazione</a>.</p>
@@ -157,7 +164,7 @@
             <section id="browser" class="privacy-policy-card privacy-policy-card--twelve">
                 <header class="privacy-card-heading"><span class="privacy-card-number" aria-hidden="true">10</span><h2>Cookie e memoria del browser</h2></header>
 
-<p>Il login usa la persistenza gestita da Firebase; il nome mostrato nella dashboard è conservato in <code>sessionStorage</code> e rimosso dal flusso di uscita. Il browser può conservare ulteriori dati tecnici delle librerie di autenticazione.</p>
+<p>Il login usa la persistenza gestita da Firebase. In <code>sessionStorage</code> viene conservato un riferimento all’identificativo dell’account e al ruolo selezionato; viene rimosso dal flusso di uscita e ignorato se appartiene a un altro account. Il vecchio nome salvato localmente non viene usato dalla dashboard. Il browser può conservare ulteriori dati tecnici delle librerie di autenticazione.</p>
 <p>Nelle pagine esaminate non è presente un contatore visite visibile collegato al precedente script statistico. La sola presenza di codice non prova un trattamento attivo. Non viene dichiarata una statistica «anonima» senza una verifica della raccolta effettiva.</p>
 <p>I link social sono collegamenti esterni con icone locali: aprirli porta ai servizi dei rispettivi fornitori. Il caricamento di font e librerie esterne, invece, può già generare richieste durante la navigazione.</p>
 <p>La revisione non certifica l’assenza di qualunque cookie o tracciamento dei fornitori. Gli strumenti non strettamente necessari, se introdotti, richiedono una valutazione e, dove previsto, consenso preventivo e revocabile. Cancellare i dati del browser non elimina i dati già presenti nei servizi remoti.</p>
@@ -226,11 +233,12 @@
             <section id="revisione" class="privacy-policy-card privacy-policy-card--twelve">
                 <header class="privacy-card-heading"><span class="privacy-card-number" aria-hidden="true">18</span><h2>Stato della revisione e riferimenti</h2></header>
 
-<p>Versione del <time datetime="2026-09-05">5 settembre 2026</time>. Questa pagina corregge le precedenti attribuzioni istituzionali e descrive i flussi riscontrati nel codice, senza attestare la conformità complessiva del servizio.</p>
+<p>Versione del <time datetime="2026-09-06">6 settembre 2026</time>. Questa pagina descrive i flussi riscontrati nel codice, incluso il nome della dashboard ricavato dal profilo associato all’email, senza attestare la conformità complessiva del servizio.</p>
 <p>Il titolare è identificato in Harzafi Adam; sono dichiarati backup manuali settimanali e in occasione degli aggiornamenti, con conservazione su Firebase senza scadenza. Quest’ultima pratica deve essere rivista e motivata in relazione alle finalità. Restano da definire e verificare basi giuridiche effettive, gestione dei minori, criteri di conservazione di dati e copie, accordi e localizzazioni dei fornitori, permessi del database e procedure di cancellazione. Prima dell’uso con dati reali serve completare questi elementi e sottoporre l’informativa a un professionista competente in protezione dei dati.</p>
 <p>Un aggiornamento non rende retroattivamente lecito un trattamento. Le modifiche rilevanti devono essere comunicate agli interessati con modalità adeguate; nuovi consensi vanno raccolti soltanto dove necessari.</p>
 <p>Riferimenti: <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj?locale=it" target="_blank" rel="noopener noreferrer">Regolamento (UE) 2016/679</a>, <a href="https://www.garanteprivacy.it/home/principi-fondamentali-del-trattamento" target="_blank" rel="noopener noreferrer">principi del trattamento</a> e <a href="https://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/8981258" target="_blank" rel="noopener noreferrer">obblighi di informazione del Garante</a>. La normativa nazionale applicabile comprende il D.Lgs. 196/2003 e successive modifiche.</p>
             </section>
+        </div>
         </div>
         <aside class="privacy-contact-strip" aria-label="Contatto privacy">
             <h2>Parliamone.</h2>

@@ -4,7 +4,7 @@
     if (!('IntersectionObserver' in window) || !Element.prototype.animate) return;
     const played = new WeakSet();
     const running = new Map();
-    const selector = 'h1, .account-hero-logo, .account-belief > img, .account-belief > h2, .account-belief > p, main article, main details, .harzafi-footer-inner';
+    const selector = 'h1, .account-hero-logo, .account-belief > img, .account-belief > h2, .account-belief > p, .legal-editorial-page .privacy-hero-logo, .legal-overview, .legal-editorial-page .privacy-policy-card, .legal-editorial-page .privacy-contact-strip, main article, main details, .harzafi-footer-inner';
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (!entry.isIntersecting) return;
