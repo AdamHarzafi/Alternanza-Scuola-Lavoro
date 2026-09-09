@@ -552,7 +552,7 @@
         }
     </style>
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="login-modern.css?v=20260831-mobile-center">
+    <link rel="stylesheet" href="login-modern.css?v=20260909-two-step">
     <script defer src="site-motion.js?v=20260906"></script>
 </head>
 <body class="auth-page">
@@ -599,10 +599,10 @@
                      style="position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;">
                 </div>
 
-                <form id="login-form" target="dummyframe" action="about:blank" method="POST" novalidate>
+                <form id="login-form" action="login.html" method="post" autocomplete="on" novalidate>
                     <div id="login-email-step" class="login-step is-active">
                         <div class="auth-field email-auth-field floating-auth-field">
-                            <input type="email" id="email-input" name="email" autocomplete="username"
+                            <input type="email" id="email-input" name="email" autocomplete="username" required
                                    inputmode="email" autocapitalize="none" spellcheck="false"
                                    placeholder=" " aria-describedby="email-error">
                             <label class="floating-field-label" for="email-input">Indirizzo email</label>
@@ -626,19 +626,17 @@
                         </div>
                         <div class="error-msg" id="google-login-error" role="alert"></div>
                     </div>
-
                     <div id="login-password-step" class="login-step" hidden>
                         <div class="selected-account">
                             <div class="selected-account-copy">
-                                <span>Account Harzafi</span>
-                                <strong id="selected-email-display"></strong>
+                                <label for="email-input">Account Harzafi</label>
+                                <div id="selected-email-display"></div>
                             </div>
                             <button type="button" id="change-email" aria-label="Modifica email">Modifica</button>
                         </div>
-
                         <div class="auth-field auth-password-field floating-auth-field">
                             <input type="password" id="password-input" name="password"
-                                   autocomplete="current-password" placeholder=" ">
+                                   autocomplete="current-password" required placeholder=" ">
                             <label class="floating-field-label" for="password-input">Password</label>
                             <span id="caps-lock-warning" class="caps-lock-indicator" hidden aria-live="polite">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 6.5 7H15v5H9v-5H5.5L12 4Zm-3 14h6v2H9v-2Z"/></svg>
@@ -655,7 +653,6 @@
                         <a href="#" id="btn-forgot-pass" class="forgot-link">Hai dimenticato la password?</a>
                         <button type="submit" id="login-submit" class="btn-gradient">Accedi</button>
                     </div>
-
                 </form>
             </div>
 
@@ -738,7 +735,6 @@
     </footer>
 
     <!-- ── Modali (HID, Recupero Password) ── -->
-    <iframe name="dummyframe" id="dummyframe" style="display:none;"></iframe>
 
     <!-- Modale Harzafi ID -->
     <div id="hid-modal" class="modal-overlay bottom-sheet">
@@ -821,6 +817,8 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     <script defer src="https://accounts.google.com/gsi/client"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <script defer src="login.js?v=20260829-apple"></script>
+    <script defer src="auth-session.js?v=20260909"></script>
+    <script defer src="login.js?v=20260909-two-step"></script>
 </body>
 </html>
+

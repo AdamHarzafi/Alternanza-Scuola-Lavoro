@@ -7,7 +7,8 @@
     "dev": "node server.js",
     "start": "node server.js",
     "build": "node build-site.js",
-    "lint": "node -c server.js"
+    "lint": "node -c server.js",
+    "test": "node --test tests/*.test.cjs"
   },
   "dependencies": {
     "express": "^4.21.2"

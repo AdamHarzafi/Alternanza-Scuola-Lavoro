@@ -1,9 +1,8 @@
 (function () {
     'use strict';
 
-    const cachedName = sessionStorage.getItem('harzafi_user') || 'Utente';
-    const displayName = plainText(cachedName) || 'Utente';
-    document.getElementById('hero-user-name').textContent = displayName;
+    const nameElement = document.getElementById('hero-user-name');
+    nameElement.textContent = 'Utente';
 
     const firebaseConfig = {
         apiKey: 'AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc',
@@ -20,6 +19,16 @@
             sessionStorage.removeItem('harzafi_user');
             window.location.replace('login.html');
             return;
+        }
+        // The email-linked Firestore profile is the source of the greeting.
+        // HID accounts have no email: only reuse a name bound to this exact UID.
+        if (user.isAnonymous && sessionStorage.getItem('harzafi_user_uid') === user.uid) {
+            nameElement.textContent = sessionStorage.getItem('harzafi_user') || 'Utente';
+        } else {
+            window.HarzafiSession.profileName(user).then(name => {
+                if (auth.currentUser?.uid !== user.uid) return;
+                nameElement.textContent = name;
+            });
         }
         loadData();
     });
@@ -234,9 +243,13 @@
     }
 
     document.getElementById('btn-logout').addEventListener('click', () => {
-        auth.signOut().finally(() => {
+        auth.signOut().then(() => {
             sessionStorage.removeItem('harzafi_user');
+            sessionStorage.removeItem('harzafi_user_uid');
             window.location.replace('index.html');
+        }).catch(() => {
+            const button = document.getElementById('btn-logout');
+            button.textContent = 'Uscita non riuscita. Riprova';
         });
     });
 })();

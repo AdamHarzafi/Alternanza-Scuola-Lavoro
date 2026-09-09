@@ -89,6 +89,7 @@ async function checkVPN() {
 function entraNelPortale(nomeUtente) {
     // Salviamo il nome in sessionStorage (SOLO A SCOPO ESTETICO: la vera sicurezza ora è in dashboard.html via Firebase Auth)
     sessionStorage.setItem('harzafi_user', nomeUtente);
+    sessionStorage.setItem('harzafi_user_uid', window.auth.currentUser.uid);
     window.location.href = 'dashboard.html';
 }
 
@@ -116,153 +117,94 @@ document.addEventListener("DOMContentLoaded", function () {
         window.addEventListener('scroll', handleScroll, { passive: true });
     }
 
-    // ── Accesso in due passaggi: email, poi password ─────────
-    let selectedRole      = 'studente';
-    let selectedUserEmail = "";
-    let emailVerificationAttempt = 0;
+    // Due passaggi visivi, un solo modulo e gli stessi campi per l'autofill.
+    let selectedRole = 'studente';
+    let selectedUserEmail = '';
+    let pendingCredentials = null;
+    const submitBtn = document.getElementById('login-submit');
+    const passInput = document.getElementById('password-input');
+    const errorMsg = document.getElementById('login-error');
+    const emailInput = document.getElementById('email-input');
+    const emailError = document.getElementById('email-error');
+    const emailStep = document.getElementById('login-email-step');
+    const passwordStep = document.getElementById('login-password-step');
+    const continueBtn = document.getElementById('login-continue');
+    const emailHome = emailInput.parentElement;
+    const selectedEmail = document.getElementById('selected-email-display');
+    const subtitle = document.querySelector('#login-page-wrapper .auth-subtitle');
+    const panel = document.querySelector('#login-page-wrapper .login-panel');
+    const emailSubtitle = subtitle?.textContent;
+    let verificationAttempt = 0;
 
-    const submitBtn       = document.getElementById('login-submit');
-    const passInput       = document.getElementById('password-input');
-    const errorMsg        = document.getElementById('login-error');
-    const emailInput      = document.getElementById('email-input');
-    const emailError      = document.getElementById('email-error');
-    const continueBtn     = document.getElementById('login-continue');
-    const emailStep       = document.getElementById('login-email-step');
-    const passwordStep    = document.getElementById('login-password-step');
-    const selectedEmailEl = document.getElementById('selected-email-display');
-    const changeEmailBtn  = document.getElementById('change-email');
-    const loginPanel      = document.querySelector('#login-page-wrapper .login-panel');
-    const authSubtitle    = document.querySelector('#login-page-wrapper .auth-subtitle');
-    const emailSubtitleText = authSubtitle?.textContent || '';
-
-    function isValidEmail(value) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    }
-
-    function delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function getDatabaseWhenReady(timeoutMs = 3000) {
-        const startedAt = Date.now();
-        while (typeof window.db === 'undefined' && Date.now() - startedAt < timeoutMs) {
-            await delay(100);
-        }
-        return window.db;
-    }
-
-    function setContinueLoading(isLoading) {
-        if (!continueBtn) return;
-        continueBtn.disabled = isLoading;
-        continueBtn.classList.toggle('is-loading', isLoading);
-        continueBtn.setAttribute('aria-busy', isLoading ? 'true' : 'false');
-        continueBtn.innerHTML = isLoading
-            ? '<span class="login-button-loader"><span class="login-button-spinner" aria-hidden="true"></span><span>Verifica…</span></span>'
-            : 'Continua';
-    }
-
-    function showEmailStep({ keepEmail = true } = {}) {
-        emailVerificationAttempt++;
-        setContinueLoading(false);
-        selectedUserEmail = "";
-        if (!keepEmail && emailInput) emailInput.value = "";
-        if (passInput) passInput.value = "";
-        if (errorMsg) errorMsg.style.display = 'none';
-        if (emailError) emailError.style.display = 'none';
-        if (passwordStep) {
-            passwordStep.hidden = true;
-            passwordStep.classList.remove('is-active');
-        }
-        loginPanel?.classList.remove('is-password-step');
-        if (authSubtitle) authSubtitle.textContent = emailSubtitleText;
-        if (emailStep) {
-            emailStep.hidden = false;
-            emailStep.classList.remove('is-active');
-            void emailStep.offsetWidth;
-            emailStep.classList.add('is-active');
-        }
-        setTimeout(() => emailInput?.focus(), 50);
+    function showEmailStep() {
+        verificationAttempt++;
+        if (!emailStep) return;
+        emailHome.prepend(emailInput);
+        emailInput.setAttribute('aria-describedby', 'email-error');
+        emailStep.hidden = false;
+        passwordStep.hidden = true;
+        passwordStep.classList.remove('is-active');
+        panel?.classList.remove('is-password-step');
+        if (subtitle) subtitle.textContent = emailSubtitle;
+        continueBtn.disabled = false;
+        continueBtn.textContent = 'Continua';
+        continueBtn.removeAttribute('aria-busy');
+        emailInput.focus();
     }
 
     async function showPasswordStep() {
-        if (continueBtn?.disabled) return;
-        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
-        if (!isValidEmail(email)) {
-            if (emailError) {
-                emailError.innerText = "Inserisci un indirizzo email valido.";
-                emailError.style.display = 'block';
-            }
-            emailInput?.focus();
+        if (continueBtn.disabled || submitBtn.disabled) return;
+        const email = emailInput.value.trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            emailError.textContent = 'Inserisci un indirizzo email valido.';
+            emailError.style.display = 'block';
+            emailInput.focus();
             return;
         }
-
-        if (emailError) emailError.style.display = 'none';
-        const currentAttempt = ++emailVerificationAttempt;
-        const roleAtStart = selectedRole;
-        setContinueLoading(true);
-
+        const attempt = ++verificationAttempt;
+        const role = selectedRole;
+        continueBtn.disabled = true;
+        continueBtn.textContent = 'Verifica…';
+        continueBtn.setAttribute('aria-busy', 'true');
+        emailError.style.display = 'none';
         try {
-            const db = await getDatabaseWhenReady();
-            if (!db) throw new Error('database-unavailable');
-
-            const collectionName = roleAtStart === 'studente' ? 'studenti' : 'docenti';
-            const [snapshot] = await Promise.all([
-                db.collection(collectionName).where('email', '==', email).limit(1).get(),
-                delay(650)
-            ]);
-
-            if (currentAttempt !== emailVerificationAttempt || selectedRole !== roleAtStart) return;
-            if (snapshot.empty) {
-                const roleLabel = roleAtStart === 'studente' ? 'Studenti' : 'Docenti';
-                if (emailError) {
-                    emailError.innerText = `Questo indirizzo non è abilitato per l’area ${roleLabel}.`;
-                    emailError.style.display = 'block';
-                }
-                emailInput?.focus();
-                return;
-            }
-
+            const snapshot = await window.db.collection(role === 'studente' ? 'studenti' : 'docenti')
+                .where('email', '==', email).limit(1).get();
+            if (attempt !== verificationAttempt) return;
+            if (emailInput.value.trim().toLowerCase() !== email) return;
+            if (snapshot.empty) throw new Error('role-not-enabled');
             selectedUserEmail = email;
-            if (emailInput) emailInput.value = email;
-            if (selectedEmailEl) selectedEmailEl.textContent = email;
-            if (emailStep) {
-                emailStep.hidden = true;
-                emailStep.classList.remove('is-active');
-            }
-            loginPanel?.classList.add('is-password-step');
-            if (authSubtitle) authSubtitle.textContent = 'Inserisci la password';
-            if (passwordStep) {
-                passwordStep.hidden = false;
-                passwordStep.classList.remove('is-active');
-                void passwordStep.offsetWidth;
-                passwordStep.classList.add('is-active');
-            }
-            setTimeout(() => passInput?.focus(), 80);
+            emailInput.value = email;
+            // Move the actual username input instead of replacing it with text.
+            // Keep any password already filled by the manager before Continue.
+            selectedEmail.appendChild(emailInput);
+            emailInput.setAttribute('aria-describedby', 'login-error');
+            emailStep.hidden = true;
+            passwordStep.hidden = false;
+            passwordStep.classList.add('is-active');
+            panel?.classList.add('is-password-step');
+            if (subtitle) subtitle.textContent = 'Inserisci la password';
+            passInput.focus();
         } catch (error) {
-            if (currentAttempt !== emailVerificationAttempt) return;
-            console.error('Verifica email non riuscita:', error);
-            if (emailError) {
-                emailError.innerText = "Non è possibile verificare l’indirizzo adesso. Riprova tra poco.";
-                emailError.style.display = 'block';
-            }
+            if (attempt !== verificationAttempt) return;
+            emailError.textContent = error.message === 'role-not-enabled'
+                ? 'Questo indirizzo non è abilitato per il ruolo selezionato.'
+                : 'Non è possibile verificare l’indirizzo adesso. Riprova tra poco.';
+            emailError.style.display = 'block';
         } finally {
-            if (currentAttempt === emailVerificationAttempt) setContinueLoading(false);
+            if (attempt === verificationAttempt) {
+                continueBtn.disabled = false;
+                continueBtn.textContent = 'Continua';
+                continueBtn.removeAttribute('aria-busy');
+            }
         }
     }
-
     continueBtn?.addEventListener('click', showPasswordStep);
-    changeEmailBtn?.addEventListener('click', () => showEmailStep({ keepEmail: true }));
-    emailInput?.addEventListener('input', () => {
-        emailVerificationAttempt++;
-        setContinueLoading(false);
-        if (emailError) emailError.style.display = 'none';
+    document.getElementById('change-email')?.addEventListener('click', () => {
+        if (!submitBtn.disabled) showEmailStep();
     });
-    emailInput?.addEventListener('keydown', event => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            showPasswordStep();
-        }
-    });
+
+    emailInput.addEventListener('input', () => { emailError.style.display = 'none'; });
 
     // ── Segmented control ruolo ──────────────────────────────
     const segBtns   = document.querySelectorAll('#role-control .seg-btn');
@@ -271,6 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const rulesView = document.getElementById('rules-view');
 
     segBtns.forEach((btn, index) => btn.addEventListener('click', e => {
+        if (submitBtn.disabled) return;
         segBtns.forEach(b => {
             b.classList.remove('active');
             b.setAttribute('aria-pressed', 'false');
@@ -278,8 +221,9 @@ document.addEventListener("DOMContentLoaded", function () {
         e.currentTarget.classList.add('active');
         e.currentTarget.setAttribute('aria-pressed', 'true');
         selectedRole = e.currentTarget.dataset.role;
+        showEmailStep();
         if (segSlider) segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
-        showEmailStep({ keepEmail: true });
+        if (errorMsg) errorMsg.style.display = 'none';
         const gErr = document.getElementById('google-login-error');
         if (gErr) gErr.style.display = 'none';
     }));
@@ -334,28 +278,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 capsLockWarning.classList.remove('is-typing');
             }
         });
-        passInput.addEventListener('copy',  e => { 
-            e.preventDefault(); 
-            if (errorMsg) { errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; }
-        });
-        passInput.addEventListener('paste', e => { 
-            e.preventDefault(); 
-            if (errorMsg) { errorMsg.innerText = 'Operazione negata.'; errorMsg.style.display = 'block'; }
-        });
+
     }
 
     // ── Login con credenziali ────────────────────────────────
     window.eseguiAccessoServer = function () {
-        const pass  = passInput ? passInput.value.trim() : '';
+        if (!pendingCredentials) return;
+        const { email, password: pass, role } = pendingCredentials;
+        pendingCredentials = null;
         if (submitBtn) submitBtn.innerText = "Verifica in corso…";
 
         if (typeof window.auth !== 'undefined') {
-            window.auth.signInWithEmailAndPassword(selectedUserEmail, pass)
+            window.auth.signInWithEmailAndPassword(email, pass)
                 .then(async credential => {
-                    const uName = credential.user.displayName || selectedUserEmail.split('@')[0] || 'Utente';
-                    await inviaEmail(selectedUserEmail, 2, {
+                    const uName = await window.HarzafiSession.profileName(credential.user, role);
+                    await inviaEmail(email, 2, {
                         nome_utente:    uName,
-                        email_utente:   selectedUserEmail,
+                        email_utente:   email,
                         orario_accesso: new Date().toLocaleString('it-IT')
                     });
                     
@@ -402,13 +341,26 @@ document.addEventListener("DOMContentLoaded", function () {
     if (loginFormEl) {
         loginFormEl.addEventListener('submit', async e => {
             e.preventDefault();
-            if (document.activeElement) document.activeElement.blur();
+            if (submitBtn.disabled) return;
 
-            const pass  = passInput ? passInput.value.trim() : '';
+            if (passwordStep?.hidden) {
+                await showPasswordStep();
+                return;
+            }
+
+            const pass  = passInput ? passInput.value : '';
 
             if (typeof window.auth === 'undefined') { if (errorMsg) { errorMsg.innerText = "Database offline."; errorMsg.style.display = 'block'; } return; }
-            if (!selectedUserEmail)                 { showEmailStep({ keepEmail: true }); return; }
+            selectedUserEmail = emailInput.value.trim().toLowerCase();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(selectedUserEmail)) {
+                const visibleError = passwordStep && !passwordStep.hidden ? errorMsg : emailError;
+                visibleError.textContent = 'Inserisci un indirizzo email valido.';
+                visibleError.style.display = 'block';
+                emailInput.focus();
+                return;
+            }
             if (!pass)                              { if (errorMsg) { errorMsg.innerText = "Il campo password è obbligatorio."; errorMsg.style.display = 'block'; } return; }
+            pendingCredentials = { email: selectedUserEmail, password: pass, role: selectedRole };
 
             if (errorMsg) errorMsg.style.display = 'none';
             if (submitBtn) {
@@ -416,8 +368,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 submitBtn.disabled     = true;
             }
 
+            // Preserve the existing role eligibility check, including autofilled values.
+            const roleButtons = document.querySelectorAll('#role-control .seg-btn');
+            roleButtons.forEach(button => { button.disabled = true; });
+            try {
+                const collection = selectedRole === 'studente' ? 'studenti' : 'docenti';
+                const snapshot = await window.db.collection(collection)
+                    .where('email', '==', selectedUserEmail).limit(1).get();
+                if (snapshot.empty) throw new Error('role-not-enabled');
+            } catch (error) {
+                pendingCredentials = null;
+                errorMsg.textContent = error.message === 'role-not-enabled'
+                    ? 'Questo indirizzo non è abilitato per il ruolo selezionato.'
+                    : 'Non è possibile verificare l’indirizzo adesso. Riprova tra poco.';
+                errorMsg.style.display = 'block';
+                submitBtn.innerText = 'Accedi';
+                submitBtn.disabled = false;
+                return;
+            } finally {
+                roleButtons.forEach(button => { button.disabled = false; });
+            }
+
             const isVpn = await checkVPN();
             if (isVpn) {
+                pendingCredentials = null;
                 if (errorMsg) {
                     errorMsg.innerText  = "Disattivare la VPN per continuare.";
                     errorMsg.style.display = 'block';
@@ -451,6 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (googleBtn) {
         googleBtn.addEventListener('click', async () => {
+            if (submitBtn.disabled) return;
             if (document.activeElement) document.activeElement.blur();
             const originalHTML = googleBtn.innerHTML;
             googleBtn.innerHTML  = `<div class="btn-loader"><div class="btn-spinner"></div><span class="btn-text-main" style="margin-left:5px;">CARICO...</span></div>`;
@@ -486,15 +461,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     const email = result.user.email.toLowerCase();
                     
                     if (email.endsWith("@" + targetDomain)) {
+                        const profileName = await window.HarzafiSession.profileName(result.user, selectedRole);
                         await inviaEmail(email, 2, {
-                            nome_utente:    result.user.displayName || "Utente",
+                            nome_utente:    profileName,
                             email_utente:   email,
                             orario_accesso: new Date().toLocaleString('it-IT')
                         });
                         
                         googleBtn.innerHTML = originalHTML;
                         googleBtn.disabled  = false;
-                        entraNelPortale(result.user.displayName || "Utente");
+                        entraNelPortale(profileName);
                     } else {
                         window.auth.signOut().then(() => {
                             if (googleErrorMsg) {
@@ -581,7 +557,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (!snap.empty) {
                             const userData = snap.docs[0].data();
                             if (typeof window.auth !== 'undefined') {
-                                try { await window.auth.signInAnonymously(); } catch (err) { console.warn(err); }
+                                await window.auth.signInAnonymously();
                             }
                             if (hidModalEl) hidModalEl.classList.remove('active');
                             hidSubmitBtnEl.innerHTML = origText;
@@ -625,7 +601,7 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             if (otpStep1) { otpStep1.style.display  = 'block'; otpStep1.style.opacity  = '1'; }
             if (otpStep3) { otpStep3.style.display  = 'none'; otpStep3.style.opacity  = '0'; }
-            if (otpEmailInput) otpEmailInput.value = selectedUserEmail || '';
+            if (otpEmailInput) otpEmailInput.value = emailInput.value.trim().toLowerCase();
             const otpErr = document.getElementById('otp-error-msg');
             if (otpErr) otpErr.style.display = 'none';
             const roleTitle = document.getElementById('otp-role-title');

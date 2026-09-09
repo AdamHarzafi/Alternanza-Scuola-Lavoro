@@ -1381,3 +1381,14 @@ body.auth-page {
         justify-content: flex-start !important;
     }
 }
+
+/* Lo username resta un vero campo compilabile anche nel secondo passaggio. */
+#selected-email-display { min-width: 0; width: 100%; }
+#selected-email-display input {
+    display: block; width: 100%; min-width: 0; box-sizing: border-box;
+    border: 0; background: transparent !important; box-shadow: none;
+    padding: 0; margin: 0; border-radius: 0;
+    font: inherit; font-weight: 600; color: #1d1d1f !important;
+    -webkit-text-fill-color: #1d1d1f; text-overflow: ellipsis;
+}
+.selected-account-copy > label { font-size: 12px; color: #6e6e73; }
