@@ -1,0 +1,167 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const path = require('node:path');
+const source = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
+
+function session(profiles = {}) {
+    const links = [{ textContent: 'Accedi', pending: true, setAttribute() {},
+        removeAttribute(name) { if (name === 'data-auth-pending') this.pending = false; } }];
+    let observer;
+    const auth = { currentUser: null, onAuthStateChanged(callback) { observer = callback; } };
+    const context = {
+        firebase: { apps: [{}], auth: () => auth, firestore: () => ({
+            collection: collection => ({ where: (field, op, email) => ({ limit: () => ({ get: async () => {
+                const profile = profiles[collection]?.[email];
+                if (profile instanceof Error) throw profile;
+                return { empty: !profile, docs: [{ data: () => profile }] };
+            } }) }) })
+        }) },
+        document: { querySelectorAll: () => links },
+        sessionStorage: { removeItem() {} },
+        console: { warn() {} },
+        addEventListener() {}
+    };
+    context.window = context;
+    vm.runInNewContext(source('auth-session.js'), context);
+    return { api: context.HarzafiSession, links, observer };
+}
+
+test('Firestore name wins over year-prefixed provider name and email', async () => {
+    const { api } = session({ studenti: { '2029_rossi@example.it': { nome: 'Mario Rossi' } } });
+    assert.equal(await api.profileName({ email: '2029_ROSSI@example.it', displayName: '2029_ROSSI MARIO' }), 'Mario Rossi');
+});
+test('Teacher profile is found; missing/error profiles never use the email as name', async () => {
+    const { api } = session({ studenti: { 'teacher@example.it': new Error('denied') }, docenti: { 'teacher@example.it': { nome: 'Anna Bianchi' } } });
+    assert.equal(await api.profileName({ email: 'teacher@example.it' }), 'Anna Bianchi');
+    assert.equal(await api.profileName({ email: '2029_rossi@example.it' }), 'Utente');
+    assert.equal(await api.profileName({ email: 'missing@example.it', displayName: 'Mario' }), 'Mario');
+});
+test('Navigation follows restored session, account switch, and sign-out', () => {
+    const { links, observer } = session();
+    assert.equal(links[0].textContent, 'Accedi');
+    assert.equal(links[0].pending, true);
+    observer({ uid: 'one' });
+    assert.equal(links[0].href, 'dashboard.html');
+    assert.equal(links[0].textContent, 'Il mio registro');
+    assert.equal(links[0].pending, false);
+    observer({ uid: 'two' });
+    assert.equal(links[0].href, 'dashboard.html');
+    observer(null);
+    assert.equal(links[0].href, 'login.html');
+    assert.equal(links[0].textContent, 'Accedi');
+});
+
+function login(twoStep = false) {
+    const elements = {};
+    for (const id of ['login-submit', 'password-input', 'login-error', 'email-input', 'email-error', 'login-form']) {
+        elements[id] = { value: '', style: {}, disabled: false, events: {},
+            addEventListener(type, callback) { this.events[type] = callback; }, setAttribute() {}, focus() {} };
+    }
+    if (twoStep) {
+        for (const id of ['login-email-step', 'login-password-step', 'login-continue', 'selected-email-display', 'change-email']) {
+            elements[id] = { hidden: id === 'login-password-step', disabled: false, events: {},
+                classList: { add() {}, remove() {} },
+                addEventListener(type, callback) { this.events[type] = callback; },
+                setAttribute() {}, removeAttribute() {},
+                appendChild(child) { child.parentElement = this; }
+            };
+        }
+        elements['email-input'].parentElement = { prepend(child) { child.parentElement = this; } };
+    }
+    const calls = [];
+    const user = { uid: 'test', email: 'mario@example.it' };
+    const context = {
+        document: { getElementById: id => elements[id] || null, querySelector: () => null,
+            querySelectorAll: () => [], addEventListener: (type, cb) => { context.init = cb; } },
+        history: {}, scrollTo() {}, addEventListener() {},
+        MutationObserver: class { observe() {} },
+        console, AbortController, setTimeout: () => 1, clearTimeout() {},
+        fetch: async () => ({ ok: true, json: async () => ({ org: '' }) }),
+        db: { collection: () => ({ where: () => ({ limit: () => ({ get: async () => ({ empty: false }) }) }) }) },
+        auth: { currentUser: user, signInWithEmailAndPassword: async (...args) => { calls.push(args); return { user }; } },
+        HarzafiSession: { profileName: async () => 'Mario Rossi' },
+        sessionStorage: { setItem() {} }, location: {}
+    };
+    context.window = context;
+    vm.runInNewContext(source('login.js'), context);
+    context.init();
+    context.globalTurnstileToken = 'test-token';
+    return { elements, calls, context };
+}
+test('Autofill works without input events and preserves password whitespace', async () => {
+    const { elements, calls, context } = login();
+    elements['email-input'].value = '  MARIO@example.it ';
+    elements['password-input'].value = '  password with spaces  ';
+    await elements['login-form'].events.submit({ preventDefault() {} });
+    await new Promise(resolve => setImmediate(resolve));
+    assert.deepEqual(calls, [['mario@example.it', '  password with spaces  ']]);
+    assert.equal(context.location.href, 'dashboard.html');
+    assert.equal(elements['password-input'].events.paste, undefined);
+    assert.equal(elements['password-input'].events.copy, undefined);
+});
+test('Two-step login retains autofilled password and the same username input', async () => {
+    const { elements, calls } = login(true);
+    const email = elements['email-input'];
+    email.value = 'mario@example.it';
+    elements['password-input'].value = '  autofilled password  ';
+    await elements['login-form'].events.submit({ preventDefault() {} });
+    assert.equal(calls.length, 0);
+    assert.equal(elements['login-password-step'].hidden, false);
+    assert.equal(email.parentElement, elements['selected-email-display']);
+    assert.equal(elements['password-input'].value, '  autofilled password  ');
+    await elements['login-form'].events.submit({ preventDefault() {} });
+    assert.deepEqual(calls, [['mario@example.it', '  autofilled password  ']]);
+});
+test('Modify returns to email without losing autofill; changed username is rechecked', async () => {
+    const { elements, calls } = login(true);
+    const home = elements['email-input'].parentElement;
+    elements['email-input'].value = 'mario@example.it';
+    elements['password-input'].value = 'autofilled';
+    await elements['login-continue'].events.click();
+    elements['change-email'].events.click();
+    assert.equal(elements['email-input'].parentElement, home);
+    assert.equal(elements['login-password-step'].hidden, true);
+    assert.equal(elements['password-input'].value, 'autofilled');
+    await elements['login-continue'].events.click();
+    elements['email-input'].value = 'other@example.it';
+    await elements['login-form'].events.submit({ preventDefault() {} });
+    assert.equal(calls[0][0], 'other@example.it');
+});
+test('Invalid email and missing password do not start authentication', async () => {
+    const { elements, calls } = login();
+    await elements['login-form'].events.submit({ preventDefault() {} });
+    assert.equal(elements['email-error'].style.display, 'block');
+    elements['email-input'].value = 'mario@example.it';
+    await elements['login-form'].events.submit({ preventDefault() {} });
+    assert.equal(elements['login-error'].style.display, 'block');
+    assert.equal(calls.length, 0);
+});
+test('Wrong password unlocks the form for a retry without navigation', async () => {
+    const { elements, context } = login();
+    context.auth.signInWithEmailAndPassword = async () => { throw { code: 'auth/invalid-credential' }; };
+    elements['email-input'].value = 'mario@example.it';
+    elements['password-input'].value = 'wrong-password';
+    await elements['login-form'].events.submit({ preventDefault() {} });
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(elements['login-submit'].disabled, false);
+    assert.equal(elements['login-error'].style.display, 'block');
+    assert.equal(context.location.href, undefined);
+});
+test('A role mismatch prevents the Firebase sign-in call', async () => {
+    const { elements, calls, context } = login();
+    context.db.collection = () => ({ where: () => ({ limit: () => ({ get: async () => ({ empty: true }) }) }) });
+    elements['email-input'].value = 'mario@example.it';
+    elements['password-input'].value = 'test-password';
+    await elements['login-form'].events.submit({ preventDefault() {} });
+    assert.equal(calls.length, 0);
+    assert.equal(elements['login-submit'].disabled, false);
+    assert.equal(elements['login-error'].style.display, 'block');
+});
+test('Every public page offering login includes the Firebase session observer', () => {
+    for (const file of fs.readdirSync(path.join(__dirname, '..')).filter(file => file.endsWith('.html'))) {
+        const html = source(file);
+        if (html.includes('href="login.html"')) assert.ok(html.includes('src="auth-session.js'), file);
+    }
+});
