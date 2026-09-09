@@ -30,22 +30,18 @@
     window.HarzafiSession = { auth, profileName };
     const links = Array.from(document.querySelectorAll('a[href="login.html"]'));
     const originalLabels = links.map(link => link.textContent);
-    links.forEach(link => {
-        link.textContent = 'Account…';
-        link.setAttribute('aria-busy', 'true');
-    });
     function updateNavigation(user) {
         links.forEach((link, index) => {
             link.href = user ? 'dashboard.html' : 'login.html';
             link.textContent = user ? 'Il mio registro' : originalLabels[index];
-            link.removeAttribute('aria-busy');
+            link.removeAttribute('data-auth-pending');
         });
         if (!user) {
             sessionStorage.removeItem('harzafi_user');
             sessionStorage.removeItem('harzafi_user_uid');
         }
     }
-    auth.onAuthStateChanged(updateNavigation);
+    auth.onAuthStateChanged(updateNavigation, () => updateNavigation(null));
     // Refresh links when a page is restored from the browser's back/forward cache.
     window.addEventListener('pageshow', event => {
         if (event.persisted) updateNavigation(auth.currentUser);
