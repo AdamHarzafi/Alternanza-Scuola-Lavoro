@@ -437,18 +437,6 @@
             font-weight: 550;
         }
 
-        #custom-google-btn img { width: 21px; left: 22px; }
-        #custom-google-btn .btn-text-main {
-            color: #1d1d1f;
-            font-size: .9rem;
-            font-weight: 550;
-        }
-        #custom-google-btn .btn-text-sub {
-            color: #86868b;
-            font-size: .68rem;
-            font-weight: 450;
-        }
-
         #btn-harzafi-id { border-color: #d2d2d7; }
         #btn-harzafi-id img { height: 17px; }
         #btn-harzafi-id span { color: #1d1d1f; font-weight: 550; }
@@ -552,7 +540,7 @@
         }
     </style>
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="login-modern.css?v=20260909-two-step">
+    <link rel="stylesheet" href="login-modern.css?v=20260914-equal-buttons">
     <script defer src="site-motion.js?v=20260906"></script>
 </head>
 <body class="auth-page">
@@ -608,7 +596,6 @@
                             <label class="floating-field-label" for="email-input">Indirizzo email</label>
                         </div>
                         <div class="error-msg" id="email-error" role="alert"></div>
-                        <button type="button" id="btn-harzafi-id" class="harzafi-id-link">Accedi con Harzafi ID <span aria-hidden="true">↗</span></button>
 
                         <div class="privacy-disclaimer login-privacy">
                             <span class="privacy-people" aria-hidden="true">
@@ -619,12 +606,13 @@
 
                         <div class="login-actions">
                             <button type="button" id="login-continue" class="btn-gradient">Continua</button>
-                            <button type="button" id="custom-google-btn" class="btn-social">
-                                <img src="IMMAGINI/GOOGLE-LOGO.png" alt="" width="22" height="22">
-                                <span>Accedi con Google</span>
+                            <button type="button" id="btn-harzafi-id" class="btn-social" aria-controls="hid-modal">
+                                <img src="IMMAGINI/LOGO-HARZAFI.png" alt="" width="80" height="32">
+                                <span class="harzafi-id-separator" aria-hidden="true"></span>
+                                <span class="harzafi-id-label">Accedi con Harzafi ID</span>
+                                <svg class="harzafi-id-arrow" width="18" height="24" viewBox="0 0 18 24" fill="none" aria-hidden="true" focusable="false"><path d="m6 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </button>
                         </div>
-                        <div class="error-msg" id="google-login-error" role="alert"></div>
                     </div>
                     <div id="login-password-step" class="login-step" hidden>
                         <div class="selected-account">
@@ -815,10 +803,9 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-check-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-functions-compat.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
-    <script defer src="https://accounts.google.com/gsi/client"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script defer src="auth-session.js?v=20260909"></script>
-    <script defer src="login.js?v=20260909-two-step"></script>
+    <script defer src="login.js?v=20260914-harzafi-id"></script>
 </body>
 </html>
 

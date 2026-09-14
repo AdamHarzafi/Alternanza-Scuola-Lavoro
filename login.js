@@ -224,8 +224,6 @@ document.addEventListener("DOMContentLoaded", function () {
         showEmailStep();
         if (segSlider) segSlider.style.transform = index === 0 ? 'translateX(0)' : 'translateX(100%)';
         if (errorMsg) errorMsg.style.display = 'none';
-        const gErr = document.getElementById('google-login-error');
-        if (gErr) gErr.style.display = 'none';
     }));
 
     const btnRules = document.getElementById('btn-rules-banner');
@@ -416,80 +414,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }, 2500);
             }
-        });
-    }
-
-    // ── Login con Google ─────────────────────────────────────
-    const googleBtn      = document.getElementById('custom-google-btn');
-    const googleErrorMsg = document.getElementById('google-login-error');
-
-    if (googleBtn) {
-        googleBtn.addEventListener('click', async () => {
-            if (submitBtn.disabled) return;
-            if (document.activeElement) document.activeElement.blur();
-            const originalHTML = googleBtn.innerHTML;
-            googleBtn.innerHTML  = `<div class="btn-loader"><div class="btn-spinner"></div><span class="btn-text-main" style="margin-left:5px;">CARICO...</span></div>`;
-            googleBtn.disabled   = true;
-            if (googleErrorMsg) googleErrorMsg.style.display = 'none';
-
-            const isVpn = await checkVPN();
-            if (isVpn) {
-                if (googleErrorMsg) {
-                    googleErrorMsg.innerText = "Disattivare la VPN per continuare.";
-                    googleErrorMsg.style.display = 'block';
-                }
-                googleBtn.innerHTML = originalHTML;
-                googleBtn.disabled  = false;
-                return;
-            }
-            if (typeof window.auth === 'undefined') {
-                if (googleErrorMsg) {
-                    googleErrorMsg.innerText = "Servizio di autenticazione offline.";
-                    googleErrorMsg.style.display = 'block';
-                }
-                googleBtn.innerHTML = originalHTML;
-                googleBtn.disabled  = false;
-                return;
-            }
-
-            const provider = new firebase.auth.GoogleAuthProvider();
-            const targetDomain = selectedRole === 'studente' ? 'studenti.itisavogadro.it' : 'itisavogadro.it';
-            provider.setCustomParameters({ hd: targetDomain });
-
-            window.auth.signInWithPopup(provider)
-                .then(async result => {
-                    const email = result.user.email.toLowerCase();
-                    
-                    if (email.endsWith("@" + targetDomain)) {
-                        const profileName = await window.HarzafiSession.profileName(result.user, selectedRole);
-                        await inviaEmail(email, 2, {
-                            nome_utente:    profileName,
-                            email_utente:   email,
-                            orario_accesso: new Date().toLocaleString('it-IT')
-                        });
-                        
-                        googleBtn.innerHTML = originalHTML;
-                        googleBtn.disabled  = false;
-                        entraNelPortale(profileName);
-                    } else {
-                        window.auth.signOut().then(() => {
-                            if (googleErrorMsg) {
-                                googleErrorMsg.innerText = `Accesso negato. Usa l'email corretta per il tuo ruolo (@${targetDomain}).`;
-                                googleErrorMsg.style.display = 'block';
-                            }
-                            googleBtn.innerHTML = originalHTML;
-                            googleBtn.disabled  = false;
-                        });
-                    }
-                })
-                .catch(() => {
-                    if (googleErrorMsg) {
-                        googleErrorMsg.innerText = "Accesso annullato. Riprova.";
-                        googleErrorMsg.style.display = 'block';
-                    }
-                    googleBtn.innerHTML = originalHTML;
-                    googleBtn.disabled  = false;
-                });
         });
     }
 

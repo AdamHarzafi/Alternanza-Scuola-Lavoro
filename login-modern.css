@@ -839,39 +839,21 @@ body.auth-page {
     color: #6e6e73 !important;
 }
 
-.harzafi-id-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    margin: 11px 0 0;
-    padding: 3px 0;
-    color: #0071e3;
-    font: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    border: 0;
-    background: transparent;
-}
-
-.harzafi-id-link:hover {
-    text-decoration: underline;
-}
-
 #login-page-wrapper .login-privacy {
     display: grid !important;
-    grid-template-columns: 46px 1fr;
-    gap: 13px;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    justify-items: center;
     margin: 25px 0 0 !important;
     color: #1d1d1f !important;
     font-size: 12px !important;
     line-height: 1.42 !important;
-    text-align: left !important;
+    text-align: center !important;
 }
 
 .privacy-people {
     width: 44px;
-    height: 34px;
+    height: 36px;
 }
 
 #login-page-wrapper .privacy-people svg {
@@ -890,26 +872,37 @@ body.auth-page {
 
 .login-actions {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
     margin-top: 24px;
 }
 
 #login-page-wrapper .login-actions .btn-gradient,
 #login-page-wrapper .login-actions .btn-social {
-    min-height: 48px !important;
+    height: 50px !important;
+    min-height: 50px !important;
     margin: 0 !important;
 }
 
-#login-page-wrapper .login-actions .btn-social {
-    color: #1d1d1f !important;
-    border-color: #d2d2d7 !important;
-    background: #ffffff !important;
+#login-page-wrapper .login-actions #btn-harzafi-id {
+    height: 50px !important;
+    min-height: 50px !important;
+    color: #111827 !important;
+    font-family: "Inter", sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    border-color: #dce1e7 !important;
+    background: #f8f7f5 url("IMMAGINI/SFONDO-HARZAFI-ID.png") center / 100% 100% no-repeat !important;
+    box-shadow: 0 6px 15px rgba(38, 64, 91, .14), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
 }
 
-#login-page-wrapper .login-actions .btn-social:hover:not(:disabled) {
-    border-color: #86868b !important;
-    background: #f5f5f7 !important;
+#login-page-wrapper .login-actions #btn-harzafi-id:hover:not(:disabled) {
+    border-color: #a9c8e4 !important;
+    box-shadow: 0 9px 22px rgba(56, 65, 95, .2), inset 0 1px 0 #ffffff !important;
+}
+
+#login-page-wrapper .login-actions #btn-harzafi-id:active:not(:disabled) {
+    box-shadow: inset 0 2px 5px rgba(56, 65, 95, .12), 0 2px 6px rgba(56, 65, 95, .08) !important;
 }
 
 .selected-account {
@@ -956,11 +949,6 @@ body.auth-page {
 }
 
 @media (max-width: 410px) {
-    .login-actions {
-        grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr);
-        gap: 8px;
-    }
-
     #login-page-wrapper .login-actions .btn-gradient,
     #login-page-wrapper .login-actions .btn-social {
         padding-inline: 9px !important;
@@ -1103,33 +1091,146 @@ body.auth-page {
     object-fit: contain;
 }
 
-#login-page-wrapper #custom-google-btn {
+#login-page-wrapper #btn-harzafi-id {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 9px !important;
-    overflow: hidden;
+    gap: 14px !important;
+    padding-inline: 24px;
     white-space: nowrap;
 }
 
-#login-page-wrapper #custom-google-btn img {
+#login-page-wrapper #btn-harzafi-id img {
     position: static !important;
     inset: auto !important;
     display: block !important;
-    flex: 0 0 21px;
-    width: 21px !important;
-    height: 21px !important;
+    flex: 0 0 80px;
+    width: 80px !important;
+    height: auto !important;
     margin: 0 !important;
     transform: none !important;
     object-fit: contain;
 }
 
-#login-page-wrapper #custom-google-btn > span {
+#login-page-wrapper #btn-harzafi-id .harzafi-id-label {
     position: static;
     display: block;
     min-width: 0;
-    line-height: 1.15;
+    color: inherit;
+    font: inherit;
+    line-height: 1.3;
+}
+
+#login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+    flex: 0 0 1px;
+    width: 1px;
+    height: 30px;
+    background: #c8cbd2;
+}
+
+#login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+    display: block;
+    flex: 0 0 18px;
+    width: 18px;
+    height: 24px;
+    color: #777e8f;
+}
+
+@media (min-width: 601px) {
+    .login-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: center;
+    }
+
+    #login-page-wrapper .login-actions #login-continue {
+        height: 50px !important;
+        min-height: 50px !important;
+        padding-block: 0;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        height: 50px !important;
+        min-height: 50px !important;
+        padding-inline: 8px !important;
+        gap: 5px !important;
+        font-size: 13px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex-basis: 48px;
+        width: 48px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+        height: 22px;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+        flex-basis: 12px;
+        width: 12px;
+        height: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    #login-page-wrapper .login-panel:not(.is-password-step) #login-view,
+    #login-page-wrapper .login-panel:not(.is-password-step) #login-form,
+    #login-page-wrapper #login-email-step {
+        height: auto;
+        min-height: 340px;
+        flex-basis: auto;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        height: 50px !important;
+        min-height: 50px !important;
+        padding-inline: 12px !important;
+        gap: 8px !important;
+        font-size: 14px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex-basis: 60px;
+        width: 60px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+        height: 26px;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+        flex-basis: 16px;
+        width: 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        gap: 7px !important;
+        font-size: 13px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex-basis: 52px;
+        width: 52px !important;
+    }
+}
+
+@media (forced-colors: active) {
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        background: ButtonFace !important;
+        color: ButtonText !important;
+        border-color: ButtonText !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+        background: ButtonText;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+        color: ButtonText;
+    }
 }
 
 .login-end-brand {
@@ -1163,18 +1264,6 @@ body.auth-page {
 
     .auth-page .login-site-footer {
         border-radius: 38px 38px 0 0;
-    }
-}
-
-@media (max-width: 410px) {
-    #login-page-wrapper #custom-google-btn {
-        gap: 6px !important;
-    }
-
-    #login-page-wrapper #custom-google-btn img {
-        flex-basis: 18px;
-        width: 18px !important;
-        height: 18px !important;
     }
 }
 
