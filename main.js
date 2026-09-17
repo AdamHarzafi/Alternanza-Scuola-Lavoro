@@ -125,15 +125,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const setupCarouselPlayer = window.setupHarzafiCarousel;
     setupCarouselPlayer({
         trackId: 'apple-features-track',
-        itemSelector: '.apple-feat-card',
+        itemSelector: '.feature-card',
         playerId: 'features-carousel-player',
-        edgeContainerId: 'apple-features-carousel'
+        onlyWhenOverflow: true,
+        pauseOnFocus: true,
+        skipRepeatedPositions: true
     });
     setupCarouselPlayer({
         trackId: 'apple-cards-carousel',
         itemSelector: '.apple-card',
         playerId: 'support-carousel-player',
-        edgeContainerId: 'apple-cards-carousel-shell'
+        onlyWhenOverflow: true,
+        pauseOnFocus: true
     });
 
     function trapFocus(modal) {

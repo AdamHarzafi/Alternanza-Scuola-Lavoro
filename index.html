@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" class="home-document">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -33,7 +33,10 @@
 
     <link rel="stylesheet" href="style.css?v=20260831-donazioni-clean">
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
+    <link rel="stylesheet" href="home-cards.css?v=20260917-shared-motion">
     <script defer src="site-motion.js?v=20260906"></script>
+    <link rel="stylesheet" href="carousel-motion.css?v=20260917-shared">
+    <script defer src="carousel-motion.js?v=20260917-shared"></script>
 </head>
 <body class="home-page">
 
@@ -44,7 +47,6 @@
             </button>
             <div class="nav-links">
                 <a href="#features">Funzionalità</a>
-                <a href="#collaborazioni">Collaborazioni</a>
                 <a href="supporto.html">Supporto</a>
                 <a href="#footer">Contatti</a>
             </div>
@@ -54,10 +56,10 @@
         <header class="hero-wrapper">
             <div class="hero-mesh" aria-hidden="true"></div>
             <div class="hero-shell">
-                <div class="hero-stage reveal" style="transition-delay: 0.06s;">
+                <div class="hero-stage">
                     <picture class="hero-cover">
                         <source media="(max-width: 1024px)" srcset="IMMAGINI/HOMEPAGE-MOBILI.png">
-                        <img class="hero-cover-image" src="IMMAGINI/HOMEPAGE-PC.png" alt="">
+                        <img class="hero-cover-image" src="IMMAGINI/HOMEPAGE-PC.png" alt="" fetchpriority="high" decoding="async">
                     </picture>
                 </div>
 
@@ -74,34 +76,10 @@
             </div>
         </header>
 
-        <section id="collaborazioni" class="partners reveal">
-            <h2 class="partners-title">In collaborazione con</h2>
-            <div class="partners-inner">
-                <a href="https://www.miur.gov.it/" target="_blank" rel="noopener noreferrer">
-                    <img src="IMMAGINI/LOGO-MIM.png" loading="eager" fetchpriority="low" decoding="async" alt="MIM">
-                </a>
-                <a href="https://www.its-ictpiemonte.it/" target="_blank" rel="noopener noreferrer">
-                    <img src="IMMAGINI/ITS-ACADEMY.png" loading="eager" fetchpriority="low" decoding="async" alt="ITS Academy" style="height: 50px;">
-                </a>
-                <a href="https://www.netacad.com/" target="_blank" rel="noopener noreferrer">
-                    <img src="IMMAGINI/CISCO-LOGO.png" loading="eager" fetchpriority="low" decoding="async" alt="Cisco">
-                </a>
-                <a href="https://www.unito.it/" target="_blank" rel="noopener noreferrer">
-                    <img src="IMMAGINI/UNITO-LOGO.png" loading="eager" fetchpriority="low" decoding="async" alt="UniTo">
-                </a>
-                <a href="https://www.hackersgen.com/" target="_blank" rel="noopener noreferrer">
-                    <img src="IMMAGINI/HACKERSEN-LOGO.png" loading="eager" fetchpriority="low" decoding="async" alt="HackersGen">
-                </a>
-                <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
-                    <img src="IMMAGINI/GITHUB-LOGO.png" loading="eager" fetchpriority="low" decoding="async" alt="GitHub" style="height: 35px;">
-                </a>
-            </div>
-        </section>
-
         <!-- Sezione Funzionalità FSL in stile Harzafi -->
         <section id="features" class="apple-features-section">
             <div class="apple-features-container">
-                <div class="apple-features-header reveal">
+                <div class="apple-features-header">
                     <h2 class="apple-features-title">
                         <span class="apple-title-main">Tutto ciò che ti serve.</span>
                         <span class="apple-title-sub">In un unico posto.</span>
@@ -111,63 +89,52 @@
                 <div class="apple-features-carousel" id="apple-features-carousel">
                     <div class="apple-features-grid" id="apple-features-track" tabindex="0" role="region" aria-label="Funzionalità Harzafi">
                     <!-- Riquadro 1: Monitoraggio in Tempo Reale -->
-                    <div class="apple-feat-card monitor-card reveal">
-                        <div class="apple-feat-content">
-                            <span class="apple-feat-tag">IL TUO PERCORSO</span>
-                            <h3 class="apple-feat-h3">Le tue ore. Sempre sotto controllo.</h3>
-                            <p class="apple-feat-p">Segui i progressi FSL in tempo reale, con dati chiari e immediati.</p>
+                    <article class="apple-card feature-card feature-card--progress">
+                        <div class="apple-card-top">
+                            <span class="apple-card-eyebrow">IL TUO PERCORSO</span>
+                            <h3 class="apple-card-heading">Le tue ore. Sempre sotto controllo.</h3>
+                            <p class="apple-card-desc">Segui i progressi FSL in tempo reale, con dati chiari e immediati.</p>
                         </div>
-                        <div class="apple-feat-visual monitor-visual">
-                            <div class="apple-mini-chart">
-                                <div class="chart-progress-bar">
-                                    <div class="chart-progress-fill" style="width: 78%;"></div>
-                                </div>
-                                <div class="chart-metrics-row">
-                                    <div class="chart-metric">
-                                        <span class="metric-num">117 / 150</span>
-                                        <span class="metric-lbl">Ore Validate</span>
-                                    </div>
-                                    <div class="chart-badge">78% Completato</div>
-                                </div>
-                            </div>
+                        <div class="apple-card-media feature-card-media">
+                            <img src="IMMAGINI/GRAFICO-ORARIO.png" alt="Grafico ad anelli del percorso FSL" width="2160" height="2160" loading="lazy" decoding="async">
                         </div>
-                    </div>
+                    </article>
 
                     <!-- Riquadro 2: Archivio Sicurezza -->
-                    <div class="apple-feat-card safety-card reveal">
-                        <div class="apple-feat-content">
-                            <span class="apple-feat-tag">PRIVACY</span>
-                            <h3 class="apple-feat-h3">Tutto al sicuro. Tutto con te.</h3>
-                            <p class="apple-feat-p">Attestati e certificazioni sempre ordinati e disponibili quando servono.</p>
+                    <article class="apple-card feature-card feature-card--privacy">
+                        <div class="apple-card-top">
+                            <span class="apple-card-eyebrow">PRIVACY</span>
+                            <h3 class="apple-card-heading">Tutto al sicuro. Tutto con te.</h3>
+                            <p class="apple-card-desc">Attestati e certificazioni sempre ordinati e disponibili quando servono.</p>
                         </div>
-                        <div class="apple-feat-visual icon-badge-visual">
-                            <img src="IMMAGINI/LOGO-HARZAFI-PRIVACY-BOX.png" alt="Logo Harzafi Privacy" class="privacy-logo-visual" loading="eager" fetchpriority="low" decoding="async">
+                        <div class="apple-card-media feature-card-media">
+                            <img src="IMMAGINI/LOGO-HARZAFI-PRIVACY-BOX.png" alt="Logo Harzafi Privacy" loading="lazy" decoding="async">
                         </div>
-                    </div>
+                    </article>
 
                     <!-- Riquadro 3: Storico Incontri -->
-                    <div class="apple-feat-card events-card reveal">
-                        <div class="apple-feat-content">
-                            <span class="apple-feat-tag">ATTIVITÀ</span>
-                            <h3 class="apple-feat-h3">Ogni esperienza, in un unico posto.</h3>
-                            <p class="apple-feat-p">Ritrova incontri, seminari e attività svolte con scuole, università e aziende.</p>
+                    <article class="apple-card feature-card feature-card--events">
+                        <div class="apple-card-top">
+                            <span class="apple-card-eyebrow">ATTIVITÀ</span>
+                            <h3 class="apple-card-heading">Ogni esperienza, in un unico posto.</h3>
+                            <p class="apple-card-desc">Ritrova incontri, seminari e attività svolte con scuole, università e aziende.</p>
                         </div>
-                        <div class="apple-feat-visual icon-badge-visual">
-                            <img src="IMMAGINI/Scuola SVG.svg" alt="Scuola" class="school-visual-image" loading="eager" fetchpriority="low" decoding="async">
+                        <div class="apple-card-media feature-card-media">
+                            <img src="IMMAGINI/Scuola SVG.svg" alt="Scuola" loading="lazy" decoding="async">
                         </div>
-                    </div>
+                    </article>
 
                     <!-- Riquadro 4: Harzafi ID -->
-                    <div class="apple-feat-card id-card reveal">
-                        <div class="apple-feat-content">
-                            <span class="apple-feat-tag accent">HARZAFI ID</span>
-                            <h3 class="apple-feat-h3">Un tocco. E sei dentro.</h3>
-                            <p class="apple-feat-p">Avvicina la Harzafi Card al tuo smartphone per accedere e registrare le attività in un istante.</p>
+                    <article class="apple-card feature-card feature-card--id">
+                        <div class="apple-card-top">
+                            <span class="apple-card-eyebrow">HARZAFI ID</span>
+                            <h3 class="apple-card-heading">Un tocco. E sei dentro.</h3>
+                            <p class="apple-card-desc">Avvicina la Harzafi Card al tuo smartphone per accedere e registrare le attività in un istante.</p>
                         </div>
-                        <div class="apple-feat-visual nfc-visual">
-                            <img src="IMMAGINI/HARZAFI-CARD-BOX.png" alt="Harzafi Card" class="harzafi-card-image" loading="eager" fetchpriority="low" decoding="async">
+                        <div class="apple-card-media feature-card-media">
+                            <img src="IMMAGINI/HARZAFI-CARD-BOX.png" alt="Harzafi Card" loading="lazy" decoding="async">
                         </div>
-                    </div>
+                    </article>
                 </div>
                 </div>
                 <div class="carousel-player" id="features-carousel-player" style="--carousel-duration: 6500ms;" aria-label="Riproduzione automatica delle funzionalità">
@@ -188,7 +155,7 @@
         <!-- Sezione Serve Aiuto -->
         <section id="support" class="apple-showcase-section">
             <div class="apple-showcase-container">
-                <div class="apple-showcase-header reveal">
+                <div class="apple-showcase-header">
                     <h2 class="apple-showcase-title">
                         <span class="apple-title-main">Serve aiuto?</span>
                         <span class="apple-title-sub">Lo trovi qui, come e quando vuoi.</span>
@@ -198,30 +165,30 @@
                 <div class="apple-cards-carousel-shell" id="apple-cards-carousel-shell">
                     <div class="apple-cards-carousel" id="apple-cards-carousel" tabindex="0" role="region" aria-label="Riquadri di supporto Harzafi e servizi">
                 <!-- Riquadro 1: Specialist Harzafi con immagine ottimizzata -->
-                    <div class="apple-card specialist-card reveal" id="apple-card-specialist">
+                    <div class="apple-card specialist-card" id="apple-card-specialist">
                         <div class="apple-card-top">
                             <span class="apple-card-eyebrow">SPECIALIST HARZAFI</span>
                             <h3 class="apple-card-heading">Ottieni l'aiuto di cui hai bisogno.</h3>
                         </div>
                         <div class="apple-card-media specialist-media">
-                            <img src="IMMAGINI/SUPPORTO-PERSONA-BOX.png" alt="Specialist Harzafi" class="apple-person-photo" loading="eager" fetchpriority="low" decoding="async">
+                            <img src="IMMAGINI/SUPPORTO-PERSONA-BOX.png" alt="Specialist Harzafi" class="apple-person-photo" loading="lazy" decoding="async">
                         </div>
                     </div>
 
                     <!-- Riquadro 2: guida rapida Harzafi -->
-                    <div class="apple-card photo-card reveal" id="apple-card-intelligence">
+                    <div class="apple-card photo-card" id="apple-card-intelligence">
                         <div class="apple-card-top">
                             <span class="apple-card-eyebrow">GUIDA RAPIDA</span>
                             <h3 class="apple-card-heading">Impara a usare Harzafi in pochi minuti.</h3>
                             <p class="apple-card-desc">Scopri come accedere, controllare le ore FSL, consultare le attività e usare Harzafi ID.</p>
                         </div>
                         <div class="apple-card-media photo-media guide-photo-media">
-                            <img src="IMMAGINI/PC-HARZAFI-BOX.png" alt="Computer con il portale Harzafi" class="harzafi-guide-photo" loading="eager" fetchpriority="low" decoding="async">
+                            <img src="IMMAGINI/PC-HARZAFI-BOX.png" alt="Computer con il portale Harzafi" class="harzafi-guide-photo" loading="lazy" decoding="async">
                         </div>
                     </div>
 
                     <!-- Riquadro 3: configurazione accesso Harzafi -->
-                    <div class="apple-card setup-card reveal" id="apple-card-setup">
+                    <div class="apple-card setup-card" id="apple-card-setup">
                         <div class="apple-card-top">
                             <span class="apple-card-eyebrow">PRIMO ACCESSO</span>
                             <h3 class="apple-card-heading">Configura il tuo accesso a Harzafi.</h3>
@@ -300,7 +267,7 @@
 
         <section class="support-effort-section" aria-labelledby="support-effort-title">
             <div class="support-effort-box reveal">
-                <img class="support-effort-backdrop" src="IMMAGINI/DONAZIONI.png" loading="eager" fetchpriority="low" decoding="async" alt="">
+                <img class="support-effort-backdrop" src="IMMAGINI/DONAZIONI.png" loading="lazy" decoding="async" alt="">
                 <div class="support-effort-content">
                     <h2 id="support-effort-title">
                         <span class="support-effort-title-line">Le tue donazioni</span>
@@ -328,7 +295,7 @@
                 <div class="harzafi-footer-main">
                     <div class="harzafi-footer-brand">
                         <a href="index.html" aria-label="Harzafi FSL — Home">
-                            <img src="IMMAGINI/LOGO-HARZAFI.png" loading="eager" fetchpriority="low" decoding="async" alt="Harzafi">
+                            <img src="IMMAGINI/LOGO-HARZAFI.png" loading="lazy" decoding="async" alt="Harzafi">
                         </a>
                         <h2>Un registro più semplice. <span>Creato con cura.</span></h2>
                     </div>
@@ -372,8 +339,8 @@
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-check-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/10.8.1/firebase-functions-compat.js"></script>
 
-    <script defer src="carousel-player.js?v=20260905"></script>
+    <script defer src="carousel-player.js?v=20260917-shared-motion"></script>
     <script defer src="auth-session.js?v=20260909"></script>
-    <script defer src="main.js?v=20260905-shared-carousel"></script>
+    <script defer src="main.js?v=20260917-shared-motion"></script>
 </body>
 </html>
