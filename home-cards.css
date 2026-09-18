@@ -177,3 +177,19 @@
         transition: none;
     }
 }
+
+/* Il computer occupa tutta la larghezza disponibile, senza tagliare il dispositivo. */
+.home-page .guide-photo-media {
+    padding: 0;
+    flex: 1;
+    min-height: 0;
+    align-items: center;
+}
+
+.home-page .harzafi-guide-photo {
+    width: 116%;
+    max-width: none;
+    height: auto;
+    flex: 0 0 116%;
+    object-fit: contain;
+}
