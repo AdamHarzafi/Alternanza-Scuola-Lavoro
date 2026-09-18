@@ -1,0 +1,113 @@
+.support-document { width: 100%; overflow-x: clip; }
+.support-page .support-main { background: #fff; }
+/* Stesse proporzioni e stessa apertura a tutta altezza di Il tuo account. */
+.support-page .support-hero {
+    width: 100%; min-height: 100vh; min-height: 100svh;
+    padding: 90px 24px 48px; margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+}
+.support-page .support-hero-logo {
+    display: block; width: clamp(132px, 13vw, 180px); height: auto; max-height: none;
+    margin: 0 auto 28px; filter: none;
+}
+.support-page .support-hero h1 {
+    margin: 0 auto; font-size: clamp(2.8rem, 6.3vw, 6.4rem);
+    font-weight: 600; line-height: 1.05; letter-spacing: -.065em; text-align: center;
+}
+.support-page .support-hero h1 strong { display: block; font-weight: 650; color: #1d1d1f; }
+.support-page .support-hero h1 span { display: block; margin: 0; color: #86868b; }
+.support-intro {
+    width: min(1280px, calc(100% - 96px)); margin: 0 auto;
+    padding: 46px 0 clamp(100px, 10vw, 150px); text-align: center;
+}
+.support-intro-logo { display: block; width: 200px; max-width: 100%; height: auto; margin: 0 auto 30px; object-fit: contain; }
+.support-intro h2 { font-size: clamp(2rem, 4vw, 3.7rem); font-weight: 600; line-height: 1.08; letter-spacing: -.048em; }
+.support-intro p { max-width: 740px; margin: 25px auto 0; font-size: clamp(1.125rem, 1.6vw, 1.4rem); line-height: 1.55; color: #6e6e73; text-wrap: pretty; }
+.support-page .support-experience { width: min(1280px, calc(100% - 96px)); padding-top: clamp(64px, 7vw, 100px); }
+.support-page .support-section-heading { padding: 0; margin-bottom: 42px; }
+.support-page .support-section-heading > span { font-size: .875rem; font-weight: 600; line-height: 1.5; letter-spacing: .04em; text-transform: none; margin-bottom: 15px; }
+.support-page .support-section-heading h2 { font-size: clamp(2.35rem, 4.3vw, 4rem); font-weight: 600; line-height: 1.06; letter-spacing: -.05em; }
+.support-page .support-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.support-page .support-card {
+    display: flex; flex-direction: column; min-height: 610px; padding: 0;
+    border: 1px solid #e8e8ed; border-radius: 30px; background: #fff; box-shadow: none;
+}
+.support-page .support-card::after { content: none; }
+.support-page .support-card-visual {
+    position: relative; inset: auto; width: 100%; height: auto; aspect-ratio: 3 / 2;
+    display: grid; place-items: center; overflow: hidden; flex-shrink: 0;
+}
+.support-page .support-card-visual img {
+    width: 100%; height: 100%; min-height: 0; max-width: 100%;
+    object-fit: contain; filter: none; transform: none;
+}
+.support-page .support-card-copy,
+.support-page .support-card--email .support-card-copy {
+    display: flex; flex-direction: column; flex: 1; max-width: none; padding: 28px 38px 34px;
+}
+.support-page .support-card-label {
+    align-self: flex-start; min-height: 0; margin: 0 0 12px; padding: 0;
+    border: 0; border-radius: 0; background: none; color: #6e6e73;
+    font-size: .75rem; line-height: 1.5; letter-spacing: .04em;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+.support-page .support-card-copy h3 {
+    max-width: none; margin: 0 0 16px; color: #1d1d1f;
+    font-size: clamp(1.65rem, 2.2vw, 2rem); font-weight: 600; line-height: 1.12; letter-spacing: -.035em;
+}
+.support-page .support-card-copy h3 span { color: #0071e3; }
+.support-page .support-card-copy p { max-width: none; margin: 0 0 20px; color: #515158; font-size: 1rem; font-weight: 400; line-height: 1.5; }
+.support-page .support-card-link {
+    margin: auto 0 0; padding: 8px 0; min-height: 44px; border-radius: 0;
+    background: transparent; box-shadow: none; color: #0066cc;
+    font-size: .875rem; font-weight: 500; line-height: 1.5;
+}
+.support-page .support-card--guide { min-height: 0; padding: 38px; margin-top: 40px; }
+.support-page .support-card--guide .support-card-copy { padding: 0; }
+.support-page .support-card--guide .support-card-copy h3 { font-size: clamp(1.65rem, 2.2vw, 2rem); }
+.support-details-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    padding: 28px 0;
+    margin: 28px 0 0;
+    border-top: 1px solid #e9e9ed;
+    list-style: none;
+}
+.support-details-list li { display: flex; gap: 14px; align-items: flex-start; }
+.support-detail-number { color: #0071e3; font-size: .8rem; font-weight: 700; line-height: 1.8; }
+.support-details-list h4 { margin: 0 0 8px; font-size: 1rem; letter-spacing: -.02em; }
+.support-details-list p { margin: 0; color: #616167; font-size: .92rem; line-height: 1.5; }
+.support-details-note { margin: 0; color: #6e6e73; font-size: .85rem; line-height: 1.5; }
+
+@media (hover: hover) and (pointer: fine) {
+    .support-page .support-card:hover { transform: none; box-shadow: none; }
+    .support-page .support-card:hover .support-card-visual img { transform: none; }
+    .support-page .support-card-link:hover { background: none; box-shadow: none; transform: none; text-decoration: underline; text-underline-offset: .22em; }
+}
+@media (max-width: 760px) {
+    .support-page .support-hero { padding: 88px 20px 48px; }
+    .support-page .support-hero h1 { font-size: clamp(2.4rem, 8.5vw, 4rem); letter-spacing: -.055em; }
+    .support-intro, .support-page .support-experience { width: calc(100% - 48px); }
+    .support-intro { padding-top: 24px; padding-bottom: 80px; }
+    .support-intro-logo { width: 160px; }
+    .support-intro h2 { font-size: clamp(1.9rem, 6.5vw, 2.75rem); }
+    .support-intro p { font-size: 1.125rem; }
+    .support-page .support-section-heading { margin-bottom: 28px; }
+    .support-page .support-bento { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .support-page .support-card { min-height: 540px; border-radius: 26px; }
+    .support-page .support-card-copy,
+    .support-page .support-card--email .support-card-copy { padding: 24px 26px 28px; }
+    .support-page .support-card-copy h3 { font-size: 1.65rem; }
+    .support-page .support-card--guide { min-height: 0; padding: 28px; margin-top: 28px; }
+    .support-page .support-card--guide .support-card-copy { padding: 0; }
+    .support-details-list { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+}
+@media (max-height: 540px) and (orientation: landscape) {
+    .support-page .support-hero { padding-top: 76px; padding-bottom: 28px; }
+    .support-page .support-hero-logo { width: 96px; margin-bottom: 16px; }
+    .support-page .support-hero h1 { font-size: clamp(2rem, 5vw, 3rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .support-page .support-main *, .support-page .support-main *::before, .support-page .support-main *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

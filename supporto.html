@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" class="support-document">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=20260830-mobile-carousel-v3">
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
+    <link rel="stylesheet" href="supporto.css?v=20260918-question-logo-large">
     <script defer src="site-motion.js?v=20260906"></script>
 </head>
 <body class="support-page">
@@ -20,7 +21,6 @@
         </a>
         <div class="nav-links">
             <a href="index.html#features">Funzionalità</a>
-            <a href="index.html#collaborazioni">Collaborazioni</a>
             <a href="supporto.html" aria-current="page">Supporto</a>
             <a href="#footer">Contatti</a>
         </div>
@@ -28,60 +28,66 @@
     </nav>
 
     <main class="support-main">
-        <header class="support-hero reveal active">
-            <img class="support-hero-logo" src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi">
-            <h1><span>Supporto Harzafi</span></h1>
-            <p>
-                <span>Ogni risposta che cerchi, esattamente dove dovrebbe essere.</span>
-                <span>Semplice, veloce, intuitivo.</span>
-            </p>
+        <header class="support-hero">
+            <img class="support-hero-logo" src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi" decoding="async" fetchpriority="high">
+            <h1><strong>Supporto.</strong><span>Qui per aiutarti.</span></h1>
         </header>
 
+        <section class="support-intro" aria-labelledby="support-intro-title">
+            <img class="support-intro-logo" src="IMMAGINI/LOGO-DOMANDA-HARZAFI.png" alt="" width="1024" height="1024" loading="lazy" decoding="async">
+            <h2 id="support-intro-title">Ogni risposta che cerchi.<br>Al posto giusto.</h2>
+            <p>Semplice, veloce, intuitivo. Ritrova l’accesso al tuo account o contattaci: partiamo da quello di cui hai bisogno.</p>
+        </section>
+
         <section class="support-experience" aria-labelledby="support-options-title">
-            <header class="support-section-heading reveal active">
+            <header class="support-section-heading">
                 <span>Hai bisogno di una mano?</span>
                 <h2 id="support-options-title">Partiamo da qui.</h2>
             </header>
 
             <div class="support-bento">
-                <article class="support-card support-card--password reveal active">
-                    <div class="support-card-copy">
+                <article class="support-card support-card--password">
+                    <div class="support-card-visual support-card-visual--identity" aria-hidden="true">
+                        <img src="IMMAGINI/ID-HARZAFI-BOX.png" alt="" loading="lazy" decoding="async">
+                    </div>
+                                    <div class="support-card-copy">
                         <span class="support-card-label">Account</span>
-                        <h3>Rientra nel tuo account.</h3>
+                        <h3><span>Il tuo account.</span><br>Ritrova l’accesso.</h3>
                         <p>Hai dimenticato la password? Apri la schermata di accesso e ricevi il link per impostarne una nuova.</p>
                         <a class="support-card-link" href="login.html">
                             Reimposta la password
                             <span aria-hidden="true">→</span>
                         </a>
                     </div>
-                    <div class="support-card-visual support-card-visual--identity" aria-hidden="true">
-                        <span class="support-visual-orbit"></span>
-                        <img src="IMMAGINI/ID-HARZAFI-BOX.png" alt="" loading="eager" fetchpriority="low" decoding="async">
-                    </div>
-                </article>
+</article>
 
-                <article class="support-card support-card--email reveal active">
-                    <div class="support-card-copy">
+                <article class="support-card support-card--email">
+                    <div class="support-card-visual support-card-visual--person" aria-hidden="true">
+                        <img src="IMMAGINI/SUPPORTO1-BOX.png" alt="" loading="lazy" decoding="async">
+                    </div>
+                                    <div class="support-card-copy">
                         <span class="support-card-label">Supporto diretto</span>
-                        <h3>Parliamone.</h3>
+                        <h3><span>Parliamone.</span><br>Siamo qui per aiutarti.</h3>
                         <p>Raccontaci cosa è successo. Più il messaggio è chiaro, più sarà semplice capire subito come aiutarti.</p>
                         <a class="support-card-link support-card-link--light" href="mailto:harzafi.support@gmail.com">
                             Scrivi all’assistenza
                             <span aria-hidden="true">↗</span>
                         </a>
                     </div>
-                    <div class="support-card-visual support-card-visual--person" aria-hidden="true">
-                        <span class="support-visual-glow"></span>
-                        <img src="IMMAGINI/SUPPORTO1-BOX.png" alt="" loading="eager" fetchpriority="low" decoding="async">
-                    </div>
-                </article>
+</article>
 
-                <article class="support-card support-card--guide reveal active">
+                <article class="support-card support-card--guide">
                     <div class="support-card-copy">
                         <span class="support-card-label">Prima di scriverci</span>
                         <h3>Tre dettagli fanno la differenza.</h3>
-                        <p>Indica la pagina, il dispositivo e cosa stavi provando a fare. Non inviare mai password o codici di accesso.</p>
+                        <p>Per aiutarti meglio, includi queste informazioni nel messaggio.</p>
                     </div>
+                    <ol class="support-details-list">
+                        <li><span class="support-detail-number" aria-hidden="true">01</span><div><h4>La pagina</h4><p>Dove hai incontrato il problema.</p></div></li>
+                        <li><span class="support-detail-number" aria-hidden="true">02</span><div><h4>Il dispositivo</h4><p>Telefono, tablet o computer e browser usato.</p></div></li>
+                        <li><span class="support-detail-number" aria-hidden="true">03</span><div><h4>Cosa succede</h4><p>L’operazione che stavi provando a fare e l’eventuale errore.</p></div></li>
+                    </ol>
+                    <p class="support-details-note">Non inviare mai password o codici di accesso.</p>
                 </article>
             </div>
         </section>
