@@ -59,7 +59,7 @@ Sono pertinenti i problemi nel codice di Harzafi o nella sua integrazione con i 
 - esposizione involontaria di informazioni nelle risorse distribuite;
 - configurazioni dei servizi del progetto che sembrano consentire operazioni non previste.
 
-Il codice del Worker email e le regole Firebase non sono presenti in questo repository. Una segnalazione può riguardarli, ma la verifica richiede accesso autorizzato alle rispettive configurazioni.
+Il codice del Worker email e le regole Firebase pubblicate non sono presenti in questo repository. In `firebase/` è disponibile un frammento di regole per il registro personale, ancora da integrare nella configurazione remota. La verifica del servizio richiede accesso autorizzato alle rispettive configurazioni.
 
 ### Servizi esterni
 

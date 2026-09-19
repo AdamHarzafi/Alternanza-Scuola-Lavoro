@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     document.querySelectorAll('.modal-overlay').forEach(modal => { focusTrapObserver.observe(modal, { attributes: true, attributeFilter:['class'] }); });
 
-    const finalHoursValue = "113.30";
+
     let selectedRole = 'studente'; let selectedUserValue = ""; let selectedUserEmail = ""; 
 
     const submitBtn = document.getElementById('login-submit');
@@ -622,40 +622,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function entraNelPortale(nomeUtente) {
-        if (loginModal) loginModal.classList.remove('active');
-        const formattedName = nomeUtente.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-        const greetingEl = document.getElementById('user-greeting-title');
-        if (greetingEl) greetingEl.innerText = `Buongiorno, ${formattedName}.`;
-        
-        const landing = document.getElementById('landing-view'); 
-        const dash = document.getElementById('app-dashboard');
-        
-        isScrolled = false; 
-        if (navbar) navbar.classList.remove('scrolled'); 
-        if (landing) landing.style.opacity = '0'; 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        setTimeout(() => { 
-            if (landing) landing.style.display = 'none'; 
-            
-            if (dash) {
-                dash.style.display = 'block'; 
-                void dash.offsetWidth; 
-                dash.style.opacity = '1'; 
-            }
-            document.body.style.overflow = ''; 
-            
-            const hourCounter = document.getElementById('hour-counter');
-            if (hourCounter) hourCounter.innerText = finalHoursValue; 
-            setTimeout(() => { document.querySelectorAll('.stat-segment').forEach((el, index) => { setTimeout(() => { el.style.transform = 'scaleX(1)'; }, index * 150); }); }, 100);
-            scaricaECostruisciCronologia(); 
-            
-            setTimeout(() => {
-                const discModal = document.getElementById('disclaimer-ministero-modal');
-                if (discModal) discModal.classList.add('active');
-            }, 800); 
-            
-        }, 500);
+        if (!window.auth?.currentUser) return;
+        sessionStorage.setItem('harzafi_user', nomeUtente || 'Utente');
+        sessionStorage.setItem('harzafi_user_uid', window.auth.currentUser.uid);
+        window.location.assign('dashboard.html');
     }
 
     const btnLogoutDash = document.getElementById('btn-logout-dash');
@@ -699,30 +669,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function scaricaECostruisciCronologia() {
-        const container = document.getElementById('timeline-container');
-        if (!container) return;
-        container.innerHTML = '<div style="text-align:center; padding:20px; font-weight:bold; color:var(--primary);">Sincronizzazione dati in corso...</div>';
 
-        if (typeof window.db !== 'undefined') {
-            window.db.collection("attivita_pcto").orderBy("ordine", "desc").get()
-            .then((querySnapshot) => {
-                container.innerHTML = ''; 
-                if (querySnapshot.empty) { container.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;">Nessuna attività registrata.</div>'; return; }
-
-                querySnapshot.forEach((doc, index) => {
-                    const att = doc.data(); const cssCertElement = att.certificato ? 'ac-cert' : ''; const cssDateElement = att.certificato ? 'special-badge-date' : ''; const bgCertInfo = att.certificato ? 'style="background:#ecfdf5; border-color:#a7f3d0;"' : '';
-                    const itemHTML = `<div class="timeline-item ${cssCertElement} reveal" aria-expanded="false"><div class="tl-header"><div class="tl-content"><span class="tl-date ${cssDateElement}">${att.data}</span><h3>${att.titolo}</h3><p class="tl-meta">${att.meta}</p></div><div class="tl-hours">${att.ore}</div></div><div class="tl-dropdown"><div class="tl-dropdown-inner"><div class="tl-ext-info" ${bgCertInfo}>${att.descrizione || "Dettagli non disponibili."}</div></div></div></div>`;
-                    container.insertAdjacentHTML('beforeend', itemHTML);
-                });
-
-                const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-                const tlObserver = new IntersectionObserver((entries, obs) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); obs.unobserve(entry.target); } }); }, observerOptions);
-                container.querySelectorAll('.reveal').forEach(el => tlObserver.observe(el));
-                container.querySelectorAll('.timeline-item').forEach(currElMap => { currElMap.addEventListener('click', function() { const isOpen = this.getAttribute('aria-expanded') === 'true'; this.setAttribute('aria-expanded', String(!isOpen)); }); });
-            }).catch((error) => { container.innerHTML = '<div style="color:var(--danger); text-align:center; padding:20px;">ERRORE: Impossibile recuperare i dati. Assicurati di essere autenticato e di avere i permessi.</div>'; });
-        } else { container.innerHTML = '<div style="color:var(--warning); text-align:center; padding:20px; font-weight:700;">Dati temporaneamente offline.</div>'; }
-    }
 
 
     let targetCollectionOTP = 'studenti';

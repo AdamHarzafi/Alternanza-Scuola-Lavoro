@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="dashboard.css?v=20260902a">
+    <link rel="stylesheet" href="dashboard.css?v=20260919">
     <script defer src="site-motion.js?v=20260906"></script>
 </head>
 <body class="dashboard-page">
@@ -92,10 +92,10 @@
                     <p class="eyebrow">Registro personale</p>
                     <h2>Le tue esperienze.</h2>
                 </div>
-                <span id="timeline-count">Caricamento…</span>
+                <div class="register-actions"><span id="timeline-count">Caricamento…</span><button class="hours-primary" id="add-hours" type="button" disabled>Aggiungi ore</button></div>
             </header>
 
-            <div class="experience-list" id="timeline-container">
+            <p id="hours-status" role="status" aria-live="polite"></p><button id="retry-hours" type="button" hidden>Riprova</button><div class="experience-list" id="timeline-container">
                 <div class="experience-skeleton"></div>
                 <div class="experience-skeleton"></div>
                 <div class="experience-skeleton"></div>
@@ -107,10 +107,20 @@
                 <p class="eyebrow">Chiarezza prima di tutto</p>
                 <h2>Dati semplici da leggere.<br><span>Fonti sempre riconoscibili.</span></h2>
             </div>
-            <p>I dati mostrati sono aggiornati dal registro Harzafi e hanno valore riepilogativo. Per la validazione ufficiale ai fini scolastici fanno fede i servizi dell’istituto.</p>
+            <p>Le attività sono inserite da te nel tuo registro personale e hanno valore riepilogativo. Per la validazione ufficiale ai fini scolastici fanno fede i servizi dell’istituto.</p>
         </section>
     </main>
 
+    <dialog id="hours-dialog" aria-labelledby="hours-dialog-title">
+      <form id="hours-form"><h2 id="hours-dialog-title">Aggiungi un’esperienza.</h2><p>Le ore saranno salvate nel tuo registro personale.</p>
+      <fieldset id="hours-fields">
+        <label>Titolo<input name="titolo" required maxlength="120" autocomplete="off"></label>
+        <div class="hours-grid"><label>Data<input name="data" type="date" required></label><label>Ore svolte<input name="ore" type="number" min="0.01" max="24" step="0.01" required inputmode="decimal"></label></div>
+        <label>Categoria<select name="categoria"><option value="formazione">Formazione scolastica</option><option value="extra">Esperienza extrascolastica</option><option value="sicurezza">Sicurezza</option><option value="certificazioni">Esperienza con attestazione</option></select></label>
+        <label>Descrizione (facoltativa)<textarea name="descrizione" maxlength="2000" rows="3"></textarea></label>
+      </fieldset><p id="hours-form-status" role="status" aria-live="polite"></p>
+      <div class="hours-dialog-actions"><button id="cancel-hours" type="button">Annulla</button><button class="hours-primary" id="save-hours" type="submit">Salva ore</button></div></form>
+    </dialog>
     <footer class="harzafi-footer">
         <div class="harzafi-footer-inner">
             <div class="harzafi-footer-main">
@@ -149,6 +159,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="auth-session.js?v=20260909"></script>
-    <script src="dashboard.js?v=20260909"></script>
+    <script src="hours-store.js?v=20260919"></script>
+    <script src="dashboard.js?v=20260919"></script>
 </body>
 </html>

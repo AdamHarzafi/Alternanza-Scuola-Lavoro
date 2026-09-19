@@ -14,7 +14,26 @@
     const auth = firebase.auth();
     const list = document.getElementById('timeline-container');
 
+    const store = HarzafiHours.create(db, auth, () => firebase.firestore.FieldValue.serverTimestamp());
+    const status = document.getElementById('hours-status');
+    const addButton = document.getElementById('add-hours');
+    const dialog = document.getElementById('hours-dialog');
+    const form = document.getElementById('hours-form');
+    const formStatus = document.getElementById('hours-form-status');
+    const retry = document.getElementById('retry-hours');
+    let unsubscribe, animation;
+    let busy = false;
     auth.onAuthStateChanged(user => {
+        if (unsubscribe) unsubscribe();
+        unsubscribe = null;
+        dialog.close();
+        retry.hidden = true;
+        nameElement.textContent = 'Utente';
+        addButton.disabled = true;
+        renderExperiences([]);
+        updateRing({ formazione: 0, extra: 0, sicurezza: 0, certificazioni: 0 });
+        document.getElementById('activity-count').textContent = '0';
+        document.getElementById('certificate-count').textContent = '0';
         if (!user) {
             sessionStorage.removeItem('harzafi_user');
             window.location.replace('login.html');
@@ -30,6 +49,11 @@
                 nameElement.textContent = name;
             });
         }
+        if (user.isAnonymous) {
+            status.textContent = 'Questo accesso Harzafi ID è temporaneo. Esci e accedi con email e password per salvare e ritrovare le tue ore anche su altri dispositivi.';
+            return;
+        }
+        addButton.disabled = false;
         loadData();
     });
 
@@ -84,6 +108,7 @@
         return item;
     }
     function animateHours(total) {
+        cancelAnimationFrame(animation);
         const element = document.getElementById('hour-counter');
         if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
             element.textContent = formatHours(total);
@@ -93,10 +118,10 @@
         function frame(now) {
             const progress = Math.min((now - start) / 1100, 1);
             element.textContent = formatHours(total * (1 - Math.pow(1 - progress, 4)));
-            if (progress < 1) requestAnimationFrame(frame);
+            if (progress < 1) animation = requestAnimationFrame(frame);
             else element.textContent = formatHours(total);
         }
-        requestAnimationFrame(frame);
+        animation = requestAnimationFrame(frame);
     }
 
     function updateRing(totals) {
@@ -164,7 +189,8 @@
             const date = document.createElement('span');
             date.className = 'experience-date';
             const dateText = plainText(activity.data) || 'Data non disponibile';
-            date.textContent = dateText;
+            date.textContent = /^\d{4}-\d{2}-\d{2}$/.test(dateText)
+                ? dateText.split('-').reverse().join('/') : dateText;
             const hours = document.createElement('span');
             hours.className = 'experience-hours';
             const hoursText = formatActivityHours(activity.ore);
@@ -194,7 +220,27 @@
             detailEyebrow.textContent = 'Dettagli dell’esperienza';
             const description = document.createElement('p');
             description.textContent = plainText(activity.descrizione) || 'Nessun dettaglio aggiuntivo disponibile.';
-            detailCopy.append(detailEyebrow, description);
+            const remove = document.createElement('button');
+            remove.type = 'button';
+            remove.className = 'hours-remove';
+            remove.tabIndex = -1;
+            remove.textContent = 'Elimina esperienza';
+            remove.addEventListener('click', async () => {
+                if (!window.confirm('Eliminare “' + plainText(activity.titolo) + '” e le relative ore?')) return;
+                const uid = auth.currentUser?.uid;
+                remove.disabled = true;
+                try {
+                    await store.remove(activity.id);
+                    if (auth.currentUser?.uid !== uid) return;
+                    status.textContent = 'Esperienza eliminata da Firebase.';
+                    addButton.focus();
+                } catch (error) {
+                    if (auth.currentUser?.uid !== uid) return;
+                    status.textContent = errorMessage(error);
+                    remove.disabled = false;
+                }
+            });
+            detailCopy.append(detailEyebrow, description, remove);
             const detailMeta = document.createElement('div');
             detailMeta.className = 'experience-detail-meta';
             detailMeta.append(
@@ -208,39 +254,83 @@
             summary.addEventListener('click', () => {
                 const open = item.classList.toggle('open');
                 summary.setAttribute('aria-expanded', String(open));
+                remove.tabIndex = open ? 0 : -1;
             });
             list.appendChild(item);
         });
     }
 
+    function errorMessage(error) {
+        if (error.code === 'permission-denied') return 'Accesso negato: occorre configurare le regole Firebase del registro personale.';
+        if (error.code === 'unavailable') return 'Connessione non disponibile. Riprova quando torni online.';
+        return error.code ? 'Operazione non riuscita. Riprova tra poco.' : error.message;
+    }
     function loadData() {
-        db.collection('attivita_pcto').orderBy('ordine', 'desc').get().then(snapshot => {
-            const activities = [];
+        if (unsubscribe) unsubscribe();
+        const uid = auth.currentUser?.uid;
+        retry.hidden = true;
+        status.textContent = 'Sincronizzazione del tuo registro…';
+        unsubscribe = store.subscribe((activities, fromCache) => {
             const totals = { formazione: 0, extra: 0, sicurezza: 0, certificazioni: 0 };
             let certificateCount = 0;
-            snapshot.forEach(documentSnapshot => {
-                const activity = documentSnapshot.data();
-                activities.push(activity);
+            activities.forEach(activity => {
                 const category = classify(activity);
                 totals[category] += toNumber(activity.ore);
                 if (activity.certificato === true || category === 'certificazioni') certificateCount += 1;
             });
             document.getElementById('activity-count').textContent = activities.length;
             document.getElementById('certificate-count').textContent = certificateCount;
-            document.getElementById('last-update').textContent =
-                new Intl.DateTimeFormat('it-IT', { hour: '2-digit', minute: '2-digit' }).format(new Date());
+            document.getElementById('last-update').textContent = fromCache ? 'Offline' : new Intl.DateTimeFormat('it-IT', { hour: '2-digit', minute: '2-digit' }).format(new Date());
             updateRing(totals);
             renderExperiences(activities);
-        }).catch(error => {
-            console.error(error);
-            list.replaceChildren();
-            const message = document.createElement('p');
-            message.className = 'empty-state error-state';
-            message.textContent = 'Non è stato possibile caricare i dati. Riprova tra poco.';
-            list.appendChild(message);
-            document.getElementById('timeline-count').textContent = 'Errore';
+            status.textContent = fromCache ? 'In attesa di connessione: i dati potrebbero non essere aggiornati.' : 'Registro personale sincronizzato.';
+        }, error => {
+            if (auth.currentUser?.uid !== uid) return;
+            renderExperiences([]);
+            updateRing({ formazione: 0, extra: 0, sicurezza: 0, certificazioni: 0 });
+            document.getElementById('activity-count').textContent = '—';
+            document.getElementById('certificate-count').textContent = '—';
+            document.getElementById('timeline-count').textContent = 'Dati non disponibili';
+            status.textContent = errorMessage(error);
+            retry.hidden = false;
         });
     }
+    retry.addEventListener('click', loadData);
+    addButton.addEventListener('click', () => {
+        form.reset();
+        const today = new Date();
+        form.elements.data.value = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+        formStatus.textContent = '';
+        dialog.showModal();
+        form.elements.titolo.focus();
+    });
+    document.getElementById('cancel-hours').addEventListener('click', () => { if (!busy) dialog.close(); });
+    dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
+    form.addEventListener('submit', async event => {
+        event.preventDefault();
+        if (busy || !form.reportValidity()) return;
+        const uid = auth.currentUser?.uid;
+        busy = true;
+        const values = Object.fromEntries(new FormData(form));
+        document.getElementById('hours-fields').disabled = true;
+        document.getElementById('save-hours').disabled = true;
+        document.getElementById('cancel-hours').disabled = true;
+        formStatus.textContent = 'Salvataggio su Firebase in corso…';
+        try {
+            await store.add(values);
+            if (auth.currentUser?.uid !== uid) return;
+            dialog.close();
+            status.textContent = 'Ore salvate su Firebase.';
+            addButton.focus();
+        } catch (error) {
+            if (auth.currentUser?.uid === uid) formStatus.textContent = errorMessage(error);
+        } finally {
+            busy = false;
+            document.getElementById('hours-fields').disabled = false;
+            document.getElementById('save-hours').disabled = false;
+            document.getElementById('cancel-hours').disabled = false;
+        }
+    });
 
     document.getElementById('btn-logout').addEventListener('click', () => {
         auth.signOut().then(() => {
