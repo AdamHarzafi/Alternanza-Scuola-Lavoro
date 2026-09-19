@@ -7,7 +7,7 @@
         const ore = Number(String(input.ore).replace(',', '.'));
         const data = String(input.data || '');
         if (!titolo || titolo.length > 120) throw new Error('Inserisci un titolo di massimo 120 caratteri.');
-        if (!Number.isFinite(ore) || ore <= 0 || ore > 24 || Math.abs(ore * 100 - Math.round(ore * 100)) > 1e-8) throw new Error('Inserisci una durata tra 0,01 e 24 ore, con massimo due decimali.');
+        if (!Number.isFinite(ore) || ore <= 0 || ore > 10000 || Math.abs(ore * 100 - Math.round(ore * 100)) > 1e-8) throw new Error('Inserisci una durata tra 0,01 e 10.000 ore, con massimo due decimali.');
         if (!/^\d{4}-\d{2}-\d{2}$/.test(data) || !Number.isFinite(Date.parse(data)) || new Date(data).toISOString().slice(0, 10) !== data) throw new Error('Inserisci una data valida.');
         if (!categories.includes(input.categoria)) throw new Error('Scegli una categoria valida.');
         if (descrizione.length > 2000) throw new Error('La descrizione può contenere al massimo 2000 caratteri.');
