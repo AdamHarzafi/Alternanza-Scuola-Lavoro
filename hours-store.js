@@ -1,6 +1,6 @@
 (function (root) {
     'use strict';
-    const categories = ['formazione', 'extra', 'sicurezza', 'certificazioni'];
+    const categories = ['formazione', 'certificazioni'];
     function validate(input) {
         const titolo = String(input.titolo || '').trim();
         const descrizione = String(input.descrizione || '').trim();

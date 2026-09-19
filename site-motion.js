@@ -27,7 +27,7 @@
         const elements = [...root.querySelectorAll(selector)];
         if (root.matches?.(selector)) elements.unshift(root);
         elements.forEach(element => {
-            if (played.has(element) || element.closest('[hidden], [aria-hidden="true"]')) return;
+            if (played.has(element) || element.closest('[hidden], [aria-hidden="true"]') || element.dataset.registerMotion) return;
             // Avoid animating an article and its nested details independently.
             if (element.parentElement?.closest('article, details')) return;
             if (preference.matches) played.add(element);

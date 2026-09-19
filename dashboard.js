@@ -23,11 +23,25 @@
     const retry = document.getElementById('retry-hours');
     let unsubscribe, animation;
     let busy = false;
-    let editing = null;
+    let editing = null, deleting = null;
+    let deleteBusy = false, displayedTotal = 0, lastTotal = null;
+    const cards = new Map();
+    const motion = matchMedia('(prefers-reduced-motion: reduce)');
+    const deleteDialog = document.getElementById('delete-dialog');
+    const calendar = RegisterUI.calendar(form.elements.data, document.getElementById('date-trigger'), document.getElementById('date-picker'));
+    const reveal = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            reveal.unobserve(entry.target);
+            if (!motion.matches) entry.target.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 440, easing: 'cubic-bezier(.2,.7,.2,1)' });
+        });
+    }, { threshold: .06, rootMargin: '0px 0px -16px 0px' }) : null;
     auth.onAuthStateChanged(user => {
         if (unsubscribe) unsubscribe();
         unsubscribe = null;
         dialog.close();
+        deleteDialog.close();
+        document.documentElement.classList.remove('register-modal-open');
         retry.hidden = true;
         nameElement.textContent = 'Utente';
         addButton.disabled = true;
@@ -80,11 +94,10 @@
     }
     function classify(activity) {
         const category = plainText(activity.categoria).toLowerCase();
+        if (category === 'formazione' || category === 'certificazioni') return category;
         const meta = plainText(activity.meta).toLowerCase();
         const title = plainText(activity.titolo).toLowerCase();
         if (activity.certificato === true || category.includes('certifica') || meta.includes('certificazion') || title.includes('certificazion')) return 'certificazioni';
-        if (category.includes('sicurezza') || meta.includes('sicurezza') || title.includes('sicurezza')) return 'sicurezza';
-        if (category.includes('extra') || meta.includes('extra') || meta.includes('universit') || title.includes('extra')) return 'extra';
         return 'formazione';
     }
     function labelFor(category) {
@@ -109,16 +122,21 @@
         return item;
     }
     function animateHours(total) {
+        if (total === lastTotal) return;
+        lastTotal = total;
+        const initial = displayedTotal;
         cancelAnimationFrame(animation);
         const element = document.getElementById('hour-counter');
         if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            displayedTotal = total;
             element.textContent = formatHours(total);
             return;
         }
         const start = performance.now();
         function frame(now) {
-            const progress = Math.min((now - start) / 1100, 1);
-            element.textContent = formatHours(total * (1 - Math.pow(1 - progress, 4)));
+            const progress = Math.min((now - start) / 500, 1);
+            displayedTotal = initial + (total - initial) * (1 - Math.pow(1 - progress, 3));
+            element.textContent = formatHours(displayedTotal);
             if (progress < 1) animation = requestAnimationFrame(frame);
             else element.textContent = formatHours(total);
         }
@@ -126,11 +144,9 @@
     }
 
     function updateRing(totals) {
-        const keys = ['formazione', 'extra', 'sicurezza', 'certificazioni'];
+        const keys = ['formazione', 'certificazioni'];
         const total = keys.reduce((sum, key) => sum + totals[key], 0);
         document.getElementById('val-formazione').textContent = formatHours(totals.formazione) + ' h';
-        document.getElementById('val-extra').textContent = formatHours(totals.extra) + ' h';
-        document.getElementById('val-sicurezza').textContent = formatHours(totals.sicurezza) + ' h';
         document.getElementById('val-certificazioni').textContent = formatHours(totals.certificazioni) + ' h';
         animateHours(total);
 
@@ -142,14 +158,17 @@
         ring.setAttribute('aria-label',
             formatHours(total) + ' ore totali: ' +
             formatHours(totals.formazione) + ' di formazione, ' +
-            formatHours(totals.extra) + ' extrascolastiche, ' +
-            formatHours(totals.sicurezza) + ' di sicurezza e ' +
             formatHours(totals.certificazioni) + ' con certificazione'
         );
     }
 
     function renderExperiences(activities) {
-        list.replaceChildren();
+        const keys = new Set(activities.map(activity => (activity.predefined ? 'default:' : 'personal:') + activity.id));
+        cards.forEach((record, key) => {
+            if (keys.has(key)) return;
+            reveal?.unobserve(record.item); cards.delete(key); record.item.remove();
+        });
+        list.querySelectorAll('.empty-state, .experience-skeleton').forEach(element => element.remove());
         document.getElementById('timeline-count').textContent =
             activities.length + (activities.length === 1 ? ' esperienza' : ' esperienze');
         if (!activities.length) {
@@ -160,16 +179,22 @@
             return;
         }
 
-        activities.forEach((activity, index) => {
+        activities.forEach(activity => {
+            const key = (activity.predefined ? 'default:' : 'personal:') + activity.id;
+            const signature = JSON.stringify(activity);
+            const previous = cards.get(key);
+            if (previous?.signature === signature) return;
+            const wasOpen = previous?.item.classList.contains('open');
             const category = classify(activity);
             const item = document.createElement('article');
             item.className = 'experience-item';
+            item.dataset.registerMotion = 'true';
 
             const summary = document.createElement('button');
             summary.type = 'button';
             summary.className = 'experience-summary';
             summary.setAttribute('aria-expanded', 'false');
-            const detailsId = 'experience-details-' + index;
+            const detailsId = 'experience-details-' + key.replace(':', '-');
             summary.setAttribute('aria-controls', detailsId);
 
             const titleWrap = document.createElement('div');
@@ -226,20 +251,12 @@
             remove.className = 'hours-remove';
             remove.tabIndex = -1;
             remove.textContent = 'Elimina esperienza';
-            remove.addEventListener('click', async () => {
-                if (!window.confirm('Eliminare “' + plainText(activity.titolo) + '” e le relative ore?')) return;
-                const uid = auth.currentUser?.uid;
-                remove.disabled = true;
-                try {
-                    await store.remove(activity.id, activity.predefined);
-                    if (auth.currentUser?.uid !== uid) return;
-                    status.textContent = 'Esperienza eliminata da Firebase.';
-                    addButton.focus();
-                } catch (error) {
-                    if (auth.currentUser?.uid !== uid) return;
-                    status.textContent = errorMessage(error);
-                    remove.disabled = false;
-                }
+            remove.addEventListener('click', () => {
+                deleting = activity;
+                document.getElementById('delete-name').textContent = plainText(activity.titolo);
+                document.getElementById('delete-status').textContent = '';
+                RegisterUI.open(deleteDialog);
+                document.getElementById('cancel-delete').focus();
             });
             const edit = document.createElement('button');
             edit.type = 'button';
@@ -252,13 +269,12 @@
                 form.elements.titolo.value = plainText(activity.titolo);
                 form.elements.descrizione.value = plainText(activity.descrizione);
                 form.elements.ore.value = toNumber(activity.ore);
-                const rawDate = plainText(activity.data);
-                const italian = rawDate.match(/^(\d{2})[/.](\d{2})[/.](\d{4})$/);
-                form.elements.data.value = italian ? italian[3] + '-' + italian[2] + '-' + italian[1] : rawDate;
+                calendar.set(activity.data);
+                calendar.hide();
                 form.elements.categoria.value = classify(activity);
                 document.getElementById('hours-dialog-title').textContent = 'Modifica la tua esperienza.';
                 formStatus.textContent = form.elements.data.value ? '' : 'Seleziona una data per questa esperienza.';
-                dialog.showModal();
+                RegisterUI.open(dialog);
                 form.elements.titolo.focus();
             });
             detailCopy.append(detailEyebrow, description, edit, remove);
@@ -266,19 +282,32 @@
             detailMeta.className = 'experience-detail-meta';
             detailMeta.append(
                 detailStat('Tipologia', labelFor(category)),
-                detailStat('Data', dateText),
+                detailStat('Data', date.textContent),
                 detailStat('Durata', hoursText)
             );
             inner.append(detailCopy, detailMeta);
             details.appendChild(inner);
+            details.inert = true;
             item.append(summary, details);
             summary.addEventListener('click', () => {
                 const open = item.classList.toggle('open');
+                details.inert = !open;
                 summary.setAttribute('aria-expanded', String(open));
                 remove.tabIndex = open ? 0 : -1;
                 edit.tabIndex = open ? 0 : -1;
             });
-            list.appendChild(item);
+            if (wasOpen) {
+                item.classList.add('open'); summary.setAttribute('aria-expanded', 'true');
+                details.inert = false; edit.tabIndex = 0; remove.tabIndex = 0;
+            }
+            cards.set(key, { item, signature });
+            if (previous) { reveal?.unobserve(previous.item); previous.item.replaceWith(item); }
+            else reveal?.observe(item);
+        });
+        activities.forEach((activity, index) => {
+            const key = (activity.predefined ? 'default:' : 'personal:') + activity.id;
+            const item = cards.get(key).item;
+            if (list.children[index] !== item) list.insertBefore(item, list.children[index] || null);
         });
     }
 
@@ -296,7 +325,7 @@
         let failed = false;
         function renderCombined() {
             if (failed || !personalRows || !defaultRows || auth.currentUser?.uid !== uid) return;
-            const activities = [...personalRows, ...defaultRows].sort((a, b) => String(b.data).localeCompare(String(a.data)));
+            const activities = [...personalRows, ...defaultRows].sort(RegisterUI.compare);
             const fromCache = personalCache || defaultCache;
             const totals = { formazione: 0, extra: 0, sicurezza: 0, certificazioni: 0 };
             let certificateCount = 0;
@@ -333,16 +362,22 @@
         document.getElementById('hours-dialog-title').textContent = 'Aggiungi un’esperienza.';
         form.reset();
         const today = new Date();
-        form.elements.data.value = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+        calendar.set(new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10));
+        calendar.hide();
         formStatus.textContent = '';
-        dialog.showModal();
+        RegisterUI.open(dialog);
         form.elements.titolo.focus();
     });
-    document.getElementById('cancel-hours').addEventListener('click', () => { if (!busy) dialog.close(); });
-    dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
+    document.getElementById('cancel-hours').addEventListener('click', () => { if (!busy) RegisterUI.close(dialog); });
+    dialog.addEventListener('cancel', event => { event.preventDefault(); if (!busy) RegisterUI.close(dialog); });
     form.addEventListener('submit', async event => {
         event.preventDefault();
         if (busy || !form.reportValidity()) return;
+        if (!form.elements.data.value) {
+            formStatus.textContent = 'Scegli la data dell’esperienza.';
+            document.getElementById('date-trigger').setAttribute('aria-invalid', 'true');
+            document.getElementById('date-trigger').focus(); return;
+        }
         const uid = auth.currentUser?.uid;
         busy = true;
         const values = Object.fromEntries(new FormData(form));
@@ -354,9 +389,8 @@
             if (editing) await store.edit(editing.id, values, editing.predefined);
             else await store.add(values);
             if (auth.currentUser?.uid !== uid) return;
-            dialog.close();
+            RegisterUI.close(dialog);
             status.textContent = 'Ore salvate su Firebase.';
-            addButton.focus();
         } catch (error) {
             if (auth.currentUser?.uid === uid) formStatus.textContent = errorMessage(error);
         } finally {
@@ -367,6 +401,28 @@
         }
     });
 
+    document.getElementById('cancel-delete').addEventListener('click', () => { if (!deleteBusy) RegisterUI.close(deleteDialog); });
+    deleteDialog.addEventListener('cancel', event => { event.preventDefault(); if (!deleteBusy) RegisterUI.close(deleteDialog); });
+    document.getElementById('confirm-delete').addEventListener('click', async () => {
+        if (deleteBusy || !deleting) return;
+        const uid = auth.currentUser?.uid;
+        deleteBusy = true;
+        document.getElementById('confirm-delete').disabled = true;
+        document.getElementById('cancel-delete').disabled = true;
+        const message = document.getElementById('delete-status');
+        message.textContent = 'Eliminazione in corso…';
+        try {
+            await store.remove(deleting.id, deleting.predefined);
+            if (auth.currentUser?.uid !== uid) return;
+            RegisterUI.close(deleteDialog);
+            status.textContent = 'Esperienza eliminata dal tuo registro.';
+        } catch (error) { if (auth.currentUser?.uid === uid) message.textContent = errorMessage(error); }
+        finally {
+            deleteBusy = false;
+            document.getElementById('confirm-delete').disabled = false;
+            document.getElementById('cancel-delete').disabled = false;
+        }
+    });
     document.getElementById('btn-logout').addEventListener('click', () => {
         auth.signOut().then(() => {
             sessionStorage.removeItem('harzafi_user');
