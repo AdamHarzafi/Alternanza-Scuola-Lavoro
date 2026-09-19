@@ -20,7 +20,44 @@
             return current;
         }
         function collection() { return db.collection('attivita_pcto'); }
+        function overrides(uid) { return db.collection('registri').doc(uid).collection('predefinite'); }
         return {
+            subscribeDefaults(next, error) {
+                const uid = user().uid;
+                let templates, personal;
+                let stopped = false;
+                function publish() {
+                    if (stopped || auth.currentUser?.uid !== uid || !templates || !personal) return;
+                    const changes = new Map(personal.docs.map(doc => [doc.id, doc.data()]));
+                    const rows = templates.docs.flatMap(doc => {
+                        const change = changes.get(doc.id);
+                        if (change?.deleted) return [];
+                        return [{ ...(change || doc.data()), id: doc.id, predefined: true }];
+                    });
+                    next(rows, templates.metadata.fromCache || personal.metadata.fromCache);
+                }
+                const stopTemplates = db.collection('attivita_predefinite').onSnapshot({ includeMetadataChanges: true }, snapshot => {
+                    templates = snapshot; publish();
+                }, error);
+                const stopPersonal = overrides(uid).onSnapshot({ includeMetadataChanges: true }, snapshot => {
+                    if (snapshot.metadata.hasPendingWrites) return;
+                    personal = snapshot; publish();
+                }, error);
+                return () => { stopped = true; stopTemplates(); stopPersonal(); };
+            },
+            edit(id, input, predefined = false) {
+                const uid = user().uid;
+                if (typeof id !== 'string' || !id || id.includes('/')) throw new Error('Attività non valida.');
+                const values = validate(input);
+                if (predefined) return overrides(uid).doc(id).set({ ...values, deleted: false });
+                const ref = collection().doc(id);
+                return db.runTransaction(async transaction => {
+                    const snapshot = await transaction.get(ref);
+                    if (!snapshot.exists) throw new Error('Questa attività è stata eliminata.');
+                    if (snapshot.data().ownerUid !== uid) throw new Error('Questa attività non appartiene al tuo account.');
+                    transaction.update(ref, values);
+                });
+            },
             subscribe(next, error) {
                 const uid = user().uid;
                 return collection().where('ownerUid', '==', uid).onSnapshot({ includeMetadataChanges: true }, snapshot => {
@@ -37,9 +74,10 @@
                 if (typeof navigator !== 'undefined' && navigator.onLine === false) throw new Error('Sei offline. Riconnettiti prima di salvare.');
                 return collection().doc().set({ ...validate(input), ownerUid, createdAt: timestamp() });
             },
-            remove(id) {
+            remove(id, predefined = false) {
                 const uid = user().uid;
                 if (typeof id !== 'string' || !id || id.includes('/')) throw new Error('Attività non valida.');
+                if (predefined) return overrides(uid).doc(id).set({ deleted: true });
                 const ref = collection().doc(id);
                 return db.runTransaction(async transaction => {
                     const snapshot = await transaction.get(ref);

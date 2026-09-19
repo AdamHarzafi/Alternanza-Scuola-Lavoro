@@ -23,6 +23,7 @@
     const retry = document.getElementById('retry-hours');
     let unsubscribe, animation;
     let busy = false;
+    let editing = null;
     auth.onAuthStateChanged(user => {
         if (unsubscribe) unsubscribe();
         unsubscribe = null;
@@ -230,7 +231,7 @@
                 const uid = auth.currentUser?.uid;
                 remove.disabled = true;
                 try {
-                    await store.remove(activity.id);
+                    await store.remove(activity.id, activity.predefined);
                     if (auth.currentUser?.uid !== uid) return;
                     status.textContent = 'Esperienza eliminata da Firebase.';
                     addButton.focus();
@@ -240,7 +241,27 @@
                     remove.disabled = false;
                 }
             });
-            detailCopy.append(detailEyebrow, description, remove);
+            const edit = document.createElement('button');
+            edit.type = 'button';
+            edit.className = 'hours-edit';
+            edit.tabIndex = -1;
+            edit.textContent = 'Modifica esperienza';
+            edit.addEventListener('click', () => {
+                editing = activity;
+                form.reset();
+                form.elements.titolo.value = plainText(activity.titolo);
+                form.elements.descrizione.value = plainText(activity.descrizione);
+                form.elements.ore.value = toNumber(activity.ore);
+                const rawDate = plainText(activity.data);
+                const italian = rawDate.match(/^(\d{2})[/.](\d{2})[/.](\d{4})$/);
+                form.elements.data.value = italian ? italian[3] + '-' + italian[2] + '-' + italian[1] : rawDate;
+                form.elements.categoria.value = classify(activity);
+                document.getElementById('hours-dialog-title').textContent = 'Modifica la tua esperienza.';
+                formStatus.textContent = form.elements.data.value ? '' : 'Seleziona una data per questa esperienza.';
+                dialog.showModal();
+                form.elements.titolo.focus();
+            });
+            detailCopy.append(detailEyebrow, description, edit, remove);
             const detailMeta = document.createElement('div');
             detailMeta.className = 'experience-detail-meta';
             detailMeta.append(
@@ -255,6 +276,7 @@
                 const open = item.classList.toggle('open');
                 summary.setAttribute('aria-expanded', String(open));
                 remove.tabIndex = open ? 0 : -1;
+                edit.tabIndex = open ? 0 : -1;
             });
             list.appendChild(item);
         });
@@ -270,7 +292,12 @@
         const uid = auth.currentUser?.uid;
         retry.hidden = true;
         status.textContent = 'Sincronizzazione del tuo registro…';
-        unsubscribe = store.subscribe((activities, fromCache) => {
+        let personalRows, defaultRows, personalCache = false, defaultCache = false;
+        let failed = false;
+        function renderCombined() {
+            if (failed || !personalRows || !defaultRows || auth.currentUser?.uid !== uid) return;
+            const activities = [...personalRows, ...defaultRows].sort((a, b) => String(b.data).localeCompare(String(a.data)));
+            const fromCache = personalCache || defaultCache;
             const totals = { formazione: 0, extra: 0, sicurezza: 0, certificazioni: 0 };
             let certificateCount = 0;
             activities.forEach(activity => {
@@ -284,7 +311,9 @@
             updateRing(totals);
             renderExperiences(activities);
             status.textContent = fromCache ? 'In attesa di connessione: i dati potrebbero non essere aggiornati.' : 'Registro personale sincronizzato.';
-        }, error => {
+        }
+        function loadError(error) {
+            failed = true;
             if (auth.currentUser?.uid !== uid) return;
             renderExperiences([]);
             updateRing({ formazione: 0, extra: 0, sicurezza: 0, certificazioni: 0 });
@@ -293,10 +322,15 @@
             document.getElementById('timeline-count').textContent = 'Dati non disponibili';
             status.textContent = errorMessage(error);
             retry.hidden = false;
-        });
+        }
+        const stopPersonal = store.subscribe((rows, cached) => { personalRows = rows; personalCache = cached; renderCombined(); }, loadError);
+        const stopDefaults = store.subscribeDefaults((rows, cached) => { defaultRows = rows; defaultCache = cached; renderCombined(); }, loadError);
+        unsubscribe = () => { failed = true; stopPersonal(); stopDefaults(); };
     }
     retry.addEventListener('click', loadData);
     addButton.addEventListener('click', () => {
+        editing = null;
+        document.getElementById('hours-dialog-title').textContent = 'Aggiungi un’esperienza.';
         form.reset();
         const today = new Date();
         form.elements.data.value = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -317,7 +351,8 @@
         document.getElementById('cancel-hours').disabled = true;
         formStatus.textContent = 'Salvataggio su Firebase in corso…';
         try {
-            await store.add(values);
+            if (editing) await store.edit(editing.id, values, editing.predefined);
+            else await store.add(values);
             if (auth.currentUser?.uid !== uid) return;
             dialog.close();
             status.textContent = 'Ore salvate su Firebase.';

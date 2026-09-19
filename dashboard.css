@@ -414,3 +414,5 @@ button:disabled { opacity:.55; cursor:wait; }
 #cancel-hours, #retry-hours { background:var(--soft); color:var(--ink); }
 @media(max-width:700px) { .register-actions { justify-content:flex-start; margin-top:20px; } }
 @media(max-width:400px) { #hours-dialog { padding:22px; } .hours-grid { grid-template-columns:1fr; } }
+
+.hours-edit { border:0; border-radius:12px; padding:13px 18px; min-height:44px; cursor:pointer; font:inherit; font-size:.9rem; background:var(--soft); color:var(--ink); margin:18px 10px 0 0; }
