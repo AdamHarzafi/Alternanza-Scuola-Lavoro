@@ -540,7 +540,7 @@
         }
     </style>
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="login-modern.css?v=20260920-hid-dialog">
+    <link rel="stylesheet" href="login-modern.css?v=20260920-hid-glass">
     <script defer src="site-motion.js?v=20260906"></script>
 </head>
 <body class="auth-page">
@@ -727,14 +727,13 @@
     <!-- Modale Harzafi ID -->
     <div id="hid-modal" class="modal-overlay bottom-sheet" role="dialog" aria-modal="true" aria-label="Accedi con Harzafi ID">
         <div class="modal-content">
-            <div class="hid-modal-header"><span>Harzafi ID</span><button type="button" id="hid-close-btn" class="close-btn" aria-label="Chiudi Harzafi ID">&times;</button></div>
+            <div class="hid-modal-header"><span>Harzafi ID</span><button type="button" id="hid-close-btn" class="close-btn" aria-label="Chiudi Harzafi ID"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
             <div class="bottom-sheet-body">
                 <div id="hid-scan-view">
-                    <div class="hid-symbol"><img src="IMMAGINI/NFC-LOGO.png" decoding="async" alt="NFC"></div>
-                    <h2>Pronto per la scansione.</h2>
-                    <p class="hid-description">Tieni il telefono vicino all’ID Harzafi per effettuare la timbratura.</p>
-                    <a id="hid-open-manual" href="#" class="hid-manual-link">Inserisci il tuo Harzafi ID</a>
-                    <button type="button" id="hid-cancel-btn" class="btn-premium">Annulla</button>
+                    <div class="hid-service"><div class="hid-service-logo"><img src="IMMAGINI/LOGO-HARZAFI.png" alt="Harzafi"></div><p>Accedi al tuo Harzafi Account per <span class="hid-site-address">adamharzafi.github.io/Alternanza-Scuola-Lavoro/</span></p></div>
+                    <div class="hid-scan-card"><img src="IMMAGINI/NFC-LOGO.png" decoding="async" alt=""><div><h2>Pronto per la scansione</h2><p>Avvicina la tua Harzafi Card al dispositivo e mantienila in posizione per consentirne la lettura.</p></div></div>
+                    <div class="hid-scan-action"><button type="button" class="hid-wait-button" disabled aria-label="In attesa della Harzafi Card"><svg class="hid-spinner" viewBox="0 0 32 32" aria-hidden="true"><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M16 3v5"/><path d="M22.5 4.7 20 9" opacity=".92"/><path d="m27.3 9.5-4.3 2.5" opacity=".84"/><path d="M29 16h-5" opacity=".76"/><path d="m27.3 22.5-4.3-2.5" opacity=".68"/><path d="M22.5 27.3 20 23" opacity=".6"/><path d="M16 29v-5" opacity=".52"/><path d="m9.5 27.3 2.5-4.3" opacity=".44"/><path d="m4.7 22.5 4.3-2.5" opacity=".36"/><path d="M3 16h5" opacity=".28"/><path d="m4.7 9.5 4.3 2.5" opacity=".2"/><path d="m9.5 4.7 2.5 4.3" opacity=".12"/></g></svg></button></div>
+                    <a id="hid-open-manual" href="#" class="hid-manual-link">Usa l’HID</a>
                 </div>
                 <div id="hid-manual-view" style="display:none;">
                     <h2>Il tuo Harzafi ID.</h2>
