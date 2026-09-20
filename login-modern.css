@@ -1533,7 +1533,7 @@ body.auth-page {
 #hid-modal .hid-scan-card p { margin: 0; color: #626268; font-size: 13px; line-height: 1.5; }
 #hid-modal .hid-scan-action { display: flex; justify-content: center; margin: 26px 0 8px; }
 #hid-modal .hid-wait-button { display: grid; place-items: center; width: 150px; height: 54px; border: 0; border-radius: 999px; color: #fff; background: #0085f7; opacity: 1; cursor: default; }
-#hid-modal .hid-spinner { width: 26px; height: 26px; animation: hid-spinner .9s steps(12,end) infinite; }
+.auth-page .hid-spinner { width: 26px; height: 26px; animation: hid-spinner .9s steps(12,end) infinite; }
 @keyframes hid-spinner { to { transform: rotate(360deg); } }
 #hid-modal .hid-manual-link { margin: 0; font-size: 16px; }
 #hid-modal #hid-submit-btn { border-radius: 999px; }
@@ -1552,5 +1552,8 @@ body.auth-page {
  #hid-modal .hid-scan-card h2 { font-size: 17px; }
  #hid-modal .hid-scan-card p { font-size: 12px; }
 }
-@media(prefers-reduced-motion:reduce) { #hid-modal, #hid-modal .modal-content { transition: none; } #hid-modal .hid-spinner { animation: none; } }
+@media(prefers-reduced-motion:reduce) { #hid-modal, #hid-modal .modal-content { transition: none; } .auth-page .hid-spinner { animation: none; } }
 @media(prefers-reduced-transparency:reduce) { #hid-modal .modal-content { background: #f0f1f4; backdrop-filter: none; } }
+
+/* Keep the shared access indicator centered without changing button geometry. */
+.auth-page button .hid-spinner { display: inline-block; vertical-align: middle; flex-shrink: 0; }
