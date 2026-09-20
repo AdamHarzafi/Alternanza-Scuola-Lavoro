@@ -540,7 +540,7 @@
         }
     </style>
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="login-modern.css?v=20260914-equal-buttons">
+    <link rel="stylesheet" href="login-modern.css?v=20260920-hid-dialog">
     <script defer src="site-motion.js?v=20260906"></script>
 </head>
 <body class="auth-page">
@@ -725,31 +725,26 @@
     <!-- ── Modali (HID, Recupero Password) ── -->
 
     <!-- Modale Harzafi ID -->
-    <div id="hid-modal" class="modal-overlay bottom-sheet">
+    <div id="hid-modal" class="modal-overlay bottom-sheet" role="dialog" aria-modal="true" aria-label="Accedi con Harzafi ID">
         <div class="modal-content">
-            <button id="hid-close-btn" class="close-btn" aria-label="Chiudi">&times;</button>
+            <div class="hid-modal-header"><span>Harzafi ID</span><button type="button" id="hid-close-btn" class="close-btn" aria-label="Chiudi Harzafi ID">&times;</button></div>
             <div class="bottom-sheet-body">
                 <div id="hid-scan-view">
-                    <h2 style="font-size:1.8rem;margin-bottom:10px;color:var(--text-dark);text-align:center;font-weight:900;">Pronto per la scansione.</h2>
-                    <p style="margin-bottom:35px;font-size:1.05rem;font-weight:500;color:var(--text-gray);text-align:center;">Tieni il telefono vicino all'ID Harzafi per effettuare la timbratura.</p>
-                    <div style="display:flex;justify-content:center;margin-bottom:35px;">
-                        <div style="width:130px;height:130px;border-radius:50%;border:6px solid #3b82f6;display:flex;justify-content:center;align-items:center;background:rgba(59,130,246,0.05);box-shadow:0 10px 25px rgba(59,130,246,0.15);">
-                            <img src="IMMAGINI/NFC-LOGO.png" loading="lazy" decoding="async" alt="NFC" style="width:130px;">
-                        </div>
-                    </div>
-                    <a id="hid-open-manual" href="#" style="color:var(--primary);font-weight:800;text-decoration:none;display:block;margin-bottom:25px;text-align:center;transition:opacity 0.2s;">Non funziona? Inserisci L'HID</a>
-                    <button id="hid-cancel-btn" class="btn-premium" style="width:100%;background:#f1f5f9;color:var(--text-dark);">Annulla</button>
+                    <div class="hid-symbol"><img src="IMMAGINI/NFC-LOGO.png" decoding="async" alt="NFC"></div>
+                    <h2>Pronto per la scansione.</h2>
+                    <p class="hid-description">Tieni il telefono vicino all’ID Harzafi per effettuare la timbratura.</p>
+                    <a id="hid-open-manual" href="#" class="hid-manual-link">Inserisci il tuo Harzafi ID</a>
+                    <button type="button" id="hid-cancel-btn" class="btn-premium">Annulla</button>
                 </div>
                 <div id="hid-manual-view" style="display:none;">
-                    <h2 style="text-align:center;font-size:1.6rem;margin-bottom:10px;color:var(--text-dark);font-weight:900;">Inserisci Harzafi ID</h2>
-                    <p style="text-align:center;margin-bottom:25px;font-size:1rem;font-weight:500;color:var(--text-gray);">Digita il codice univoco a 24 cifre.</p>
+                    <h2>Il tuo Harzafi ID.</h2>
+                    <p class="hid-description">Inserisci il tuo codice univoco di 24 caratteri.</p>
                     <div class="input-group">
-                        <input type="text" id="hid-input" class="apple-input"
-                               placeholder="XXXXXXXXXXXXXXXXXXXXXXXX" maxlength="24"
-                               style="text-align:center;letter-spacing:2px;">
-                        <div class="error-msg" id="hid-error">HID non valido. Riprova.</div>
+                        <label for="hid-input">Codice Harzafi ID</label>
+                        <input type="text" id="hid-input" class="apple-input" placeholder="Inserisci il codice" maxlength="24" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-describedby="hid-error">
+                        <div class="error-msg" id="hid-error" role="status">HID non valido. Riprova.</div>
                     </div>
-                    <button type="button" id="hid-submit-btn" class="btn-gradient">VERIFICA E ACCEDI</button>
+                    <button type="button" id="hid-submit-btn" class="btn-gradient">Verifica e accedi</button>
                     <button type="button" id="hid-back-btn" class="btn-text">← Torna alla scansione</button>
                 </div>
             </div>
