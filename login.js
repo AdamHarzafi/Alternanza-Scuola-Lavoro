@@ -1,3 +1,8 @@
+// Shared visual indicator; the status remains available to screen readers.
+function loginLoadingIndicator() {
+    return `<svg class="hid-spinner" viewBox="0 0 32 32" aria-hidden="true"><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M16 3v5"/><path d="M22.5 4.7 20 9" opacity=".92"/><path d="m27.3 9.5-4.3 2.5" opacity=".84"/><path d="M29 16h-5" opacity=".76"/><path d="m27.3 22.5-4.3-2.5" opacity=".68"/><path d="M22.5 27.3 20 23" opacity=".6"/><path d="M16 29v-5" opacity=".52"/><path d="m9.5 27.3 2.5-4.3" opacity=".44"/><path d="m4.7 22.5 4.3-2.5" opacity=".36"/><path d="M3 16h5" opacity=".28"/><path d="m4.7 9.5 4.3 2.5" opacity=".2"/><path d="m9.5 4.7 2.5 4.3" opacity=".12"/></g></svg><span class="sr-only">Accesso in corso</span>`;
+}
+
 /* ============================================================
    login.js — logica esclusiva della pagina login.html
    ============================================================ */
@@ -164,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const attempt = ++verificationAttempt;
         const role = selectedRole;
         continueBtn.disabled = true;
-        continueBtn.textContent = 'Verifica…';
+        continueBtn.innerHTML = loginLoadingIndicator();
         continueBtn.setAttribute('aria-busy', 'true');
         emailError.style.display = 'none';
         try {
@@ -284,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!pendingCredentials) return;
         const { email, password: pass, role } = pendingCredentials;
         pendingCredentials = null;
-        if (submitBtn) submitBtn.innerText = "Verifica in corso…";
+        if (submitBtn) submitBtn.innerHTML = loginLoadingIndicator();
 
         if (typeof window.auth !== 'undefined') {
             window.auth.signInWithEmailAndPassword(email, pass)
@@ -362,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (errorMsg) errorMsg.style.display = 'none';
             if (submitBtn) {
-                submitBtn.innerText    = "Verifica sicurezza…";
+                submitBtn.innerHTML = loginLoadingIndicator();
                 submitBtn.disabled     = true;
             }
 
@@ -471,7 +476,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (isVpn) { if (hidErrorEl) { hidErrorEl.innerText = "Disattivare la VPN per continuare."; hidErrorEl.style.display = 'block'; } return; }
             if (!inputVal.length) return;
 
-            hidSubmitBtnEl.innerHTML = "VERIFICA IN CORSO...";
+            hidSubmitBtnEl.innerHTML = loginLoadingIndicator();
             hidSubmitBtnEl.disabled  = true;
             if (hidErrorEl) hidErrorEl.style.display = 'none';
 
