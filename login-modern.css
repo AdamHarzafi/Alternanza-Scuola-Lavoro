@@ -1513,3 +1513,44 @@ body.auth-page {
 @media(prefers-reduced-motion:reduce) {
     #hid-modal, #hid-modal .modal-content { transition: none; }
 }
+/* Harzafi ID glass sheet: all content stays in normal document flow. */
+#hid-modal { align-items: flex-end; padding: 24px; background: #14182047; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); transition: opacity .32s ease, visibility .32s; }
+#hid-modal .modal-content { max-width: 540px; margin: 0 auto; border: 1px solid #ffffffe0; border-radius: 48px; background: linear-gradient(145deg,#fffffff0,#f2f4f9eb); backdrop-filter: blur(36px) saturate(145%); -webkit-backdrop-filter: blur(36px) saturate(145%); box-shadow: inset 0 1px 1px #fff,inset 0 -1px 1px #ffffff80,0 24px 70px #0003,0 0 0 1px #0000000d; opacity: 0; transform: translateY(70px) scale(.975); transition: transform .52s cubic-bezier(.16,1,.3,1),opacity .32s ease; }
+#hid-modal.active .modal-content { opacity: 1; transform: none; }
+#hid-modal .hid-modal-header { gap: 20px; padding: 24px 24px 0 30px; }
+#hid-modal .hid-modal-header > span { color: #101113; font-size: clamp(26px,4vw,32px); font-weight: 750; letter-spacing: -.04em; line-height: 1.2; }
+#hid-modal .close-btn { flex-basis: 52px; width: 52px; height: 52px; border: 1px solid #ffffffed; color: #1d1d1f; background: linear-gradient(145deg,#ffffffb3,#ffffff40); box-shadow: inset 0 1px 2px #fff,0 0 0 1px #00000012; backdrop-filter: blur(12px); }
+#hid-modal .bottom-sheet-body { padding: 28px 30px 22px; }
+#hid-modal .hid-service { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+#hid-modal .hid-service-logo { display: grid; place-items: center; flex: 0 0 72px; width: 72px; height: 72px; padding: 8px; border-radius: 20px; background: linear-gradient(#fff,#f8f9fbb3); box-shadow: inset 0 1px 2px #fff,0 2px 8px #00000006; }
+#hid-modal .hid-service-logo img { width: 100%; height: 100%; object-fit: contain; }
+#hid-modal .hid-service p { min-width: 0; margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; letter-spacing: -.025em; color: #1d1d1f; }
+#hid-modal .hid-site-address { display: block; margin-top: 3px; font-size: 13px; font-weight: 500; line-height: 1.45; color: #515154; overflow-wrap: anywhere; }
+#hid-modal .hid-scan-card { display: flex; align-items: center; gap: 18px; padding: 22px; border: 1px solid #ffffff4d; border-radius: 30px; background: #fafaffad; box-shadow: inset 0 1px 1px #ffffff90; }
+#hid-modal .hid-scan-card > img { flex: 0 0 60px; width: 60px; height: 60px; object-fit: contain; }
+#hid-modal .hid-scan-card > div { min-width: 0; }
+#hid-modal .hid-scan-card h2 { margin: 0 0 8px; font-size: 19px; text-align: left; line-height: 1.2; }
+#hid-modal .hid-scan-card p { margin: 0; color: #626268; font-size: 13px; line-height: 1.5; }
+#hid-modal .hid-scan-action { display: flex; justify-content: center; margin: 26px 0 8px; }
+#hid-modal .hid-wait-button { display: grid; place-items: center; width: 150px; height: 54px; border: 0; border-radius: 999px; color: #fff; background: #0085f7; opacity: 1; cursor: default; }
+#hid-modal .hid-spinner { width: 26px; height: 26px; animation: hid-spinner .9s steps(12,end) infinite; }
+@keyframes hid-spinner { to { transform: rotate(360deg); } }
+#hid-modal .hid-manual-link { margin: 0; font-size: 16px; }
+#hid-modal #hid-submit-btn { border-radius: 999px; }
+@media(max-width:600px) {
+ #hid-modal { padding: 10px; }
+ #hid-modal .modal-content { max-height: calc(100dvh - 20px); border-radius: 36px; }
+ #hid-modal .hid-modal-header { padding: 20px 20px 0 24px; }
+ #hid-modal .close-btn { flex-basis: 44px; width: 44px; height: 44px; }
+ #hid-modal .bottom-sheet-body { padding: 24px 22px max(20px,env(safe-area-inset-bottom)); }
+ #hid-modal .hid-service { gap: 12px; margin-bottom: 24px; }
+ #hid-modal .hid-service-logo { flex-basis: 60px; width: 60px; height: 60px; border-radius: 17px; }
+ #hid-modal .hid-service p { font-size: 15px; }
+ #hid-modal .hid-site-address { font-size: 11px; }
+ #hid-modal .hid-scan-card { gap: 12px; padding: 18px 14px; border-radius: 24px; }
+ #hid-modal .hid-scan-card > img { flex-basis: 44px; width: 44px; height: 44px; }
+ #hid-modal .hid-scan-card h2 { font-size: 17px; }
+ #hid-modal .hid-scan-card p { font-size: 12px; }
+}
+@media(prefers-reduced-motion:reduce) { #hid-modal, #hid-modal .modal-content { transition: none; } #hid-modal .hid-spinner { animation: none; } }
+@media(prefers-reduced-transparency:reduce) { #hid-modal .modal-content { background: #f0f1f4; backdrop-filter: none; } }
