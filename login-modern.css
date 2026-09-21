@@ -1557,3 +1557,18 @@ body.auth-page {
 
 /* Keep the shared access indicator centered without changing button geometry. */
 .auth-page button .hid-spinner { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+
+/* A full-height entrance with one restrained settling bounce. */
+#hid-modal { transition: opacity .28s ease, visibility .28s; }
+#hid-modal .modal-content { transform: translateY(calc(100% + 48px)); transition: transform .28s cubic-bezier(.4,0,1,1), opacity .22s ease; }
+#hid-modal.active .modal-content { transform: translateY(0); animation: hid-sheet-rise .68s both; }
+@keyframes hid-sheet-rise {
+  0% { opacity: 0; transform: translateY(calc(100% + 48px)); animation-timing-function: cubic-bezier(.16,1,.3,1); }
+  68% { opacity: 1; transform: translateY(-7px); animation-timing-function: ease-in-out; }
+  86% { opacity: 1; transform: translateY(2px); animation-timing-function: ease-out; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@media(prefers-reduced-motion:reduce) {
+  #hid-modal, #hid-modal .modal-content { transition: none; }
+  #hid-modal.active .modal-content { animation: none; }
+}
