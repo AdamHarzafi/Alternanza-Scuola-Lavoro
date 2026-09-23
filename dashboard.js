@@ -27,6 +27,7 @@
     let deleteBusy = false, displayedTotal = 0, lastTotal = null;
     const cards = new Map();
     const motion = matchMedia('(prefers-reduced-motion: reduce)');
+    const compactMotion = matchMedia('(max-width: 1024px), (hover: none) and (pointer: coarse)');
     const deleteDialog = document.getElementById('delete-dialog');
     const calendar = RegisterUI.calendar(form.elements.data, document.getElementById('date-trigger'), document.getElementById('date-picker'));
     const enteringCards = new Map();
@@ -43,11 +44,14 @@
             reveal.unobserve(item);
             item.style.removeProperty('opacity');
             if (motion.matches || item.contains(document.activeElement)) return;
-            const distance = matchMedia('(max-width: 600px)').matches ? 12 : 18;
+            const compact = compactMotion.matches;
+            // Fast touch scrolling should never reveal a blank card already above the viewport.
+            if (compact && entry.boundingClientRect.top < 0) return;
+            const distance = compact ? 8 : 18;
             const entrance = item.animate([
                 { opacity: 0, translate: '0 ' + distance + 'px' },
                 { opacity: 1, translate: '0 0' }
-            ], { duration: 560, delay: Math.min(sequence++ * 45, 90), easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
+            ], { duration: compact ? 380 : 560, delay: compact ? 0 : Math.min(sequence++ * 45, 90), easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
             enteringCards.set(item, entrance);
             entrance.onfinish = () => enteringCards.delete(item);
         });
