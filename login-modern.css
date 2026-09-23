@@ -1594,3 +1594,39 @@ body.auth-page {
 #forgot-sheet-modal .recovery-success p { margin: 12px 0 26px; }
 #forgot-sheet-modal .recovery-mail { display: grid; place-items: center; width: 80px; height: 80px; margin: 0 auto 24px; border-radius: 24px; color: #0071e3; background: #ffffffba; box-shadow: inset 0 1px 2px white; }
 #forgot-sheet-modal .recovery-mail svg { width: 44px; height: 44px; }
+
+/* Touch motion: avoid nested moving blur and keep the bottom edge stable. */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  :is(#hid-modal, #forgot-sheet-modal) {
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: opacity .22s ease, visibility .26s;
+  }
+  :is(#hid-modal, #forgot-sheet-modal) .modal-content {
+    max-height: calc(100svh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: linear-gradient(145deg, #fffffff5, #f2f4f9f2);
+    box-shadow: inset 0 1px 1px #fff, inset 0 -1px 1px #ffffff80, 0 16px 44px #00000026;
+    transform: translate3d(0, calc(100% + 48px), 0);
+    transition: transform .26s cubic-bezier(.4,0,.8,.2), opacity .2s ease;
+  }
+  :is(#hid-modal, #forgot-sheet-modal).active .modal-content {
+    animation: hid-sheet-rise-touch .52s both;
+  }
+  :is(#hid-modal, #forgot-sheet-modal) .close-btn {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  #hid-manual-view h2:focus { outline: none; }
+}
+@keyframes hid-sheet-rise-touch {
+  0% { opacity: 0; transform: translate3d(0, calc(100% + 48px), 0); animation-timing-function: cubic-bezier(.2,.8,.25,1); }
+  72% { opacity: 1; transform: translate3d(0, -3px, 0); animation-timing-function: cubic-bezier(.3,0,.3,1); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(#hid-modal, #forgot-sheet-modal), :is(#hid-modal, #forgot-sheet-modal) .modal-content { transition: none; }
+  :is(#hid-modal, #forgot-sheet-modal).active .modal-content { animation: none; transform: none; }
+}
