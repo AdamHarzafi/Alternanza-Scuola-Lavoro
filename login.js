@@ -423,15 +423,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const sheetResizes = new WeakMap();
+    const compactMotion = matchMedia('(max-width: 1024px), (hover: none) and (pointer: coarse)');
     function resizeSheet(modal, update) {
         const sheet = modal?.querySelector('.modal-content');
-        sheetResizes.get(sheet)?.cancel();
         const before = sheet?.getBoundingClientRect().height;
+        sheetResizes.get(sheet)?.cancel();
         update();
         if (!sheet?.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const after = sheet.getBoundingClientRect().height;
         if (Math.abs(before - after) < 1) return;
-        const effect = sheet.animate([{ height: before + 'px' }, { height: after + 'px' }], { duration: 360, easing: 'cubic-bezier(.22,1,.36,1)' });
+        const effect = sheet.animate([{ height: before + 'px' }, { height: after + 'px' }], { duration: compactMotion.matches ? 260 : 360, easing: 'cubic-bezier(.22,1,.36,1)' });
         sheetResizes.set(sheet, effect);
         effect.onfinish = () => sheetResizes.delete(sheet);
     }
@@ -465,7 +466,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (sView) sView.style.display = 'none';
                 if (mView) mView.style.display = 'block';
             });
-            if (hInput) hInput.focus();
+            // On touch screens, let the sheet settle before the user opens the keyboard.
+            const focusTarget = compactMotion.matches ? mView?.querySelector('h2') : hInput;
+            if (focusTarget) {
+                if (compactMotion.matches) focusTarget.setAttribute('tabindex', '-1');
+                focusTarget.focus({ preventScroll: true });
+            }
         });
     }
     const hidBackBtnEl = document.getElementById('hid-back-btn');
