@@ -29,13 +29,37 @@
     const motion = matchMedia('(prefers-reduced-motion: reduce)');
     const deleteDialog = document.getElementById('delete-dialog');
     const calendar = RegisterUI.calendar(form.elements.data, document.getElementById('date-trigger'), document.getElementById('date-picker'));
-    const reveal = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+    const enteringCards = new Map();
+    function finishEntrance(item) {
+        item.style.removeProperty('opacity');
+        enteringCards.get(item)?.cancel();
+        enteringCards.delete(item);
+    }
+    const reveal = 'IntersectionObserver' in window && Element.prototype.animate ? new IntersectionObserver(entries => {
+        let sequence = 0;
         entries.forEach(entry => {
             if (!entry.isIntersecting) return;
-            reveal.unobserve(entry.target);
-            if (!motion.matches) entry.target.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 440, easing: 'cubic-bezier(.2,.7,.2,1)' });
+            const item = entry.target;
+            reveal.unobserve(item);
+            item.style.removeProperty('opacity');
+            if (motion.matches || item.contains(document.activeElement)) return;
+            const distance = matchMedia('(max-width: 600px)').matches ? 12 : 18;
+            const entrance = item.animate([
+                { opacity: 0, translate: '0 ' + distance + 'px' },
+                { opacity: 1, translate: '0 0' }
+            ], { duration: 560, delay: Math.min(sequence++ * 45, 90), easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
+            enteringCards.set(item, entrance);
+            entrance.onfinish = () => enteringCards.delete(item);
         });
-    }, { threshold: .06, rootMargin: '0px 0px -16px 0px' }) : null;
+    }, { threshold: 0, rootMargin: '0px 0px 32px 0px' }) : null;
+    list.addEventListener('focusin', event => {
+        const item = event.target.closest('.experience-item');
+        if (item) { reveal?.unobserve(item); finishEntrance(item); }
+    });
+    motion.addEventListener('change', event => {
+        if (!event.matches) return;
+        cards.forEach(({ item }) => { reveal?.unobserve(item); finishEntrance(item); });
+    });
     auth.onAuthStateChanged(user => {
         if (unsubscribe) unsubscribe();
         unsubscribe = null;
@@ -166,7 +190,7 @@
         const keys = new Set(activities.map(activity => (activity.predefined ? 'default:' : 'personal:') + activity.id));
         cards.forEach((record, key) => {
             if (keys.has(key)) return;
-            reveal?.unobserve(record.item); cards.delete(key); record.item.remove();
+            reveal?.unobserve(record.item); finishEntrance(record.item); cards.delete(key); record.item.remove();
         });
         list.querySelectorAll('.empty-state, .experience-skeleton').forEach(element => element.remove());
         document.getElementById('timeline-count').textContent =
@@ -301,8 +325,8 @@
                 details.inert = false; edit.tabIndex = 0; remove.tabIndex = 0;
             }
             cards.set(key, { item, signature });
-            if (previous) { reveal?.unobserve(previous.item); previous.item.replaceWith(item); }
-            else reveal?.observe(item);
+            if (previous) { reveal?.unobserve(previous.item); finishEntrance(previous.item); previous.item.replaceWith(item); }
+            else if (reveal && !motion.matches) { item.style.opacity = '0'; reveal.observe(item); }
         });
         activities.forEach((activity, index) => {
             const key = (activity.predefined ? 'default:' : 'personal:') + activity.id;
