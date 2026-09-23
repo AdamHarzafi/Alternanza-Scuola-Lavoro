@@ -56,9 +56,6 @@ function waitForFirebase(callback) {
             appId:             "1:743942918497:web:6d6e44ba348760ce137520"
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-            self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-        }
         window.auth = firebase.auth();
         window.db   = firebase.firestore();
         callback();
