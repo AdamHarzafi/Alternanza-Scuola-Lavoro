@@ -4,8 +4,30 @@
     if (!firebase.apps.length) firebase.initializeApp({
         apiKey: 'AIzaSyBisp324W7J5jGwF_s-nbXabOjEutcwMmc',
         authDomain: 'harzafi---fsl.firebaseapp.com',
-        projectId: 'harzafi---fsl'
+        projectId: 'harzafi---fsl',
+        storageBucket: 'harzafi---fsl.firebasestorage.app',
+        messagingSenderId: '743942918497',
+        appId: '1:743942918497:web:6d6e44ba348760ce137520'
     });
+
+    // Activate before Auth/Firestore: their SDKs attach and refresh the token.
+    // This is a public site key, restricted to the production domains in Google Cloud.
+    const localPreview = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
+    if (!localPreview) {
+        try {
+            const appCheck = firebase.appCheck();
+            appCheck.activate(new firebase.appCheck.ReCaptchaEnterpriseProvider(
+                '6LejpcksAAAAAEQEVz602t2PL78MzHE73T4a608-'
+            ), true);
+            appCheck.getToken(false).then(() => {
+                console.info('[App Check] Attestazione verificata.');
+            }).catch(error => {
+                console.warn('[App Check] Attestazione non disponibile:', error.code || 'errore di rete');
+            });
+        } catch (error) {
+            console.error('[App Check] Inizializzazione non riuscita:', error.code || 'SDK non disponibile');
+        }
+    }
     const auth = firebase.auth();
 
     // Names always come from profile fields, never email prefixes or document IDs.
