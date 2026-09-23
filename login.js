@@ -69,9 +69,8 @@ function waitForFirebase(callback) {
     }
 }
 
-window.addEventListener('load', () => {
-    waitForFirebase(() => {});
-});
+// Deferred after the Firebase SDK: do not wait for images and third-party widgets.
+waitForFirebase(() => {});
 
 // ── VPN check ────────────────────────────────────────────────
 async function checkVPN() {
