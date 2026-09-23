@@ -1,6 +1,6 @@
 // Shared visual indicator; the status remains available to screen readers.
-function loginLoadingIndicator() {
-    return `<svg class="hid-spinner" viewBox="0 0 32 32" aria-hidden="true"><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M16 3v5"/><path d="M22.5 4.7 20 9" opacity=".92"/><path d="m27.3 9.5-4.3 2.5" opacity=".84"/><path d="M29 16h-5" opacity=".76"/><path d="m27.3 22.5-4.3-2.5" opacity=".68"/><path d="M22.5 27.3 20 23" opacity=".6"/><path d="M16 29v-5" opacity=".52"/><path d="m9.5 27.3 2.5-4.3" opacity=".44"/><path d="m4.7 22.5 4.3-2.5" opacity=".36"/><path d="M3 16h5" opacity=".28"/><path d="m4.7 9.5 4.3 2.5" opacity=".2"/><path d="m9.5 4.7 2.5 4.3" opacity=".12"/></g></svg><span class="sr-only">Accesso in corso</span>`;
+function loginLoadingIndicator(status = "Accesso in corso") {
+    return `<svg class="hid-spinner" viewBox="0 0 32 32" aria-hidden="true"><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M16 3v5"/><path d="M22.5 4.7 20 9" opacity=".92"/><path d="m27.3 9.5-4.3 2.5" opacity=".84"/><path d="M29 16h-5" opacity=".76"/><path d="m27.3 22.5-4.3-2.5" opacity=".68"/><path d="M22.5 27.3 20 23" opacity=".6"/><path d="M16 29v-5" opacity=".52"/><path d="m9.5 27.3 2.5-4.3" opacity=".44"/><path d="m4.7 22.5 4.3-2.5" opacity=".36"/><path d="M3 16h5" opacity=".28"/><path d="m4.7 9.5 4.3 2.5" opacity=".2"/><path d="m9.5 4.7 2.5 4.3" opacity=".12"/></g></svg><span class="sr-only">${status}</span>`;
 }
 
 /* ============================================================
@@ -422,6 +422,20 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const sheetResizes = new WeakMap();
+    function resizeSheet(modal, update) {
+        const sheet = modal?.querySelector('.modal-content');
+        sheetResizes.get(sheet)?.cancel();
+        const before = sheet?.getBoundingClientRect().height;
+        update();
+        if (!sheet?.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const after = sheet.getBoundingClientRect().height;
+        if (Math.abs(before - after) < 1) return;
+        const effect = sheet.animate([{ height: before + 'px' }, { height: after + 'px' }], { duration: 360, easing: 'cubic-bezier(.22,1,.36,1)' });
+        sheetResizes.set(sheet, effect);
+        effect.onfinish = () => sheetResizes.delete(sheet);
+    }
+
     // ── Harzafi ID ───────────────────────────────────────────
     const btnHid = document.getElementById('btn-harzafi-id');
     const hidModalEl = document.getElementById('hid-modal');
@@ -446,8 +460,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const sView = document.getElementById('hid-scan-view');
             const mView = document.getElementById('hid-manual-view');
             const hInput = document.getElementById('hid-input');
-            if (sView) sView.style.display   = 'none';
-            if (mView) mView.style.display = 'block';
+            resizeSheet(hidModalEl, () => {
+                hidModalEl.classList.add('is-manual');
+                if (sView) sView.style.display = 'none';
+                if (mView) mView.style.display = 'block';
+            });
             if (hInput) hInput.focus();
         });
     }
@@ -457,8 +474,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const sView = document.getElementById('hid-scan-view');
             const mView = document.getElementById('hid-manual-view');
             const hErr = document.getElementById('hid-error');
-            if (mView) mView.style.display = 'none';
-            if (sView) sView.style.display   = 'block';
+            resizeSheet(hidModalEl, () => {
+                hidModalEl.classList.remove('is-manual');
+                if (mView) mView.style.display = 'none';
+                if (sView) sView.style.display = 'block';
+            });
             if (hErr) hErr.style.display       = 'none';
         });
     }
@@ -534,7 +554,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const otpErr = document.getElementById('otp-error-msg');
             if (otpErr) otpErr.style.display = 'none';
             const roleTitle = document.getElementById('otp-role-title');
-            if (roleTitle) roleTitle.innerText = selectedRole === 'studente' ? 'Area Studenti' : 'Area Docenti';
+            if (roleTitle) roleTitle.innerText = 'Password dimenticata?';
             targetCollectionOTP = selectedRole === 'studente' ? 'studenti' : 'docenti';
             forgotModal.classList.add('active');
         });
@@ -552,11 +572,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnSendOtpEl = document.getElementById('btn-send-otp');
     if (btnSendOtpEl && otpEmailInput) {
         btnSendOtpEl.addEventListener('click', async function () {
+            if (this.disabled) return;
             const emailVal   = otpEmailInput.value.trim().toLowerCase();
             const errorDiv   = document.getElementById('otp-error-msg');
             const origBtnTxt = this.innerHTML;
 
-            if (!emailVal || !emailVal.includes('@')) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
                 if (errorDiv) {
                     errorDiv.innerText = "Inserisci un'email valida.";
                     errorDiv.style.display = 'block';
@@ -564,21 +585,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             if (errorDiv) errorDiv.style.display = 'none';
-            this.innerHTML  = '<div class="btn-loader"><div class="btn-spinner"></div><span>Invio in corso...</span></div>';
+            this.innerHTML = loginLoadingIndicator('Invio in corso');
             this.disabled   = true;
 
             try {
                 const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
                 if (snapshot.empty) throw new Error("Email non trovata a sistema.");
                 await window.auth.sendPasswordResetEmail(emailVal);
-                if (otpStep1) otpStep1.style.opacity = '0';
-                setTimeout(() => {
+                resizeSheet(forgotModal, () => {
                     if (otpStep1) otpStep1.style.display = 'none';
-                    if (otpStep3) {
-                        otpStep3.style.display = 'block';
-                        setTimeout(() => { otpStep3.style.opacity = '1'; }, 50);
-                    }
-                }, 400);
+                    if (otpStep3) { otpStep3.style.display = 'block'; otpStep3.style.opacity = '1'; }
+                });
+                if (forgotModal.classList.contains('active')) otpStep3?.focus();
             } catch (err) {
                 if (errorDiv) {
                     errorDiv.innerText = err.message || "Errore di connessione. Riprova.";
