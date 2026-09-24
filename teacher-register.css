@@ -71,3 +71,34 @@
 @media(max-width:800px) { .student-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .teacher-toolbar { grid-template-columns: repeat(2,minmax(0,1fr)); } .teacher-search { grid-column: 1/-1; } .teacher-page main { padding-inline: 22px; } .teacher-hero { padding-top: 48px; } }
 @media(max-width:540px) { .teacher-page main { padding: 0 16px 44px; } .teacher-hero { padding: 40px 4px 34px; } .teacher-hero > p:last-of-type { font-size: 16px; } .teacher-metrics { gap: 24px; } .teacher-metrics span { font-size: 11px; } .teacher-section-head { align-items: start; flex-direction: column; } .teacher-export { width: 100%; } .teacher-toolbar { padding: 14px; gap: 12px; border-radius: 20px; } .teacher-toolbar input, .teacher-toolbar select, .student-detail select { font-size: 16px; } .student-grid { grid-template-columns: 1fr; gap: 14px; } .student-card { padding: 24px; } .student-card h3 { font-size: 20px; min-height: 0; } .student-card-status { min-height: 0; font-size: 12px; } .student-card-legend { font-size: 13px; } .student-card-foot { font-size: 12px; } .student-ring { width: 168px; height: 168px; flex-basis: 168px; } .student-detail { width: calc(100% - 20px); max-height: calc(100svh - 20px); padding: 22px 18px; border-radius: 26px; } .student-detail-summary { gap: 18px; align-items: center; } .student-detail-summary .student-ring { width: 112px; height: 112px; flex-basis: 112px; } .student-detail-summary .student-ring::before { inset: 9px; } .student-detail-summary .student-ring-center strong { font-size: 24px; } .student-detail-summary > div:last-child > strong { font-size: 17px; } .student-detail-summary p { font-size: 12px; } .student-detail-controls { gap: 10px; } .student-tabs { width: 100%; } .student-tabs button { flex: 1; } .student-detail select { min-width: 0; } .teacher-experience { padding: 16px; } }
 @media(prefers-reduced-motion:reduce) { .student-card { transition: none; } .student-detail[open] { animation: none; } }
+
+/* Shared student ring geometry, with proportions preserved at every card size. */
+.teacher-page main { width: min(1320px, calc(100% - 64px)); max-width: none; padding: 0 0 80px; }
+.teacher-hero { min-height: clamp(500px, 76svh, 800px); max-width: none; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 86px 0 92px; text-align: left; }
+.teacher-hero h1 { max-width: 900px; margin: 0; font-size: clamp(3.9rem,6.7vw,6.9rem); line-height: .98; letter-spacing: -.062em; font-weight: 600; }
+.teacher-hero h1 span { color: var(--tertiary); }
+.teacher-hero > p:last-of-type { margin: 30px 0 0; max-width: 570px; font-size: clamp(1rem,1.5vw,1.24rem); line-height: 1.56; letter-spacing: -.025em; }
+.teacher-metrics { margin-top: 32px; }
+.teacher-metrics > div { display: flex; align-items: baseline; gap: 9px; }
+.teacher-metrics strong { font-size: 22px; font-weight: 600; }
+.teacher-metrics span { font-size: 13px; }
+.student-grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
+.student-card { padding: 28px 28px 22px; border-radius: 30px; box-shadow: 0 6px 26px #1d1d1f04; }
+.student-card h3 { font-size: 19px; min-height: 52px; }
+.student-card-status { min-height: 17px; font-size: 12px; }
+.student-ring { width: min(100%, 240px); height: auto; aspect-ratio: 1; flex: none; margin: 28px auto; background: #fff; box-shadow: 0 16px 40px #00000008; }
+.student-ring::before { display: none; }
+.student-ring .activity-track, .student-ring .activity-progress { vector-effect: none; }
+.student-ring .activity-progress { animation: none; stroke-dashoffset: 0; }
+.student-ring-center { inset: 35%; gap: 0; }
+.student-ring-center strong { font-size: 24px; font-weight: 600; letter-spacing: -.055em; white-space: nowrap; }
+.student-ring-center.compact-total strong { font-size: 20px; }
+.student-ring-center span { margin-top: 3px; font-size: 9px; white-space: nowrap; }
+.student-card-legend { font-size: 12px; gap: 10px; margin: 2px 0 24px; }
+.student-card-legend span::before { background: #0a84ff; }
+.student-card-legend .certificate-hours::before { background: #ff2d92; }
+.student-card-foot { font-size: 12px; padding-top: 18px; }
+.student-detail-summary .student-ring { width: 224px; height: 224px; flex: 0 0 224px; }
+@media(max-width:1000px) { .student-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media(max-width:800px) { .teacher-page main { width: calc(100% - 44px); } .teacher-hero { min-height: 540px; padding: 70px 0; } .teacher-hero h1 { font-size: clamp(3.5rem,8vw,5.4rem); } }
+@media(max-width:540px) { .teacher-page main { width: calc(100% - 32px); padding-bottom: 44px; } .teacher-hero { min-height: 460px; padding: 56px 4px 60px; } .teacher-hero h1 { font-size: clamp(2.9rem,12.8vw,4.3rem); } .teacher-hero > p:last-of-type { font-size: 16px; margin-top: 24px; } .teacher-metrics { margin-top: 24px; } .student-grid { grid-template-columns: 1fr; gap: 18px; } .student-card { padding: 26px 24px 22px; } .student-card h3 { min-height: 0; font-size: 21px; } .student-ring { width: 240px; height: 240px; flex-basis: auto; } .student-detail-summary { flex-direction: column; align-items: flex-start; gap: 0; } .student-detail-summary .student-ring { width: 224px; height: 224px; flex: 0 0 224px; margin: 24px auto; } .student-detail-summary .student-ring-center strong { font-size: 24px; } .student-detail-summary .compact-total strong { font-size: 20px; } }
