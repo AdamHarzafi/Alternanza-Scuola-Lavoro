@@ -20,6 +20,8 @@
     }
     function mount(db, user) {
         const main = document.querySelector('main'), original = Array.from(main.childNodes), originalTitle = document.title;
+        const ringTemplate = main.querySelector('.activity-rings').cloneNode(true);
+        let ringSequence = 0;
         const nav = document.querySelector('.dashboard-header nav a');
         const oldNav = { href: nav.getAttribute('href'), text: nav.textContent };
         nav.href = '#classe'; nav.textContent = 'La classe'; document.title = 'La classe — Harzafi FSL';
@@ -69,11 +71,17 @@
         }
         function ring(summary) {
             const circle = el('div', 'student-ring');
-            circle.style.setProperty('--school-share', (summary.total ? summary.formazione / summary.total * 100 : 0) + '%');
-            circle.classList.toggle('is-empty', !summary.total);
+            const svg = ringTemplate.cloneNode(true), prefix = 'teacher-ring-' + (++ringSequence) + '-';
+            svg.querySelectorAll('[id]').forEach(node => { node.id = prefix + node.id; });
+            ['outer', 'middle', 'inner'].forEach((name, i) => {
+                const progress = svg.querySelector('.activity-progress-' + name);
+                progress.style.stroke = 'url(#' + prefix + ['ring-pink-gradient','ring-lime-gradient','ring-aqua-gradient'][i] + ')';
+                progress.style.filter = 'url(#' + prefix + 'activity-ring-shadow)';
+            });
+            circle.append(svg);
             circle.setAttribute('role', 'img');
             circle.setAttribute('aria-label', `${format(summary.total)} ore totali: ${format(summary.formazione)} di formazione e ${format(summary.certificazioni)} con attestazione`);
-            const center = el('div', 'student-ring-center'); center.append(el('strong', '', format(summary.total)), el('span', '', 'ore totali')); circle.append(center); return circle;
+            const center = el('div', 'student-ring-center'); center.append(el('strong', '', format(summary.total)), el('span', '', 'ore totali')); center.classList.toggle('compact-total', format(summary.total).length > 5); circle.append(center); return circle;
         }
         function render() {
             if (authChanged()) return;
@@ -88,7 +96,7 @@
             const ready = records.filter(row => !row.incomplete);
             const incomplete = !!errorMessage || ready.length !== records.length;
             const metrics = root.querySelector('.teacher-metrics'); metrics.replaceChildren();
-            for (const [value, label] of [[records.length, 'studenti'], [incomplete ? '—' : format(ready.reduce((n, r) => n + r.total, 0)), 'ore complessive'], [incomplete ? '—' : ready.reduce((n, r) => n + r.deleted.length, 0), 'esperienze eliminate']]) {
+            for (const [value, label] of [[records.length, 'studenti nella classe']]) {
                 const block = el('div'); block.append(el('strong', '', value), el('span', '', label)); metrics.append(block);
             }
             const query = search.value.trim().toLocaleLowerCase('it');
