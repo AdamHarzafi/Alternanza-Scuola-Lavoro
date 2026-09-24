@@ -438,8 +438,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const hidModalEl = document.getElementById('hid-modal');
     if (btnHid && hidModalEl) {
         btnHid.addEventListener('click', () => {
-            hidModalEl.classList.add('active');
             if (document.activeElement) document.activeElement.blur();
+            hidModalEl.classList.add('active');
         });
     }
     const hidCloseBtnEl = document.getElementById('hid-close-btn');
@@ -558,6 +558,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const roleTitle = document.getElementById('otp-role-title');
             if (roleTitle) roleTitle.innerText = 'Password dimenticata?';
             targetCollectionOTP = selectedRole === 'studente' ? 'studenti' : 'docenti';
+            if (document.activeElement) document.activeElement.blur();
             forgotModal.classList.add('active');
         });
     }
@@ -621,11 +622,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const last  = focusable[focusable.length - 1];
         function onKey(e) {
             if (e.key !== 'Tab') return;
-            if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
-            else            { if (document.activeElement === last)  { e.preventDefault(); first.focus(); } }
+            if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus({ preventScroll: true }); } }
+            else            { if (document.activeElement === last)  { e.preventDefault(); first.focus({ preventScroll: true }); } }
         }
         modal.addEventListener('keydown', onKey);
-        if (first) first.focus();
+        if (first) first.focus({ preventScroll: true });
         return () => modal.removeEventListener('keydown', onKey);
     }
 
