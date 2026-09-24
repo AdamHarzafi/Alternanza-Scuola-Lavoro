@@ -22,6 +22,7 @@
     const formStatus = document.getElementById('hours-form-status');
     const retry = document.getElementById('retry-hours');
     let unsubscribe, animation;
+    let stopTeacher, sessionGeneration = 0;
     let busy = false;
     let editing = null, deleting = null;
     let deleteBusy = false, displayedTotal = 0, lastTotal = null;
@@ -64,7 +65,10 @@
         if (!event.matches) return;
         cards.forEach(({ item }) => { reveal?.unobserve(item); finishEntrance(item); });
     });
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged(async user => {
+        const generation = ++sessionGeneration;
+        if (stopTeacher) stopTeacher();
+        stopTeacher = null;
         if (unsubscribe) unsubscribe();
         unsubscribe = null;
         dialog.close();
@@ -96,8 +100,19 @@
             status.textContent = 'Questo accesso Harzafi ID è temporaneo. Esci e accedi con email e password per salvare e ritrovare le tue ore anche su altri dispositivi.';
             return;
         }
-        addButton.disabled = false;
-        loadData();
+        try {
+            status.textContent = 'Preparazione del registro…';
+            const teacher = await TeacherRegister.access(db, user);
+            if (generation !== sessionGeneration || auth.currentUser?.uid !== user.uid) return;
+            if (teacher) { stopTeacher = TeacherRegister.mount(db, user); return; }
+            await TeacherRegister.ensureStudent(db, user);
+            if (generation !== sessionGeneration || auth.currentUser?.uid !== user.uid) return;
+            addButton.disabled = false;
+            loadData();
+        } catch (error) {
+            if (generation !== sessionGeneration) return;
+            status.textContent = 'Non è possibile verificare il tuo accesso al registro. Ricarica la pagina per riprovare.';
+        }
     });
 
     function plainText(value) {
