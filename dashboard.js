@@ -1,6 +1,11 @@
 (function () {
     'use strict';
 
+    const loadingMessage = document.getElementById('dashboard-loading-message');
+    const loadingRetry = document.getElementById('dashboard-loading-retry');
+    loadingRetry.addEventListener('click', () => window.location.reload());
+    function showDashboard() { document.body.classList.remove('dashboard-pending'); }
+
     const nameElement = document.getElementById('hero-user-name');
     nameElement.textContent = 'Utente';
 
@@ -66,6 +71,10 @@
         cards.forEach(({ item }) => { reveal?.unobserve(item); finishEntrance(item); });
     });
     auth.onAuthStateChanged(async user => {
+        document.body.classList.add('dashboard-pending');
+        loadingMessage.textContent = '';
+        loadingRetry.hidden = true;
+        document.querySelector('.dashboard-spinner').hidden = false;
         const generation = ++sessionGeneration;
         if (stopTeacher) stopTeacher();
         stopTeacher = null;
@@ -97,6 +106,7 @@
             });
         }
         if (user.isAnonymous) {
+            showDashboard();
             status.textContent = 'Questo accesso Harzafi ID è temporaneo. Esci e accedi con email e password per salvare e ritrovare le tue ore anche su altri dispositivi.';
             return;
         }
@@ -104,14 +114,17 @@
             status.textContent = 'Preparazione del registro…';
             const teacher = await TeacherRegister.access(db, user);
             if (generation !== sessionGeneration || auth.currentUser?.uid !== user.uid) return;
-            if (teacher) { stopTeacher = TeacherRegister.mount(db, user); return; }
+            if (teacher) { stopTeacher = TeacherRegister.mount(db, user); showDashboard(); return; }
             await TeacherRegister.ensureStudent(db, user);
             if (generation !== sessionGeneration || auth.currentUser?.uid !== user.uid) return;
             addButton.disabled = false;
+            showDashboard();
             loadData();
         } catch (error) {
             if (generation !== sessionGeneration) return;
-            status.textContent = 'Non è possibile verificare il tuo accesso al registro. Ricarica la pagina per riprovare.';
+            document.querySelector('.dashboard-spinner').hidden = true;
+            loadingMessage.textContent = 'Non è possibile verificare il tuo accesso al registro.';
+            loadingRetry.hidden = false;
         }
     });
 
