@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
     <link rel="stylesheet" href="dashboard.css?v=20260919-refined">
     <link rel="stylesheet" href="register-refinements.css?v=20260919-refined">
-    <link rel="stylesheet" href="teacher-register.css?v=20260924">
     <script defer src="site-motion.js?v=20260919-refined"></script>
 </head>
 <body class="dashboard-page">
@@ -131,7 +130,7 @@
     <dialog id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description">
       <div class="delete-symbol" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></svg></div>
       <h2 id="delete-title">Eliminare questa esperienza?</h2>
-      <p id="delete-name"></p><p id="delete-description">L’attività e le relative ore verranno rimosse solo dal tuo registro. La voce resterà consultabile dai docenti come attività eliminata.</p>
+      <p id="delete-name"></p><p id="delete-description">L’attività e le relative ore verranno rimosse solo dal tuo registro. I registri degli altri utenti non cambieranno.</p>
       <p id="delete-status" role="status" aria-live="polite"></p>
       <div class="hours-dialog-actions"><button id="cancel-delete" type="button">Annulla</button><button id="confirm-delete" type="button">Elimina esperienza</button></div>
     </dialog>
@@ -175,9 +174,7 @@
     <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
     <script src="auth-session.js?v=20260923-app-check"></script>
     <script src="register-ui.js?v=20260919-refined"></script>
-    <script src="hours-store.js?v=20260924-teachers"></script>
-    <script src="teacher-model.js?v=20260924"></script>
-    <script src="teacher-register.js?v=20260924"></script>
-    <script src="dashboard.js?v=20260924-teachers"></script>
+    <script src="hours-store.js?v=20260919-refined"></script>
+    <script src="dashboard.js?v=20260923-touch-motion"></script>
 </body>
 </html>
