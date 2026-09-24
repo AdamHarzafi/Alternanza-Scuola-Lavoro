@@ -1613,7 +1613,11 @@ body.auth-page {
     transition: transform .26s cubic-bezier(.4,0,.8,.2), opacity .2s ease;
   }
   :is(#hid-modal, #forgot-sheet-modal).active .modal-content {
-    animation: hid-sheet-rise-touch .52s both;
+    /* Only the keyframes own the entrance; a concurrent transform transition
+       can cause a second settling movement on mobile browsers. */
+    transition: none;
+    transform: translate3d(0, 0, 0);
+    animation: hid-sheet-rise-touch .48s both;
   }
   :is(#hid-modal, #forgot-sheet-modal) .close-btn {
     backdrop-filter: none;
@@ -1623,7 +1627,7 @@ body.auth-page {
 }
 @keyframes hid-sheet-rise-touch {
   0% { opacity: 0; transform: translate3d(0, calc(100% + 48px), 0); animation-timing-function: cubic-bezier(.2,.8,.25,1); }
-  72% { opacity: 1; transform: translate3d(0, -3px, 0); animation-timing-function: cubic-bezier(.3,0,.3,1); }
+  80% { opacity: 1; transform: translate3d(0, -2px, 0); animation-timing-function: cubic-bezier(.3,0,.3,1); }
   100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
