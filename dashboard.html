@@ -16,9 +16,18 @@
     <link rel="stylesheet" href="dashboard.css?v=20260919-refined">
     <link rel="stylesheet" href="register-refinements.css?v=20260919-refined">
     <link rel="stylesheet" href="teacher-register.css?v=20260924-polish">
+    <style>
+        .dashboard-loading { display: none; }
+        .dashboard-pending main, .dashboard-pending .dashboard-header nav a, .dashboard-pending footer { display: none; }
+        .dashboard-pending .dashboard-loading { min-height: calc(100svh - 68px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; text-align: center; color: #6e6e73; }
+        .dashboard-spinner { width: 28px; height: 28px; border: 3px solid #e5e5ea; border-top-color: #86868b; border-radius: 50%; animation: dashboard-spin .8s linear infinite; }
+        .dashboard-loading button { border: 0; border-radius: 20px; padding: 10px 20px; background: #0071e3; color: white; cursor: pointer; }
+        @keyframes dashboard-spin { to { transform: rotate(360deg); } }
+        @media(prefers-reduced-motion:reduce) { .dashboard-spinner { animation: none; } }
+    </style>
     <script defer src="site-motion.js?v=20260919-refined"></script>
 </head>
-<body class="dashboard-page">
+<body class="dashboard-page dashboard-pending">
     <header class="dashboard-header">
         <div class="header-inner">
             <a class="dashboard-brand" href="index.html" aria-label="Harzafi FSL — Home">
@@ -31,6 +40,7 @@
         </div>
     </header>
 
+    <div class="dashboard-loading" role="status" aria-label="Caricamento del registro"><span class="dashboard-spinner" aria-hidden="true"></span><span id="dashboard-loading-message"></span><button id="dashboard-loading-retry" type="button" hidden>Riprova</button></div>
     <main>
         <section class="hero" aria-labelledby="hero-title">
             <div class="hero-copy">
@@ -178,6 +188,6 @@
     <script src="hours-store.js?v=20260924-teachers"></script>
     <script src="teacher-model.js?v=20260924"></script>
     <script src="teacher-register.js?v=20260924-polish"></script>
-    <script src="dashboard.js?v=20260924-teachers"></script>
+    <script src="dashboard.js?v=20260924-role-ready"></script>
 </body>
 </html>
