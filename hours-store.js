@@ -49,13 +49,21 @@
                 const uid = user().uid;
                 if (typeof id !== 'string' || !id || id.includes('/')) throw new Error('Attività non valida.');
                 const values = validate(input);
-                if (predefined) return overrides(uid).doc(id).set({ ...values, deleted: false });
+                if (predefined) {
+                    const ref = overrides(uid).doc(id);
+                    return db.runTransaction(async transaction => {
+                        const snapshot = await transaction.get(ref);
+                        if (snapshot.exists && snapshot.data().deleted) throw new Error('Questa attività è stata eliminata.');
+                        transaction.set(ref, { ...values, deleted: false, updatedAt: timestamp() });
+                    });
+                }
                 const ref = collection().doc(id);
                 return db.runTransaction(async transaction => {
                     const snapshot = await transaction.get(ref);
                     if (!snapshot.exists) throw new Error('Questa attività è stata eliminata.');
                     if (snapshot.data().ownerUid !== uid) throw new Error('Questa attività non appartiene al tuo account.');
-                    transaction.update(ref, values);
+                    if (snapshot.data().deleted) throw new Error('Questa attività è stata eliminata.');
+                    transaction.update(ref, { ...values, updatedAt: timestamp() });
                 });
             },
             subscribe(next, error) {
@@ -64,7 +72,7 @@
                     if (auth.currentUser?.uid !== uid) return;
                     // Display only acknowledged writes: a pending write is not yet saved on Firebase.
                     if (snapshot.metadata.hasPendingWrites) return;
-                    const rows = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                    const rows = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })).filter(row => !row.deleted);
                     rows.sort((a, b) => String(b.data).localeCompare(String(a.data)) || a.id.localeCompare(b.id));
                     next(rows, snapshot.metadata.fromCache);
                 }, error);
@@ -72,18 +80,27 @@
             add(input) {
                 const ownerUid = user().uid;
                 if (typeof navigator !== 'undefined' && navigator.onLine === false) throw new Error('Sei offline. Riconnettiti prima di salvare.');
-                return collection().doc().set({ ...validate(input), ownerUid, createdAt: timestamp() });
+                return collection().doc().set({ ...validate(input), ownerUid, createdAt: timestamp(), deleted: false });
             },
             remove(id, predefined = false) {
                 const uid = user().uid;
                 if (typeof id !== 'string' || !id || id.includes('/')) throw new Error('Attività non valida.');
-                if (predefined) return overrides(uid).doc(id).set({ deleted: true });
+                if (predefined) {
+                    const ref = overrides(uid).doc(id);
+                    return db.runTransaction(async transaction => {
+                        const snapshot = await transaction.get(ref);
+                        if (snapshot.exists && snapshot.data().deleted) return;
+                        // Preserve any personal changes so teachers can inspect the removed entry.
+                        transaction.set(ref, { ...(snapshot.exists ? snapshot.data() : {}), deleted: true, deletedAt: timestamp(), updatedAt: timestamp() });
+                    });
+                }
                 const ref = collection().doc(id);
                 return db.runTransaction(async transaction => {
                     const snapshot = await transaction.get(ref);
                     if (!snapshot.exists) return;
                     if (snapshot.data().ownerUid !== uid) throw new Error('Questa attività non appartiene al tuo account.');
-                    transaction.delete(ref);
+                    if (snapshot.data().deleted) return;
+                    transaction.update(ref, { deleted: true, deletedAt: timestamp(), updatedAt: timestamp() });
                 });
             }
         };

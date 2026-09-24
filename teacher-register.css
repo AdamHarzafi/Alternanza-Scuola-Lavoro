@@ -1,0 +1,73 @@
+.teacher-page { background: #f5f5f7; }
+.teacher-page main { max-width: 1280px; margin: auto; padding: 0 32px 80px; }
+.teacher-register { --teacher-pink: #ed3675; --teacher-aqua: #00aeb8; }
+.teacher-hero { padding: 76px 0 52px; max-width: 900px; }
+.teacher-hero h1 { font-size: clamp(40px, 6vw, 76px); line-height: 1.06; letter-spacing: -.055em; margin: 16px 0 24px; font-weight: 700; }
+.teacher-hero h1 span { color: #77777e; }
+.teacher-hero > p:last-of-type { max-width: 590px; font-size: 18px; line-height: 1.6; color: #68686f; }
+.teacher-metrics { display: flex; flex-wrap: wrap; gap: 40px; margin-top: 36px; }
+.teacher-metrics > div { display: grid; gap: 5px; }
+.teacher-metrics strong { font-size: clamp(25px, 3vw, 36px); letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+.teacher-metrics span { color: #727278; font-size: 13px; }
+.teacher-section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+.teacher-section-head h2 { font-size: clamp(25px, 3vw, 36px); letter-spacing: -.045em; margin: 9px 0 0; }
+.teacher-register button, .student-detail button, .teacher-register input, .teacher-register select, .student-detail select { font: inherit; }
+.teacher-export, .detail-export { background: #0071e3; color: white; border: 0; border-radius: 999px; padding: 13px 20px; min-height: 44px; font-size: 13px !important; font-weight: 600 !important; cursor: pointer; white-space: nowrap; }
+.teacher-export:disabled, .detail-export:disabled { opacity: .45; cursor: default; }
+.teacher-toolbar { display: grid; grid-template-columns: minmax(220px,1fr) minmax(160px,230px) minmax(150px,190px); gap: 14px; background: #ffffffb3; border: 1px solid #fff; padding: 18px; border-radius: 24px; }
+.teacher-toolbar label { display: flex; flex-direction: column; gap: 8px; font-size: 12px; font-weight: 600; color: #65656c; min-width: 0; }
+.teacher-toolbar input, .teacher-toolbar select, .student-detail select { width: 100%; min-width: 0; height: 46px; color: #1d1d1f; background: #f5f5f7; border: 1px solid #e0e0e5; border-radius: 12px; padding: 0 12px; font-size: 14px; }
+.teacher-status { color: #75757b; font-size: 13px; line-height: 1.5; margin: 20px 2px; min-height: 20px; }
+.student-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 18px; align-items: stretch; }
+.student-card { display: flex; flex-direction: column; align-items: stretch; text-align: left; min-width: 0; background: #fff; border: 1px solid #eaeaf0; border-radius: 28px; padding: 23px 20px 18px; color: #1d1d1f; box-shadow: 0 4px 18px #1d1d1f04; cursor: pointer; transition: box-shadow .2s ease, border-color .2s ease; }
+.student-card h3 { font-size: 16px; font-weight: 650; letter-spacing: -.025em; line-height: 1.35; min-height: 43px; margin: 0 0 7px; overflow-wrap: anywhere; }
+.student-card-status { font-size: 11px; line-height: 1.4; color: #76767c; min-height: 30px; }
+.student-card:disabled { cursor: wait; }
+.student-ring { --school-share: 0%; position: relative; width: 152px; height: 152px; flex: 0 0 152px; border-radius: 50%; background: conic-gradient(from -90deg, #ed3675 0 var(--school-share), #00b9c2 var(--school-share) 100%); margin: 22px auto; box-shadow: inset 0 0 0 1px #00000005; }
+.student-ring::before { content: ''; position: absolute; inset: 12px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px #ffffff55; }
+.student-ring.is-empty { background: #eeeeF2; }
+.student-ring-center { position: absolute; inset: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.student-ring-center strong { font-size: 29px; line-height: 1.2; letter-spacing: -.065em; font-variant-numeric: tabular-nums; }
+.student-ring-center span { font-size: 11px; color: #787880; margin-top: 3px; }
+.student-ring-placeholder { height: 152px; display: grid; place-items: center; margin: 22px auto; font-size: 32px; color: #999; }
+.student-card-legend { display: grid; gap: 8px; font-size: 11px; color: #686870; line-height: 1.4; margin-bottom: 22px; }
+.student-card-legend span::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: #ed3675; }
+.student-card-legend .certificate-hours::before { background: #00aeb8; }
+.student-card-foot { border-top: 1px solid #f0f0f3; padding-top: 15px; display: flex; gap: 8px; justify-content: space-between; font-size: 11px; color: #74747c; margin-top: auto; }
+.deleted-count { color: #a54c30 !important; }
+.teacher-footnote { font-size: 12px; line-height: 1.65; color: #777780; margin-top: 26px; max-width: 850px; }
+.teacher-empty { grid-column: 1/-1; text-align: center; color: #74747b; padding: 40px 16px; }
+.student-detail { border: 1px solid #ffffffc9; border-radius: 32px; width: min(880px,calc(100% - 40px)); max-height: calc(100svh - 40px); padding: 30px; background: #f8f8fa; color: #1d1d1f; box-shadow: 0 28px 100px #0003; overscroll-behavior: contain; }
+.student-detail::backdrop { background: #17172270; backdrop-filter: blur(8px); }
+.student-detail[open] { animation: teacher-detail-in .3s cubic-bezier(.2,.8,.3,1); }
+.student-detail-head { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
+.student-detail h2 { font: 650 clamp(25px,4vw,36px)/1.2 Inter,sans-serif; letter-spacing: -.04em; margin: 8px 0 0; overflow-wrap: anywhere; }
+.student-close { flex: 0 0 42px; width: 42px; height: 42px; border: 0; border-radius: 50%; background: #e9e9ed; color: #50505b; font-size: 27px !important; cursor: pointer; }
+.student-detail-summary { display: flex; gap: 32px; align-items: center; padding: 10px 0 24px; }
+.student-detail-summary .student-ring { margin: 20px 0; }
+.student-detail-summary .student-ring::before { background: #f8f8fa; }
+.student-detail-summary > div:last-child > strong { font-size: 21px; letter-spacing: -.02em; }
+.student-detail-summary p { line-height: 1.6; color: #71717a; font-size: 13px; }
+.student-detail-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.student-tabs { display: flex; border-radius: 14px; padding: 4px; background: #e8e8ed; }
+.student-tabs button { background: transparent; border: 0; border-radius: 11px; padding: 11px 16px; font-size: 13px; color: #676770; cursor: pointer; min-height: 42px; }
+.student-tabs button[aria-pressed="true"] { background: white; box-shadow: 0 2px 6px #0000000a; color: #1d1d1f; }
+.student-detail select { flex: 1; width: auto; min-width: 180px; background: white; }
+.detail-status { font-size: 12px; color: #74747e; line-height: 1.5; padding: 8px 0; }
+.student-experiences { display: grid; gap: 12px; }
+.teacher-experience { border: 1px solid #e8e8ee; border-radius: 20px; background: white; padding: 20px; }
+.teacher-experience-heading { display: flex; gap: 18px; justify-content: space-between; align-items: start; }
+.teacher-experience h3 { margin: 0; font-size: 16px; line-height: 1.4; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.teacher-experience-heading > strong { font-size: 17px; color: #1d1d1f; flex-shrink: 0; }
+.teacher-badges { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0; }
+.teacher-badges span { background: #f5f5f7; border-radius: 6px; padding: 5px 8px; font-size: 10px; color: #72727a; }
+.teacher-badges .modified-badge { color: #0065bd; background: #eef6ff; }
+.teacher-experience p { font-size: 13px; line-height: 1.65; color: #62626e; overflow-wrap: anywhere; }
+.teacher-experience .teacher-date { font-size: 11px; color: #86868e; }
+.teacher-register :focus-visible, .student-detail :focus-visible { outline: 3px solid #0071e3; outline-offset: 4px; }
+@keyframes teacher-detail-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@media(hover:hover) { .student-card:hover { border-color: #cfd0db; box-shadow: 0 10px 32px #1d1d1f0a; } }
+@media(max-width:1100px) { .student-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media(max-width:800px) { .student-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .teacher-toolbar { grid-template-columns: repeat(2,minmax(0,1fr)); } .teacher-search { grid-column: 1/-1; } .teacher-page main { padding-inline: 22px; } .teacher-hero { padding-top: 48px; } }
+@media(max-width:540px) { .teacher-page main { padding: 0 16px 44px; } .teacher-hero { padding: 40px 4px 34px; } .teacher-hero > p:last-of-type { font-size: 16px; } .teacher-metrics { gap: 24px; } .teacher-metrics span { font-size: 11px; } .teacher-section-head { align-items: start; flex-direction: column; } .teacher-export { width: 100%; } .teacher-toolbar { padding: 14px; gap: 12px; border-radius: 20px; } .teacher-toolbar input, .teacher-toolbar select, .student-detail select { font-size: 16px; } .student-grid { grid-template-columns: 1fr; gap: 14px; } .student-card { padding: 24px; } .student-card h3 { font-size: 20px; min-height: 0; } .student-card-status { min-height: 0; font-size: 12px; } .student-card-legend { font-size: 13px; } .student-card-foot { font-size: 12px; } .student-ring { width: 168px; height: 168px; flex-basis: 168px; } .student-detail { width: calc(100% - 20px); max-height: calc(100svh - 20px); padding: 22px 18px; border-radius: 26px; } .student-detail-summary { gap: 18px; align-items: center; } .student-detail-summary .student-ring { width: 112px; height: 112px; flex-basis: 112px; } .student-detail-summary .student-ring::before { inset: 9px; } .student-detail-summary .student-ring-center strong { font-size: 24px; } .student-detail-summary > div:last-child > strong { font-size: 17px; } .student-detail-summary p { font-size: 12px; } .student-detail-controls { gap: 10px; } .student-tabs { width: 100%; } .student-tabs button { flex: 1; } .student-detail select { min-width: 0; } .teacher-experience { padding: 16px; } }
+@media(prefers-reduced-motion:reduce) { .student-card { transition: none; } .student-detail[open] { animation: none; } }
