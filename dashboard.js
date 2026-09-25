@@ -72,9 +72,9 @@
     });
     auth.onAuthStateChanged(async user => {
         document.body.classList.add('dashboard-pending');
-        loadingMessage.textContent = '';
+        loadingMessage.textContent = 'Carico...';
         loadingRetry.hidden = true;
-        document.querySelector('.dashboard-spinner').hidden = false;
+        document.querySelector('.dashboard-spinner').style.display = '';
         const generation = ++sessionGeneration;
         if (stopTeacher) stopTeacher();
         stopTeacher = null;
@@ -122,7 +122,7 @@
             loadData();
         } catch (error) {
             if (generation !== sessionGeneration) return;
-            document.querySelector('.dashboard-spinner').hidden = true;
+            document.querySelector('.dashboard-spinner').style.display = 'none';
             loadingMessage.textContent = 'Non è possibile verificare il tuo accesso al registro.';
             loadingRetry.hidden = false;
         }
