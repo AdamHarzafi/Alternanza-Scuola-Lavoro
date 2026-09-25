@@ -20,7 +20,7 @@
         .dashboard-loading { display: none; }
         .dashboard-pending main, .dashboard-pending .dashboard-header nav a, .dashboard-pending footer { display: none; }
         .dashboard-pending .dashboard-loading { min-height: calc(100svh - 68px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; text-align: center; color: #6e6e73; }
-        .dashboard-spinner { width: 28px; height: 28px; border: 3px solid #e5e5ea; border-top-color: #86868b; border-radius: 50%; animation: dashboard-spin .8s linear infinite; }
+        .dashboard-spinner { width: 28px; height: 28px; color: #86868b; flex-shrink: 0; animation: dashboard-spin .9s steps(12,end) infinite; }
         .dashboard-loading button { border: 0; border-radius: 20px; padding: 10px 20px; background: #0071e3; color: white; cursor: pointer; }
         @keyframes dashboard-spin { to { transform: rotate(360deg); } }
         @media(prefers-reduced-motion:reduce) { .dashboard-spinner { animation: none; } }
@@ -40,7 +40,7 @@
         </div>
     </header>
 
-    <div class="dashboard-loading" role="status" aria-label="Caricamento del registro"><span class="dashboard-spinner" aria-hidden="true"></span><span id="dashboard-loading-message"></span><button id="dashboard-loading-retry" type="button" hidden>Riprova</button></div>
+    <div class="dashboard-loading" role="status" aria-live="polite"><svg class="dashboard-spinner" viewBox="0 0 32 32" aria-hidden="true"><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M16 3v5"/><path d="M22.5 4.7 20 9" opacity=".92"/><path d="m27.3 9.5-4.3 2.5" opacity=".84"/><path d="M29 16h-5" opacity=".76"/><path d="m27.3 22.5-4.3-2.5" opacity=".68"/><path d="M22.5 27.3 20 23" opacity=".6"/><path d="M16 29v-5" opacity=".52"/><path d="m9.5 27.3 2.5-4.3" opacity=".44"/><path d="m4.7 22.5 4.3-2.5" opacity=".36"/><path d="M3 16h5" opacity=".28"/><path d="m4.7 9.5 4.3 2.5" opacity=".2"/><path d="m9.5 4.7 2.5 4.3" opacity=".12"/></g></svg><span id="dashboard-loading-message">Carico...</span><button id="dashboard-loading-retry" type="button" hidden>Riprova</button></div>
     <main>
         <section class="hero" aria-labelledby="hero-title">
             <div class="hero-copy">
@@ -188,6 +188,6 @@
     <script src="hours-store.js?v=20260924-teachers"></script>
     <script src="teacher-model.js?v=20260924"></script>
     <script src="teacher-register.js?v=20260924-polish"></script>
-    <script src="dashboard.js?v=20260924-role-ready"></script>
+    <script src="dashboard.js?v=20260925-loader"></script>
 </body>
 </html>
