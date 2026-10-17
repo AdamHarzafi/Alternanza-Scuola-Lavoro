@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="IMMAGINI/LOGO-HARZAFI.png" width="200" alt="Harzafi">
+  <img src="IMMAGINI/LOGO-HARZAFI.webp" width="200" alt="Harzafi">
 </p>
 
 <h1 align="center">Harzafi FSL</h1>
@@ -31,7 +31,7 @@
 <p align="center"><sub>L’anteprima ospitata può richiedere l’autorizzazione del proprietario.</sub></p>
 
 <p align="center">
-  <img src="IMMAGINI/PC-HARZAFI-BOX.png" width="920" alt="Immagine di presentazione Harzafi: il portale illustrato sullo schermo di un portatile">
+  <img src="IMMAGINI/PC-HARZAFI-BOX.webp" width="920" alt="Immagine di presentazione Harzafi: il portale illustrato sullo schermo di un portatile">
 </p>
 
 <p align="center"><sub>Immagine di presentazione del progetto, non una schermata live della versione corrente.</sub></p>
@@ -42,7 +42,7 @@
 
 | Le tue esperienze | Il tuo account | Una lettura più semplice |
 | :--- | :--- | :--- |
-| <img src="IMMAGINI/LEZIONE.png" width="64" alt=""> | <img src="IMMAGINI/LOGO-HARZAFI-PRIVACY-BOX.png" width="64" alt=""> | <img src="IMMAGINI/LOGO-LIBRO-HARZAFI.png" width="64" alt=""> |
+| <img src="IMMAGINI/LEZIONE.webp" width="64" alt=""> | <img src="IMMAGINI/LOGO-HARZAFI-PRIVACY-BOX.webp" width="64" alt=""> | <img src="IMMAGINI/LOGO-LIBRO-HARZAFI.webp" width="64" alt=""> |
 | Ore, categorie e attestazioni, con dettagli che si aprono quando servono. | Spiegazioni comprensibili e collegamenti alle informazioni sul trattamento dei dati. | Pagine dedicate, testi leggibili e attenzione alle preferenze di movimento. |
 | [Esplora la dashboard](dashboard.html) | [Il tuo account](privacy-account.html) | [Accessibilità](accessibilita.html) |
 
@@ -232,7 +232,7 @@ Il testo applicabile è riportato in [LICENSE.md](LICENSE.md), nelle versioni it
 ---
 
 <p align="center">
-  <img src="IMMAGINI/LOGO-HARZAFI.png" width="110" alt="Harzafi"><br>
+  <img src="IMMAGINI/LOGO-HARZAFI.webp" width="110" alt="Harzafi"><br>
   <strong>Un progetto di Harzafi Adam.</strong><br>
   <sub>Esperienze al centro. Attenzione ai dettagli.</sub>
 </p>

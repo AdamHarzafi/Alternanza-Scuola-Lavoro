@@ -892,7 +892,7 @@ body.auth-page {
     font-size: 16px !important;
     font-weight: 700 !important;
     border-color: #dce1e7 !important;
-    background: #f8f7f5 url("IMMAGINI/SFONDO-HARZAFI-ID.png") center / 100% 100% no-repeat !important;
+    background: #f8f7f5 url("IMMAGINI/SFONDO-HARZAFI-ID.webp") center / 100% 100% no-repeat !important;
     box-shadow: 0 6px 15px rgba(38, 64, 91, .14), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
 }
 

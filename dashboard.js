@@ -182,7 +182,7 @@
         }[category];
     }
     function iconMarkup(certificate) {
-        const source = certificate ? 'IMMAGINI/CERTIFICAZIONE.png' : 'IMMAGINI/LEZIONE.png';
+        const source = certificate ? 'IMMAGINI/CERTIFICAZIONE.webp' : 'IMMAGINI/LEZIONE.webp';
         return '<img src="' + source + '" alt="" loading="lazy" decoding="async">';
     }
     function detailStat(label, value) {
