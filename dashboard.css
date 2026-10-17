@@ -424,6 +424,24 @@ button:disabled { opacity:.55; cursor:wait; }
     font-optical-sizing: auto;
     font-weight: 600;
 }
+.dashboard-page :is(.hero h1, .section-header h2) {
+    font-size: 36px;
+    line-height: 1.1;
+    letter-spacing: -.04em;
+}
+.dashboard-page .hero-lead {
+    margin-top: 6px;
+    color: var(--ink);
+    font-family: var(--font-text) !important;
+    font-size: 14px;
+    line-height: 1.45;
+    letter-spacing: -.01em;
+}
+.dashboard-page :is(.experience-detail-copy p, .official-note > p, #hours-dialog p) {
+    font-family: var(--font-text) !important;
+    font-size: 14px;
+    line-height: 1.5;
+}
 .dashboard-page :is(.summary-line strong, .ring-center strong) {
     font-family: var(--font-display) !important;
     font-weight: 600;
