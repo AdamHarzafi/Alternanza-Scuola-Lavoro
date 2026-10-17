@@ -25,6 +25,22 @@
     const dialog = document.getElementById('hours-dialog');
     const form = document.getElementById('hours-form');
     const formStatus = document.getElementById('hours-form-status');
+    const successToast = document.getElementById('dashboard-success-toast');
+    const successToastTitle = document.getElementById('dashboard-success-title');
+    const successToastMessage = document.getElementById('dashboard-success-message');
+    let successToastTimer;
+    function showSuccessToast(title, message) {
+        if (!successToast || !successToastTitle || !successToastMessage) return;
+        window.clearTimeout(successToastTimer);
+        successToastTitle.textContent = title;
+        successToastMessage.textContent = message;
+        successToast.setAttribute('aria-hidden', 'false');
+        successToast.classList.add('is-visible');
+        successToastTimer = window.setTimeout(() => {
+            successToast.classList.remove('is-visible');
+            successToast.setAttribute('aria-hidden', 'true');
+        }, 5000);
+    }
     const retry = document.getElementById('retry-hours');
     let unsubscribe, animation;
     let stopTeacher, sessionGeneration = 0;
@@ -447,6 +463,10 @@
             if (auth.currentUser?.uid !== uid) return;
             RegisterUI.close(dialog);
             status.textContent = 'Ore salvate su Firebase.';
+            showSuccessToast(
+                editing ? 'Modifica salvata' : 'Esperienza aggiunta',
+                editing ? 'Le informazioni sono aggiornate nel tuo registro.' : 'La nuova attività è nel tuo registro.'
+            );
         } catch (error) {
             if (auth.currentUser?.uid === uid) formStatus.textContent = errorMessage(error);
         } finally {
@@ -472,6 +492,7 @@
             if (auth.currentUser?.uid !== uid) return;
             RegisterUI.close(deleteDialog);
             status.textContent = 'Esperienza eliminata dal tuo registro.';
+            showSuccessToast('Esperienza eliminata', 'La voce è stata rimossa dal tuo registro.');
         } catch (error) { if (auth.currentUser?.uid === uid) message.textContent = errorMessage(error); }
         finally {
             deleteBusy = false;
