@@ -434,6 +434,11 @@ button:disabled { opacity:.55; cursor:wait; }
     line-height: .93;
     letter-spacing: -.062em;
 }
+.dashboard-page .section-header h2 {
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: .92;
+    letter-spacing: -.07em;
+}
 .dashboard-page .hero-lead {
     margin-top: 6px;
     color: var(--ink);
@@ -460,5 +465,8 @@ button:disabled { opacity:.55; cursor:wait; }
 @media (max-width: 700px) {
     .dashboard-page .hero h1 {
         font-size: clamp(3.15rem, 15vw, 5rem);
+    }
+    .dashboard-page .section-header h2 {
+        font-size: 3.4rem;
     }
 }
