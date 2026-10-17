@@ -14,9 +14,6 @@
     <meta property="og:type" content="website">
 
     <meta name="google-site-verification" content="sbEJOTIS_aeemOMbv_Alq3MKfx3Y9eryt8OcIdt8t3E" />
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="dns-prefetch" href="https://challenges.cloudflare.com">
 
@@ -28,15 +25,16 @@
     
     <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="style.css?v=20260831-donazioni-clean">
+    <!-- Font SF Pro locali. -->
+    <link rel="stylesheet" href="style.css?v=20261017-mobile-oltre-line">
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="home-cards.css?v=20260918-guide-photo">
+    <link rel="stylesheet" href="home-cards.css?v=20261017-journey-story-v30">
+    <link rel="stylesheet" href="environment-cards.css?v=20261017-environment-cards-v12">
     <script defer src="site-motion.js?v=20260906"></script>
-    <link rel="stylesheet" href="carousel-motion.css?v=20260917-shared">
+    <link rel="stylesheet" href="carousel-motion.css?v=20261017-overlay">
     <script defer src="carousel-motion.js?v=20260917-shared"></script>
+    <link rel="stylesheet" href="fonts.css?v=20261017-sf-copy-spacing">
+    <link rel="stylesheet" href="page-design.css?v=20261017-nav-button-weight">
 </head>
 <body class="home-page">
 
@@ -66,7 +64,7 @@
                 <div class="hero-copy-row">
                     <div class="hero-copy reveal" style="transition-delay: 0.16s;">
                         <p class="hero-kicker">Harzafi FSL</p>
-                        <h1>Il primo registro FSL.<span>Pensato per andare oltre.</span></h1>
+                        <h1>Il primo registro FSL.<span>Pensato per andare <br class="hero-mobile-break">oltre.</span></h1>
                     </div>
                     <div class="hero-cta-panel reveal" style="transition-delay: 0.24s;" aria-label="Azioni principali">
                         <a href="#features" class="hero-discover">Scopri il progetto <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
@@ -81,8 +79,7 @@
             <div class="apple-features-container">
                 <div class="apple-features-header">
                     <h2 class="apple-features-title">
-                        <span class="apple-title-main">Tutto ciò che ti serve.</span>
-                        <span class="apple-title-sub">In un unico posto.</span>
+                        <span class="apple-title-main">Guarda cosa ti sei perso.</span>
                     </h2>
                 </div>
 
@@ -108,7 +105,7 @@
                             <p class="apple-card-desc">Attestati e certificazioni sempre ordinati e disponibili quando servono.</p>
                         </div>
                         <div class="apple-card-media feature-card-media">
-                            <img src="IMMAGINI/LOGO-HARZAFI-PRIVACY-BOX.png" alt="Logo Harzafi Privacy" loading="lazy" decoding="async">
+                            <img src="IMMAGINI/BANNER%20HARZAFI%20SECURITY.png" alt="Banner Harzafi Security" width="2400" height="1350" loading="lazy" decoding="async">
                         </div>
                     </article>
 
@@ -136,7 +133,6 @@
                         </div>
                     </article>
                 </div>
-                </div>
                 <div class="carousel-player" id="features-carousel-player" style="--carousel-duration: 6500ms;" aria-label="Riproduzione automatica delle funzionalità">
                     <div class="carousel-timeline" role="group" aria-label="Seleziona una funzionalità">
                         <button class="carousel-timeline-step is-active" type="button" data-carousel-index="0" aria-label="Mostra la funzionalità 1" aria-current="true"></button>
@@ -148,6 +144,45 @@
                         <span class="carousel-pause-symbol" aria-hidden="true"><i></i><i></i></span>
                         <svg class="carousel-play-symbol" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z" fill="currentColor"/></svg>
                     </button>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="journey-story-banner" aria-labelledby="journey-story-title">
+            <h2 class="journey-story-title" id="journey-story-title">Ogni attività, facile da ritrovare.</h2>
+            <a class="journey-story-section-link" href="dashboard.html">
+                Scopri Harzafi
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+        </section>
+
+        <section class="journey-story-section" aria-label="Significato delle icone delle esperienze">
+            <div class="journey-story-container">
+                <div class="journey-story-panel">
+                    <div class="journey-story-highlights">
+                        <article class="journey-story-highlight">
+                            <div class="journey-story-highlight-media">
+                                <img src="IMMAGINI/CERTIFICAZIONE.png" alt="" width="2160" height="2160" loading="lazy" decoding="async">
+                            </div>
+                            <div class="journey-story-highlight-copy">
+                                <p class="journey-story-eyebrow">CERTIFICATO</p>
+                                <h3>Attività con attestato</h3>
+                                <p>L’icona segnala che per questa esperienza era previsto un certificato.</p>
+                            </div>
+                        </article>
+
+                        <article class="journey-story-highlight">
+                            <div class="journey-story-highlight-media">
+                                <img src="IMMAGINI/LEZIONE.png" alt="" width="2160" height="2160" loading="lazy" decoding="async">
+                            </div>
+                            <div class="journey-story-highlight-copy">
+                                <p class="journey-story-eyebrow">LEZIONE</p>
+                                <h3>Lezione frequentata</h3>
+                                <p>L’icona segnala che hai partecipato a una lezione o a un incontro formativo.</p>
+                            </div>
+                        </article>
+                    </div>
                 </div>
             </div>
         </section>
@@ -290,6 +325,99 @@
             </div>
         </section>
 
+        <section class="environment-section" aria-labelledby="environment-title">
+            <div class="environment-inner">
+                <header class="environment-heading">
+                    <h2 id="environment-title">Harzafi e l’ambiente.</h2>
+                    <a class="environment-heading-link" href="https://cloud.google.com/sustainability" target="_blank" rel="noopener noreferrer">Per saperne di più, scopri le iniziative per infrastrutture digitali più efficienti.</a>
+                </header>
+
+                <div class="environment-cards-shell" id="environment-cards-shell">
+                    <div class="environment-cards" id="environment-cards-track" tabindex="0" role="region" aria-label="Informazioni sull’ambiente e sull’infrastruttura di Harzafi">
+                        <article class="environment-card environment-card--violet">
+                            <svg class="environment-card-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                                <path d="M18.4 8.8 5.8 30.6a3.3 3.3 0 0 0 2.9 4.9h9.1M29.5 8.8l12.7 21.8a3.3 3.3 0 0 1-2.9 4.9h-9.1M24 39.2l-6.2-10.7m6.2 10.7 6.2-10.7M18.4 8.8l5.6 9.7m-5.6-9.7 3.2 5.5M29.5 8.8l-5.5 9.7m5.5-9.7-3.2 5.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <h3 class="environment-card-title">Una piattaforma <span>condivisa.</span></h3>
+                            <button class="environment-card-plus" type="button" data-environment-detail="environment-detail-platform" data-modal-eyebrow="INFRASTRUTTURA" data-modal-title="Una piattaforma condivisa." aria-label="Approfondisci l’infrastruttura digitale usata da Harzafi" aria-haspopup="dialog" aria-controls="environment-detail-modal" aria-expanded="false"><span class="environment-card-plus-disc" aria-hidden="true"><svg class="environment-card-plus-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span></button>
+                        </article>
+
+                        <article class="environment-card environment-card--orange">
+                            <svg class="environment-card-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                                <path d="M27.2 4.8 11.5 26h11.2l-2 17.2L36.5 21H25.2l2-16.2Z" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <h3 class="environment-card-title">Più efficienza, <span>nei data center.</span></h3>
+                            <button class="environment-card-plus" type="button" data-environment-detail="environment-detail-efficiency" data-modal-eyebrow="EFFICIENZA ENERGETICA" data-modal-title="Data center più efficienti." aria-label="Approfondisci i dati sull’efficienza energetica" aria-haspopup="dialog" aria-controls="environment-detail-modal" aria-expanded="false"><span class="environment-card-plus-disc" aria-hidden="true"><svg class="environment-card-plus-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span></button>
+                        </article>
+
+                        <article class="environment-card environment-card--teal">
+                            <svg class="environment-card-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                                <path d="M24 4.8v6.1m0 26.2v6.1m19.2-19.2h-6.1m-26.2 0H4.8m32.8-13.6-4.3 4.3M14.7 33.3l-4.3 4.3m27.2 0-4.3-4.3m-18.6-18.6-4.3-4.3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                                <circle cx="24" cy="24" r="8.3" stroke="currentColor" stroke-width="2.4"/>
+                                <path d="M24 19.7v4.8l3.2 2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <h3 class="environment-card-title">Energia rinnovabile, <span>su base annuale.</span></h3>
+                            <button class="environment-card-plus" type="button" data-environment-detail="environment-detail-renewables" data-modal-eyebrow="ENERGIA RINNOVABILE" data-modal-title="Energia rinnovabile, su base annuale." aria-label="Approfondisci i dati sull’energia rinnovabile" aria-haspopup="dialog" aria-controls="environment-detail-modal" aria-expanded="false"><span class="environment-card-plus-disc" aria-hidden="true"><svg class="environment-card-plus-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span></button>
+                        </article>
+                    </div>
+
+                    <template id="environment-detail-platform">
+                        <p class="environment-modal-intro">Per alcune funzioni del progetto, come l’accesso e l’archivio dei dati, Harzafi usa Firebase.</p>
+                        <ul class="environment-modal-list">
+                            <li><strong>Una base condivisa.</strong><span>Firebase e Google Cloud condividono alcuni prodotti e la relativa infrastruttura.</span></li>
+                            <li><strong>Un dato da contestualizzare.</strong><span>L’uso di questa piattaforma non misura da solo l’impronta ambientale specifica di Harzafi.</span></li>
+                        </ul>
+                        <a class="environment-modal-source" href="https://firebase.google.com/firebase-and-gcp" target="_blank" rel="noopener noreferrer">Scopri come si collegano Firebase e Google Cloud <span aria-hidden="true">↗</span></a>
+                    </template>
+
+                    <template id="environment-detail-efficiency">
+                        <p class="environment-modal-intro">Google dichiara che i propri data center sono in media oltre 1,5 volte più efficienti dal punto di vista energetico rispetto a un data center aziendale tipico.</p>
+                        <ul class="environment-modal-list">
+                            <li><strong>Il confronto è di Google.</strong><span>Il dato riguarda i data center gestiti da Google e il confronto indicato nella sua documentazione.</span></li>
+                            <li><strong>Non è una misura di Harzafi.</strong><span>Il consumo energetico del progetto non è stato calcolato.</span></li>
+                        </ul>
+                        <a class="environment-modal-source" href="https://cloud.google.com/blog/topics/sustainability/cop28-how-to-decarbonize-your-google-cloud-carbon-footprint" target="_blank" rel="noopener noreferrer">Consulta la fonte Google Cloud <span aria-hidden="true">↗</span></a>
+                    </template>
+
+                    <template id="environment-detail-renewables">
+                        <p class="environment-modal-intro">Google dichiara di aver abbinato ogni anno il 100% del proprio consumo elettrico globale con acquisti di energia rinnovabile.</p>
+                        <ul class="environment-modal-list">
+                            <li><strong>Il dato è annuale e globale.</strong><span>Non significa che ogni data center usi energia rinnovabile in ogni ora.</span></li>
+                            <li><strong>Il dato riguarda Google.</strong><span>Non rappresenta una misurazione dell’elettricità consumata da Harzafi.</span></li>
+                        </ul>
+                        <a class="environment-modal-source" href="https://cloud.google.com/blog/products/infrastructure/expanding-cloud-infrastructure-around-the-world" target="_blank" rel="noopener noreferrer">Consulta la fonte Google Cloud <span aria-hidden="true">↗</span></a>
+                    </template>
+
+                    <div class="carousel-player environment-carousel-player" id="environment-carousel-player" style="--carousel-duration: 7000ms;" aria-label="Scorrimento automatico delle informazioni ambientali">
+                        <div class="carousel-timeline" role="group" aria-label="Seleziona un’informazione ambientale">
+                            <button class="carousel-timeline-step is-active" type="button" data-carousel-index="0" aria-label="Mostra informazione ambientale 1" aria-current="true"></button>
+                            <button class="carousel-timeline-step" type="button" data-carousel-index="1" aria-label="Mostra informazione ambientale 2" aria-current="false"></button>
+                            <button class="carousel-timeline-step" type="button" data-carousel-index="2" aria-label="Mostra informazione ambientale 3" aria-current="false"></button>
+                        </div>
+                        <button class="carousel-play-toggle" type="button" aria-label="Metti in pausa le informazioni ambientali" aria-pressed="false">
+                            <span class="carousel-pause-symbol" aria-hidden="true"><i></i><i></i></span>
+                            <svg class="carousel-play-symbol" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z" fill="currentColor"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <p class="environment-note">Le informazioni ambientali riportate sono dichiarazioni pubbliche di Google. L’impronta specifica di Harzafi non è stata calcolata.</p>
+            </div>
+        </section>
+
+        <div class="access-modal-overlay environment-modal-overlay" id="environment-detail-modal" aria-hidden="true">
+            <section class="access-modal-panel environment-modal-panel" role="dialog" aria-modal="true" aria-labelledby="environment-modal-title" aria-describedby="environment-modal-content" tabindex="-1">
+                <button class="access-modal-close" type="button" aria-label="Chiudi i dettagli">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+                </button>
+                <div class="access-modal-scroll">
+                    <span class="access-modal-eyebrow" id="environment-modal-eyebrow"></span>
+                    <h2 id="environment-modal-title"></h2>
+                    <div class="access-modal-content environment-modal-content" id="environment-modal-content"></div>
+                </div>
+            </section>
+        </div>
+
         <footer id="footer" class="harzafi-footer">
             <div class="harzafi-footer-inner reveal">
                 <div class="harzafi-footer-main">
@@ -302,7 +430,7 @@
                     <div class="harzafi-footer-profile">
                         <img class="harzafi-footer-avatar" src="IMMAGINI/ADAM%20HARZAFI.png" alt="Adam Harzafi" width="64" height="64" loading="lazy" decoding="async">
                         <p class="harzafi-footer-eyebrow">PROGETTO PERSONALE</p>
-                        <h3>Harzafi Adam</h3>
+                        <h3>Adam Harzafi</h3>
                         <p class="harzafi-footer-school"><span>Classe 4AI</span><span>Anno scolastico 2026/2027</span></p>
                         <ul class="harzafi-footer-socials" aria-label="Social Harzafi">
                             <li><a href="https://www.instagram.com/adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri Instagram di Adam Harzafi"><img src="IMMAGINI/SOCIAL-INSTAGRAM.svg" alt=""></a></li>
@@ -329,18 +457,14 @@
 
     <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
 
-    <div id="scrollToTop" class="scroll-to-top" title="Torna su">
-        <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
-    </div>
-
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-functions-compat.js"></script>
 
-    <script defer src="carousel-player.js?v=20260917-shared-motion"></script>
+    <script defer src="carousel-player.js?v=20261017-player-rest"></script>
     <script defer src="auth-session.js?v=20260923-app-check"></script>
-    <script defer src="main.js?v=20260917-shared-motion"></script>
+    <script defer src="main.js?v=20261017-environment-modal-v3"></script>
 </body>
 </html>

@@ -16,7 +16,7 @@ for (const entry of fs.readdirSync(projectRoot, { withFileTypes: true })) {
     fs.copyFileSync(path.join(projectRoot, entry.name), path.join(clientRoot, entry.name));
 }
 
-for (const directory of ['IMMAGINI', 'src']) {
+for (const directory of ['IMMAGINI', 'fonts', 'src']) {
     const source = path.join(projectRoot, directory);
     if (fs.existsSync(source)) {
         fs.cpSync(source, path.join(clientRoot, directory), { recursive: true });

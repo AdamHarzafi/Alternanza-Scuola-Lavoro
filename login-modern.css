@@ -18,7 +18,7 @@ body.auth-page {
 body.auth-page {
     margin: 0;
     color: var(--login-text);
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    font-family: SF Pro Text, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
 }
 
 body.auth-page::before,
@@ -888,7 +888,7 @@ body.auth-page {
     height: 50px !important;
     min-height: 50px !important;
     color: #111827 !important;
-    font-family: "Inter", sans-serif !important;
+    font-family: "SF Pro Text", sans-serif !important;
     font-size: 16px !important;
     font-weight: 700 !important;
     border-color: #dce1e7 !important;
@@ -956,7 +956,7 @@ body.auth-page {
     }
 }
 
-/* Interazioni finali richieste per l'accesso */
+/* SF Pro Textazioni finali richieste per l'accesso */
 .login-topbar {
     justify-content: flex-end;
 }
@@ -1629,4 +1629,44 @@ body.auth-page {
 @media (prefers-reduced-motion: reduce) {
   :is(#hid-modal, #forgot-sheet-modal), :is(#hid-modal, #forgot-sheet-modal) .modal-content { transition: none; }
   :is(#hid-modal, #forgot-sheet-modal).active .modal-content { animation: none; transform: none; }
+}
+
+/* Ritmo tipografico più compatto e regolare, in linea con la pagina Apple di accesso. */
+#login-page-wrapper .auth-title {
+    line-height: 1.04 !important;
+}
+
+#login-page-wrapper .auth-subtitle,
+#login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+    margin-top: 10px !important;
+    margin-bottom: 16px !important;
+    line-height: 1.45 !important;
+}
+
+#login-page-wrapper .segmented-control {
+    margin-bottom: 16px !important;
+}
+
+#login-page-wrapper .forgot-link {
+    margin-top: 8px;
+}
+
+/* On touch screens use one transition for Harzafi ID: the keyframe animation
+   was competing with the sheet's transform transition and caused a brief snap. */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+    #hid-modal .modal-content {
+        transition: transform .36s cubic-bezier(.22, 1, .36, 1), opacity .2s ease;
+    }
+
+    #hid-modal.active .modal-content {
+        animation: none;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #hid-modal .modal-content {
+        transition: none;
+    }
 }

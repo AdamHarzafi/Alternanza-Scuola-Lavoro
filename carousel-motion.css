@@ -1,4 +1,200 @@
-/* Dal cerchio alla pillola: lo spazio del player resta sempre stabile. */
+/* ==========================================================================
+   Carousel Player — Layout, Timeline & Morphing stile Apple (56px)
+   ========================================================================== */
+
+body .carousel-player {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    margin-top: 24px !important;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Nasconde totalmente il player se non serve scorrere (PC) */
+body .carousel-player.is-hidden-by-overflow {
+    display: none !important;
+}
+
+/* ==========================================================================
+   Contenitore Timeline (Altezza 56px)
+   ========================================================================== */
+body .carousel-timeline {
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    padding: 0 24px !important;
+    box-sizing: border-box !important;
+    border-radius: 999px !important;
+    background: rgba(232, 232, 237, .74) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
+    isolation: isolate;
+}
+
+/* ==========================================================================
+   Puntini / Capsule della Timeline (SOLO 2 COLORI: #86868b e #1d1d1f)
+   ========================================================================== */
+body .carousel-timeline-step {
+    position: relative !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    height: 8px !important;
+    min-height: 8px !important;
+    max-height: 8px !important;
+    line-height: 0 !important;
+    width: 8px;
+    flex: 0 0 8px;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    outline: none !important;
+    border-radius: 999px !important;
+    background-color: #86868b; /* Grigio chiaro identico per tutto */
+    cursor: pointer;
+    overflow: hidden !important;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: width .34s cubic-bezier(.25, 1, .5, 1),
+                flex-basis .34s cubic-bezier(.25, 1, .5, 1),
+                background-color .24s ease;
+}
+
+/* Capsula attiva di base: ESATTAMENTE lo stesso grigio dei pallini */
+body .carousel-timeline-step.is-active {
+    width: 40px;
+    flex: 0 0 40px;
+    background-color: #86868b !important;
+}
+
+body .carousel-timeline-step::before {
+    display: none !important;
+}
+
+/* La linea NERA di caricamento compare solo sopra il grigio chiaro */
+body .carousel-timeline-step::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100% !important;
+    width: 8px;
+    border-radius: 999px !important;
+    background-color: #1d1d1f !important; /* L'UNICO nero presente */
+    opacity: 0;
+    pointer-events: none;
+    transform: none !important;
+}
+
+body .carousel-player:not(.is-paused):not(.is-dragging):not(.is-animating) .carousel-timeline-step.is-active::after {
+    opacity: 1;
+    animation: sharedCarouselTimelineFill var(--carousel-duration, 6500ms) linear forwards;
+}
+
+@keyframes sharedCarouselTimelineFill {
+    from { width: 8px; }
+    to { width: 100%; }
+}
+
+/* ==========================================================================
+   DURANTE LO SCORRIMENTO (Morphing)
+   ========================================================================== */
+body .carousel-player.is-dragging .carousel-timeline-step,
+body .carousel-player.is-measuring .carousel-timeline-step,
+body .carousel-player.is-animating .carousel-timeline-step {
+    transition: none !important;
+    will-change: width, flex-basis, background-color;
+}
+
+body .carousel-player.is-dragging .carousel-timeline-step::after,
+body .carousel-player.is-animating .carousel-timeline-step::after {
+    display: none !important;
+    opacity: 0 !important;
+    animation: none !important;
+}
+
+/* QUANDO IN PAUSA: la capsula resta grigio chiaro, uguale agli altri pallini */
+body .carousel-player.is-user-paused .carousel-timeline-step.is-active {
+    background-color: #86868b !important;
+}
+
+body .carousel-player.is-user-paused .carousel-timeline-step.is-active::after {
+    display: none !important;
+    opacity: 0 !important;
+    animation: none !important;
+}
+
+/* ==========================================================================
+   Pulsante Play / Pausa (Cerchio perfetto a 56px)
+   ========================================================================== */
+body .carousel-play-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    flex: 0 0 56px !important;
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 50% !important;
+    border: none !important;
+    outline: none !important;
+    background: rgba(232, 232, 237, .74) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
+    color: #1d1d1f !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color .2s ease, transform .2s ease;
+}
+
+body .carousel-play-toggle:hover {
+    background: rgba(222, 222, 227, .84) !important;
+}
+
+body .carousel-play-toggle > .carousel-toggle-icons {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    pointer-events: none !important;
+    overflow: visible !important;
+}
+
+body .carousel-play-toggle .carousel-icon {
+    display: none !important;
+    fill: #1d1d1f !important;
+    opacity: 0;
+    transform-origin: 28px 28px;
+    transition: opacity .2s ease, transform .25s ease;
+}
+
+body .carousel-play-toggle[data-state="playing"] .carousel-icon-pause,
+body .carousel-play-toggle[data-state="paused"] .carousel-icon-play,
+body .carousel-play-toggle[data-state="ended"] .carousel-icon-replay {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* ==========================================================================
+   ANIMAZIONE ORIGINALE DI ENTRATA: Dal cerchio alla pillola
+   ========================================================================== */
 body .carousel-player.has-scroll-reveal {
     --player-orb-size: 56px;
     --player-orb-offset: 35px;
@@ -9,11 +205,9 @@ body .carousel-player.has-scroll-reveal {
 }
 
 body .has-scroll-reveal .carousel-timeline {
-    position: relative;
-    isolation: isolate;
-    background: transparent;
-    backdrop-filter: none;
+    background: transparent !important;
     -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 body .has-scroll-reveal .carousel-timeline::before {
@@ -22,7 +216,9 @@ body .has-scroll-reveal .carousel-timeline::before {
     inset: 0;
     z-index: -1;
     border-radius: 999px;
-    background: #e8e8ed;
+    background: rgba(232, 232, 237, .74);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
     clip-path: inset(0 calc((100% - var(--player-orb-size)) / 2) round 999px);
     translate: var(--player-orb-offset) 12px;
     scale: .85;
@@ -32,7 +228,7 @@ body .has-scroll-reveal .carousel-timeline::before {
 body .has-scroll-reveal .carousel-timeline-step {
     opacity: 0;
     visibility: hidden;
-    transition: opacity .12s ease, visibility 0s linear .12s, width .32s var(--apple-ease, cubic-bezier(.22, 1, .36, 1)), flex-basis .32s var(--harzafi-ease, ease), transform .22s ease;
+    transition: opacity .12s ease, visibility 0s linear .12s, width .32s cubic-bezier(.22, 1, .36, 1), flex-basis .32s ease, transform .22s ease;
 }
 
 body .has-scroll-reveal .carousel-play-toggle {
@@ -60,7 +256,7 @@ body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-timeline
 body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-timeline-step {
     opacity: 1;
     visibility: visible;
-    transition: opacity .24s ease .4s, visibility 0s .4s, width .32s var(--apple-ease, cubic-bezier(.22, 1, .36, 1)), flex-basis .32s var(--harzafi-ease, ease), transform .22s ease;
+    transition: opacity .24s ease .4s, visibility 0s .4s, width .32s cubic-bezier(.22, 1, .36, 1), flex-basis .32s ease, transform .22s ease;
 }
 
 body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-play-toggle {
@@ -72,7 +268,7 @@ body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-play-tog
 }
 
 @media (max-width: 760px) {
-    .home-page .carousel-player.has-scroll-reveal {
+    body .carousel-player.has-scroll-reveal {
         --player-orb-size: 54px;
         --player-orb-offset: 33px;
     }
@@ -86,31 +282,4 @@ body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-play-tog
         translate: none !important;
         scale: none !important;
     }
-}
-
-
-body .access-carousel-player.has-scroll-reveal {
-    --player-orb-size: 54px;
-    --player-orb-offset: 33px;
-}
-
-/* La larghezza cresce senza deformare le due estremità semicircolari. */
-body .carousel-player.has-scroll-reveal .carousel-timeline-step::after {
-    width: 8px;
-    border-radius: 4px;
-    transform: translateY(-50%);
-}
-
-body .carousel-player.has-scroll-reveal .carousel-timeline-step.is-active::after {
-    animation-name: sharedCarouselTimelineFill;
-}
-
-@keyframes sharedCarouselTimelineFill {
-    from { width: 8px; }
-    to { width: 100%; }
-}
-
-
-body .access-carousel-player.has-scroll-reveal .carousel-timeline-step::after {
-    transform: none;
 }

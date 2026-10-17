@@ -83,15 +83,6 @@ window.addEventListener('load', () => {
     });
 });
 
-const scrollBtn = document.getElementById('scrollToTop');
-if (scrollBtn) {
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) scrollBtn.classList.add('visible'); 
-        else scrollBtn.classList.remove('visible');
-    });
-    scrollBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
-}
-
 document.addEventListener("DOMContentLoaded", function() {
     const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
     const observer = new IntersectionObserver((entries, observer) => {
@@ -134,6 +125,68 @@ document.addEventListener("DOMContentLoaded", function() {
         playerId: 'support-carousel-player',
         onlyWhenOverflow: true,
         pauseOnFocus: true
+    });
+    setupCarouselPlayer({
+        trackId: 'environment-cards-track',
+        itemSelector: '.environment-card',
+        playerId: 'environment-carousel-player',
+        edgeContainerId: 'environment-cards-shell',
+        label: 'informazioni ambientali',
+        onlyWhenOverflow: true,
+        pauseOnFocus: true,
+        suspendWhile: () => document.body.classList.contains('access-modal-open')
+    });
+
+    const environmentModal = document.getElementById('environment-detail-modal');
+    const environmentModalPanel = environmentModal?.querySelector('.environment-modal-panel');
+    const environmentModalScroll = environmentModal?.querySelector('.access-modal-scroll');
+    const environmentModalClose = environmentModal?.querySelector('.access-modal-close');
+    const environmentModalEyebrow = document.getElementById('environment-modal-eyebrow');
+    const environmentModalTitle = document.getElementById('environment-modal-title');
+    const environmentModalContent = document.getElementById('environment-modal-content');
+    let environmentModalTrigger = null;
+    let environmentModalFocusCleanup = null;
+
+    const closeEnvironmentModal = () => {
+        if (!environmentModal?.classList.contains('is-open')) return;
+        environmentModal.classList.remove('is-open');
+        environmentModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('access-modal-open');
+        environmentModalTrigger?.setAttribute('aria-expanded', 'false');
+        document.dispatchEvent(new CustomEvent('accessmodalchange'));
+        environmentModalFocusCleanup?.();
+        environmentModalFocusCleanup = null;
+        window.requestAnimationFrame(() => environmentModalTrigger?.focus());
+    };
+
+    const openEnvironmentModal = (trigger) => {
+        const template = document.getElementById(trigger.dataset.environmentDetail);
+        if (!(template instanceof HTMLTemplateElement) || !environmentModal || !environmentModalTitle || !environmentModalContent || !environmentModalEyebrow) return;
+
+        document.querySelectorAll('[data-environment-detail]').forEach((button) => button.setAttribute('aria-expanded', 'false'));
+        environmentModalTrigger = trigger;
+        trigger.setAttribute('aria-expanded', 'true');
+        environmentModalEyebrow.textContent = trigger.dataset.modalEyebrow || '';
+        environmentModalTitle.textContent = trigger.dataset.modalTitle || '';
+        environmentModalContent.replaceChildren(template.content.cloneNode(true));
+        if (environmentModalScroll) environmentModalScroll.scrollTop = 0;
+        environmentModal.setAttribute('aria-hidden', 'false');
+        environmentModal.classList.add('is-open');
+        document.body.classList.add('access-modal-open');
+        document.dispatchEvent(new CustomEvent('accessmodalchange'));
+        environmentModalFocusCleanup = trapFocus(environmentModalPanel);
+    };
+
+    document.querySelectorAll('[data-environment-detail]').forEach((button) => {
+        button.addEventListener('click', () => openEnvironmentModal(button));
+    });
+
+    environmentModalClose?.addEventListener('click', closeEnvironmentModal);
+    environmentModal?.addEventListener('click', (event) => {
+        if (event.target === environmentModal) closeEnvironmentModal();
+    });
+    environmentModal?.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeEnvironmentModal();
     });
 
     function trapFocus(modal) {

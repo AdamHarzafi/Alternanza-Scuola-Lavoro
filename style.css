@@ -1,3 +1,11 @@
+/* ==========================================================================
+   Font SF Pro caricati localmente da fonts.css.
+   ========================================================================== */
+:root {
+    --font-text: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 :root {
             --primary: #0284c7;        
             --primary-hover: #0369a1;  
@@ -20,7 +28,7 @@
             --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: inherit; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
 /* ==========================================================================
    ACCESSIBILITÀ (WCAG 2.1 AA) - Gestione del Focus Visibile
    ========================================================================== */
@@ -113,7 +121,7 @@
         .partners-title {
             margin-bottom: 50px;
             color: #6e6e73;
-            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: var(--font-display);
             font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 800;
             line-height: 1.05;
@@ -861,7 +869,7 @@
         
         .apple-input { width: 100%; height: 52px; padding: 0 20px; background: #f5f5f7; border: 1px solid transparent; border-radius: 16px; font-size: 1.05rem; font-weight: 600; color: var(--text-dark); transition: background-color 0.25s ease-out, border-color 0.25s ease-out, box-shadow 0.25s ease-out, color 0.25s ease-out; box-sizing: border-box; }
         .apple-input:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15); }
-        .apple-input::placeholder { color: #a1a1aa; font-weight: 500; font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; letter-spacing: normal;}
+        .apple-input::placeholder { color: #a1a1aa; font-weight: 500; font-family: var(--font-text); letter-spacing: normal;}
         #password-input { font-family: Verdana, sans-serif; letter-spacing: 2px; }
 
         .custom-select { position: relative; width: 100%; }
@@ -1105,26 +1113,11 @@
         .map-app-btn img { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08)); transition: transform 0.3s var(--apple-ease); }
         .map-app-btn span { font-size: clamp(0.7rem, 2.5vw, 0.85rem); font-weight: 700; color: var(--text-dark); margin-top: 8px; white-space: nowrap; }
 
-        .scroll-to-top {
-            position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px;
-            border-radius: 50%; background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--primary); cursor: pointer; z-index: 9900;
-            opacity: 0; pointer-events: none; transform: translateY(20px);
-            transition: opacity 0.3s ease-out, transform 0.3s ease-out, color 0.3s ease-out, box-shadow 0.3s ease-out;
-        }
-        .scroll-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .scroll-to-top svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: transform 0.3s; }
-        
         @media (hover: hover) and (pointer: fine) {
             .btn-premium:hover { transform: scale(1.04); background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(2, 132, 199, 0.2); }
             .btn-gradient:hover { transform: translateY(-3px) scale(1.02); background: var(--primary-hover); box-shadow: 0 15px 35px rgba(2, 132, 199, 0.35); }
             .btn-secondary:hover { background: #fff; border-color: var(--primary-light); color: var(--primary); transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.05);}
             .btn-text:hover { color: var(--primary); }
-            .scroll-to-top:hover { transform: translateY(-6px) scale(1.05); color: var(--primary-hover); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); }
-            .scroll-to-top:hover svg { transform: translateY(-2px); }
             .nav-links a:hover { color: var(--primary); transform: translateY(-2px); }
             .hero-main-img:hover { transform: translateY(-12px) scale(1.02); filter: drop-shadow(0 35px 55px rgba(2, 132, 199, 0.2)); }
             .partners-inner a:hover img { transform: scale(1.15); filter: opacity(1) drop-shadow(0 15px 25px rgba(0,0,0,0.1)); }
@@ -1301,7 +1294,6 @@
             .legal-links { flex-direction: column; gap: 15px;}
             .legal-links span { display: none; }
             .cie-card-container { transform: scale(0.9); }
-            .scroll-to-top { bottom: 20px; right: 20px; width: 50px; height: 50px; }
             .custom-bottom-sheet { align-items: flex-end; padding: 0; }
             .custom-bottom-sheet .avviso-modal-content { border-radius: 32px 32px 0 0; height: 95dvh; max-height: 95dvh; max-width: 100%; padding: 30px 20px calc(40px + env(safe-area-inset-bottom, 0px)); transform: translateY(100%); overflow: hidden; overflow-y: auto; -webkit-mask-image: -webkit-radial-gradient(white, black); }
             .avviso-inner-content { display: flex; flex-direction: column; justify-content: flex-start; height: 100%; padding-top: 10px; }
@@ -1538,9 +1530,10 @@
     gap: 56px;
 }
 .hero-copy { max-width: min(900px, 70vw); }
-.hero-kicker { margin: 0 0 10px; color: #1d1d1f; font-size: clamp(1.15rem, 1.6vw, 1.55rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.1; }
-.hero-copy h1 { margin: 0; color: #1d1d1f; font-size: clamp(2.6rem, 4.45vw, 4.7rem); font-weight: 750; letter-spacing: -.061em; line-height: .98; }
+.hero-kicker { margin: 0 0 8px; color: #1d1d1f; font-size: 1.75rem; font-weight: 600; letter-spacing: -.025em; line-height: 1.14; }
+.hero-copy h1 { margin: 0; color: #1d1d1f; font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 600; letter-spacing: -.035em; line-height: 1.06; }
 .hero-copy h1 span { display: block; }
+.hero-mobile-break { display: none; }
 .hero-hosting { display: flex; align-items: center; gap: 8px; margin: 14px 0 0; color: #6e6e73; font-size: .92rem; font-weight: 600; line-height: 1.25; }
 .hero-hosting > span { width: 8px; height: 8px; border-radius: 50%; background: #34c759; box-shadow: 0 0 0 4px rgba(52,199,89,.11); }
 .hero-cta-panel {
@@ -1608,10 +1601,11 @@
     .app-token--classroom { left: 6%; }
     .app-token--gemini { left: 88%; }
     .hero-copy { max-width: 68vw; }
-    .hero-copy h1 { font-size: clamp(2.45rem, 5.2vw, 4.15rem); }
+    .hero-copy h1 { font-size: clamp(2.45rem, 5.82vw, 4rem); }
 }
 
 @media (max-width: 760px) {
+    .hero-mobile-break { display: block; }
     .navbar-wrapper,
     .navbar-wrapper.scrolled {
         min-height: 48px;
@@ -1693,8 +1687,8 @@
 
 .hero-copy h1 {
     font-weight: 600;
-    line-height: 1.02;
-    letter-spacing: -0.048em;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
 }
 
 .carousel-player {
@@ -2478,4 +2472,22 @@
         padding: 0 24px;
         font-size: .8rem;
     }
+}
+
+/* ==========================================================================
+   FONT — applicazione: Text per il testo, Display per i titoli
+   ========================================================================== */
+html, body {
+    font-family: var(--font-text);
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6,
+.apple-title-main, .apple-title-sub,
+.apple-card-heading, .apple-features-title, .apple-showcase-title,
+.partners-title, .hero-copy h1, .support-effort-content h2 {
+    font-family: var(--font-display);
 }

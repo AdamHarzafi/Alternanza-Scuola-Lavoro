@@ -4,6 +4,20 @@
     overflow-x: clip;
 }
 
+/* IMPORTANTE: style.css mette overflow-x:hidden sul body, che lo trasforma in un
+   contenitore di scorrimento e rompe position:sticky (il player non resterebbe
+   agganciato al fondo dello schermo). "clip" taglia allo stesso modo ma NON crea
+   un contenitore di scorrimento, quindi lo sticky torna a funzionare. */
+body.home-page {
+    overflow-x: clip;
+}
+
+.home-page #landing-view,
+.home-page .apple-features-section,
+.home-page .apple-features-container {
+    overflow: visible;
+}
+
 /* Raccordo fisso al bianco: sopra lo sfondo, sotto testo e pulsanti. */
 .home-page .hero-stage {
     z-index: 0;
@@ -26,47 +40,19 @@
     );
 }
 
-/* Le funzionalità usano gli stessi componenti del riquadro Specialist. */
-.home-page .apple-features-grid {
-    grid-auto-columns: 380px;
-    gap: 24px;
-    padding: 10px 4px 30px;
-    margin-inline: -4px;
-    scroll-snap-type: x mandatory;
-}
-
+/* ==========================================================================
+   Stili Card Funzionalità (Sfondo #f5f5f7, zero ombre)
+   ========================================================================== */
 .home-page .feature-card {
+    box-shadow: none !important;
+    background-color: #f5f5f7 !important;
+    border: none !important;
     width: 100%;
     min-width: 0;
 }
 
-.home-page .feature-card .apple-card-top {
-    flex-shrink: 0;
-}
-
-.home-page .feature-card--progress .apple-card-eyebrow {
-    color: #db286b;
-    --eyebrow-gradient: linear-gradient(90deg, #e52b64 0%, #d42d7c 55%, #b632a4 100%);
-}
-
-.home-page .feature-card--privacy .apple-card-eyebrow {
-    color: #049be9;
-}
-
-.home-page .feature-card--events .apple-card-eyebrow {
-    color: #c8925e;
-    --eyebrow-gradient: linear-gradient(90deg, #c8925e, #f8b667);
-}
-
-@supports (background-clip: text) or (-webkit-background-clip: text) {
-    .home-page .feature-card--progress .apple-card-eyebrow,
-    .home-page .feature-card--events .apple-card-eyebrow {
-        width: fit-content;
-        background-image: var(--eyebrow-gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
+.home-page .feature-card:hover {
+    transform: none;
 }
 
 @media (forced-colors: active) {
@@ -76,109 +62,686 @@
     }
 }
 
-.home-page .feature-card-media {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1 1 240px;
-    min-height: 0;
-    padding: 24px;
-    margin-top: 12px;
-}
-
-.home-page .feature-card-media > img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    max-height: 280px;
-    object-fit: contain;
-}
-
-.home-page .feature-card--privacy .feature-card-media > img {
-    max-width: 190px;
-    max-height: 210px;
-}
-
-.home-page .feature-card--progress .feature-card-media > img {
-    max-width: 240px;
-    max-height: 240px;
-}
-
-.home-page .feature-card--events .feature-card-media,
-.home-page .feature-card--id .feature-card-media {
-    align-items: flex-end;
-    padding: 12px 12px 0;
-}
-
-.home-page .feature-card--events .feature-card-media > img,
-.home-page .feature-card--id .feature-card-media > img {
-    object-position: center bottom;
-}
-
-/* Nessuna velatura o sfocatura compare ai bordi durante lo scorrimento. */
 .home-page .apple-features-carousel::before,
 .home-page .apple-features-carousel::after,
 .home-page .apple-cards-carousel-shell::before,
 .home-page .apple-cards-carousel-shell::after {
     content: none;
     display: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
 }
 
 .home-page .carousel-player[hidden] {
     display: none;
 }
 
-@media (min-width: 901px) {
-    .home-page .apple-features-grid {
-        grid-auto-columns: calc((100% - 48px) / 3);
-        margin-inline: 0;
-        padding-inline: 0;
+/* ==========================================================================
+   GALLERIA FUNZIONALITÀ — riquadri grandi come quelli Apple
+   Desktop: 1258 × 678 px, con il riquadro successivo che "spunta" a destra.
+   ========================================================================== */
+.home-page .apple-features-section {
+    --gallery-card-w: 1258px;
+    --gallery-gutter: clamp(20px, 5vw, 48px);
+    --gallery-gap: 22px;
+    /* Allinea il primo riquadro alla colonna del titolo e lascia scorrere
+       il resto fino al bordo destro dello schermo. */
+    --gallery-pad: max(var(--gallery-gutter), calc((100% - var(--gallery-card-w)) / 2));
+    max-width: none;
+    margin: 120px 0 90px;
+    padding: 0;
+}
+
+/* Titoli di sezione — stile Apple ("Get the highlights."): 56px, grassetto, un solo colore */
+.home-page .apple-features-title,
+.home-page .apple-showcase-title {
+    display: block;
+    max-width: 725px;
+    margin: 0;
+    font-size: clamp(2.25rem, 5.47vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.0714;
+    letter-spacing: -0.025em;
+    color: #1d1d1f;
+    text-wrap: balance;
+}
+
+.home-page .apple-showcase-title {
+    width: 100%;
+    max-width: none;
+}
+
+.home-page .apple-features-title .apple-title-main,
+.home-page .apple-showcase-title .apple-title-main {
+    color: #1d1d1f;
+    font-weight: 600;
+}
+
+/* Il sottotitolo resta su una riga finché lo spazio disponibile lo consente. */
+.home-page .apple-showcase-title .apple-title-sub {
+    display: block;
+    max-width: none;
+    color: #86868b;
+    font-weight: 600;
+    text-wrap: wrap;
+}
+
+/* Tipografia delle card come negli esempi forniti. */
+.home-page .apple-card-eyebrow {
+    font-family: var(--font-text);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.3334;
+    color: #424245;
+    padding: 0 0 6px;
+    margin-bottom: 0;
+}
+
+.home-page .apple-card-heading {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.1429;
+    letter-spacing: 0.007em;
+}
+
+.home-page .apple-card-desc {
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.3;
+    padding: 6px 0 0;
+    color: #1d1d1f;
+    margin: 0;
+    max-width: 300px;
+    letter-spacing: 0;
+    text-wrap: pretty;
+}
+
+.home-page .apple-features-header {
+    width: min(var(--gallery-card-w), calc(100% - 2 * var(--gallery-gutter)));
+    margin: 0 auto 48px;
+}
+
+/* Il carosello è una griglia a una sola cella: scorrimento e player stanno
+   nella stessa cella, così il player può restare sopra alle foto. */
+.home-page .apple-features-carousel {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    /* Seconda riga: lo spazio sotto le schede dove il player si ferma a fine corsa
+       (32px sotto la scheda + player 56px + 28px sotto). */
+    grid-template-rows: auto var(--player-rest, 116px);
+}
+
+.home-page .apple-features-grid {
+    grid-area: 1 / 1;
+    display: grid;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: min(var(--gallery-card-w), 100%);
+    gap: var(--gallery-gap);
+    margin: 0;
+    padding: 0 var(--gallery-pad);
+    scroll-padding-inline: var(--gallery-pad);
+    position: relative;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+}
+
+.home-page .apple-features-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.home-page .apple-features-grid > .feature-card {
+    --card-inset: clamp(28px, 4.6vw, 64px);
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    aspect-ratio: 1258 / 678;
+    min-height: 520px;
+    border-radius: clamp(24px, 2.4vw, 32px);
+    overflow: hidden;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+/* ---- Testo -------------------------------------------------------------- */
+.home-page .feature-card .apple-card-top {
+    position: absolute;
+    z-index: 3;
+    flex: none;
+    width: min(42%, 500px);
+    padding: 0;
+}
+
+.home-page .feature-card .apple-card-heading {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.1429;
+    letter-spacing: 0.007em;
+}
+
+.home-page .feature-card .apple-card-desc {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-top: 0;
+    max-width: 300px;
+    letter-spacing: 0;
+}
+
+/* ---- Media -------------------------------------------------------------- */
+.home-page .feature-card .apple-card-media {
+    position: absolute;
+    z-index: 1;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.home-page .feature-card-media > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* ==========================================================================
+   POSIZIONI DIVERSE DEL TESTO (desktop)
+   1 · in alto al centro      2 · in basso a sinistra
+   3 · in alto a sinistra     4 · al centro a destra
+   ========================================================================== */
+
+/* 1 — Il tuo percorso: testo in alto, centrato. Grafico sotto. */
+.home-page .feature-card--progress .apple-card-top {
+    top: var(--card-inset);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(72%, 760px);
+    text-align: center;
+}
+
+.home-page .feature-card--progress .apple-card-eyebrow,
+.home-page .feature-card--progress .apple-card-desc {
+    margin-inline: auto;
+}
+
+.home-page .feature-card--progress .feature-card-media {
+    inset: 40% 0 0 0;
+    padding: 0 0 clamp(20px, 3vw, 36px);
+}
+
+.home-page .feature-card--progress .feature-card-media > img {
+    max-width: 520px;
+    max-height: 520px;
+}
+
+/* 2 — Privacy: testo in basso a sinistra (sopra la zona del player). Logo a destra. */
+.home-page .feature-card--privacy .apple-card-top {
+    left: var(--card-inset);
+    bottom: calc(var(--card-inset) + 60px);
+}
+
+.home-page .feature-card--privacy .feature-card-media {
+    inset: 6% 6% 6% 48%;
+}
+
+.home-page .feature-card--privacy .feature-card-media > img {
+    max-width: 400px;
+    max-height: 440px;
+}
+
+/* 3 — Attività: testo in alto a sinistra. Illustrazione ancorata in basso a destra. */
+.home-page .feature-card--events .apple-card-top {
+    top: var(--card-inset);
+    left: var(--card-inset);
+    width: min(38%, 470px);
+}
+
+.home-page .feature-card--events .feature-card-media {
+    inset: 10% 0 0 42%;
+    padding: 0;
+    align-items: flex-end;
+}
+
+.home-page .feature-card--events .feature-card-media > img {
+    object-position: center bottom;
+}
+
+/* 4 — Harzafi ID: testo al centro a destra. Card a sinistra. */
+.home-page .feature-card--id .apple-card-top {
+    right: var(--card-inset);
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(38%, 460px);
+}
+
+.home-page .feature-card--id .feature-card-media {
+    inset: 0 auto 0 0;
+    width: 56%;
+    padding: 6% 4%;
+}
+
+.home-page .feature-card--id .feature-card-media > img {
+    max-width: 520px;
+    max-height: 100%;
+}
+
+/* ==========================================================================
+   PLAYER — come Apple: sopra la foto finché la scheda sporge sotto lo schermo,
+   poi a fine corsa si stacca e resta SOTTO la scheda, nello spazio bianco
+   (prima del titolo "Serve aiuto?"). Il JS aggiunge .is-offscreen quando né
+   la foto né il player sono più in vista.
+   ========================================================================== */
+.home-page #features-carousel-player {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    align-self: end;
+    justify-self: center;
+    position: sticky;
+    bottom: 28px;
+    z-index: 10;
+    width: auto;
+    margin: 0 0 28px !important;
+}
+
+.home-page #features-carousel-player.is-offscreen {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: opacity .2s ease, visibility 0s linear .2s !important;
+}
+
+/* ==========================================================================
+   Titolo donazioni — stesso stile di "Guarda cosa ti sei perso."
+   (56px, grassetto, interlinea 1.07, tracking -0.03em). Resta bianco perché
+   sta sopra l'immagine viola. Su mobile restano le misure già esistenti.
+   ========================================================================== */
+@media (min-width: 761px) {
+    .home-page .support-effort-box .support-effort-content h2 {
+        max-width: none;
+        font-size: clamp(1.9rem, 4.4vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.07;
+        letter-spacing: -0.01em;
     }
 }
 
-@media (max-width: 600px) {
-    .home-page .apple-features-section,
-    .home-page .apple-showcase-section {
-        padding-inline: 20px;
+@media (max-width: 760px) {
+    .home-page .support-effort-box .support-effort-content h2 {
+        font-weight: 700;
+        line-height: 1.07;
+        letter-spacing: -0.01em;
     }
-
-    .home-page .apple-features-grid {
-        grid-auto-columns: min(309px, calc(100% - 20px));
-        gap: 18px;
-    }
-
-    .home-page .apple-cards-carousel {
-        gap: 18px;
-    }
-
-    .home-page .apple-cards-carousel > .apple-card {
-        flex-basis: min(309px, calc(100% - 20px));
-        width: min(309px, calc(100% - 20px));
-    }
-
-    .home-page .feature-card-media {
-        padding: 20px;
-    }
-
-    .home-page .feature-card--events .feature-card-media,
-    .home-page .feature-card--id .feature-card-media {
-        padding: 10px 8px 0;
-    }
-
 }
 
-@media (hover: none), (prefers-reduced-motion: reduce) {
-    .home-page .apple-card,
-    .home-page .apple-card:hover,
-    .home-page .apple-card:hover img {
+/* Testi di servizio della homepage: proporzioni e spaziatura più vicine ad Apple. */
+.home-page .hero-cta-panel a {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+
+.home-page .nav-login {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+.home-page .harzafi-footer-eyebrow {
+    margin-bottom: 12px;
+    color: #6e6e73;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.3334;
+    letter-spacing: 0.03em;
+}
+
+.home-page .harzafi-footer-profile h3 {
+    margin-bottom: 8px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.home-page .harzafi-footer-profile .harzafi-footer-school {
+    gap: 6px;
+    margin-bottom: 18px;
+    color: #6e6e73;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.home-page .harzafi-footer-bottom p,
+.home-page .harzafi-footer-links a {
+    font-size: 13px;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+}
+
+.home-page .harzafi-footer-bottom p {
+    color: #6e6e73;
+    font-weight: 400;
+}
+
+.home-page .harzafi-footer-links a {
+    color: #424245;
+    font-weight: 400;
+}
+
+@media (max-width: 760px) {
+    .home-page .nav-login {
+        font-size: 13px;
+    }
+
+    .home-page .harzafi-footer-links {
+        gap: 12px 18px;
+    }
+}
+
+/* Racconto del percorso tra funzionalità e supporto. */
+.home-page .journey-story-banner {
+    box-sizing: border-box;
+    width: min(1258px, calc(100% - 2 * clamp(20px, 5vw, 48px)));
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+    background: #fff;
+}
+
+.home-page .journey-story-section {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 0 clamp(84px, 10vw, 132px);
+    padding: 0 clamp(20px, 2vw, 34px) 80px;
+    background: #fff;
+}
+
+.home-page .journey-story-container {
+    width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
+}
+
+.home-page .journey-story-section-header {
+    max-width: 1260px;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 24px;
+}
+
+.home-page .journey-story-section-link {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #06c;
+    font-family: var(--font-text);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
+    text-decoration: none;
+}
+
+.home-page .journey-story-section-link:hover {
+    text-decoration: underline;
+}
+
+.home-page .journey-story-section-link svg {
+    width: 16px;
+    height: 16px;
+}
+
+.home-page .journey-story-panel {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1260px;
+    min-height: 635px;
+    margin-inline: auto;
+    padding: 120px 0;
+    overflow: hidden;
+    border: 1px solid #e8e8ed;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 8px 28px rgba(29, 29, 31, .045);
+}
+
+.home-page .journey-story-title {
+    position: relative;
+    top: -31px;
+    max-width: 725px;
+    margin: 0;
+    color: #1d1d1f;
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5.47vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.0714;
+    letter-spacing: -0.025em;
+    text-align: left;
+    text-wrap: balance;
+}
+
+.home-page .journey-story-highlights {
+    width: 100%;
+    max-width: 790px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+}
+
+.home-page .journey-story-highlight {
+    min-width: 0;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+}
+
+.home-page .journey-story-highlight-media {
+    box-sizing: border-box;
+    width: 100%;
+    height: 330px;
+    min-height: 330px;
+    flex: 0 0 auto;
+    padding: 0 16px 8px;
+    display: grid;
+    place-items: start center;
+}
+
+.home-page .journey-story-highlight-media img {
+    display: block;
+    width: min(100%, 260px);
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+}
+
+.home-page .journey-story-eyebrow {
+    margin: 0 9px 9px;
+    color: #b64400;
+    font-family: var(--font-text);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.3334;
+    letter-spacing: normal;
+    text-transform: uppercase;
+}
+
+.home-page .journey-story-highlight-copy {
+    box-sizing: border-box;
+    width: min(100%, 500px);
+    margin-top: 0;
+    padding: 0 18px 0;
+}
+
+.home-page .journey-story-highlight-copy h3 {
+    margin: 0;
+    color: #1d1d1f;
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.1429;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+}
+
+.home-page .journey-story-highlight-copy > p:last-child {
+    max-width: 430px;
+    margin: 12px auto 0;
+    color: #6e6e73;
+    font-family: var(--font-text);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+    .home-page .journey-story-section {
+        padding-inline: 24px;
+    }
+
+    .home-page .journey-story-highlight {
+        min-height: 500px;
+    }
+
+    .home-page .journey-story-highlight-media {
+        height: 260px;
+        min-height: 260px;
+    }
+
+    .home-page .journey-story-highlight-media img {
+        width: min(100%, 210px);
+    }
+}
+
+@media (max-width: 760px) {
+    .home-page .journey-story-banner {
+        width: calc(100% - 40px);
+        margin-inline: auto;
+        padding: 0 0 24px;
+    }
+
+    .home-page .journey-story-section {
+        margin: 0 0 88px;
+        padding: 0 14px 14px;
+    }
+
+    .home-page .journey-story-section-header {
+        max-width: none;
+        margin-bottom: 10px;
+        padding-inline: 8px;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .home-page .journey-story-section-link {
+        position: static;
+        display: flex;
+        width: max-content;
+        margin: 4px 0 0;
+        padding: 0;
+        font-size: 13px;
+    }
+
+    .home-page .journey-story-section-link svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    .home-page .journey-story-panel {
+        max-width: 100%;
+        min-height: 0;
+        padding: 72px 20px;
+        border-radius: 24px;
+    }
+
+    .home-page .journey-story-title {
+        top: 0;
+        margin: 0;
+        font-size: clamp(2.35rem, 11vw, 3rem);
+        line-height: 1.02;
+    }
+
+    .home-page .journey-story-highlights {
+        grid-template-columns: 1fr;
+        gap: 34px;
+    }
+
+    .home-page .journey-story-highlight {
+        min-height: 0;
         transform: none;
-        transition: none;
     }
+
+    .home-page .journey-story-highlight-media {
+        width: 100%;
+        height: 210px;
+        min-height: 0;
+        flex: 0 0 auto;
+        padding: 0 12px 12px;
+    }
+
+    .home-page .journey-story-eyebrow {
+        margin-bottom: 9px;
+    }
+
+    .home-page .journey-story-highlight-media img {
+        width: min(64vw, 190px);
+    }
+
+    .home-page .journey-story-highlight-copy {
+        padding: 0 8px;
+    }
+
+    .home-page .journey-story-highlight-copy h3 {
+        font-size: 28px;
+    }
+
+    .home-page .journey-story-highlight-copy > p:last-child {
+        font-size: 15px;
+    }
+
+}
+/* ==========================================================================
+   Sezione Supporto (Rimozione logica del carosello su PC)
+   ========================================================================== */
+.home-page .apple-cards-carousel {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
 }
 
-/* Il computer occupa tutta la larghezza disponibile, senza tagliare il dispositivo. */
+.home-page .apple-cards-carousel::-webkit-scrollbar {
+    display: none;
+}
+
 .home-page .guide-photo-media {
     padding: 0;
     flex: 1;
@@ -192,4 +755,222 @@
     height: auto;
     flex: 0 0 116%;
     object-fit: contain;
+}
+
+/* SU PC: Centrate, si adattano allo schermo, niente scorrimento, niente player */
+@media (min-width: 761px) {
+    .home-page .apple-cards-carousel {
+        justify-content: center;
+        overflow-x: hidden;
+    }
+    .home-page .apple-cards-carousel > .apple-card {
+        flex: 0 1 380px;
+        max-width: 380px;
+    }
+    #support-carousel-player {
+        display: none !important;
+    }
+}
+
+/* SU MOBILE: Restano a scorrimento orizzontale */
+@media (max-width: 760px) {
+    .home-page .apple-cards-carousel > .apple-card {
+        flex: 0 0 min(309px, calc(100% - 20px));
+        scroll-snap-align: start;
+    }
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+    .home-page .apple-card,
+    .home-page .apple-card:hover,
+    .home-page .apple-card:hover img {
+        transform: none;
+        transition: none;
+    }
+}
+
+/* ==========================================================================
+   MOBILE — schede alte come quelle Apple, testo alternato alto/basso
+   1 · alto, centrato   2 · basso   3 · alto, a sinistra   4 · basso
+   ========================================================================== */
+@media (max-width: 760px) {
+    .home-page .apple-features-section {
+        margin: 80px 0 70px;
+    }
+
+    .home-page .apple-features-grid {
+        grid-auto-columns: calc(100% - 28px);
+        gap: 14px;
+    }
+
+    .home-page .apple-features-grid > .feature-card {
+        --card-inset: 28px;
+        --player-zone: 96px;
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: auto;
+        min-height: 0;
+        height: clamp(540px, 150vw, 640px);
+        border-radius: 28px;
+    }
+
+    .home-page .feature-card .apple-card-top,
+    .home-page .feature-card--progress .apple-card-top,
+    .home-page .feature-card--privacy .apple-card-top,
+    .home-page .feature-card--events .apple-card-top,
+    .home-page .feature-card--id .apple-card-top {
+        position: static;
+        inset: auto;
+        transform: none;
+        width: auto;
+        padding: var(--card-inset) var(--card-inset) 0;
+        text-align: left;
+    }
+
+    .home-page .feature-card .apple-card-heading {
+        font-size: 1.65rem;
+    }
+
+    .home-page .feature-card .apple-card-media,
+    .home-page .feature-card--progress .feature-card-media,
+    .home-page .feature-card--privacy .feature-card-media,
+    .home-page .feature-card--events .feature-card-media,
+    .home-page .feature-card--id .feature-card-media {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        flex: 1 1 0;
+        min-height: 0;
+        padding: 16px 20px 0;
+    }
+
+    /* 1 — alto, centrato */
+    .home-page .feature-card--progress .apple-card-top {
+        text-align: center;
+    }
+
+    .home-page .feature-card--progress .feature-card-media {
+        padding-bottom: var(--player-zone);
+    }
+
+    .home-page .feature-card--progress .feature-card-media > img {
+        max-width: 260px;
+        max-height: 260px;
+    }
+
+    /* 2 — immagine in alto, testo in basso */
+    .home-page .feature-card--privacy {
+        flex-direction: column-reverse;
+    }
+
+    .home-page .feature-card--privacy .apple-card-top {
+        padding-bottom: var(--player-zone);
+    }
+
+    .home-page .feature-card--privacy .feature-card-media > img {
+        max-width: 190px;
+        max-height: 210px;
+    }
+
+    /* 3 — alto, a sinistra, illustrazione ancorata in basso */
+    .home-page .feature-card--events .feature-card-media {
+        padding: 12px 12px 0;
+        align-items: flex-end;
+    }
+
+    /* 4 — immagine in alto, testo in basso */
+    .home-page .feature-card--id {
+        flex-direction: column-reverse;
+    }
+
+    .home-page .feature-card--id .apple-card-top {
+        padding-bottom: var(--player-zone);
+    }
+
+    .home-page .feature-card--id .feature-card-media {
+        padding: 24px 24px 0;
+    }
+
+    .home-page .apple-features-carousel {
+        --player-rest: 102px;
+    }
+
+    .home-page #features-carousel-player {
+        bottom: 20px;
+        margin: 0 0 20px !important;
+    }
+}
+
+/* Banner Harzafi Security: copre la card intera, con il testo sopra l'immagine. */
+.home-page .feature-card--privacy {
+    background: #087b80;
+}
+
+.home-page .feature-card--privacy .feature-card-media {
+    inset: 0;
+    z-index: 1;
+    padding: 0;
+}
+
+.home-page .feature-card--privacy .feature-card-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(90deg, rgba(0, 30, 34, .54), rgba(0, 42, 46, .2) 50%, rgba(0, 42, 46, 0) 78%);
+    pointer-events: none;
+}
+
+.home-page .feature-card--privacy .feature-card-media > img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    object-position: 66% center;
+}
+
+.home-page .feature-card--privacy .apple-card-top {
+    z-index: 3;
+    width: min(42%, 500px);
+    color: #fff;
+}
+
+.home-page .feature-card--privacy .apple-card-eyebrow,
+.home-page .feature-card--privacy .apple-card-heading,
+.home-page .feature-card--privacy .apple-card-desc {
+    color: #fff;
+}
+
+.home-page .feature-card--privacy .apple-card-eyebrow { opacity: .82; }
+.home-page .feature-card--privacy .apple-card-desc { opacity: .88; }
+
+@media (max-width: 760px) {
+    .home-page .feature-card--privacy {
+        position: relative;
+        flex-direction: column;
+    }
+
+    .home-page .feature-card--privacy .feature-card-media {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        flex: none;
+    }
+
+    .home-page .feature-card--privacy .feature-card-media > img {
+        object-position: 72% center;
+    }
+
+    .home-page .feature-card--privacy .apple-card-top {
+        position: absolute;
+        right: var(--card-inset);
+        bottom: calc(var(--card-inset) + var(--player-zone));
+        left: var(--card-inset);
+        width: auto;
+        padding: 0;
+    }
 }

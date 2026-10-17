@@ -10,7 +10,7 @@ body.legal-editorial-page {
     --legal-muted: #626269;
     --legal-line: #e5e5ea;
     --legal-blue: #0066cc;
-    font-family: Inter, sans-serif;
+    font-family: SF Pro Text, sans-serif;
 }
 .legal-editorial-page .privacy-main { background: #fff; padding: 0 24px 88px; }
 .legal-editorial-page .privacy-hero {
@@ -115,7 +115,7 @@ body.legal-editorial-page {
 .legal-editorial-page .privacy-contents a span {
     color: var(--legal-blue);
     flex: 0 0 2ch;
-    font-family: 'Inter', sans-serif;
+    font-family: 'SF Pro Text', sans-serif;
     font-size: .875rem;
     font-weight: 700;
     letter-spacing: 0;
@@ -143,7 +143,7 @@ body.legal-editorial-page {
     flex: 0 0 34px; width: 34px; height: 34px; min-width: 34px; min-height: 34px; padding: 0;
     border: 0; border-radius: 10px; margin: 0;
     background: #edf5ff; color: var(--legal-blue);
-    font-family: 'Inter', sans-serif;
+    font-family: 'SF Pro Text', sans-serif;
     font-size: .875rem; font-weight: 700; line-height: 1;
     letter-spacing: 0; font-variant-numeric: lining-nums tabular-nums;
 }

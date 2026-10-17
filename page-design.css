@@ -1,0 +1,114 @@
+/* Sistema tipografico e superfici condivise, ispirato alla home. */
+:root {
+    --page-ink: #1d1d1f;
+    --page-copy: #6e6e73;
+    --page-muted: #86868b;
+    --page-blue: #0071e3;
+    --page-line: rgba(29, 29, 31, .09);
+    --page-card-shadow: 0 14px 40px rgba(0, 0, 0, .04);
+}
+
+html { background: #fff; }
+
+body {
+    color: var(--page-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+body :is(h1, h2, h3, h4) {
+    text-wrap: balance;
+    font-kerning: normal;
+}
+
+body :is(p, li, dd) { text-wrap: pretty; }
+
+/* Etichette e testi brevi usano la stessa misura sobria delle card in home. */
+body :is(
+    .apple-card-eyebrow,
+    .access-card-eyebrow,
+    .account-eyebrow,
+    .support-card-label,
+    .support-section-heading > span,
+    .eyebrow,
+    .harzafi-footer-eyebrow,
+    .privacy-date,
+    .legal-date,
+    .badge-gov
+) {
+    color: #424245;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.3334;
+    letter-spacing: -.01em;
+}
+
+/* Superfici chiare, bordi fini e ombre leggere per i riquadri delle pagine interne. */
+body :is(
+    .access-info-card,
+    .status-card,
+    .doc-section,
+    .account-card,
+    .account-value,
+    .support-card,
+    .error-card,
+    .legal-content-card,
+    .privacy-policy-card
+) {
+    border-color: var(--page-line);
+    border-radius: 30px;
+    box-shadow: var(--page-card-shadow);
+}
+
+body :is(.access-info-card, .status-card, .doc-section, .account-card, .account-value, .support-card, .error-card, .legal-content-card, .privacy-policy-card) h2,
+body :is(.access-info-card, .status-card, .doc-section, .account-card, .account-value, .support-card, .error-card, .legal-content-card, .privacy-policy-card) h3 {
+    color: var(--page-ink);
+    font-weight: 600;
+}
+
+/* Form e azioni condividono il blu e il focus visibile della home. */
+body:is(.auth-page, .reset-page, .dashboard-page) input:not([type="checkbox"]):not([type="radio"]),
+body:is(.auth-page, .reset-page, .dashboard-page) textarea {
+    color: var(--page-ink);
+    border-color: #d2d2d7;
+    border-radius: 12px;
+    background-color: #fff;
+}
+
+body:is(.auth-page, .reset-page, .dashboard-page) input:not([type="checkbox"]):not([type="radio"]):focus,
+body:is(.auth-page, .reset-page, .dashboard-page) textarea:focus {
+    border-color: var(--page-blue);
+    outline-color: rgba(0, 113, 227, .22);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, .12);
+}
+
+/* Il pulsante di accesso mantiene la stessa tipografia e dimensione su Index e Il tuo account. */
+body:is(.home-page, .account-privacy-page) .navbar-wrapper .nav-login {
+    box-sizing: border-box;
+    min-width: 82px;
+    min-height: 0;
+    padding: 9px 19px;
+    border-radius: 30px;
+    font-family: var(--font-text) !important;
+    font-size: .88rem;
+    font-weight: 500;
+    line-height: normal;
+    text-align: center;
+    white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+    body:is(.home-page, .account-privacy-page) .navbar-wrapper .nav-login {
+        min-width: 68px;
+        min-height: 32px;
+        padding: 7px 14px;
+        font-size: .78rem;
+        line-height: 1;
+    }
+}
+
+@media (max-width: 620px) {
+    body :is(.access-info-card, .status-card, .doc-section, .account-card, .account-value, .support-card, .error-card, .legal-content-card, .privacy-policy-card) {
+        border-radius: 26px;
+    }
+}

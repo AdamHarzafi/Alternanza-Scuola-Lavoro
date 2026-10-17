@@ -1,0 +1,321 @@
+/* Approfondimento ambientale: griglia desktop, carosello su schermi piccoli. */
+.home-page .environment-section {
+    width: 100%;
+    padding: clamp(112px, 14vw, 168px) 24px clamp(76px, 8vw, 112px);
+    background: #fff;
+    color: #1d1d1f;
+}
+
+.home-page .environment-inner {
+    width: min(100%, 1290px);
+    margin: 0 auto;
+}
+
+.home-page .environment-heading {
+    max-width: 850px;
+    margin: 0 0 62px;
+}
+
+.home-page .environment-heading h2 {
+    margin: 0;
+    color: #1d1d1f;
+    font-family: var(--font-display) !important;
+    font-size: clamp(40px, 4.8vw, 56px);
+    font-weight: 600;
+    letter-spacing: -.035em;
+    line-height: 1.08;
+}
+
+.home-page .environment-heading-link {
+    display: inline-block;
+    max-width: 780px;
+    margin-top: 16px;
+    color: #0066cc;
+    font-family: var(--font-text) !important;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.25;
+    text-decoration: none;
+}
+
+.home-page .environment-heading-link:hover {
+    text-decoration: underline;
+}
+
+.home-page .environment-cards-shell {
+    position: relative;
+}
+
+.home-page .environment-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 400px));
+    justify-content: start;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.home-page .environment-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    min-height: 274px;
+    overflow: hidden;
+    padding: 24px 24px 68px;
+    border: none !important;
+    outline: none !important;
+    border-radius: 28px;
+    background: #f5f5f7;
+    box-shadow: none;
+    transition: box-shadow .24s ease, transform .24s ease;
+}
+
+.home-page .environment-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .055);
+    transform: translateY(-2px);
+}
+
+.home-page .environment-card-icon {
+    display: block;
+    width: 44px;
+    height: 44px;
+    color: var(--environment-accent);
+}
+
+.home-page .environment-card-title {
+    display: block;
+    max-width: 360px;
+    margin: 20px 0 0;
+    color: #1d1d1f;
+    font-family: var(--font-display) !important;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: .007em;
+    line-height: 1.142857;
+}
+
+.home-page .environment-card-title > span {
+    color: var(--environment-accent);
+}
+
+.home-page .environment-card-plus {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.home-page .environment-card-plus-disc {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #1d1d1f;
+    color: #fff;
+    transition: background-color 100ms linear;
+}
+
+.home-page .environment-card-plus-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 36px;
+    height: 36px;
+    fill: currentColor;
+    transform: translate(-50%, -50%);
+}
+
+.home-page .environment-card-plus:hover .environment-card-plus-disc {
+    background: #272729;
+}
+
+.home-page .environment-card-plus:active .environment-card-plus-disc {
+    background: #18181a;
+}
+
+.home-page .environment-card-plus:focus-visible {
+    outline: none;
+}
+
+.home-page .environment-card-plus:focus-visible .environment-card-plus-disc {
+    outline: 2px solid #0071e3;
+    outline-offset: 3px;
+}
+
+.home-page .environment-modal-content {
+    max-width: 820px;
+}
+
+.home-page .environment-modal-intro {
+    max-width: 760px;
+    margin: 0 0 42px;
+    color: #d2d2d7;
+    font-size: clamp(1.12rem, 2vw, 1.42rem);
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.home-page .environment-modal-list {
+    margin: 0 0 32px;
+    padding: 0;
+    list-style: none;
+}
+
+.home-page .environment-modal-list li {
+    padding: 24px 0;
+    border-top: 1px solid rgba(255, 255, 255, .14);
+}
+
+.home-page .environment-modal-list strong,
+.home-page .environment-modal-list span {
+    display: block;
+}
+
+.home-page .environment-modal-list strong {
+    margin-bottom: 7px;
+    color: #f5f5f7;
+    font-size: 1.08rem;
+    font-weight: 600;
+}
+
+.home-page .environment-modal-list span {
+    color: #a1a1a6;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.home-page .environment-modal-source {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #64b5ff;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+}
+
+.home-page .environment-modal-source:hover {
+    text-decoration: underline;
+}
+
+.home-page .environment-card--violet { --environment-accent: #8065e8; }
+.home-page .environment-card--orange { --environment-accent: #e76519; }
+.home-page .environment-card--teal { --environment-accent: #18a3b3; }
+
+.home-page .environment-carousel-player {
+    display: none !important;
+}
+
+.home-page .environment-note {
+    max-width: 900px;
+    margin: 20px 0 0;
+    color: #86868b;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+    .home-page .environment-section {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    .home-page .environment-heading {
+        margin-bottom: 36px;
+    }
+
+    .home-page .environment-cards {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        margin: 0 -20px;
+        padding: 0 20px 6px;
+        scroll-padding-inline: 20px;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .home-page .environment-cards::-webkit-scrollbar {
+        display: none;
+    }
+
+    .home-page .environment-card {
+        flex: 0 0 min(82vw, 400px);
+        scroll-snap-align: start;
+    }
+
+    .home-page .environment-carousel-player {
+        display: flex !important;
+    }
+
+    .home-page .environment-note {
+        margin-top: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-page .environment-section {
+        padding-bottom: 70px;
+    }
+
+    .home-page .environment-heading h2 {
+        font-size: clamp(34px, 9vw, 42px);
+    }
+
+    .home-page .environment-card {
+        flex-basis: min(84vw, 350px);
+        min-height: 255px;
+        padding: 24px 20px 68px;
+    }
+
+    .home-page .environment-card-title {
+        font-size: 21px;
+        letter-spacing: .011em;
+        line-height: 1.190476;
+    }
+
+    .home-page .environment-modal-intro {
+        margin-bottom: 30px;
+        font-size: 1.08rem;
+    }
+
+    .home-page .environment-modal-list li {
+        padding: 22px 0;
+    }
+}
+
+@media (min-width: 735px) and (max-width: 1068px) {
+    .home-page .environment-card-title {
+        font-size: 24px;
+        letter-spacing: .009em;
+        line-height: 1.166667;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-page .environment-card,
+    .home-page .environment-card-plus {
+        transition: none;
+    }
+}

@@ -83,123 +83,19 @@ fetch(commitUrl, { method: 'POST', headers: { 'Content-Type': 'application/json'
         }, { passive: true });
     }
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    function setupAccessCarousel(trackId, playerId) {
-        const track = document.getElementById(trackId);
-        const player = document.getElementById(playerId);
-        if (!track || !player) return;
-
-        const cards = Array.from(track.querySelectorAll('.access-info-card'));
-        const steps = Array.from(player.querySelectorAll('.carousel-timeline-step'));
-        const toggle = player.querySelector('.carousel-play-toggle');
-        const duration = Number.parseInt(getComputedStyle(player).getPropertyValue('--carousel-duration'), 10) || 6500;
-        let activeIndex = 0;
-        let timer = null;
-        let isVisible = false;
-        let pausedByUser = reducedMotion.matches;
-        let ignoreScrollUntil = 0;
-        let scrollSettleTimer = null;
-
-        const restartProgress = (step) => {
-            step.classList.remove('is-active');
-            void step.offsetWidth;
-            step.classList.add('is-active');
+    const setupCarousel = window.setupHarzafiCarousel;
+    if (typeof setupCarousel === 'function') {
+        const sharedCarouselOptions = {
+            itemSelector: '.access-info-card',
+            onlyWhenOverflow: true,
+            pauseOnFocus: true,
+            activeItemClass: 'is-current',
+            suspendWhile: () => document.body.classList.contains('access-modal-open')
         };
 
-        const updateToggle = () => {
-            player.classList.toggle('is-paused', pausedByUser);
-            toggle.setAttribute('aria-pressed', String(pausedByUser));
-            toggle.setAttribute('aria-label', pausedByUser ? 'Riprendi il carosello' : 'Metti in pausa il carosello');
-        };
-
-        const canPlay = () => (
-            !pausedByUser &&
-            isVisible &&
-            !document.hidden &&
-            !document.body.classList.contains('access-modal-open')
-        );
-
-        const clearTimer = () => {
-            if (timer !== null) window.clearTimeout(timer);
-            timer = null;
-        };
-
-        const scheduleNext = () => {
-            clearTimer();
-            if (!canPlay()) return;
-            timer = window.setTimeout(() => {
-                selectCard((activeIndex + 1) % cards.length, true, true);
-            }, duration);
-        };
-
-        const selectCard = (nextIndex, shouldScroll, resetProgress) => {
-            activeIndex = (nextIndex + cards.length) % cards.length;
-            cards.forEach((card, index) => card.classList.toggle('is-current', index === activeIndex));
-            steps.forEach((step, index) => {
-                const isActive = index === activeIndex;
-                step.setAttribute('aria-current', String(isActive));
-                if (isActive && resetProgress) restartProgress(step);
-                else step.classList.toggle('is-active', isActive);
-            });
-
-            if (shouldScroll) {
-                ignoreScrollUntil = performance.now() + 750;
-                const target = cards[activeIndex];
-                track.scrollTo({
-                    left: target.offsetLeft - track.offsetLeft,
-                    behavior: reducedMotion.matches ? 'auto' : 'smooth'
-                });
-            }
-            scheduleNext();
-        };
-
-        steps.forEach((step, index) => {
-            step.addEventListener('click', () => selectCard(index, true, true));
-        });
-
-        toggle.addEventListener('click', () => {
-            pausedByUser = !pausedByUser;
-            updateToggle();
-            if (pausedByUser) clearTimer();
-            else selectCard(activeIndex, false, true);
-        });
-
-        track.addEventListener('scroll', () => {
-            if (performance.now() < ignoreScrollUntil) return;
-            window.clearTimeout(scrollSettleTimer);
-            scrollSettleTimer = window.setTimeout(() => {
-                const left = track.scrollLeft;
-                const nearestIndex = cards.reduce((nearest, card, index) => {
-                    const cardLeft = card.offsetLeft - track.offsetLeft;
-                    const nearestLeft = cards[nearest].offsetLeft - track.offsetLeft;
-                    return Math.abs(cardLeft - left) < Math.abs(nearestLeft - left) ? index : nearest;
-                }, 0);
-                if (nearestIndex !== activeIndex) selectCard(nearestIndex, false, true);
-            }, 100);
-        }, { passive: true });
-
-        const visibilityObserver = new IntersectionObserver((entries) => {
-            isVisible = entries[0].isIntersecting;
-            if (isVisible) scheduleNext();
-            else clearTimer();
-        }, { threshold: 0.3 });
-        visibilityObserver.observe(track);
-
-        document.addEventListener('visibilitychange', scheduleNext);
-        document.addEventListener('accessmodalchange', scheduleNext);
-        reducedMotion.addEventListener?.('change', (event) => {
-            if (event.matches) pausedByUser = true;
-            updateToggle();
-            scheduleNext();
-        });
-
-        updateToggle();
-        selectCard(0, false, true);
+        setupCarousel({ ...sharedCarouselOptions, trackId: 'access-features-track', playerId: 'access-features-player', label: 'funzioni di accessibilità' });
+        setupCarousel({ ...sharedCarouselOptions, trackId: 'access-standards-track', playerId: 'access-standards-player', label: 'standard di accessibilità' });
     }
-
-    setupAccessCarousel('access-features-track', 'access-features-player');
-    setupAccessCarousel('access-standards-track', 'access-standards-player');
 
     const modal = document.getElementById('access-detail-modal');
     const modalPanel = modal?.querySelector('.access-modal-panel');

@@ -23,7 +23,7 @@ html {
 
 body {
     color: var(--harzafi-ink);
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    font-family: SF Pro Text, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
@@ -1523,7 +1523,7 @@ body {
     border-radius: 7px;
     background: rgba(0, 113, 227, .08);
     color: #0066cc;
-    font-family: "SFMono-Regular", Consolas, monospace;
+    font-family: "SF Mono", Consolas, monospace;
     font-size: .88em;
 }
 
@@ -2823,145 +2823,113 @@ body {
 
 .access-card-more {
     position: absolute;
-    right: clamp(24px, 2.6vw, 34px);
-    bottom: clamp(24px, 2.6vw, 34px);
+    right: 16px;
+    bottom: 16px;
     z-index: 3;
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: 0;
     border-radius: 50%;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.access-card-more-disc {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
     background: #1d1d1f;
     color: #fff;
-    cursor: pointer;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, .13);
-    transition: transform .25s var(--harzafi-ease), background-color .25s ease;
+    transition: background-color 100ms linear;
 }
 
-.access-card-more svg {
-    width: 23px;
-    height: 23px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    stroke-linecap: round;
+.access-card-more-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 36px;
+    height: 36px;
+    fill: currentColor;
+    transform: translate(-50%, -50%);
 }
 
-.access-card-more:hover {
-    transform: scale(1.08);
-    background: #0071e3;
+.access-card-more:hover .access-card-more-disc {
+    background: #272729;
 }
 
-.access-card-more:focus-visible,
+.access-card-more:active .access-card-more-disc {
+    background: #18181a;
+}
+
+.access-card-more:focus-visible {
+    outline: none;
+}
+
+.access-card-more:focus-visible .access-card-more-disc {
+    outline: 2px solid #0071e3;
+    outline-offset: 3px;
+}
+
+@media (max-width: 1068px) {
+    .access-card-more {
+        right: 13px;
+        bottom: 13px;
+    }
+}
+
 .access-modal-close:focus-visible,
 .access-carousel-player button:focus-visible {
     outline: 3px solid #0071e3;
     outline-offset: 4px;
 }
 
-.access-carousel-player {
-    --carousel-duration: 6500ms;
-    width: fit-content;
-    margin: 32px auto 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
+/* Accessibilità usa lo stesso player condiviso della home, solo quando le card scorrono. */
+body.accessibility-page .access-carousel-player {
+    display: none !important;
 }
 
-.access-carousel-player .carousel-timeline {
-    min-width: 178px;
-    height: 54px;
-    padding: 0 22px;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    background: #f2f2f4;
+@media (min-width: 761px) and (max-width: 1050px) {
+    .access-info-card {
+        padding: 24px 20px 86px;
+    }
+
+    .access-info-card h3 {
+        font-size: clamp(1.55rem, 2.5vw, 2rem);
+    }
+
+    .access-card-summary {
+        font-size: .96rem;
+    }
+
+    .access-card-highlights li {
+        padding-block: 12px;
+        font-size: .9rem;
+    }
+
+    .access-card-highlights li::before {
+        top: 19px;
+    }
+
+    .access-card-visual {
+        height: 165px;
+    }
 }
 
-.access-carousel-player .carousel-timeline-step {
-    position: relative;
-    width: 8px;
-    height: 8px;
-    flex: 0 0 8px;
-    padding: 0;
-    border: 0;
-    border-radius: 999px;
-    overflow: hidden;
-    background: #8e8e93;
-    cursor: pointer;
-    transition: flex-basis .3s var(--harzafi-ease), width .3s var(--harzafi-ease), background-color .25s ease;
-}
-
-.access-carousel-player .carousel-timeline-step.is-active {
-    width: 48px;
-    flex-basis: 48px;
-    background: #c7c7cc;
-}
-
-.access-carousel-player .carousel-timeline-step.is-active::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: #1d1d1f;
-    transform: scaleX(0);
-    transform-origin: left center;
-    animation: accessCarouselProgress var(--carousel-duration) linear forwards;
-}
-
-.access-carousel-player.is-paused .carousel-timeline-step.is-active::after,
-.access-carousel-player.is-interacting .carousel-timeline-step.is-active::after {
-    animation-play-state: paused;
-}
-
-.access-carousel-player .carousel-play-toggle {
-    width: 54px;
-    height: 54px;
-    flex: 0 0 54px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: #f2f2f4;
-    color: #1d1d1f;
-    cursor: pointer;
-}
-
-.access-carousel-player .carousel-pause-symbol {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.access-carousel-player .carousel-pause-symbol i {
-    width: 4px;
-    height: 19px;
-    border-radius: 4px;
-    background: currentColor;
-}
-
-.access-carousel-player .carousel-play-symbol {
-    display: none;
-    width: 22px;
-    height: 22px;
-}
-
-.access-carousel-player.is-paused .carousel-pause-symbol {
-    display: none;
-}
-
-.access-carousel-player.is-paused .carousel-play-symbol {
-    display: block;
-}
-
-@keyframes accessCarouselProgress {
-    to { transform: scaleX(1); }
+@media (min-width: 761px) {
+    body.accessibility-page .access-info-card.is-current {
+        border-color: rgba(29, 29, 31, .09);
+        box-shadow: 0 16px 42px rgba(0, 0, 0, .055);
+    }
 }
 
 body.access-modal-open {
@@ -3176,7 +3144,9 @@ body.access-modal-open {
     .accessibility-page .page-content {
         padding-inline: 24px;
     }
+}
 
+@media (max-width: 760px) {
     .access-card-track {
         grid-template-columns: none;
         grid-auto-flow: column;
@@ -3199,9 +3169,11 @@ body.access-modal-open {
         border-color: rgba(0, 113, 227, .22);
         box-shadow: 0 20px 48px rgba(0, 0, 0, .075);
     }
-}
 
-@media (max-width: 760px) {
+    body.accessibility-page .access-carousel-player:not(.is-hidden-by-overflow) {
+        display: flex !important;
+    }
+
     .accessibility-page .page-content {
         padding: calc(78px + env(safe-area-inset-top)) 14px 72px;
     }
@@ -3281,13 +3253,6 @@ body.access-modal-open {
         top: 21px;
     }
 
-    .access-card-more {
-        right: 24px;
-        bottom: 24px;
-        width: 46px;
-        height: 46px;
-    }
-
     .access-carousel-player {
         margin-top: 24px;
     }
@@ -3349,11 +3314,6 @@ body.access-modal-open {
         padding: 28px 22px 84px;
     }
 
-    .access-carousel-player .carousel-timeline {
-        min-width: 164px;
-        padding-inline: 19px;
-    }
-
     .access-modal-scroll {
         padding-inline: 22px;
     }
@@ -3370,11 +3330,6 @@ body.access-modal-open {
         transform: translate3d(0, 0, 0) scale(var(--access-card-image-scale));
         transition: none;
         will-change: auto;
-    }
-
-    .access-carousel-player .carousel-timeline-step.is-active::after {
-        animation: none;
-        transform: scaleX(1);
     }
 
     .access-modal-overlay,

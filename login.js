@@ -14,7 +14,8 @@ async function inviaEmail(emailDestinatario, idModelloBrevo, parametriMail) {
         const response = await fetch(WORKER_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ emailDestinatario, idModelloBrevo, parametriMail })
+            body: JSON.stringify({ emailDestinatario, idModelloBrevo, parametriMail }),
+            keepalive: true
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || "Errore sconosciuto");
@@ -22,27 +23,6 @@ async function inviaEmail(emailDestinatario, idModelloBrevo, parametriMail) {
         console.error("❌ Email error:", err);
     }
 }
-
-// ── Cloudflare Turnstile callbacks ───────────────────────────
-window.globalTurnstileToken = "";
-window.isWaitingForToken    = false;
-
-window.onTurnstileSuccess = function (token) {
-    window.globalTurnstileToken = token;
-    if (window.isWaitingForToken) {
-        window.isWaitingForToken      = false;
-        window.turnstileCallbackFired = true;
-        if (typeof window.eseguiAccessoServer === 'function') window.eseguiAccessoServer();
-    }
-};
-window.onTurnstileExpired = function () { window.globalTurnstileToken = ""; };
-window.onTurnstileError   = function () {
-    window.globalTurnstileToken = "";
-    if (window.isWaitingForToken) {
-        window.isWaitingForToken = false;
-        if (typeof window.eseguiAccessoServer === 'function') window.eseguiAccessoServer();
-    }
-};
 
 // ── Attesa Firebase ───────────────────────────────────────────
 function waitForFirebase(callback) {
@@ -71,20 +51,6 @@ function waitForFirebase(callback) {
 
 // Deferred after the Firebase SDK: do not wait for images and third-party widgets.
 waitForFirebase(() => {});
-
-// ── VPN check ────────────────────────────────────────────────
-async function checkVPN() {
-    try {
-        const controller = new AbortController();
-        const tid = setTimeout(() => controller.abort(), 2000);
-        const res  = await fetch('https://ipapi.co/json/', { signal: controller.signal });
-        clearTimeout(tid);
-        if (!res.ok) return false;
-        const data = await res.json();
-        const org  = (data.org || "").toLowerCase();
-        return org.includes('vpn') || org.includes('hosting') || org.includes('cloud') || org.includes('datacenter');
-    } catch { return false; }
-}
 
 // ── Redirect alla dashboard dopo login riuscito ───────────────
 function entraNelPortale(nomeUtente) {
@@ -121,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Due passaggi visivi, un solo modulo e gli stessi campi per l'autofill.
     let selectedRole = 'studente';
     let selectedUserEmail = '';
+    let verifiedProfile = null;
     let pendingCredentials = null;
     const submitBtn = document.getElementById('login-submit');
     const passInput = document.getElementById('password-input');
@@ -139,6 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showEmailStep() {
         verificationAttempt++;
+        verifiedProfile = null;
         if (!emailStep) return;
         emailHome.prepend(emailInput);
         emailInput.setAttribute('aria-describedby', 'email-error');
@@ -174,6 +142,12 @@ document.addEventListener("DOMContentLoaded", function () {
             if (attempt !== verificationAttempt) return;
             if (emailInput.value.trim().toLowerCase() !== email) return;
             if (snapshot.empty) throw new Error('role-not-enabled');
+            const profile = snapshot.docs?.[0]?.data?.() || {};
+            verifiedProfile = {
+                email,
+                role,
+                name: typeof profile.nome === 'string' ? profile.nome.trim() : ''
+            };
             selectedUserEmail = email;
             emailInput.value = email;
             // Move the actual username input instead of replacing it with text.
@@ -289,14 +263,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (typeof window.auth !== 'undefined') {
             window.auth.signInWithEmailAndPassword(email, pass)
-                .then(async credential => {
-                    const uName = await window.HarzafiSession.profileName(credential.user, role);
-                    await inviaEmail(email, 2, {
+                .then(credential => {
+                    const profileMatches = verifiedProfile?.email === email && verifiedProfile?.role === role;
+                    const providerName = typeof credential.user.displayName === 'string'
+                        ? credential.user.displayName.trim()
+                        : '';
+                    const uName = (profileMatches && verifiedProfile.name) || providerName || 'Utente';
+                    void inviaEmail(email, 2, {
                         nome_utente:    uName,
                         email_utente:   email,
                         orario_accesso: new Date().toLocaleString('it-IT')
                     });
-                    
                     if (submitBtn) {
                         submitBtn.innerText = "Accedi";
                         submitBtn.disabled  = false;
@@ -309,9 +286,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         submitBtn.disabled  = false;
                     }
                     if (passInput) passInput.value = '';
-                    window.globalTurnstileToken = "";
-                    if (typeof turnstile !== 'undefined') { try { turnstile.reset(); } catch (e) {} }
-                    
                     if (errorMsg) {
                         if(error.code === 'auth/too-many-requests') {
                             errorMsg.innerText = "Troppi tentativi falliti. Riprova più tardi.";
@@ -359,62 +333,44 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             if (!pass)                              { if (errorMsg) { errorMsg.innerText = "Il campo password è obbligatorio."; errorMsg.style.display = 'block'; } return; }
-            pendingCredentials = { email: selectedUserEmail, password: pass, role: selectedRole };
-
             if (errorMsg) errorMsg.style.display = 'none';
             if (submitBtn) {
                 submitBtn.innerHTML = loginLoadingIndicator();
                 submitBtn.disabled     = true;
             }
 
-            // Preserve the existing role eligibility check, including autofilled values.
-            const roleButtons = document.querySelectorAll('#role-control .seg-btn');
-            roleButtons.forEach(button => { button.disabled = true; });
-            try {
-                const collection = selectedRole === 'studente' ? 'studenti' : 'docenti';
-                const snapshot = await window.db.collection(collection)
-                    .where('email', '==', selectedUserEmail).limit(1).get();
-                if (snapshot.empty) throw new Error('role-not-enabled');
-            } catch (error) {
-                pendingCredentials = null;
-                errorMsg.textContent = error.message === 'role-not-enabled'
-                    ? 'Questo indirizzo non è abilitato per il ruolo selezionato.'
-                    : 'Non è possibile verificare l’indirizzo adesso. Riprova tra poco.';
-                errorMsg.style.display = 'block';
-                submitBtn.innerText = 'Accedi';
-                submitBtn.disabled = false;
-                return;
-            } finally {
-                roleButtons.forEach(button => { button.disabled = false; });
-            }
-
-            const isVpn = await checkVPN();
-            if (isVpn) {
-                pendingCredentials = null;
-                if (errorMsg) {
-                    errorMsg.innerText  = "Disattivare la VPN per continuare.";
+            // Check role membership only when this is a direct/autofill submission,
+            // or when the email/role changed after the password step was verified.
+            const profileMatches = verifiedProfile?.email === selectedUserEmail && verifiedProfile?.role === selectedRole;
+            if (!profileMatches) {
+                const roleButtons = document.querySelectorAll('#role-control .seg-btn');
+                roleButtons.forEach(button => { button.disabled = true; });
+                try {
+                    const collection = selectedRole === 'studente' ? 'studenti' : 'docenti';
+                    const snapshot = await window.db.collection(collection)
+                        .where('email', '==', selectedUserEmail).limit(1).get();
+                    if (snapshot.empty) throw new Error('role-not-enabled');
+                    const profile = snapshot.docs?.[0]?.data?.() || {};
+                    verifiedProfile = {
+                        email: selectedUserEmail,
+                        role: selectedRole,
+                        name: typeof profile.nome === 'string' ? profile.nome.trim() : ''
+                    };
+                } catch (error) {
+                    errorMsg.textContent = error.message === 'role-not-enabled'
+                        ? 'Questo indirizzo non è abilitato per il ruolo selezionato.'
+                        : 'Non è possibile verificare l’indirizzo adesso. Riprova tra poco.';
                     errorMsg.style.display = 'block';
+                    submitBtn.innerText = 'Accedi';
+                    submitBtn.disabled = false;
+                    return;
+                } finally {
+                    roleButtons.forEach(button => { button.disabled = false; });
                 }
-                if (submitBtn) {
-                    submitBtn.innerText = "Accedi";
-                    submitBtn.disabled  = false;
-                }
-                return;
             }
 
-            if (window.globalTurnstileToken) {
-                window.eseguiAccessoServer();
-            } else {
-                window.isWaitingForToken      = true;
-                window.turnstileCallbackFired = false;
-                if (typeof turnstile !== 'undefined') { try { turnstile.execute(); } catch (e) {} }
-                setTimeout(() => {
-                    if (window.isWaitingForToken && !window.turnstileCallbackFired) {
-                        window.isWaitingForToken = false;
-                        window.eseguiAccessoServer();
-                    }
-                }, 2500);
-            }
+            pendingCredentials = { email: selectedUserEmail, password: pass, role: selectedRole };
+            window.eseguiAccessoServer();
         });
     }
 
@@ -494,8 +450,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const inputEl     = document.getElementById('hid-input');
             const inputVal    = inputEl ? inputEl.value.trim() : '';
 
-            const isVpn = await checkVPN();
-            if (isVpn) { if (hidErrorEl) { hidErrorEl.innerText = "Disattivare la VPN per continuare."; hidErrorEl.style.display = 'block'; } return; }
             if (!inputVal.length) return;
 
             hidSubmitBtnEl.innerHTML = loginLoadingIndicator();

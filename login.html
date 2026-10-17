@@ -14,13 +14,7 @@
 
     <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link rel="icon" type="image/png" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com">
-    <link rel="dns-prefetch" href="https://challenges.cloudflare.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css?v=20260829-support-image">
 
     <style>
@@ -106,7 +100,7 @@
         body {
             background: #f5f5f7;
             color: #1d1d1f;
-            font-family: "Inter", sans-serif;
+            font-family: "SF Pro Text", sans-serif;
             font-optical-sizing: auto;
         }
 
@@ -118,7 +112,7 @@
         .modal-overlay,
         .modal-overlay button,
         .modal-overlay input {
-            font-family: "Inter", sans-serif !important;
+            font-family: "SF Pro Text", sans-serif !important;
         }
 
         #login-page-wrapper {
@@ -367,7 +361,7 @@
         .apple-input::placeholder { color: #86868b; }
 
         #password-input {
-            font-family: "Inter", sans-serif !important;
+            font-family: "SF Pro Text", sans-serif !important;
             letter-spacing: .045em !important;
         }
 
@@ -540,8 +534,10 @@
         }
     </style>
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="login-modern.css?v=20260923-touch-motion">
+    <link rel="stylesheet" href="login-modern.css?v=20261017-hid-mobile-motion">
     <script defer src="site-motion.js?v=20260906"></script>
+    <link rel="stylesheet" href="fonts.css?v=20261017-sf-copy-spacing">
+    <link rel="stylesheet" href="page-design.css?v=20261017-shared-page-style">
 </head>
 <body class="auth-page">
 
@@ -575,18 +571,6 @@
 
             <!-- Vista Login -->
             <div id="login-view" class="fade-form">
-                <!-- Turnstile Cloudflare per sicurezza anti-bot -->
-                <div id="cf-turnstile-widget"
-                     class="cf-turnstile"
-                     data-sitekey="0x4AAAAAAC6Galn1mtnng7_P"
-                     data-size="flexible"
-                     data-execution="execute"
-                     data-callback="onTurnstileSuccess"
-                     data-expired-callback="onTurnstileExpired"
-                     data-error-callback="onTurnstileError"
-                     style="position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;">
-                </div>
-
                 <form id="login-form" action="login.html" method="post" autocomplete="on" novalidate>
                     <div id="login-email-step" class="login-step is-active">
                         <div class="auth-field email-auth-field floating-auth-field">
@@ -776,11 +760,8 @@
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-functions-compat.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script defer src="auth-session.js?v=20260923-app-check"></script>
-    <script defer src="login.js?v=20260923-app-check"></script>
+    <script defer src="login.js?v=20261017-auth-fast-path"></script>
 </body>
 </html>
 

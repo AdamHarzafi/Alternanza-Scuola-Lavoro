@@ -41,7 +41,7 @@
 .student-detail::backdrop { background: #17172270; backdrop-filter: blur(8px); }
 .student-detail[open] { animation: teacher-detail-in .3s cubic-bezier(.2,.8,.3,1); }
 .student-detail-head { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
-.student-detail h2 { font: 650 clamp(25px,4vw,36px)/1.2 Inter,sans-serif; letter-spacing: -.04em; margin: 8px 0 0; overflow-wrap: anywhere; }
+.student-detail h2 { font: 650 clamp(25px,4vw,36px)/1.2 SF Pro Text,sans-serif; letter-spacing: -.04em; margin: 8px 0 0; overflow-wrap: anywhere; }
 .student-close { flex: 0 0 42px; width: 42px; height: 42px; border: 0; border-radius: 50%; background: #e9e9ed; color: #50505b; font-size: 27px !important; cursor: pointer; }
 .student-detail-summary { display: flex; gap: 32px; align-items: center; padding: 10px 0 24px; }
 .student-detail-summary .student-ring { margin: 20px 0; }

@@ -17,7 +17,7 @@ body.dashboard-page {
     min-width: 320px;
     background: #fff;
     color: var(--ink);
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    font-family: SF Pro Text, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
