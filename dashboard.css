@@ -416,3 +416,21 @@ button:disabled { opacity:.55; cursor:wait; }
 @media(max-width:400px) { #hours-dialog { padding:22px; } .hours-grid { grid-template-columns:1fr; } }
 
 .hours-edit { border:0; border-radius:12px; padding:13px 18px; min-height:44px; cursor:pointer; font:inherit; font-size:.9rem; background:var(--soft); color:var(--ink); margin:18px 10px 0 0; }
+
+/* Gerarchia tipografica della dashboard: display per titoli e numeri in evidenza,
+   text per lettura, dati secondari e controlli. */
+.dashboard-page :is(.hero h1, .section-header h2, .official-note h2, #hours-dialog h2, #delete-title) {
+    font-family: var(--font-display) !important;
+    font-optical-sizing: auto;
+    font-weight: 600;
+}
+.dashboard-page :is(.summary-line strong, .ring-center strong) {
+    font-family: var(--font-display) !important;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    font-optical-sizing: auto;
+}
+.dashboard-page :is(.experience-title strong, .experience-hours) {
+    font-family: var(--font-text) !important;
+    font-weight: 600;
+}
