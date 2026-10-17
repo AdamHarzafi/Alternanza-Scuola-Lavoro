@@ -429,6 +429,11 @@ button:disabled { opacity:.55; cursor:wait; }
     line-height: 1.1;
     letter-spacing: -.04em;
 }
+.dashboard-page .hero h1 {
+    font-size: clamp(3.9rem, 6.7vw, 6.9rem);
+    line-height: .93;
+    letter-spacing: -.062em;
+}
 .dashboard-page .hero-lead {
     margin-top: 6px;
     color: var(--ink);
@@ -451,4 +456,9 @@ button:disabled { opacity:.55; cursor:wait; }
 .dashboard-page :is(.experience-title strong, .experience-hours) {
     font-family: var(--font-text) !important;
     font-weight: 600;
+}
+@media (max-width: 700px) {
+    .dashboard-page .hero h1 {
+        font-size: clamp(3.15rem, 15vw, 5rem);
+    }
 }
