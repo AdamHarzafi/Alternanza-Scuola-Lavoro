@@ -29,11 +29,12 @@
     const successToastTitle = document.getElementById('dashboard-success-title');
     const successToastMessage = document.getElementById('dashboard-success-message');
     let successToastTimer;
-    function showSuccessToast(title, message) {
+    function showDashboardToast(title, message, isError = false) {
         if (!successToast || !successToastTitle || !successToastMessage) return;
         window.clearTimeout(successToastTimer);
         successToastTitle.textContent = title;
         successToastMessage.textContent = message;
+        successToast.classList.toggle('is-error', isError);
         successToast.setAttribute('aria-hidden', 'false');
         successToast.classList.add('is-visible');
         successToastTimer = window.setTimeout(() => {
@@ -463,12 +464,16 @@
             if (auth.currentUser?.uid !== uid) return;
             RegisterUI.close(dialog);
             status.textContent = 'Ore salvate su Firebase.';
-            showSuccessToast(
+            showDashboardToast(
                 editing ? 'Modifica salvata' : 'Esperienza aggiunta',
                 editing ? 'Le informazioni sono aggiornate nel tuo registro.' : 'La nuova attività è nel tuo registro.'
             );
         } catch (error) {
-            if (auth.currentUser?.uid === uid) formStatus.textContent = errorMessage(error);
+            if (auth.currentUser?.uid === uid) {
+                const message = errorMessage(error);
+                formStatus.textContent = message;
+                showDashboardToast(editing ? 'Modifica non riuscita' : 'Salvataggio non riuscito', message, true);
+            }
         } finally {
             busy = false;
             document.getElementById('hours-fields').disabled = false;
@@ -492,8 +497,14 @@
             if (auth.currentUser?.uid !== uid) return;
             RegisterUI.close(deleteDialog);
             status.textContent = 'Esperienza eliminata dal tuo registro.';
-            showSuccessToast('Esperienza eliminata', 'La voce è stata rimossa dal tuo registro.');
-        } catch (error) { if (auth.currentUser?.uid === uid) message.textContent = errorMessage(error); }
+            showDashboardToast('Esperienza eliminata', 'La voce è stata rimossa dal tuo registro.');
+        } catch (error) {
+            if (auth.currentUser?.uid === uid) {
+                const errorText = errorMessage(error);
+                message.textContent = errorText;
+                showDashboardToast('Eliminazione non riuscita', errorText, true);
+            }
+        }
         finally {
             deleteBusy = false;
             document.getElementById('confirm-delete').disabled = false;

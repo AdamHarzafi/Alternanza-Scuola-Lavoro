@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.png">
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="dashboard.css?v=20261017-dashboard-success-toast">
+    <link rel="stylesheet" href="dashboard.css?v=20261017-dashboard-liquid-toast">
     <link rel="stylesheet" href="register-refinements.css?v=20260919-refined">
     <link rel="stylesheet" href="teacher-register.css?v=20260925-hero-scroll">
     <style>
@@ -40,7 +40,10 @@
     </header>
 
     <div id="dashboard-success-toast" class="dashboard-success-toast" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true">
-        <span class="dashboard-success-toast-logo"><img src="IMMAGINI/LOGO-HARZAFI.png" alt=""></span>
+        <span class="dashboard-success-toast-logo" aria-hidden="true">
+            <img class="dashboard-toast-icon-success" src="IMMAGINI/LOGO%20SPUNTA%20BLU.png" alt="">
+            <img class="dashboard-toast-icon-error" src="IMMAGINI/LOGO%20ERRATO.png" alt="">
+        </span>
         <span class="dashboard-success-toast-copy">
             <strong id="dashboard-success-title"></strong>
             <span id="dashboard-success-message"></span>
@@ -195,6 +198,6 @@
     <script src="hours-store.js?v=20260924-teachers"></script>
     <script src="teacher-model.js?v=20260924"></script>
     <script src="teacher-register.js?v=20260925-hero-scroll"></script>
-    <script src="dashboard.js?v=20261017-dashboard-success-toast"></script>
+    <script src="dashboard.js?v=20261017-dashboard-liquid-toast"></script>
 </body>
 </html>

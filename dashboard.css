@@ -483,12 +483,12 @@ button:disabled { opacity:.55; cursor:wait; }
     width: min(430px, calc(100vw - 36px));
     min-height: 78px;
     padding: 13px 17px;
-    border: 1px solid rgba(255,255,255,.82);
-    border-radius: 24px;
-    background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(245,247,251,.92));
-    box-shadow: 0 12px 36px rgba(29,29,31,.16), inset 0 1px 1px rgba(255,255,255,.95);
-    -webkit-backdrop-filter: saturate(170%) blur(22px);
-    backdrop-filter: saturate(170%) blur(22px);
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 30px;
+    background: linear-gradient(135deg, rgba(255,255,255,.66), rgba(241,245,251,.48));
+    box-shadow: 0 14px 42px rgba(29,29,31,.13), inset 0 1px 1px rgba(255,255,255,.82);
+    -webkit-backdrop-filter: saturate(190%) blur(34px);
+    backdrop-filter: saturate(190%) blur(34px);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -502,23 +502,30 @@ button:disabled { opacity:.55; cursor:wait; }
     transition-delay: 0s;
 }
 .dashboard-success-toast-logo {
-    display: grid;
+    position: relative;
+    display: block;
     flex: 0 0 50px;
     width: 50px;
     height: 50px;
-    place-items: center;
-    padding: 7px;
-    border: 1px solid rgba(29,29,31,.06);
-    border-radius: 16px;
-    background: #fff;
-    box-shadow: inset 0 1px 1px #fff, 0 2px 8px rgba(29,29,31,.06);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.76);
+    border-radius: 17px;
+    box-shadow: 0 2px 9px rgba(29,29,31,.12);
 }
 .dashboard-success-toast-logo img {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    border-radius: inherit;
+    object-fit: cover;
+    transition: opacity .18s ease, visibility .18s ease;
 }
+.dashboard-toast-icon-success { opacity: 1; visibility: visible; }
+.dashboard-toast-icon-error { opacity: 0; visibility: hidden; }
+.dashboard-success-toast.is-error .dashboard-toast-icon-success { opacity: 0; visibility: hidden; }
+.dashboard-success-toast.is-error .dashboard-toast-icon-error { opacity: 1; visibility: visible; }
 .dashboard-success-toast-copy {
     display: grid;
     min-width: 0;
