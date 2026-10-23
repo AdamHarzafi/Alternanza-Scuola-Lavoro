@@ -233,8 +233,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (togglePasswordBtn && passInput) {
         togglePasswordBtn.addEventListener('click', () => {
-            const willShowPassword = passInput.type === 'password';
-            passInput.type = willShowPassword ? 'text' : 'password';
+            const willShowPassword = passInput.type !== 'text';
+            const currentPassword = passInput.value;
+            let selection = null;
+            try {
+                if (Number.isInteger(passInput.selectionStart) && Number.isInteger(passInput.selectionEnd)) {
+                    selection = [passInput.selectionStart, passInput.selectionEnd];
+                }
+            } catch (_) {
+                // Password selection APIs are unavailable in a few older browser versions.
+            }
+
+            passInput.setAttribute('type', willShowPassword ? 'text' : 'password');
+            if (passInput.value !== currentPassword) passInput.value = currentPassword;
+            if (selection) {
+                try { passInput.setSelectionRange(selection[0], selection[1]); } catch (_) {}
+            }
             togglePasswordBtn.classList.toggle('is-visible', willShowPassword);
             togglePasswordBtn.setAttribute('aria-label', willShowPassword ? 'Nascondi password' : 'Mostra password');
             togglePasswordBtn.setAttribute('aria-pressed', String(willShowPassword));
