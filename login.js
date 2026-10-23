@@ -230,11 +230,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ── Toggle password visibilità ───────────────────────────
     const togglePasswordBtn = document.getElementById('toggle-password');
+    const passwordTransition = document.getElementById('password-visibility-transition');
+    const passwordField = passInput?.closest('.auth-password-field');
+    let passwordTransitionTimer;
 
     if (togglePasswordBtn && passInput) {
         togglePasswordBtn.addEventListener('click', () => {
             const willShowPassword = passInput.type !== 'text';
             const currentPassword = passInput.value;
+            const previousRepresentation = passInput.type === 'password'
+                ? Array.from(currentPassword, () => '●').join('')
+                : currentPassword;
             let selection = null;
             try {
                 if (Number.isInteger(passInput.selectionStart) && Number.isInteger(passInput.selectionEnd)) {
@@ -244,10 +250,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Password selection APIs are unavailable in a few older browser versions.
             }
 
+            window.clearTimeout(passwordTransitionTimer);
+            passwordField?.classList.remove('password-visibility-switching');
+            if (passwordTransition && currentPassword) {
+                passwordTransition.textContent = previousRepresentation;
+                passwordTransition.scrollLeft = passInput.scrollLeft;
+            } else if (passwordTransition) {
+                passwordTransition.textContent = '';
+            }
+            if (passwordField) void passwordField.offsetWidth;
+
             passInput.setAttribute('type', willShowPassword ? 'text' : 'password');
             if (passInput.value !== currentPassword) passInput.value = currentPassword;
             if (selection) {
                 try { passInput.setSelectionRange(selection[0], selection[1]); } catch (_) {}
+            }
+            if (passwordTransition && passwordField && currentPassword) {
+                passwordField.classList.add('password-visibility-switching');
+                passwordTransitionTimer = window.setTimeout(() => {
+                    passwordField.classList.remove('password-visibility-switching');
+                    passwordTransition.textContent = '';
+                }, 360);
             }
             togglePasswordBtn.classList.toggle('is-visible', willShowPassword);
             togglePasswordBtn.setAttribute('aria-label', willShowPassword ? 'Nascondi password' : 'Mostra password');

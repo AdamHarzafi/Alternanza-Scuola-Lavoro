@@ -3427,3 +3427,54 @@ body.auth-page {
     font-size: clamp(17px, 4.8vw, 20px) !important;
     line-height: 1.4 !important;
 }
+
+/* Crossfade the actual password glyphs between bullets and readable text. */
+#login-page-wrapper .auth-password-field .password-visibility-transition {
+    position: absolute;
+    z-index: 1;
+    top: 19px;
+    right: 108px;
+    bottom: 5px;
+    left: 18px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    color: #1d1d1f;
+    font-family: var(--font-text) !important;
+    font-size: 17px !important;
+    font-style: normal;
+    font-weight: 400 !important;
+    letter-spacing: normal;
+    line-height: normal;
+    white-space: pre;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+}
+
+#login-page-wrapper .auth-password-field.password-visibility-switching input#password-input {
+    animation: password-glyphs-in .28s cubic-bezier(.2,.72,.25,1) both;
+}
+
+#login-page-wrapper .auth-password-field.password-visibility-switching .password-visibility-transition {
+    animation: password-glyphs-out .28s cubic-bezier(.2,.72,.25,1) both;
+}
+
+@keyframes password-glyphs-in {
+    from { opacity: 0; filter: blur(3px); }
+    42% { opacity: .42; filter: blur(1.2px); }
+    to { opacity: 1; filter: blur(0); }
+}
+
+@keyframes password-glyphs-out {
+    from { opacity: 1; filter: blur(0); }
+    58% { opacity: .58; filter: blur(1.2px); }
+    to { opacity: 0; filter: blur(3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #login-page-wrapper .auth-password-field.password-visibility-switching input#password-input,
+    #login-page-wrapper .auth-password-field.password-visibility-switching .password-visibility-transition {
+        animation-duration: .01ms !important;
+    }
+}

@@ -535,7 +535,7 @@
         }
     </style>
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="login-modern.css?v=20261023-login-copy-scale">
+    <link rel="stylesheet" href="login-modern.css?v=20261023-password-crossfade">
     <script defer src="site-motion.js?v=20260906"></script>
     <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
     <link rel="stylesheet" href="page-design.css?v=20261017-shared-page-style">
@@ -616,6 +616,7 @@
                         <div class="auth-field auth-password-field floating-auth-field">
                             <input type="password" id="password-input" name="password"
                                    autocomplete="current-password" required placeholder=" ">
+                            <span id="password-visibility-transition" class="password-visibility-transition" aria-hidden="true"></span>
                             <label class="floating-field-label" for="password-input">Password</label>
                             <span id="caps-lock-warning" class="caps-lock-indicator" hidden aria-live="polite">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 6.5 7H15v5H9v-5H5.5L12 4Zm-3 14h6v2H9v-2Z"/></svg>
@@ -773,7 +774,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
     <script defer src="auth-session.js?v=20261023-login-startup"></script>
-    <script defer src="login.js?v=20261023-password-visibility-toggle"></script>
+    <script defer src="login.js?v=20261023-password-crossfade"></script>
 </body>
 </html>
 
