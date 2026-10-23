@@ -3415,3 +3415,15 @@ body.auth-page {
         transition-duration: .01ms !important;
     }
 }
+
+/* Give the sign-in explanation comfortable reading size without clipping it. */
+#login-page-wrapper .login-panel:not(.is-password-step) > .auth-subtitle {
+    display: block !important;
+    width: min(100%, 520px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 180px !important;
+    overflow: visible !important;
+    font-size: clamp(17px, 4.8vw, 20px) !important;
+    line-height: 1.4 !important;
+}
