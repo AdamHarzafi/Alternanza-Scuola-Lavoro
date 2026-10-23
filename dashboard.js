@@ -112,10 +112,12 @@
             window.location.replace('login.html');
             return;
         }
-        // The email-linked Firestore profile is the source of the greeting.
-        // HID accounts have no email: only reuse a name bound to this exact UID.
-        if (user.isAnonymous && sessionStorage.getItem('harzafi_user_uid') === user.uid) {
-            nameElement.textContent = sessionStorage.getItem('harzafi_user') || 'Utente';
+        const cachedUid = sessionStorage.getItem('harzafi_user_uid');
+        const hasCurrentSession = cachedUid === user.uid;
+        const cachedName = hasCurrentSession ? sessionStorage.getItem('harzafi_user') : '';
+        // Reuse the login-verified display name for this UID; fetch it only on direct visits.
+        if (hasCurrentSession && cachedName) {
+            nameElement.textContent = cachedName;
         } else {
             window.HarzafiSession.profileName(user).then(name => {
                 if (auth.currentUser?.uid !== user.uid) return;
@@ -125,6 +127,20 @@
         if (user.isAnonymous) {
             showDashboard();
             status.textContent = 'Questo accesso Harzafi ID è temporaneo. Esci e accedi con email e password per salvare e ritrovare le tue ore anche su altri dispositivi.';
+            return;
+        }
+        const cachedRole = hasCurrentSession ? sessionStorage.getItem('harzafi_user_role') : '';
+        const cachedStudentProfileId = hasCurrentSession ? sessionStorage.getItem('harzafi_student_profile_id') : '';
+        // Login already verified this student's profile by email. Use that ID only as a
+        // startup hint: Firestore rules still validate ownership, and the registry link
+        // is repaired asynchronously so it does not hold the dashboard behind a write.
+        if (cachedRole === 'studente' && cachedStudentProfileId) {
+            addButton.disabled = false;
+            showDashboard();
+            loadData();
+            TeacherRegister.ensureStudent(db, user, cachedStudentProfileId).catch(error => {
+                console.warn('Collegamento del registro rinviato:', error.code || 'errore di rete');
+            });
             return;
         }
         try {

@@ -61,6 +61,8 @@
         if (!user) {
             sessionStorage.removeItem('harzafi_user');
             sessionStorage.removeItem('harzafi_user_uid');
+            sessionStorage.removeItem('harzafi_user_role');
+            sessionStorage.removeItem('harzafi_student_profile_id');
         }
     }
     auth.onAuthStateChanged(updateNavigation, () => updateNavigation(null));

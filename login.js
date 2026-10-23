@@ -53,10 +53,19 @@ function waitForFirebase(callback) {
 waitForFirebase(() => {});
 
 // ── Redirect alla dashboard dopo login riuscito ───────────────
-function entraNelPortale(nomeUtente) {
+function entraNelPortale(nomeUtente, profile = null) {
     // Salviamo il nome in sessionStorage (SOLO A SCOPO ESTETICO: la vera sicurezza ora è in dashboard.html via Firebase Auth)
     sessionStorage.setItem('harzafi_user', nomeUtente);
     sessionStorage.setItem('harzafi_user_uid', window.auth.currentUser.uid);
+    const userEmail = window.auth.currentUser.email?.trim().toLowerCase();
+    if (profile && profile.email === userEmail && ['studente', 'docente'].includes(profile.role)) {
+        sessionStorage.setItem('harzafi_user_role', profile.role);
+        if (profile.role === 'studente' && profile.id) sessionStorage.setItem('harzafi_student_profile_id', profile.id);
+        else sessionStorage.removeItem('harzafi_student_profile_id');
+    } else {
+        sessionStorage.removeItem('harzafi_user_role');
+        sessionStorage.removeItem('harzafi_student_profile_id');
+    }
     window.location.href = 'dashboard.html';
 }
 
@@ -96,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const emailError = document.getElementById('email-error');
     const emailStep = document.getElementById('login-email-step');
     const passwordStep = document.getElementById('login-password-step');
+    const emailHelpLink = emailStep?.querySelector('.email-help-link');
     const continueBtn = document.getElementById('login-continue');
     const emailHome = emailInput.parentElement;
     const selectedEmail = document.getElementById('selected-email-display');
@@ -109,6 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
         verifiedProfile = null;
         if (!emailStep) return;
         emailHome.prepend(emailInput);
+        if (emailHelpLink) emailStep.insertBefore(emailHelpLink, emailStep.querySelector('.login-privacy'));
         emailInput.setAttribute('aria-describedby', 'email-error');
         emailStep.hidden = false;
         passwordStep.hidden = true;
@@ -146,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
             verifiedProfile = {
                 email,
                 role,
+                id: snapshot.docs[0].id,
                 name: typeof profile.nome === 'string' ? profile.nome.trim() : ''
             };
             selectedUserEmail = email;
@@ -155,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
             selectedEmail.appendChild(emailInput);
             emailInput.setAttribute('aria-describedby', 'login-error');
             emailStep.hidden = true;
+            if (emailHelpLink) passwordStep.insertBefore(emailHelpLink, submitBtn);
             passwordStep.hidden = false;
             passwordStep.classList.add('is-active');
             panel?.classList.add('is-password-step');
@@ -278,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         submitBtn.innerText = "Accedi";
                         submitBtn.disabled  = false;
                     }
-                    entraNelPortale(uName);
+                    entraNelPortale(uName, profileMatches ? verifiedProfile : null);
                 })
                 .catch((error) => {
                     if (submitBtn) {
@@ -354,6 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     verifiedProfile = {
                         email: selectedUserEmail,
                         role: selectedRole,
+                        id: snapshot.docs[0].id,
                         name: typeof profile.nome === 'string' ? profile.nome.trim() : ''
                     };
                 } catch (error) {
@@ -500,9 +514,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const otpStep3    = document.getElementById('otp-step-3');
     const otpEmailInput = document.getElementById('otp-email-input');
 
-    const btnForgotPassEl = document.getElementById('btn-forgot-pass');
-    if (btnForgotPassEl && forgotModal) {
-        btnForgotPassEl.addEventListener('click', e => {
+    const forgotPassLinks = document.querySelectorAll('#btn-forgot-pass-email');
+    if (forgotPassLinks.length && forgotModal) {
+        forgotPassLinks.forEach(btn => btn.addEventListener('click', e => {
             e.preventDefault();
             if (otpStep1) { otpStep1.style.display  = 'block'; otpStep1.style.opacity  = '1'; }
             if (otpStep3) { otpStep3.style.display  = 'none'; otpStep3.style.opacity  = '0'; }
@@ -513,7 +527,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (roleTitle) roleTitle.innerText = 'Password dimenticata?';
             targetCollectionOTP = selectedRole === 'studente' ? 'studenti' : 'docenti';
             forgotModal.classList.add('active');
-        });
+        }));
     }
 
     const forgotSheetCloseEl = document.getElementById('forgot-sheet-close');

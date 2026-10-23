@@ -8,14 +8,18 @@
         const doc = await db.collection('docenti_autorizzati').doc(user.uid).get({ source: 'server' });
         return doc.exists && doc.data().enabled === true;
     }
-    async function ensureStudent(db, user) {
+    async function ensureStudent(db, user, knownProfileId = '') {
         if (!user.email) return;
-        const profile = await db.collection('studenti').where('email', '==', user.email.toLowerCase()).limit(1).get();
-        if (profile.empty) return;
+        let studentId = knownProfileId;
+        if (!studentId) {
+            const profile = await db.collection('studenti').where('email', '==', user.email.trim().toLowerCase()).limit(1).get();
+            if (profile.empty) return;
+            studentId = profile.docs[0].id;
+        }
         const ref = db.collection('registri').doc(user.uid);
         await db.runTransaction(async tx => {
             const current = await tx.get(ref);
-            if (!current.exists) tx.set(ref, { studentId: profile.docs[0].id, email: user.email.toLowerCase() });
+            if (!current.exists) tx.set(ref, { studentId, email: user.email.trim().toLowerCase() });
         });
     }
     function mount(db, user) {

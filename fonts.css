@@ -1,10 +1,7 @@
-/*
- * SF Pro locale dal pacchetto SFWindows-main.
- * La stessa variabile copre i pesi da 100 a 900 e regola le forme in base alla dimensione.
- */
+/* SF Pro locale originale, sottinsieme WOFF2 per caratteri latini e simboli UI. */
 @font-face {
     font-family: "SF Pro Text";
-    src: url("fonts/SF-Pro-Variable.ttf") format("truetype");
+    src: url("fonts/SF-Pro-Variable-latin.woff2") format("woff2"), url("fonts/SF-Pro-Variable.ttf") format("truetype");
     font-style: normal;
     font-weight: 100 900;
     font-display: swap;
@@ -12,7 +9,7 @@
 
 @font-face {
     font-family: "SF Pro Display";
-    src: url("fonts/SF-Pro-Variable.ttf") format("truetype");
+    src: url("fonts/SF-Pro-Variable-latin.woff2") format("woff2"), url("fonts/SF-Pro-Variable.ttf") format("truetype");
     font-style: normal;
     font-weight: 100 900;
     font-display: swap;

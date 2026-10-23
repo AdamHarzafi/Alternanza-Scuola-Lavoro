@@ -15,6 +15,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="icon" type="image/webp" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preload" href="fonts/SF-Pro-Variable-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="style.css?v=20260829-support-image">
 
     <style>
@@ -534,9 +535,9 @@
         }
     </style>
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="login-modern.css?v=20261017-hid-mobile-motion">
+    <link rel="stylesheet" href="login-modern.css?v=20261023-password-step-synchronized">
     <script defer src="site-motion.js?v=20260906"></script>
-    <link rel="stylesheet" href="fonts.css?v=20261017-sf-copy-spacing">
+    <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
     <link rel="stylesheet" href="page-design.css?v=20261017-shared-page-style">
 </head>
 <body class="auth-page">
@@ -552,7 +553,7 @@
             <section class="login-panel" aria-labelledby="login-title">
                 <header class="login-topbar">
                     <a href="index.html" class="login-close" aria-label="Chiudi e torna al portale">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 12.6 12.6-1.4 1.4L5 6.4 6.4 5Zm11.2 0L19 6.4 6.4 19 5 17.6 17.6 5Z"/></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.7 5.3 1.4 1.4-5.3 5.3 5.3 5.3-1.4 1.4L8 12l6.7-6.7Z"/></svg>
                     </a>
                 </header>
 
@@ -560,8 +561,8 @@
                     <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi">
                 </div>
                 <p class="auth-eyebrow">Registro FSL</p>
-                <h1 class="auth-title" id="login-title">Accedi con il tuo<br>Account Harzafi.</h1>
-                <p class="auth-subtitle">Se hai già un account puoi effettuare l’accesso. Prosegui con l’indirizzo email</p>
+                <h1 class="auth-title" id="login-title">Account Harzafi.</h1>
+                <p class="auth-subtitle">Accedi con l’indirizzo email collegato al tuo account per ritrovare le esperienze e seguire il tuo percorso FSL.</p>
 
             <div class="segmented-control" id="role-control" aria-label="Tipo di account">
                 <div class="seg-slider" id="role-slider"></div>
@@ -580,12 +581,18 @@
                             <label class="floating-field-label" for="email-input">Indirizzo email</label>
                         </div>
                         <div class="error-msg" id="email-error" role="alert"></div>
+                        <p class="email-help-link">
+                            <a href="#" id="btn-forgot-pass-email" class="forgot-link">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M12 10.7v5.9M12 7.5h.01" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/></svg>
+                                <span>Hai dimenticato la password o non hai un account?</span>
+                            </a>
+                        </p>
 
                         <div class="privacy-disclaimer login-privacy">
                             <span class="privacy-people" aria-hidden="true">
                                 <img src="IMMAGINI/ICONA PRIVACY HARZAFI.svg" alt="">
                             </span>
-                            <span>I dati del tuo Account Harzafi vengono utilizzati per offrirti un accesso sicuro al Registro FSL. Proteggiamo le informazioni necessarie all’accesso, alla sicurezza e all’assistenza. <a href="privacy-account.html" target="_blank">Scopri come gestiamo i tuoi dati.</a></span>
+                            <span>Le informazioni relative all'Account Harzafi vengono utilizzate al momento del login per abilitare i diversi servizi, incluso il Registro FSL, l'ambiente che ti consente di conservare e sincronizzare in modo sicuro i dati del tuo percorso, rendendoli sempre accessibili da qualsiasi dispositivo. Il ruolo associato al tuo profilo potrebbe essere utilizzato per verificare l'idoneità ad accedere a funzionalità e risorse dedicate.<br><a href="privacy-account.html" target="_blank" rel="noopener">Scopri come vengono gestiti i tuoi dati...</a></span>
                         </div>
 
                         <div class="login-actions">
@@ -622,7 +629,6 @@
                             </button>
                         </div>
                         <div class="error-msg" id="login-error" role="alert">Credenziali errate. Riprova.</div>
-                        <a href="#" id="btn-forgot-pass" class="forgot-link">Hai dimenticato la password?</a>
                         <button type="submit" id="login-submit" class="btn-gradient">Accedi</button>
                     </div>
                 </form>
@@ -760,8 +766,8 @@
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
-    <script defer src="auth-session.js?v=20260923-app-check"></script>
-    <script defer src="login.js?v=20261017-auth-fast-path"></script>
+    <script defer src="auth-session.js?v=20261023-login-startup"></script>
+    <script defer src="login.js?v=20261023-account-fit"></script>
 </body>
 </html>
 
