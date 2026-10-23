@@ -3223,11 +3223,16 @@ body.auth-page {
     transform: none !important;
 }
 
-#login-page-wrapper #login-password-step.is-active .auth-password-field,
-#login-page-wrapper #login-password-step.is-active .email-help-link {
+#login-page-wrapper #login-password-step.is-active .auth-password-field {
     transform-origin: center top;
     animation: password-step-drop-in .58s cubic-bezier(.2, .78, .24, 1) both;
     will-change: clip-path, opacity, transform;
+}
+
+#login-page-wrapper #login-password-step.is-active .email-help-link {
+    transform-origin: center top;
+    animation: password-help-link-drop-in .58s cubic-bezier(.2, .78, .24, 1) both;
+    will-change: opacity, transform;
 }
 
 @keyframes password-step-drop-in {
@@ -3249,13 +3254,164 @@ body.auth-page {
     }
 }
 
+@keyframes password-help-link-drop-in {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, -18px, 0);
+    }
+    68% {
+        opacity: 1;
+        transform: translate3d(0, 2px, 0);
+    }
+    84% { transform: translate3d(0, -1px, 0); }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     #login-page-wrapper #login-password-step.is-active .auth-password-field,
     #login-page-wrapper #login-password-step.is-active .email-help-link {
         animation: none !important;
-        clip-path: none !important;
         opacity: 1 !important;
         transform: none !important;
         will-change: auto !important;
+    }
+
+    #login-page-wrapper #login-password-step.is-active .auth-password-field {
+        clip-path: none !important;
+    }
+}
+
+/* Password visibility control: soft SF Symbols-style eye transition. */
+#login-page-wrapper .toggle-password-btn {
+    display: grid !important;
+    place-items: center !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    color: #6e6e73 !important;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: color .2s ease, background-color .2s ease, transform .2s cubic-bezier(.2,.8,.2,1) !important;
+}
+
+#login-page-wrapper .toggle-password-btn:hover {
+    color: #424245 !important;
+    background: rgba(0, 113, 227, .07) !important;
+}
+
+#login-page-wrapper .toggle-password-btn:active {
+    transform: translateY(-50%) scale(.91) !important;
+}
+
+#login-page-wrapper .toggle-password-btn:focus-visible {
+    outline: 3px solid rgba(0, 113, 227, .3) !important;
+    outline-offset: 1px;
+}
+
+#login-page-wrapper #password-visibility-icon {
+    width: 21px !important;
+    height: 21px !important;
+    overflow: visible;
+    fill: none !important;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#password-visibility-icon .icon-eye,
+#password-visibility-icon .icon-eye-off {
+    display: inline !important;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: opacity .2s ease, transform .34s cubic-bezier(.2,.8,.2,1);
+}
+
+#password-visibility-icon .icon-eye {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+}
+
+#password-visibility-icon .icon-eye-off {
+    opacity: 0;
+    transform: scale(.72) rotate(-7deg);
+}
+
+#password-visibility-icon .eye-slash {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset .26s cubic-bezier(.2,.8,.2,1) .04s;
+}
+
+#login-page-wrapper .toggle-password-btn.is-visible #password-visibility-icon .icon-eye {
+    opacity: 0;
+    transform: scale(.72) rotate(7deg);
+}
+
+#login-page-wrapper .toggle-password-btn.is-visible #password-visibility-icon .icon-eye-off {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+}
+
+#login-page-wrapper .toggle-password-btn.is-visible #password-visibility-icon .eye-slash {
+    stroke-dashoffset: 0;
+}
+
+/* SF Pro Text regular keeps revealed characters aligned with the Apple reference. */
+#login-page-wrapper .auth-field.floating-auth-field.auth-password-field input#password-input {
+    font-family: var(--font-text) !important;
+    font-size: 17px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-kerning: normal;
+    font-optical-sizing: auto;
+    font-synthesis: none;
+    letter-spacing: normal !important;
+    line-height: normal !important;
+}
+
+#login-page-wrapper #change-email {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px !important;
+    padding: 0 15px !important;
+    color: #0071e3 !important;
+    font-family: var(--font-text) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: #e8f2ff !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: color .2s ease, background-color .2s ease, transform .2s cubic-bezier(.2,.8,.2,1) !important;
+}
+
+#login-page-wrapper #change-email:hover {
+    color: #0066cc !important;
+    background: #dcecff !important;
+}
+
+#login-page-wrapper #change-email:active {
+    transform: scale(.97);
+}
+
+#login-page-wrapper #change-email:focus-visible {
+    outline: 3px solid rgba(0, 113, 227, .28) !important;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #login-page-wrapper .toggle-password-btn,
+    #password-visibility-icon .icon-eye,
+    #password-visibility-icon .icon-eye-off,
+    #password-visibility-icon .eye-slash,
+    #login-page-wrapper #change-email {
+        transition-duration: .01ms !important;
     }
 }

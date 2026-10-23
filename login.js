@@ -237,6 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
             passInput.type = willShowPassword ? 'text' : 'password';
             togglePasswordBtn.classList.toggle('is-visible', willShowPassword);
             togglePasswordBtn.setAttribute('aria-label', willShowPassword ? 'Nascondi password' : 'Mostra password');
+            togglePasswordBtn.setAttribute('aria-pressed', String(willShowPassword));
         });
     }
 
