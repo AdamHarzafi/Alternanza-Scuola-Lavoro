@@ -50,7 +50,11 @@
     }
 
     window.HarzafiSession = { auth, profileName };
-    const links = Array.from(document.querySelectorAll('a[href="login.html"]'));
+    // Only update sign-in navigation controls. Other links can contain icons or
+    // custom markup (for example the reset page's back and close buttons).
+    const links = Array.from(document.querySelectorAll(
+        'a.nav-login[href="login.html"], a.hero-login[href="login.html"]'
+    ));
     const originalLabels = links.map(link => link.textContent);
     function updateNavigation(user) {
         links.forEach((link, index) => {

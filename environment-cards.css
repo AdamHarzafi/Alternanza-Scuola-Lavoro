@@ -30,7 +30,7 @@
     display: inline-block;
     max-width: 780px;
     margin-top: 16px;
-    color: #0066cc;
+    color: #00d959;
     font-family: var(--font-text) !important;
     font-size: 17px;
     font-weight: 400;
@@ -318,4 +318,20 @@
     .home-page .environment-card-plus {
         transition: none;
     }
+}
+
+.home-page .environment-heading-logo {
+    display: inline-block;
+    width: clamp(116px, 3.4em, 190px);
+    max-width: 38vw;
+    height: auto;
+    margin-right: -.04em;
+    object-fit: contain;
+    vertical-align: -.30em;
+    transform: rotate(1deg);
+    transform-origin: center;
+}
+
+.home-page .environment-heading-accent {
+    color: #00d959;
 }

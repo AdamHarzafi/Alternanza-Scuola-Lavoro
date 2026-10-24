@@ -3478,3 +3478,79 @@ body.auth-page {
         animation-duration: .01ms !important;
     }
 }
+
+/* Mobile back control: keep it in the top safe area with a visible glass edge. */
+@media (max-width: 600px) {
+    #login-page-wrapper .login-topbar {
+        position: fixed !important;
+        top: calc(env(safe-area-inset-top, 0px) + 18px) !important;
+        left: max(18px, calc(env(safe-area-inset-left, 0px) + 18px)) !important;
+        z-index: 30 !important;
+        width: auto !important;
+        min-height: 44px !important;
+    }
+
+    #login-page-wrapper .login-close {
+        width: 44px !important;
+        height: 44px !important;
+        border: 1px solid rgba(60, 60, 67, .2) !important;
+        border-radius: 50% !important;
+        color: #1d1d1f !important;
+        background: linear-gradient(145deg, rgba(255,255,255,.9), rgba(244,246,250,.68)) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.98), 0 3px 14px rgba(31,40,55,.14), 0 0 0 1px rgba(60,60,67,.05) !important;
+    }
+
+    #login-page-wrapper .login-close:active {
+        transform: scale(.96);
+    }
+}
+
+#forgot-sheet-modal #forgot-sheet-close svg {
+    display: block !important;
+    flex: 0 0 22px;
+    width: 22px !important;
+    height: 22px !important;
+    fill: currentColor !important;
+    stroke: none !important;
+}
+
+/* Harzafi ID and password recovery sheets use the bundled SF Pro files. */
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header > span {
+    font-family: var(--font-display), "SF Pro Display", sans-serif !important;
+    font-weight: 600 !important;
+    font-optical-sizing: auto;
+    letter-spacing: -.025em;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body,
+:is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body * {
+    font-family: var(--font-text), "SF Pro Text", sans-serif !important;
+    font-optical-sizing: auto;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-display), "SF Pro Display", sans-serif !important;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header .close-btn {
+    display: grid !important;
+    place-items: center !important;
+    line-height: 0 !important;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header .close-btn svg {
+    display: block !important;
+    flex: 0 0 22px !important;
+    width: 22px !important;
+    height: 22px !important;
+    fill: currentColor !important;
+    stroke: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header .close-btn svg path {
+    fill: currentColor !important;
+}
