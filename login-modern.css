@@ -3554,3 +3554,27 @@ body.auth-page {
 :is(#hid-modal, #forgot-sheet-modal) .hid-modal-header .close-btn svg path {
     fill: currentColor !important;
 }
+
+/* Keep login fields visually steady while focused; the floating label and caret
+   still communicate which field is active without tinting the control. */
+#login-page-wrapper .auth-field.floating-auth-field:focus-within {
+    border-color: transparent !important;
+    background: #f2f2f7 !important;
+    box-shadow: none !important;
+}
+
+#login-page-wrapper .auth-field.floating-auth-field input:focus {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+#login-page-wrapper .apple-input:focus,
+#hid-modal #hid-input:focus,
+#forgot-sheet-modal #otp-email-input:focus {
+    border-color: #d2d2d7 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
