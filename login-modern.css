@@ -3236,34 +3236,23 @@ body.auth-page {
 }
 
 @keyframes password-step-drop-in {
-    0% {
+    from {
         opacity: 0;
-        clip-path: inset(0 0 100% 0 round 999px);
-        transform: translate3d(0, -18px, 0) scaleY(.94);
+        clip-path: inset(0 0 100% 0 round 22px);
+        transform: translate3d(0, -8px, 0);
     }
-    68% {
+    to {
         opacity: 1;
-        clip-path: inset(0 0 0 0 round 999px);
-        transform: translate3d(0, 2px, 0) scaleY(1);
-    }
-    84% { transform: translate3d(0, -1px, 0) scaleY(1); }
-    100% {
-        opacity: 1;
-        clip-path: inset(0 0 0 0 round 999px);
-        transform: translate3d(0, 0, 0) scaleY(1);
+        clip-path: inset(0 0 0 0 round 22px);
+        transform: translate3d(0, 0, 0);
     }
 }
 
 @keyframes password-help-link-drop-in {
     0% {
         opacity: 0;
-        transform: translate3d(0, -18px, 0);
+        transform: translate3d(0, -8px, 0);
     }
-    68% {
-        opacity: 1;
-        transform: translate3d(0, 2px, 0);
-    }
-    84% { transform: translate3d(0, -1px, 0); }
     100% {
         opacity: 1;
         transform: translate3d(0, 0, 0);
@@ -3579,6 +3568,20 @@ body.auth-page {
     outline: none !important;
 }
 
+/* Keep browser autofill seamless with both credential-field backgrounds. */
+#login-page-wrapper .auth-field input:-webkit-autofill,
+#login-page-wrapper .auth-field input:-webkit-autofill:hover,
+#login-page-wrapper .auth-field input:-webkit-autofill:focus,
+#login-page-wrapper #selected-email-display input:-webkit-autofill,
+#login-page-wrapper #selected-email-display input:-webkit-autofill:hover,
+#login-page-wrapper #selected-email-display input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #1d1d1f !important;
+    -webkit-box-shadow: 0 0 0 1000px #f2f2f7 inset !important;
+    background-color: #f2f2f7 !important;
+    caret-color: #0071e3 !important;
+    transition: background-color 9999s ease-out 0s !important;
+}
+
 /* Email and password become two rows of one expanding Apple-style field. */
 #login-page-wrapper #login-password-step .login-credentials-group {
     display: flex;
@@ -3642,4 +3645,19 @@ body.auth-page {
         clip-path: none !important;
         will-change: auto !important;
     }
+}
+
+/* Keep the branded Harzafi ID surface clean, without outlines or shine. */
+#login-page-wrapper .login-actions #btn-harzafi-id,
+#login-page-wrapper .login-actions #btn-harzafi-id:hover:not(:disabled),
+#login-page-wrapper .login-actions #btn-harzafi-id:active:not(:disabled),
+#login-page-wrapper .login-actions #btn-harzafi-id:focus {
+    border: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+#login-page-wrapper .login-actions #btn-harzafi-id:hover:not(:disabled),
+#login-page-wrapper .login-actions #btn-harzafi-id:active:not(:disabled) {
+    transform: none !important;
 }
