@@ -3578,3 +3578,68 @@ body.auth-page {
     box-shadow: none !important;
     outline: none !important;
 }
+
+/* Email and password become two rows of one expanding Apple-style field. */
+#login-page-wrapper #login-password-step .login-credentials-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+    border: 0;
+    border-radius: 22px;
+    background: #f2f2f7;
+    box-shadow: none;
+}
+
+#login-page-wrapper #login-password-step .login-credentials-group > .selected-account,
+#login-page-wrapper #login-password-step .login-credentials-group > .auth-password-field {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 62px !important;
+    min-height: 62px !important;
+    max-height: 62px !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+#login-page-wrapper #login-password-step .login-credentials-group > .selected-account {
+    padding: 8px 10px 8px 16px !important;
+}
+
+#login-page-wrapper #login-password-step .login-credentials-group > .auth-password-field {
+    position: relative;
+}
+
+#login-page-wrapper #login-password-step .login-credentials-group > .auth-password-field::before {
+    position: absolute;
+    top: 0;
+    right: 16px;
+    left: 16px;
+    z-index: 3;
+    height: 1px;
+    background: #d1d1d6;
+    content: "";
+    pointer-events: none;
+}
+
+#login-page-wrapper #login-password-step.is-active .login-credentials-group {
+    transform-origin: center top;
+    animation: login-credentials-expand .58s cubic-bezier(.2, .78, .24, 1) both;
+    will-change: clip-path;
+}
+
+@keyframes login-credentials-expand {
+    0% { clip-path: inset(0 0 50% 0 round 22px); }
+    68%, 100% { clip-path: inset(0 0 0 0 round 22px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #login-page-wrapper #login-password-step.is-active .login-credentials-group {
+        animation: none !important;
+        clip-path: none !important;
+        will-change: auto !important;
+    }
+}
