@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Accesso — Registro FSL Harzafi</title>
+    <meta name="robots" content="noimageindex">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Harzafi FSL">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
+    <link rel="icon" type="image/webp" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preload" href="fonts/SF-Pro-Variable-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="style.css?v=20260829-support-image">
+
+    <style>
+        /* ── Layout pagina login ── */
+        #login-page-wrapper {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            background: #ffffff;
+        }
+
+        .login-bg-mesh {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 15% 25%, rgba(14,165,233,0.13) 0%, transparent 40%),
+                radial-gradient(ellipse at 85% 70%, rgba(2,132,199,0.10) 0%, transparent 45%);
+            filter: blur(35px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+/* ── Card login centrata ── */
+        .login-card {
+            position: relative;
+            z-index: 1;
+            background: #ffffff;
+            width: 100%;
+            max-width: 580px;  /* <--- IMPOSTATO A 580px */
+            border-radius: 36px;
+            padding: 44px 52px 36px;
+            box-shadow:
+                0 30px 70px rgba(2,132,199,0.10),
+                0 0 0 1px rgba(2,132,199,0.06);
+            animation: cardReveal 0.6s cubic-bezier(0.32,0.72,0,1) both;
+        }
+
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)   scale(1);    }
+        }
+
+        /* ── Back link ── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            margin-bottom: 28px;
+            transition: color 0.3s, transform 0.3s var(--apple-ease);
+        }
+        .back-link svg { width: 18px; fill: currentColor; transition: transform 0.3s var(--apple-ease); }
+        .back-link:hover { color: var(--primary); }
+        .back-link:hover svg { transform: translateX(-3px); }
+
+        /* ── Responsivo mobile ── */
+        @media (max-width: 767px) {
+            #login-page-wrapper { 
+                padding: 0; 
+                align-items: flex-start; 
+            }
+            .login-card { 
+                padding: 40px 24px 30px; 
+                border-radius: 0; 
+                box-shadow: none; 
+                max-width: 100%; 
+                min-height: 100vh; 
+                min-height: 100dvh;
+            }
+            .login-bg-mesh {
+                display: none; 
+            }
+        }
+
+        /* ── Accesso Harzafi — direzione visiva Apple ── */
+        body {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            font-family: "SF Pro Text", sans-serif;
+            font-optical-sizing: auto;
+        }
+
+        #login-page-wrapper,
+        #login-page-wrapper button,
+        #login-page-wrapper input,
+        #login-page-wrapper select,
+        #login-page-wrapper textarea,
+        .modal-overlay,
+        .modal-overlay button,
+        .modal-overlay input {
+            font-family: "SF Pro Text", sans-serif !important;
+        }
+
+        #login-page-wrapper {
+            padding: 28px;
+            background: #f5f5f7;
+        }
+
+        .login-bg-mesh {
+            background:
+                radial-gradient(circle at 14% 15%, rgba(0,113,227,.08), transparent 28%),
+                radial-gradient(circle at 88% 88%, rgba(90,200,250,.09), transparent 30%);
+            filter: none;
+        }
+
+        .login-card {
+            max-width: 1160px;
+            min-height: min(820px, calc(100dvh - 56px));
+            max-height: calc(100dvh - 56px);
+            padding: 0;
+            border: 1px solid rgba(0,0,0,.055);
+            border-radius: 32px;
+            display: grid;
+            grid-template-columns: minmax(340px, .92fr) minmax(480px, 1.08fr);
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,.025), 0 28px 80px rgba(0,0,0,.075);
+        }
+
+        .login-intro {
+            position: relative;
+            min-width: 0;
+            padding: 42px 48px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 20% 88%, rgba(0,113,227,.11), transparent 35%),
+                linear-gradient(145deg, #fafafa 0%, #f0f0f3 100%);
+        }
+
+        .login-intro::after {
+            content: "";
+            position: absolute;
+            right: -155px;
+            bottom: -165px;
+            width: 390px;
+            height: 390px;
+            border-radius: 50%;
+            border: 74px solid rgba(255,255,255,.55);
+            pointer-events: none;
+        }
+
+        .login-intro .back-link {
+            position: relative;
+            z-index: 2;
+            width: max-content;
+            margin: 0;
+            color: #6e6e73;
+            font-size: .82rem;
+            font-weight: 600;
+        }
+
+        .login-intro-content {
+            position: relative;
+            z-index: 2;
+            margin: auto 0;
+            padding: 54px 0;
+        }
+
+        .login-intro-logo {
+            width: auto;
+            height: 42px;
+            margin-bottom: 38px;
+            object-fit: contain;
+        }
+
+        .login-intro-eyebrow,
+        .auth-eyebrow {
+            margin: 0 0 12px;
+            color: #1d1d1f;
+            font-size: .92rem;
+            font-weight: 650;
+            letter-spacing: -.015em;
+            line-height: 1.2;
+        }
+
+        .login-intro h1 {
+            max-width: 470px;
+            margin: 0;
+            color: #1d1d1f;
+            font-size: clamp(3rem, 4.2vw, 4.65rem);
+            font-weight: 600;
+            letter-spacing: -.06em;
+            line-height: .97;
+        }
+
+        .login-intro h1 span { display: block; }
+        .login-intro h1 span:last-child { color: #6e6e73; }
+
+        .login-intro-copy {
+            max-width: 410px;
+            margin: 24px 0 0;
+            color: #6e6e73;
+            font-size: 1.03rem;
+            font-weight: 450;
+            line-height: 1.48;
+        }
+
+        .login-security-note {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #6e6e73;
+            font-size: .78rem;
+            font-weight: 600;
+        }
+
+        .login-security-note svg {
+            width: 20px;
+            height: 20px;
+            color: #34c759;
+        }
+
+        .login-panel {
+            min-width: 0;
+            padding: 44px clamp(44px, 5vw, 74px) 38px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            scrollbar-width: none;
+            background: #fff;
+            box-shadow: -1px 0 0 rgba(0,0,0,.035);
+        }
+
+        .login-panel::-webkit-scrollbar { display: none; }
+        .login-mobile-nav { display: none; }
+
+        .login-panel .modal-logo-wrapper {
+            display: none;
+        }
+
+        .auth-eyebrow {
+            color: #6e6e73;
+            font-size: .83rem;
+            text-transform: uppercase;
+            letter-spacing: .065em;
+        }
+
+        .auth-title {
+            margin: 0;
+            text-align: left;
+            color: #1d1d1f;
+            font-size: clamp(2.35rem, 3.3vw, 3.35rem);
+            font-weight: 600;
+            letter-spacing: -.055em;
+            line-height: 1.02;
+        }
+
+        .auth-subtitle {
+            margin: 12px 0 26px;
+            color: #6e6e73;
+            font-size: .96rem;
+            font-weight: 450;
+            line-height: 1.45;
+        }
+
+        .segmented-control {
+            margin-bottom: 18px;
+            padding: 3px;
+            border-radius: 11px;
+            background: #f0f0f3;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,.018);
+        }
+
+        .seg-btn {
+            min-height: 38px;
+            padding: 0;
+            border-radius: 9px;
+            color: #6e6e73;
+            font-size: .87rem;
+            font-weight: 600;
+        }
+
+        .seg-btn.active { color: #1d1d1f; }
+        .seg-slider {
+            top: 3px;
+            bottom: 3px;
+            left: 3px;
+            width: calc(50% - 3px);
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.09);
+        }
+
+        .login-rules-banner {
+            width: 100%;
+            min-height: 36px;
+            margin: 0 0 19px;
+            padding: 0;
+            border: 0;
+            justify-content: flex-start;
+            background: transparent;
+            color: #0066cc;
+            font-size: .8rem;
+            font-weight: 500;
+            white-space: normal;
+        }
+
+        .login-rules-banner svg {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+        }
+
+        .input-group { margin-bottom: 17px; }
+        .input-label {
+            margin-bottom: 8px;
+            color: #1d1d1f;
+            font-size: .79rem;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .input-label a { font-weight: 500; }
+
+        .apple-input,
+        .custom-select-trigger {
+            height: 52px;
+            padding: 0 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            background: #fff;
+            color: #1d1d1f;
+            font-size: 1rem;
+            font-weight: 450;
+            line-height: 1.2;
+        }
+
+        .apple-input:focus {
+            border-color: #d2d2d7;
+            background: #fff;
+            box-shadow: none;
+        }
+
+        .custom-select.open .custom-select-trigger {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0,113,227,.16);
+        }
+
+        .custom-select-trigger span,
+        .apple-input::placeholder { color: #86868b; }
+
+        #password-input {
+            font-family: var(--font-text) !important;
+            font-size: 17px !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+        }
+
+        .apple-input:-webkit-autofill,
+        .apple-input:-webkit-autofill:hover,
+        .apple-input:-webkit-autofill:focus {
+            -webkit-text-fill-color: #1d1d1f;
+            -webkit-box-shadow: 0 0 0 1000px #fff inset;
+            transition: background-color 9999s ease-out 0s;
+        }
+
+        .custom-options {
+            border-color: rgba(0,0,0,.1);
+            border-radius: 14px;
+            box-shadow: 0 18px 46px rgba(0,0,0,.13);
+        }
+
+        .toggle-password-btn { color: #86868b; }
+        .toggle-password-btn svg { width: 19px; height: 19px; }
+
+        .privacy-disclaimer {
+            margin: 2px 0 18px;
+            padding: 0;
+            color: #86868b;
+            font-size: .72rem;
+            font-weight: 400;
+            line-height: 1.45;
+            text-align: left;
+        }
+
+        .privacy-disclaimer svg { display: none; }
+        .privacy-disclaimer a { color: #0066cc; font-weight: 500; }
+
+        #login-submit {
+            height: 50px;
+            padding: 0 24px;
+            border-radius: 999px;
+            background: #0071e3;
+            font-size: .98rem;
+            font-weight: 600;
+            letter-spacing: 0;
+            text-transform: none;
+            box-shadow: none;
+        }
+
+        .divider {
+            margin: 18px 0;
+            color: #86868b;
+            font-size: .72rem;
+            font-weight: 500;
+            letter-spacing: 0;
+            text-transform: lowercase;
+        }
+
+        .divider::before,
+        .divider::after { border-color: #e5e5e7; }
+
+        .btn-social {
+            height: 50px;
+            margin-bottom: 10px;
+            border: 1px solid #d2d2d7;
+            border-radius: 999px;
+            color: #1d1d1f;
+            font-size: .9rem;
+            font-weight: 550;
+        }
+
+        #btn-harzafi-id { border-color: #d2d2d7; }
+        #btn-harzafi-id img { height: 17px; }
+        #btn-harzafi-id span { color: #1d1d1f; font-weight: 550; }
+
+        .error-msg {
+            color: #b42318;
+            font-size: .78rem;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        #login-page-wrapper :focus-visible {
+            outline: 3px solid rgba(0,113,227,.32) !important;
+            outline-offset: 2px !important;
+        }
+
+        #login-page-wrapper .apple-input:focus-visible,
+        #login-page-wrapper .custom-select-trigger:focus-visible {
+            outline: 0 !important;
+        }
+
+        .rules-list li {
+            border: 0;
+            border-radius: 15px;
+            background: #f5f5f7;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            #login-submit:hover {
+                transform: none;
+                background: #0077ed;
+                box-shadow: none;
+            }
+            .btn-social:hover {
+                transform: none;
+                border-color: #b9b9bd;
+                background: #f5f5f7;
+                box-shadow: none;
+            }
+            #btn-rules-banner:hover {
+                transform: none !important;
+                border-color: transparent !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                color: #0077ed;
+            }
+        }
+
+        @media (max-width: 960px) {
+            #login-page-wrapper { padding: 0; }
+            .login-bg-mesh { display: none; }
+            .login-card {
+                display: block;
+                width: 100%;
+                min-height: 100dvh;
+                max-height: none;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .login-intro { display: none; }
+            .login-panel {
+                width: 100%;
+                max-width: 560px;
+                min-height: 100dvh;
+                margin: 0 auto;
+                padding: calc(24px + env(safe-area-inset-top, 0px)) 24px calc(32px + env(safe-area-inset-bottom, 0px));
+                overflow: visible;
+            }
+            .login-mobile-nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                min-height: 36px;
+                margin-bottom: clamp(32px, 6vh, 48px);
+            }
+            .login-mobile-nav .back-link {
+                margin: 0;
+                color: #6e6e73;
+                font-size: 0;
+            }
+            .login-mobile-nav .back-link svg { width: 22px; height: 22px; }
+            .login-mobile-nav img { width: auto; height: 29px; }
+            .login-panel .auth-title { font-size: clamp(2.3rem, 11vw, 3.2rem); }
+            .auth-subtitle { margin-bottom: 28px; }
+        }
+
+        @media (max-width: 380px) {
+            .login-panel { padding-right: 18px; padding-left: 18px; }
+            .login-mobile-nav { margin-bottom: 34px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .login-card,
+            .fade-form,
+            .seg-slider,
+            .custom-options {
+                animation: none !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
+    <link rel="stylesheet" href="login-modern.css?v=20261024-forgot-motion-single">
+    <script defer src="site-motion.js?v=20261024-page-transitions"></script>
+    <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
+    <link rel="stylesheet" href="page-design.css?v=20261017-shared-page-style">
+</head>
+<body class="auth-page">
+
+    <!-- Sfondo -->
+    <div class="login-bg-mesh" aria-hidden="true"></div>
+
+    <!-- Pagina -->
+    <div id="login-page-wrapper">
+
+        <!-- Card login -->
+        <div class="login-card">
+            <section class="login-panel" aria-labelledby="login-title">
+                <header class="login-topbar">
+                    <a href="index.html" class="login-close" aria-label="Chiudi e torna al portale">
+                        <svg viewBox="12 9 12 17" width="19" height="19" aria-hidden="true"><path d="m 20 25 c -0.3838 0 -0.7676 -0.1465 -1.0605 -0.4395 l -5.5 -5.5 c -0.5859 -0.5854 -0.5859 -1.5356 0 -2.1211 l 5.5 -5.5 c 0.5859 -0.5859 1.5352 -0.5859 2.1211 0 c 0.5859 0.5854 0.5859 1.5356 0 2.1211 l -4.4395 4.4395 l 4.4395 4.4395 c 0.5859 0.5854 0.5859 1.5356 0 2.1211 c -0.293 0.293 -0.6768 0.4395 -1.0605 0.4395 Z"/></svg>
+                    </a>
+                </header>
+
+                <div class="login-hero-mark">
+                    <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi">
+                </div>
+                <p class="auth-eyebrow">Registro FSL</p>
+                <h1 class="auth-title" id="login-title">Account Harzafi.</h1>
+                <p class="auth-subtitle">Accedi con l’indirizzo email collegato al tuo account per ritrovare le esperienze e seguire il tuo percorso FSL.</p>
+
+            <div class="segmented-control" id="role-control" aria-label="Tipo di account">
+                <div class="seg-slider" id="role-slider"></div>
+                <button type="button" class="seg-btn active" data-role="studente" aria-pressed="true">Studente</button>
+                <button type="button" class="seg-btn" data-role="docente" aria-pressed="false">Docente</button>
+            </div>
+
+            <!-- Vista Login -->
+            <div id="login-view" class="fade-form">
+                <form id="login-form" action="login.html" method="post" autocomplete="on" novalidate>
+                    <div id="login-email-step" class="login-step is-active">
+                        <div class="auth-field email-auth-field floating-auth-field">
+                            <input type="email" id="email-input" name="email" autocomplete="username" required
+                                   inputmode="email" autocapitalize="none" spellcheck="false"
+                                   placeholder=" " aria-describedby="email-error">
+                            <label class="floating-field-label" for="email-input">Indirizzo email</label>
+                        </div>
+                        <div class="error-msg" id="email-error" role="alert"></div>
+                        <p class="email-help-link">
+                            <a href="#" id="btn-forgot-pass-email" class="forgot-link">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M12 10.7v5.9M12 7.5h.01" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/></svg>
+                                <span>Hai dimenticato la password o non hai un account?</span>
+                            </a>
+                        </p>
+
+                        <div class="privacy-disclaimer login-privacy">
+                            <span class="privacy-people" aria-hidden="true">
+                                <img src="IMMAGINI/ICONA PRIVACY HARZAFI.svg" alt="">
+                            </span>
+                            <span>Le informazioni relative all'Account Harzafi vengono utilizzate al momento del login per abilitare i diversi servizi, incluso il Registro FSL, l'ambiente che ti consente di conservare e sincronizzare in modo sicuro i dati del tuo percorso, rendendoli sempre accessibili da qualsiasi dispositivo. Il ruolo associato al tuo profilo potrebbe essere utilizzato per verificare l'idoneità ad accedere a funzionalità e risorse dedicate.<br><a href="privacy-account.html" target="_blank" rel="noopener">Scopri come vengono gestiti i tuoi dati...</a></span>
+                        </div>
+
+                        <div class="login-actions">
+                            <button type="button" id="login-continue" class="btn-gradient">Continua</button>
+                            <button type="button" id="btn-harzafi-id" class="btn-social" aria-controls="hid-modal">
+                                <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="" width="80" height="32">
+                                <span class="harzafi-id-separator" aria-hidden="true"></span>
+                                <span class="harzafi-id-label">Accedi con Harzafi ID</span>
+                                <svg class="harzafi-id-arrow" width="18" height="24" viewBox="0 0 18 24" fill="none" aria-hidden="true" focusable="false"><path d="m6 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="login-password-step" class="login-step" hidden>
+                        <div class="login-credentials-group" id="login-credentials-group" role="group" aria-label="Email e password">
+                        <div class="selected-account">
+                            <div class="selected-account-copy">
+                                <label for="email-input">Account Harzafi</label>
+                                <div id="selected-email-display"></div>
+                            </div>
+                            <button type="button" id="change-email" aria-label="Modifica email">Modifica</button>
+                        </div>
+                        <div class="auth-field auth-password-field floating-auth-field">
+                            <input type="password" id="password-input" name="password"
+                                   autocomplete="current-password" required placeholder=" ">
+                            <label class="floating-field-label" for="password-input">Password</label>
+                            <span id="password-visibility-transition" class="password-visibility-transition" aria-hidden="true"></span>
+                            <span id="caps-lock-warning" class="caps-lock-indicator" hidden aria-live="polite">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 6.5 7H15v5H9v-5H5.5L12 4Zm-3 14h6v2H9v-2Z"/></svg>
+                                <span class="sr-only">Il Blocco Maiuscole è attivo.</span>
+                            </span>
+                            <button type="button" id="toggle-password" class="toggle-password-btn" aria-label="Mostra password" aria-pressed="false">
+                                <svg id="password-visibility-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <g class="icon-eye">
+                                        <path d="M2.2 12s3.45-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.45 6.2-9.8 6.2S2.2 12 2.2 12Z"/>
+                                        <circle cx="12" cy="12" r="2.65"/>
+                                    </g>
+                                    <g class="icon-eye-off">
+                                        <path d="M2.2 12s3.45-6.2 9.8-6.2 9.8 6.2 9.8 6.2-3.45 6.2-9.8 6.2S2.2 12 2.2 12Z"/>
+                                        <path class="eye-slash" d="m4.1 4.1 15.8 15.8"/>
+                                    </g>
+                                </svg>
+                            </button>
+                        </div>
+                        </div>
+                        <div class="error-msg" id="login-error" role="alert">Credenziali errate. Riprova.</div>
+                        <button type="submit" id="login-submit" class="btn-gradient">Accedi</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Vista Regole -->
+            <div id="rules-view" class="fade-form">
+                <div style="background:#f0f9ff;border:1px solid #bae6fd;padding:15px;border-radius:12px;margin-bottom:20px;">
+                    <p style="font-size:0.95rem;color:#0369a1;font-weight:600;text-align:justify;margin:0;line-height:1.5;">
+                        Harzafi è un progetto indipendente. I metodi disponibili sono descritti qui sotto;
+                        l'accesso non costituisce un'autorizzazione all'uso di dati scolastici.
+                        Consulta la <a href="privacy-account.html">privacy dell'account</a> per i dettagli.
+                    </p>
+                </div>
+                <ul class="rules-list">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="var(--primary)" style="width:30px;flex-shrink:0;">
+                            <path d="M12,3L1,9L4,10.63V17L12,21L20,17V10.63L23,9M12,5.16L19.5,9L12,12.84L4.5,9M18,16.08L12,19.08L6,16.08V11.72L12,15L18,11.72V16.08Z"/>
+                        </svg>
+                        <div style="display:flex;flex-direction:column;">
+                            <span style="font-weight:800;">Studenti</span>
+                            <span style="font-size:0.8rem;color:var(--text-gray);font-weight:500;">Account Harzafi già registrato. L'integrazione Google istituzionale non è autorizzata dalla scuola.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="var(--primary)" style="width:30px;flex-shrink:0;">
+                            <path d="M12,15C7.58,15 4,16.79 4,19V21H20V19C20,16.79 16.42,15 12,15M8,9A4,4 0 0,0 12,13A4,4 0 0,0 16,9M11.5,2A2.5,2.5 0 0,0 9,4.5A2.5,2.5 0 0,0 11.5,7A2.5,2.5 0 0,0 14,4.5A2.5,2.5 0 0,0 11.5,2Z"/>
+                        </svg>
+                        <div style="display:flex;flex-direction:column;">
+                            <span style="font-weight:800;">Amministrazione Centrale</span>
+                            <span style="font-size:0.8rem;color:var(--text-gray);font-weight:500;">Accesso riservato tramite credenziali dirette fornite dall'amministratore di sistema.</span>
+                        </div>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="var(--primary)" style="width:30px;flex-shrink:0;">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        <div style="display:flex;flex-direction:column;">
+                            <span style="font-weight:800;">Personale Scolastico (Docenti)</span>
+                            <span style="font-size:0.8rem;color:var(--text-gray);font-weight:500;">Account Harzafi già registrato. Il ruolo non attribuisce un incarico istituzionale.</span>
+                        </div>
+                    </li>
+                </ul>
+                <button type="button" class="btn-text btn-back-login" style="font-weight:800;font-size:1rem;margin-top:5px;">← Torna al Login</button>
+            </div>
+            </section>
+        </div>
+    </div>
+
+    <footer id="footer" class="harzafi-footer login-site-footer">
+        <div class="harzafi-footer-inner reveal active">
+            <div class="harzafi-footer-main">
+                <div class="harzafi-footer-brand">
+                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi"></a>
+                    <h2>Un registro più semplice. <span>Creato con cura.</span></h2>
+                </div>
+                <div class="harzafi-footer-profile">
+                    <img class="harzafi-footer-avatar" src="IMMAGINI/ADAM%20HARZAFI.webp" alt="Adam Harzafi" width="64" height="64" loading="lazy" decoding="async">
+                    <p class="harzafi-footer-eyebrow">Progetto personale</p>
+                    <h3>Harzafi Adam</h3>
+                    <p class="harzafi-footer-school"><span>Classe 4AI</span><span>Anno scolastico 2026/2027</span></p>
+                    <ul class="harzafi-footer-socials" aria-label="Social Harzafi">
+                        <li><a href="https://www.instagram.com/adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri Instagram di Adam Harzafi"><img src="IMMAGINI/SOCIAL-INSTAGRAM.svg" alt=""></a></li>
+                        <li><a href="https://www.snapchat.com/@adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri Snapchat di Adam Harzafi"><img src="IMMAGINI/SOCIAL-SNAPCHAT.svg" alt=""></a></li>
+                        <li><a href="https://it.linkedin.com/in/adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri LinkedIn di Adam Harzafi"><img src="IMMAGINI/SOCIAL-LINKEDIN.svg" alt=""></a></li>
+                        <li><a href="https://github.com/AdamHarzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri GitHub di Adam Harzafi"><img src="IMMAGINI/SOCIAL-GITHUB.svg" alt=""></a></li>
+                        <li><a href="https://t.me/AdamHarzafi" target="_blank" rel="noopener noreferrer" aria-label="Apri Telegram di Adam Harzafi"><img src="IMMAGINI/SOCIAL-TELEGRAM.svg" alt=""></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="harzafi-footer-bottom">
+                <p>© 2026 Harzafi FSL. Tutti i diritti riservati.</p>
+<nav class="harzafi-footer-links" aria-label="Informazioni legali">
+                    <a href="accessibilita.html">Accessibilità</a>
+                    <a href="privacy-account.html">Il tuo account</a>
+                    <a href="privacy.html">Norme sulla privacy</a>
+                    <a href="termini.html">Termini</a>
+                    <a href="supporto.html">Supporto</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ── Modali (HID, Recupero Password) ── -->
+
+    <!-- Modale Harzafi ID -->
+    <div id="hid-modal" class="modal-overlay bottom-sheet" role="dialog" aria-modal="true" aria-label="Accedi con Harzafi ID">
+        <div class="modal-content">
+            <div class="hid-modal-header"><span>Harzafi ID</span><button type="button" id="hid-close-btn" class="close-btn" aria-label="Chiudi Harzafi ID"><svg viewBox="10 10 16 16" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="m 20.1211 18 l 3.4395 -3.4395 c 0.5859 -0.5854 0.5859 -1.5356 0 -2.1211 c -0.5859 -0.5859 -1.5352 -0.5859 -2.1211 0 l -3.4395 3.4395 l -3.4395 -3.4395 c -0.5859 -0.5859 -1.5352 -0.5859 -2.1211 0 c -0.5859 0.5854 -0.5859 1.5356 0 2.1211 l 3.4395 3.4395 l -3.4395 3.4395 c -0.5859 0.5854 -0.5859 1.5356 0 2.1211 c 0.293 0.293 0.6768 0.4395 1.0605 0.4395 s 0.7676 -0.1465 1.0605 -0.4395 l 3.4395 -3.4395 l 3.4395 3.4395 c 0.293 0.293 0.6768 0.4395 1.0605 0.4395 s 0.7676 -0.1465 1.0605 -0.4395 c 0.5859 -0.5854 0.5859 -1.5356 0 -2.1211 l -3.4395 -3.4395 Z"/></svg></button></div>
+            <div class="bottom-sheet-body">
+                <div id="hid-scan-view">
+                    <div class="hid-service"><div class="hid-service-logo"><img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi"></div><p>Accedi al tuo Harzafi Account per <span class="hid-site-address">adamharzafi.github.io/Alternanza-Scuola-Lavoro/</span></p></div>
+                    <div class="hid-scan-card"><img src="IMMAGINI/NFC-LOGO.webp" decoding="async" alt=""><div><h2>Pronto per la scansione</h2><p>Avvicina la tua Harzafi Card al dispositivo e mantienila in posizione per consentirne la lettura.</p></div></div>
+                    <div class="hid-scan-action"><button type="button" class="hid-wait-button" disabled aria-label="In attesa della Harzafi Card"><svg class="hid-spinner" viewBox="0 0 32 32" aria-hidden="true"><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M16 3v5"/><path d="M22.5 4.7 20 9" opacity=".92"/><path d="m27.3 9.5-4.3 2.5" opacity=".84"/><path d="M29 16h-5" opacity=".76"/><path d="m27.3 22.5-4.3-2.5" opacity=".68"/><path d="M22.5 27.3 20 23" opacity=".6"/><path d="M16 29v-5" opacity=".52"/><path d="m9.5 27.3 2.5-4.3" opacity=".44"/><path d="m4.7 22.5 4.3-2.5" opacity=".36"/><path d="M3 16h5" opacity=".28"/><path d="m4.7 9.5 4.3 2.5" opacity=".2"/><path d="m9.5 4.7 2.5 4.3" opacity=".12"/></g></svg></button></div>
+                    <a id="hid-open-manual" href="#" class="hid-manual-link">Usa l’HID</a>
+                </div>
+                <div id="hid-manual-view" style="display:none;">
+                    <h2>Il tuo Harzafi ID.</h2>
+                    <p class="hid-description">Inserisci il tuo codice univoco di 24 caratteri.</p>
+                    <div class="input-group">
+                        <label for="hid-input">Codice Harzafi ID</label>
+                        <input type="text" id="hid-input" class="apple-input" placeholder="Inserisci il codice" maxlength="24" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-describedby="hid-error">
+                        <div class="error-msg" id="hid-error" role="status">HID non valido. Riprova.</div>
+                    </div>
+                    <button type="button" id="hid-submit-btn" class="btn-gradient">Verifica e accedi</button>
+                    <button type="button" id="hid-back-btn" class="btn-text">← Torna alla scansione</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Recupero Password -->
+    <div id="forgot-sheet-modal" class="modal-overlay bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="recovery-heading">
+        <div class="modal-content">
+            <div class="hid-modal-header"><span id="recovery-heading">Recupera l’accesso</span><button type="button" id="forgot-sheet-close" class="close-btn" aria-label="Chiudi recupero password"><svg viewBox="10 10 16 16" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="m 20.1211 18 l 3.4395 -3.4395 c 0.5859 -0.5854 0.5859 -1.5356 0 -2.1211 c -0.5859 -0.5859 -1.5352 -0.5859 -2.1211 0 l -3.4395 3.4395 l -3.4395 -3.4395 c -0.5859 -0.5859 -1.5352 -0.5859 -2.1211 0 c -0.5859 0.5854 -0.5859 1.5356 0 2.1211 l 3.4395 3.4395 l -3.4395 3.4395 c -0.5859 0.5854 -0.5859 1.5356 0 2.1211 c 0.293 0.293 0.6768 0.4395 1.0605 0.4395 s 0.7676 -0.1465 1.0605 -0.4395 l 3.4395 -3.4395 l 3.4395 3.4395 c 0.293 0.293 0.6768 0.4395 1.0605 0.4395 s 0.7676 -0.1465 1.0605 -0.4395 c 0.5859 -0.5854 0.5859 -1.5356 0 -2.1211 l -3.4395 -3.4395 Z"/></svg></button></div>
+            <div id="shared-otp-view" class="bottom-sheet-body">
+                <div id="otp-step-1">
+                    <div class="hid-service"><div class="hid-service-logo"><img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi"></div><p>Il tuo account.<br>Di nuovo nelle tue mani.</p></div>
+                    <div class="recovery-intro"><h2 id="otp-role-title">Password dimenticata?</h2><p>Inserisci l’indirizzo email del tuo account. Ti invieremo un link per scegliere una nuova password.</p></div>
+                    <div class="input-group"><label for="otp-email-input">Indirizzo email</label><input type="email" id="otp-email-input" class="apple-input" placeholder="nome@istituto.it" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" aria-describedby="otp-error-msg"><div class="error-msg" id="otp-error-msg" role="status" style="display:none"></div></div>
+                    <button type="button" id="btn-send-otp" class="btn-gradient recovery-primary">Invia il link</button>
+                    <button type="button" id="btn-otp-back-selection" class="btn-text recovery-back">Torna all’accesso</button>
+                </div>
+                <div id="otp-step-3" class="recovery-success" style="display:none" role="status" tabindex="-1">
+                    <div class="recovery-mail" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="11" width="36" height="27" rx="6"/><path d="m8 14 16 12 16-12"/></svg></div>
+                    <h2>Controlla la tua email.</h2><p>Il link per reimpostare la password è in viaggio verso la tua casella di posta. Se non lo trovi, controlla anche la cartella spam.</p>
+                    <button type="button" class="btn-gradient recovery-primary" onclick="document.getElementById('forgot-sheet-modal').classList.remove('active')">Torna all’accesso</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Script Firebase ── -->
+    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
+    <script defer src="auth-session.js?v=20261023-login-startup"></script>
+    <script defer src="login.js?v=20261023-password-crossfade"></script>
+</body>
+</html>
+

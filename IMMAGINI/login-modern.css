@@ -1,0 +1,3663 @@
+:root {
+    --login-bg: #0b0b0d;
+    --login-panel: #171719;
+    --login-panel-soft: #202023;
+    --login-line: rgba(255, 255, 255, 0.16);
+    --login-text: #f5f5f7;
+    --login-muted: #a1a1a6;
+    --login-blue: #0a84ff;
+    --login-blue-hover: #2997ff;
+}
+
+html,
+body.auth-page {
+    min-height: 100%;
+    background: var(--login-bg) !important;
+}
+
+body.auth-page {
+    margin: 0;
+    color: var(--login-text);
+    font-family: SF Pro Text, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+body.auth-page::before,
+body.auth-page::after {
+    content: none !important;
+}
+
+#login-page-wrapper {
+    min-height: 100svh !important;
+    width: 100%;
+    display: grid !important;
+    place-items: center;
+    padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom)) !important;
+    background:
+        radial-gradient(circle at 50% -14%, rgba(34, 126, 255, 0.16), transparent 34rem),
+        var(--login-bg) !important;
+    overflow: visible !important;
+}
+
+#login-page-wrapper .login-card {
+    width: min(100%, 520px) !important;
+    min-height: min(850px, calc(100svh - 28px));
+    display: block !important;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 32px !important;
+    background: rgba(24, 24, 27, 0.94) !important;
+    box-shadow: 0 34px 100px rgba(0, 0, 0, 0.52) !important;
+    backdrop-filter: blur(24px) saturate(130%);
+}
+
+#login-page-wrapper .login-panel {
+    width: 100% !important;
+    min-height: inherit;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 38px 32px !important;
+    background: transparent !important;
+}
+
+.login-topbar {
+    width: 100%;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.login-brand {
+    display: inline-flex;
+    align-items: center;
+}
+
+.login-brand img {
+    width: 108px;
+    height: 34px;
+    object-fit: contain;
+}
+
+.login-close {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    color: #d2d2d7;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.07);
+    transition: background .2s ease, transform .2s ease;
+}
+
+.login-close:hover {
+    background: rgba(255, 255, 255, 0.13);
+    transform: scale(1.04);
+}
+
+.login-close svg {
+    width: 19px;
+    fill: currentColor;
+}
+
+.login-hero-mark {
+    position: relative;
+    width: 142px;
+    height: 142px;
+    display: grid;
+    place-items: center;
+    margin: 30px auto 20px;
+}
+
+.login-hero-mark::before {
+    content: "";
+    position: absolute;
+    inset: 13px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #2e2e34, #111114 65%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 18px 45px rgba(0,0,0,.42);
+}
+
+.login-hero-mark img {
+    position: relative;
+    z-index: 2;
+    width: 84px;
+    height: 45px;
+    object-fit: contain;
+}
+
+.orbit {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 8deg, #ff7c74 0 3deg, transparent 3deg 10deg, #57c7ff 10deg 13deg, transparent 13deg 20deg, #b967ff 20deg 23deg, transparent 23deg 30deg);
+    mask: radial-gradient(transparent 62%, #000 63% 69%, transparent 70%);
+    opacity: .95;
+}
+
+.orbit-two {
+    inset: 8px;
+    rotate: 14deg;
+    opacity: .55;
+}
+
+.orbit-three {
+    inset: 16px;
+    rotate: 28deg;
+    opacity: .3;
+}
+
+#login-page-wrapper .auth-eyebrow {
+    margin: 0 0 10px !important;
+    color: var(--login-blue) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: .12em !important;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+#login-page-wrapper .auth-title {
+    margin: 0 !important;
+    color: var(--login-text) !important;
+    font-size: clamp(34px, 7vw, 46px) !important;
+    line-height: .98 !important;
+    letter-spacing: -.05em !important;
+    font-weight: 750 !important;
+    text-align: center !important;
+}
+
+#login-page-wrapper .auth-subtitle {
+    max-width: 340px;
+    margin: 16px auto 22px !important;
+    color: var(--login-muted) !important;
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+    text-align: center !important;
+}
+
+#login-page-wrapper .segmented-control {
+    position: relative;
+    width: min(100%, 348px) !important;
+    height: 42px !important;
+    margin: 0 auto 20px !important;
+    padding: 3px !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
+    border-radius: 13px !important;
+    background: #101012 !important;
+}
+
+#login-page-wrapper .seg-slider {
+    top: 3px !important;
+    left: 3px !important;
+    width: calc(50% - 3px) !important;
+    height: calc(100% - 6px) !important;
+    border-radius: 10px !important;
+    background: #303034 !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08) !important;
+}
+
+#login-page-wrapper .seg-btn {
+    color: #98989d !important;
+    font-size: 13px !important;
+    font-weight: 650 !important;
+}
+
+#login-page-wrapper .seg-btn.active {
+    color: #fff !important;
+}
+
+#login-view,
+#rules-view {
+    width: min(100%, 420px);
+}
+
+#login-form {
+    width: 100%;
+}
+
+.login-step {
+    width: 100%;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.login-step.is-active {
+    animation: login-step-in .42s cubic-bezier(.2,.75,.25,1) forwards;
+}
+
+.login-step[hidden] {
+    display: none !important;
+}
+
+@keyframes login-step-in {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-field {
+    position: relative;
+    min-height: 64px;
+    border: 1px solid #5a5a60;
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.auth-field:focus-within {
+    border-color: var(--login-blue);
+    background: rgba(10,132,255,.035);
+    box-shadow: 0 0 0 3px rgba(10,132,255,.17);
+}
+
+.auth-field-label {
+    position: absolute;
+    top: 9px;
+    left: 16px;
+    z-index: 1;
+    color: #8e8e93;
+    font-size: 11px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.auth-field input,
+#login-page-wrapper .auth-field input.apple-input {
+    width: 100% !important;
+    height: 62px !important;
+    padding: 23px 16px 7px !important;
+    color: #fff !important;
+    caret-color: var(--login-blue);
+    font: inherit !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    letter-spacing: -.01em;
+    border: 0 !important;
+    outline: 0 !important;
+    border-radius: inherit !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.auth-field input::placeholder {
+    color: #68686d;
+}
+
+.auth-password-field input {
+    padding-right: 58px !important;
+}
+
+#login-page-wrapper .toggle-password-btn {
+    right: 8px !important;
+    top: 50% !important;
+    width: 44px !important;
+    height: 44px !important;
+    color: #a1a1a6 !important;
+    transform: translateY(-50%) !important;
+}
+
+#login-page-wrapper .toggle-password-btn svg {
+    width: 22px !important;
+    fill: currentColor;
+}
+
+#login-page-wrapper .btn-gradient,
+#login-page-wrapper .btn-social {
+    width: 100% !important;
+    min-height: 50px !important;
+    margin: 14px 0 0 !important;
+    border-radius: 12px !important;
+    font-size: 15px !important;
+    font-weight: 650 !important;
+    letter-spacing: -.01em !important;
+    text-transform: none !important;
+    box-shadow: none !important;
+}
+
+#login-page-wrapper .btn-gradient {
+    color: #fff !important;
+    border: 0 !important;
+    background: var(--login-blue) !important;
+}
+
+#login-page-wrapper .btn-gradient:hover:not(:disabled) {
+    background: var(--login-blue-hover) !important;
+    transform: none !important;
+}
+
+#login-page-wrapper .btn-gradient:disabled {
+    opacity: .58;
+}
+
+#login-page-wrapper .btn-social {
+    position: relative;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #f5f5f7 !important;
+    border: 1px solid #4d4d52 !important;
+    background: #242427 !important;
+}
+
+#login-page-wrapper .btn-social:hover:not(:disabled) {
+    border-color: #717178 !important;
+    background: #2d2d31 !important;
+    transform: none !important;
+}
+
+#login-page-wrapper .btn-social img {
+    width: 22px !important;
+    height: 22px !important;
+    margin: 0 !important;
+    object-fit: contain;
+}
+
+#login-page-wrapper .btn-harzafi-id > svg {
+    position: absolute;
+    right: 16px;
+    width: 20px;
+    fill: none;
+    stroke: #a1a1a6;
+    stroke-width: 1.7;
+}
+
+#login-page-wrapper .divider {
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 2px !important;
+    color: #77777c !important;
+    font-size: 12px !important;
+    text-transform: lowercase;
+}
+
+#login-page-wrapper .divider::before,
+#login-page-wrapper .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,.11);
+}
+
+.selected-account {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 66px;
+    margin-bottom: 10px;
+    padding: 10px 10px 10px 16px;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 14px;
+    background: rgba(255,255,255,.045);
+}
+
+.selected-account-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.selected-account-copy span {
+    color: #8e8e93;
+    font-size: 11px;
+}
+
+.selected-account-copy strong {
+    overflow: hidden;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#change-email {
+    min-height: 36px;
+    padding: 0 11px;
+    color: var(--login-blue);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 650;
+    border: 0;
+    border-radius: 9px;
+    background: rgba(10,132,255,.1);
+}
+
+.forgot-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--login-blue) !important;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+
+.caps-lock-warning {
+    margin-top: 9px;
+    color: #ffd60a;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#login-page-wrapper .error-msg {
+    margin: 8px 0 0 !important;
+    padding: 0 !important;
+    color: #ff6961 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+    background: transparent !important;
+    border: 0 !important;
+}
+
+#login-page-wrapper .privacy-disclaimer {
+    margin: 22px 2px 0 !important;
+    padding: 0 !important;
+    color: #8e8e93 !important;
+    font-size: 11px !important;
+    line-height: 1.45 !important;
+    text-align: center !important;
+    background: transparent !important;
+    border: 0 !important;
+}
+
+#login-page-wrapper .privacy-disclaimer svg {
+    display: none !important;
+}
+
+#login-page-wrapper .privacy-disclaimer a {
+    color: var(--login-blue) !important;
+}
+
+#login-page-wrapper .login-rules-banner {
+    width: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 5px;
+    margin: 13px auto 0 !important;
+    padding: 6px 8px !important;
+    color: #8e8e93 !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+#login-page-wrapper .login-rules-banner:hover {
+    color: #d2d2d7 !important;
+}
+
+#rules-view {
+    color: #1d1d1f;
+    padding-top: 8px;
+}
+
+#rules-view .rules-list {
+    color: #1d1d1f;
+}
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+@media (max-width: 600px) {
+    #login-page-wrapper {
+        padding: 0 !important;
+        place-items: stretch;
+        background: var(--login-panel) !important;
+    }
+
+    #login-page-wrapper .login-card {
+        width: 100% !important;
+        min-height: 100svh;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: var(--login-panel) !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        min-height: 100svh;
+        padding: max(18px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom)) !important;
+    }
+
+    .login-hero-mark {
+        width: 126px;
+        height: 126px;
+        margin-top: 22px;
+        margin-bottom: 16px;
+    }
+
+    #login-page-wrapper .auth-title {
+        font-size: 38px !important;
+    }
+}
+
+/* Layout desktop più ampio e campo email essenziale */
+.login-topbar {
+    justify-content: flex-start;
+}
+
+#login-page-wrapper .auth-subtitle {
+    max-height: 48px;
+    overflow: hidden;
+    opacity: 1;
+    transform: translateY(0);
+    transition: max-height .32s ease, margin .32s ease, opacity .2s ease, transform .32s ease;
+}
+
+#login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+    max-height: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    opacity: 0;
+    transform: translateY(-6px);
+}
+
+.email-auth-field {
+    min-height: 58px;
+}
+
+.email-auth-field input,
+#login-page-wrapper .email-auth-field input {
+    height: 56px !important;
+    padding: 0 18px !important;
+    font-size: 16px !important;
+    line-height: 56px !important;
+}
+
+.email-auth-field input::placeholder {
+    color: #86868b;
+    opacity: 1;
+}
+
+@media (min-width: 701px) {
+    #login-page-wrapper .login-card {
+        width: min(100%, 760px) !important;
+        min-height: min(800px, calc(100svh - 40px));
+        border-radius: 36px !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        padding: 30px 76px 44px !important;
+    }
+
+    #login-view,
+    #rules-view {
+        width: min(100%, 480px);
+    }
+
+    #login-page-wrapper .segmented-control {
+        width: min(100%, 390px) !important;
+    }
+}
+
+/* Priorità finale dei campi animati */
+#login-page-wrapper .auth-field.floating-auth-field input {
+    height: 60px !important;
+    padding: 19px 18px 5px !important;
+    line-height: normal !important;
+}
+
+#login-page-wrapper .auth-field.floating-auth-field.auth-password-field input {
+    padding: 19px 108px 5px 18px !important;
+}
+
+/* Stato stabile e label flottanti */
+#login-page-wrapper .login-card {
+    position: relative;
+}
+
+.login-topbar {
+    position: absolute;
+    z-index: 8;
+    top: 28px;
+    left: 28px;
+    width: auto;
+    min-height: 40px;
+}
+
+#login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+    max-height: 48px;
+    margin-top: 12px !important;
+    margin-bottom: 22px !important;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.floating-auth-field {
+    position: relative;
+    min-height: 62px;
+}
+
+.floating-auth-field input,
+#login-page-wrapper .floating-auth-field input {
+    height: 60px !important;
+    padding: 19px 18px 5px !important;
+    line-height: normal !important;
+}
+
+#login-page-wrapper .floating-auth-field.auth-password-field input {
+    padding: 19px 108px 5px 18px !important;
+}
+
+.floating-field-label {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 18px;
+    color: #86868b;
+    font-size: 16px;
+    font-weight: 450;
+    line-height: 1;
+    pointer-events: none;
+    transform: translateY(-50%);
+    transform-origin: left top;
+    transition: top .2s cubic-bezier(.2,.72,.25,1), transform .2s cubic-bezier(.2,.72,.25,1), font-size .2s ease, color .2s ease;
+}
+
+.floating-auth-field input:focus + .floating-field-label,
+.floating-auth-field input:not(:placeholder-shown) + .floating-field-label,
+.floating-auth-field input:-webkit-autofill + .floating-field-label {
+    top: 10px;
+    color: #6e6e73;
+    font-size: 11px;
+    transform: translateY(0);
+}
+
+.floating-auth-field:focus-within .floating-field-label {
+    color: #0071e3;
+}
+
+@media (min-width: 701px) {
+    #login-page-wrapper .login-card {
+        width: min(100%, 760px) !important;
+        height: min(800px, calc(100svh - 40px)) !important;
+        min-height: 0;
+    }
+
+    #login-page-wrapper .login-panel {
+        height: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .login-topbar {
+        top: max(18px, env(safe-area-inset-top));
+        left: 18px;
+    }
+}
+
+@media (max-width: 370px) {
+    #login-page-wrapper .login-panel {
+        padding-inline: 18px !important;
+    }
+
+    .login-hero-mark {
+        width: 110px;
+        height: 110px;
+        margin-top: 12px;
+    }
+
+    #login-page-wrapper .auth-title {
+        font-size: 33px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+/* Versione chiara ispirata al flusso Account Apple */
+html,
+body.auth-page {
+    background: #ffffff !important;
+}
+
+#login-page-wrapper {
+    background: #ffffff !important;
+}
+
+#login-page-wrapper .login-card {
+    width: min(100%, 640px) !important;
+    min-height: min(820px, calc(100svh - 28px));
+    border-color: #e5e5ea !important;
+    background: #ffffff !important;
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: none;
+}
+
+#login-page-wrapper .login-panel {
+    padding: 26px 58px 38px !important;
+    background: #ffffff !important;
+}
+
+.login-brand img {
+    width: 112px;
+}
+
+.login-close {
+    color: #515154;
+    background: #f2f2f7;
+}
+
+.login-close:hover {
+    background: #e8e8ed;
+}
+
+.login-hero-mark {
+    width: 178px;
+    height: 178px;
+    margin: 22px auto 16px;
+}
+
+.login-hero-mark::before {
+    content: none;
+}
+
+.login-hero-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#login-page-wrapper .auth-eyebrow {
+    display: none;
+}
+
+#login-page-wrapper .auth-title {
+    color: #1d1d1f !important;
+    font-size: clamp(35px, 6vw, 44px) !important;
+    line-height: 1.03 !important;
+}
+
+#login-page-wrapper .auth-subtitle {
+    margin-top: 12px !important;
+    margin-bottom: 22px !important;
+    color: #6e6e73 !important;
+}
+
+#login-page-wrapper .segmented-control {
+    border-color: #dedee3 !important;
+    background: #f2f2f7 !important;
+}
+
+#login-page-wrapper .seg-slider {
+    background: #ffffff !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,.1), inset 0 0 0 1px rgba(0,0,0,.03) !important;
+}
+
+#login-page-wrapper .seg-btn {
+    color: #6e6e73 !important;
+}
+
+#login-page-wrapper .seg-btn.active {
+    color: #1d1d1f !important;
+}
+
+.auth-field {
+    border-color: #86868b;
+    background: #ffffff;
+}
+
+.auth-field:focus-within {
+    border-color: #0071e3;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0,113,227,.14);
+}
+
+.auth-field-label {
+    color: #6e6e73;
+}
+
+.auth-field input,
+#login-page-wrapper .auth-field input.apple-input {
+    color: #1d1d1f !important;
+    caret-color: #0071e3;
+}
+
+.auth-field input::placeholder {
+    color: #86868b;
+}
+
+#login-page-wrapper .toggle-password-btn {
+    color: #6e6e73 !important;
+}
+
+#login-page-wrapper .login-privacy {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    justify-items: center;
+    margin: 25px 0 0 !important;
+    color: #1d1d1f !important;
+    font-size: 12px !important;
+    line-height: 1.42 !important;
+    text-align: center !important;
+}
+
+.privacy-people {
+    width: 44px;
+    height: 36px;
+}
+
+#login-page-wrapper .privacy-people svg {
+    display: block !important;
+    width: 44px;
+    height: 34px;
+}
+
+.privacy-people .person-one {
+    fill: #2495f3;
+}
+
+.privacy-people .person-two {
+    fill: #2d6fa5;
+}
+
+.login-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    margin-top: 24px;
+}
+
+#login-page-wrapper .login-actions .btn-gradient,
+#login-page-wrapper .login-actions .btn-social {
+    height: 50px !important;
+    min-height: 50px !important;
+    margin: 0 !important;
+}
+
+#login-page-wrapper .login-actions #btn-harzafi-id {
+    height: 50px !important;
+    min-height: 50px !important;
+    color: #111827 !important;
+    font-family: "SF Pro Text", sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    border-color: #dce1e7 !important;
+    background: #f8f7f5 url("IMMAGINI/SFONDO-HARZAFI-ID.webp") center / 100% 100% no-repeat !important;
+    box-shadow: 0 6px 15px rgba(38, 64, 91, .14), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+}
+
+#login-page-wrapper .login-actions #btn-harzafi-id:hover:not(:disabled) {
+    border-color: #a9c8e4 !important;
+    box-shadow: 0 9px 22px rgba(56, 65, 95, .2), inset 0 1px 0 #ffffff !important;
+}
+
+#login-page-wrapper .login-actions #btn-harzafi-id:active:not(:disabled) {
+    box-shadow: inset 0 2px 5px rgba(56, 65, 95, .12), 0 2px 6px rgba(56, 65, 95, .08) !important;
+}
+
+.selected-account {
+    border-color: #d2d2d7;
+    background: #f5f5f7;
+}
+
+.selected-account-copy span {
+    color: #6e6e73;
+}
+
+.selected-account-copy strong {
+    color: #1d1d1f;
+}
+
+#login-page-wrapper .login-rules-banner {
+    color: #86868b !important;
+}
+
+#login-page-wrapper .login-rules-banner:hover {
+    color: #1d1d1f !important;
+}
+
+@media (max-width: 600px) {
+    #login-page-wrapper,
+    #login-page-wrapper .login-card,
+    #login-page-wrapper .login-panel {
+        background: #ffffff !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        padding: max(18px, env(safe-area-inset-top)) 28px max(24px, env(safe-area-inset-bottom)) !important;
+    }
+
+    .login-hero-mark {
+        width: 146px;
+        height: 146px;
+        margin-top: 18px;
+    }
+
+    #login-page-wrapper .auth-title {
+        font-size: 36px !important;
+    }
+}
+
+@media (max-width: 410px) {
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social {
+        padding-inline: 9px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* SF Pro Textazioni finali richieste per l'accesso */
+.login-topbar {
+    justify-content: flex-end;
+}
+
+.login-hero-mark {
+    width: 210px;
+    height: 92px;
+    margin-top: 26px;
+    margin-bottom: 18px;
+}
+
+.login-hero-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#login-page-wrapper .login-actions #login-continue.is-loading {
+    background: #1689f8 !important;
+    cursor: wait;
+}
+
+.login-button-loader {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+}
+
+.login-button-spinner {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+    border: 2px solid rgba(255, 255, 255, .42);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: login-spinner .72s linear infinite;
+}
+
+@keyframes login-spinner {
+    to { transform: rotate(360deg); }
+}
+
+.auth-password-field input {
+    padding-right: 108px !important;
+}
+
+.caps-lock-indicator {
+    position: absolute;
+    z-index: 3;
+    top: 50%;
+    right: 55px;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    border-radius: 50%;
+    background: #f0a500;
+    box-shadow: 0 6px 16px rgba(240, 165, 0, .28);
+    transform: translateY(-50%);
+    transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease;
+}
+
+.caps-lock-indicator[hidden] {
+    display: none !important;
+}
+
+.caps-lock-indicator svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.caps-lock-indicator.is-typing {
+    transform: translateY(calc(-50% - 3px)) scale(1.06);
+    box-shadow: 0 9px 20px rgba(240, 165, 0, .35);
+}
+
+#login-page-wrapper .toggle-password-btn {
+    right: 7px !important;
+    width: 42px !important;
+    height: 42px !important;
+}
+
+#login-page-wrapper .toggle-password-btn svg {
+    display: block;
+    width: 22px !important;
+    height: 22px !important;
+}
+
+.toggle-password-btn .icon-eye-off {
+    display: none;
+}
+
+.toggle-password-btn.is-visible .icon-eye {
+    display: none;
+}
+
+.toggle-password-btn.is-visible .icon-eye-off {
+    display: block;
+}
+
+@media (max-width: 600px) {
+    .login-hero-mark {
+        width: 184px;
+        height: 80px;
+        margin-top: 22px;
+        margin-bottom: 16px;
+    }
+}
+
+/* Rifiniture finali del login */
+.login-hero-mark {
+    width: 220px;
+    height: 88px;
+    margin-top: 28px;
+    margin-bottom: 20px;
+}
+
+.login-hero-mark img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#login-page-wrapper .privacy-people img {
+    display: block;
+    width: 44px;
+    height: 36px;
+    object-fit: contain;
+}
+
+#login-page-wrapper #btn-harzafi-id {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 14px !important;
+    padding-inline: 24px;
+    white-space: nowrap;
+}
+
+#login-page-wrapper #btn-harzafi-id img {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    flex: 0 0 80px;
+    width: 80px !important;
+    height: auto !important;
+    margin: 0 !important;
+    transform: none !important;
+    object-fit: contain;
+}
+
+#login-page-wrapper #btn-harzafi-id .harzafi-id-label {
+    position: static;
+    display: block;
+    min-width: 0;
+    color: inherit;
+    font: inherit;
+    line-height: 1.3;
+}
+
+#login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+    flex: 0 0 1px;
+    width: 1px;
+    height: 30px;
+    background: #c8cbd2;
+}
+
+#login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+    display: block;
+    flex: 0 0 18px;
+    width: 18px;
+    height: 24px;
+    color: #777e8f;
+}
+
+@media (min-width: 601px) {
+    .login-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: center;
+    }
+
+    #login-page-wrapper .login-actions #login-continue {
+        height: 50px !important;
+        min-height: 50px !important;
+        padding-block: 0;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        height: 50px !important;
+        min-height: 50px !important;
+        padding-inline: 8px !important;
+        gap: 5px !important;
+        font-size: 13px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex-basis: 48px;
+        width: 48px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+        height: 22px;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+        flex-basis: 12px;
+        width: 12px;
+        height: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    #login-page-wrapper .login-panel:not(.is-password-step) #login-view,
+    #login-page-wrapper .login-panel:not(.is-password-step) #login-form,
+    #login-page-wrapper #login-email-step {
+        height: auto;
+        min-height: 340px;
+        flex-basis: auto;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        height: 50px !important;
+        min-height: 50px !important;
+        padding-inline: 12px !important;
+        gap: 8px !important;
+        font-size: 14px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex-basis: 60px;
+        width: 60px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+        height: 26px;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+        flex-basis: 16px;
+        width: 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        gap: 7px !important;
+        font-size: 13px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex-basis: 52px;
+        width: 52px !important;
+    }
+}
+
+@media (forced-colors: active) {
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        background: ButtonFace !important;
+        color: ButtonText !important;
+        border-color: ButtonText !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+        background: ButtonText;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+        color: ButtonText;
+    }
+}
+
+.login-end-brand {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5ea;
+}
+
+.login-end-brand img {
+    display: block;
+    width: auto;
+    height: 29px;
+    object-fit: contain;
+}
+
+.auth-page .login-site-footer {
+    margin-top: 0;
+}
+
+@media (max-width: 600px) {
+    .login-hero-mark {
+        width: 190px;
+        height: 76px;
+        margin-top: 22px;
+        margin-bottom: 16px;
+    }
+
+    .auth-page .login-site-footer {
+        border-radius: 38px 38px 0 0;
+    }
+}
+
+/* Priorità finali: composizione desktop e chiusura a sinistra */
+.login-topbar {
+    justify-content: flex-start;
+}
+
+@media (min-width: 701px) {
+    #login-page-wrapper .login-card {
+        width: min(100%, 760px) !important;
+        min-height: min(800px, calc(100svh - 40px));
+        border-radius: 36px !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        padding: 30px 76px 44px !important;
+    }
+
+    #login-view,
+    #rules-view {
+        width: min(100%, 480px);
+    }
+
+    #login-page-wrapper .segmented-control {
+        width: min(100%, 390px) !important;
+    }
+}
+
+/* Geometria definitiva: il passaggio email e quello password occupano
+   esattamente lo stesso spazio e rimangono centrati nello stesso punto. */
+#login-page-wrapper .login-card,
+#login-page-wrapper .login-panel,
+#login-view,
+#login-form,
+.login-step,
+#login-page-wrapper .selected-account,
+#login-page-wrapper .auth-field {
+    box-sizing: border-box;
+}
+
+#login-page-wrapper .selected-account,
+#login-page-wrapper .auth-field.floating-auth-field {
+    width: 100%;
+    min-width: 0;
+    height: 62px;
+    min-height: 62px;
+    max-height: 62px;
+}
+
+#login-page-wrapper .selected-account {
+    padding: 8px 10px 8px 16px;
+}
+
+#login-page-wrapper .auth-field.floating-auth-field input {
+    height: 60px !important;
+}
+
+@media (min-width: 601px) {
+    #login-page-wrapper {
+        place-items: center !important;
+    }
+
+    #login-page-wrapper .login-card {
+        width: min(calc(100vw - 40px), 760px) !important;
+        height: min(800px, calc(100svh - 40px)) !important;
+        min-height: min(800px, calc(100svh - 40px)) !important;
+        max-height: min(800px, calc(100svh - 40px)) !important;
+        margin-inline: auto !important;
+        border-radius: 36px !important;
+        flex: none !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        width: 100% !important;
+        max-width: none !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 30px clamp(40px, 8vw, 76px) 44px !important;
+        overflow-y: auto;
+    }
+
+    #login-page-wrapper .login-panel > :not(.login-topbar) {
+        flex-shrink: 0;
+        align-self: center;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        flex-basis: 88px;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        width: min(100%, 430px);
+        height: 44px;
+        min-height: 44px;
+        max-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 12px !important;
+        margin-bottom: 22px !important;
+        opacity: 1;
+        transform: none;
+    }
+
+    #login-page-wrapper .segmented-control {
+        width: min(100%, 390px) !important;
+        flex-basis: 42px;
+    }
+
+    #login-view {
+        width: min(100%, 480px) !important;
+        height: 300px;
+        min-height: 300px;
+        margin-inline: auto;
+        flex-basis: 300px;
+    }
+
+    #login-form,
+    .login-step {
+        width: 100%;
+        height: 100%;
+        min-height: 300px;
+        margin-inline: auto;
+    }
+
+    #rules-view {
+        width: min(100%, 480px) !important;
+        margin-inline: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    #login-page-wrapper {
+        min-height: 100svh !important;
+        place-items: center !important;
+        padding: 0 !important;
+    }
+
+    #login-page-wrapper .login-card {
+        width: 100% !important;
+        min-height: 100svh !important;
+        margin-inline: auto !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        width: 100% !important;
+        min-height: 100svh !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: max(72px, env(safe-area-inset-top)) 28px max(38px, env(safe-area-inset-bottom)) !important;
+        overflow-y: auto;
+    }
+
+    #login-page-wrapper .login-panel > :not(.login-topbar) {
+        flex-shrink: 0;
+        align-self: center;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        margin-top: 0;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        width: min(100%, 350px);
+        height: 44px;
+        min-height: 44px;
+        max-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 12px !important;
+        margin-bottom: 22px !important;
+        opacity: 1;
+        transform: none;
+    }
+
+    #login-view,
+    #rules-view,
+    #login-form,
+    .login-step {
+        width: 100% !important;
+        margin-inline: auto;
+    }
+
+    #login-view {
+        min-height: 300px;
+        flex: 0 0 300px;
+    }
+
+    #login-form,
+    .login-step {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 600px) and (max-height: 760px) {
+    #login-page-wrapper .login-panel {
+        justify-content: flex-start !important;
+    }
+}
+
+/* Lo username resta un vero campo compilabile anche nel secondo passaggio. */
+#selected-email-display { min-width: 0; width: 100%; }
+#selected-email-display input {
+    display: block; width: 100%; min-width: 0; box-sizing: border-box;
+    border: 0; background: transparent !important; box-shadow: none;
+    padding: 0; margin: 0; border-radius: 0;
+    font: inherit; font-weight: 600; color: #1d1d1f !important;
+    -webkit-text-fill-color: #1d1d1f; text-overflow: ellipsis;
+}
+.selected-account-copy > label { font-size: 12px; color: #6e6e73; }
+/* Harzafi ID: a dedicated header keeps the close control away from the copy. */
+:is(#hid-modal, #forgot-sheet-modal) { align-items: center; padding: 24px; background: rgba(29,29,31,.36); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); visibility: hidden; transition: opacity .25s ease, visibility .25s; }
+:is(#hid-modal, #forgot-sheet-modal).active { visibility: visible; }
+:is(#hid-modal, #forgot-sheet-modal) .modal-content { width: 100%; max-width: 440px; max-height: calc(100dvh - 48px); border-radius: 28px; margin: auto; padding: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-mask-image: none; box-shadow: 0 24px 80px #0003; transform: translateY(16px) scale(.98); transition: transform .32s cubic-bezier(.16,1,.3,1); }
+:is(#hid-modal, #forgot-sheet-modal).active .modal-content { transform: none; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px 0 28px; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header > span { font-size: 13px; font-weight: 600; color: #6e6e73; letter-spacing: .01em; }
+:is(#hid-modal, #forgot-sheet-modal) .close-btn { position: static; flex: 0 0 40px; width: 40px; height: 40px; margin: 0; font-size: 27px; font-weight: 400; color: #6e6e73; background: #f5f5f7; backdrop-filter: none; }
+:is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body { width: 100%; padding: 16px 32px 32px; }
+:is(#hid-modal, #forgot-sheet-modal) h2 { margin: 0 0 12px; font-size: clamp(25px,5vw,30px); font-weight: 650; line-height: 1.16; letter-spacing: -.04em; text-align: center; color: #1d1d1f; overflow-wrap: anywhere; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-description { margin: 0 auto 24px; max-width: 330px; font-size: 15px; font-weight: 400; line-height: 1.55; text-align: center; color: #6e6e73; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-symbol { display: grid; place-items: center; width: 104px; height: 104px; margin: 0 auto 24px; border-radius: 28px; background: #f0f7ff; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-symbol img { display: block; width: 80px; height: 80px; object-fit: contain; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-manual-link { display: flex; align-items: center; justify-content: center; min-height: 48px; margin: 0 0 12px; color: #0071e3; font-size: 15px; font-weight: 600; text-align: center; text-decoration: none; }
+:is(#hid-modal, #forgot-sheet-modal) .input-group { position: static; margin: 28px 0 20px; }
+:is(#hid-modal, #forgot-sheet-modal) .input-group label { display: block; margin-bottom: 8px; color: #1d1d1f; font-size: 13px; font-weight: 600; }
+:is(#hid-modal, #forgot-sheet-modal) #hid-input { min-width: 0; width: 100%; height: 54px; border: 1px solid #d2d2d7; border-radius: 12px; padding: 0 12px; background: #fff; font-size: 16px; font-weight: 400; letter-spacing: 0; text-align: left; }
+:is(#hid-modal, #forgot-sheet-modal) #hid-input:focus { border-color: #0071e3; box-shadow: 0 0 0 3px #0071e320; outline: none; }
+:is(#hid-modal, #forgot-sheet-modal) #hid-error { position: static; margin: 10px 0 0; line-height: 1.45; text-align: left; font-weight: 500; overflow-wrap: anywhere; }
+:is(#hid-modal, #forgot-sheet-modal) #hid-submit-btn, :is(#hid-modal, #forgot-sheet-modal) #hid-cancel-btn { display: block; width: 100%; min-height: 48px; padding: 13px 18px; margin: 0; border: 0; border-radius: 12px; font: inherit; font-size: 15px; font-weight: 600; line-height: 1.4; text-transform: none; letter-spacing: 0; box-shadow: none; }
+:is(#hid-modal, #forgot-sheet-modal) #hid-submit-btn { background: #0071e3; color: #fff; }
+:is(#hid-modal, #forgot-sheet-modal) #hid-cancel-btn { background: #f5f5f7; color: #1d1d1f; }
+:is(#hid-modal, #forgot-sheet-modal) #hid-back-btn { display: block; position: static; width: 100%; min-height: 48px; margin: 12px 0 0; padding: 12px 0; color: #0071e3; font-size: 14px; line-height: 1.5; }
+@media(max-width:600px) {
+    :is(#hid-modal, #forgot-sheet-modal) { align-items: flex-end; padding: 12px; }
+    :is(#hid-modal, #forgot-sheet-modal) .modal-content { margin: 0 auto; max-height: calc(100dvh - 24px); border-radius: 24px; transform: translateY(24px); }
+    :is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body { padding: 12px 24px max(24px,env(safe-area-inset-bottom)); }
+    :is(#hid-modal, #forgot-sheet-modal) .hid-modal-header { padding-left: 24px; }
+}
+@media(prefers-reduced-motion:reduce) {
+    :is(#hid-modal, #forgot-sheet-modal), :is(#hid-modal, #forgot-sheet-modal) .modal-content { transition: none; }
+}
+/* Harzafi ID glass sheet: all content stays in normal document flow. */
+:is(#hid-modal, #forgot-sheet-modal) { align-items: flex-end; padding: 24px; background: #14182047; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); transition: opacity .32s ease, visibility .32s; }
+:is(#hid-modal, #forgot-sheet-modal) .modal-content { max-width: 540px; margin: 0 auto; border: 1px solid #ffffffe0; border-radius: 48px; background: linear-gradient(145deg,#fffffff0,#f2f4f9eb); backdrop-filter: blur(36px) saturate(145%); -webkit-backdrop-filter: blur(36px) saturate(145%); box-shadow: inset 0 1px 1px #fff,inset 0 -1px 1px #ffffff80,0 24px 70px #0003,0 0 0 1px #0000000d; opacity: 0; transform: translateY(70px) scale(.975); transition: transform .52s cubic-bezier(.16,1,.3,1),opacity .32s ease; }
+:is(#hid-modal, #forgot-sheet-modal).active .modal-content { opacity: 1; transform: none; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header { gap: 20px; padding: 24px 24px 0 30px; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header > span { color: #101113; font-size: clamp(26px,4vw,32px); font-weight: 750; letter-spacing: -.04em; line-height: 1.2; }
+:is(#hid-modal, #forgot-sheet-modal) .close-btn { flex-basis: 52px; width: 52px; height: 52px; border: 1px solid #ffffffed; color: #1d1d1f; background: linear-gradient(145deg,#ffffffb3,#ffffff40); box-shadow: inset 0 1px 2px #fff,0 0 0 1px #00000012; backdrop-filter: blur(12px); }
+:is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body { padding: 28px 30px 22px; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-service { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-service-logo { display: grid; place-items: center; flex: 0 0 72px; width: 72px; height: 72px; padding: 8px; border-radius: 20px; background: linear-gradient(#fff,#f8f9fbb3); box-shadow: inset 0 1px 2px #fff,0 2px 8px #00000006; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-service-logo img { width: 100%; height: 100%; object-fit: contain; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-service p { min-width: 0; margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; letter-spacing: -.025em; color: #1d1d1f; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-site-address { display: block; margin-top: 3px; font-size: 13px; font-weight: 500; line-height: 1.45; color: #515154; overflow-wrap: anywhere; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-scan-card { display: flex; align-items: center; gap: 18px; padding: 22px; border: 1px solid #ffffff4d; border-radius: 30px; background: #fafaffad; box-shadow: inset 0 1px 1px #ffffff90; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-scan-card > img { flex: 0 0 60px; width: 60px; height: 60px; object-fit: contain; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-scan-card > div { min-width: 0; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-scan-card h2 { margin: 0 0 8px; font-size: 19px; text-align: left; line-height: 1.2; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-scan-card p { margin: 0; color: #626268; font-size: 13px; line-height: 1.5; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-scan-action { display: flex; justify-content: center; margin: 26px 0 8px; }
+:is(#hid-modal, #forgot-sheet-modal) .hid-wait-button { display: grid; place-items: center; width: 150px; height: 54px; border: 0; border-radius: 999px; color: #fff; background: #0085f7; opacity: 1; cursor: default; }
+.auth-page .hid-spinner { width: 26px; height: 26px; animation: hid-spinner .9s steps(12,end) infinite; }
+@keyframes hid-spinner { to { transform: rotate(360deg); } }
+:is(#hid-modal, #forgot-sheet-modal) .hid-manual-link { margin: 0; font-size: 16px; }
+:is(#hid-modal, #forgot-sheet-modal) #hid-submit-btn { border-radius: 999px; }
+@media(max-width:600px) {
+ :is(#hid-modal, #forgot-sheet-modal) { padding: 10px; }
+ :is(#hid-modal, #forgot-sheet-modal) .modal-content { max-height: calc(100dvh - 20px); border-radius: 36px; }
+ :is(#hid-modal, #forgot-sheet-modal) .hid-modal-header { padding: 20px 20px 0 24px; }
+ :is(#hid-modal, #forgot-sheet-modal) .close-btn { flex-basis: 44px; width: 44px; height: 44px; }
+ :is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body { padding: 24px 22px max(20px,env(safe-area-inset-bottom)); }
+ :is(#hid-modal, #forgot-sheet-modal) .hid-service { gap: 12px; margin-bottom: 24px; }
+ :is(#hid-modal, #forgot-sheet-modal) .hid-service-logo { flex-basis: 60px; width: 60px; height: 60px; border-radius: 17px; }
+ :is(#hid-modal, #forgot-sheet-modal) .hid-service p { font-size: 15px; }
+ :is(#hid-modal, #forgot-sheet-modal) .hid-site-address { font-size: 11px; }
+ :is(#hid-modal, #forgot-sheet-modal) .hid-scan-card { gap: 12px; padding: 18px 14px; border-radius: 24px; }
+ :is(#hid-modal, #forgot-sheet-modal) .hid-scan-card > img { flex-basis: 44px; width: 44px; height: 44px; }
+ :is(#hid-modal, #forgot-sheet-modal) .hid-scan-card h2 { font-size: 17px; }
+ :is(#hid-modal, #forgot-sheet-modal) .hid-scan-card p { font-size: 12px; }
+}
+@media(prefers-reduced-motion:reduce) { :is(#hid-modal, #forgot-sheet-modal), :is(#hid-modal, #forgot-sheet-modal) .modal-content { transition: none; } .auth-page .hid-spinner { animation: none; } }
+@media(prefers-reduced-transparency:reduce) { :is(#hid-modal, #forgot-sheet-modal) .modal-content { background: #f0f1f4; backdrop-filter: none; } }
+
+/* Keep the shared access indicator centered without changing button geometry. */
+.auth-page button .hid-spinner { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+
+/* A full-height entrance with one restrained settling bounce. */
+:is(#hid-modal, #forgot-sheet-modal) { transition: opacity .28s ease, visibility .28s; }
+:is(#hid-modal, #forgot-sheet-modal) .modal-content { transform: translateY(calc(100% + 48px)); transition: transform .28s cubic-bezier(.4,0,1,1), opacity .22s ease; }
+:is(#hid-modal, #forgot-sheet-modal).active .modal-content { transform: translateY(0); animation: hid-sheet-rise .68s both; }
+@keyframes hid-sheet-rise {
+  0% { opacity: 0; transform: translateY(calc(100% + 48px)); animation-timing-function: cubic-bezier(.16,1,.3,1); }
+  68% { opacity: 1; transform: translateY(-7px); animation-timing-function: ease-in-out; }
+  86% { opacity: 1; transform: translateY(2px); animation-timing-function: ease-out; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@media(prefers-reduced-motion:reduce) {
+  :is(#hid-modal, #forgot-sheet-modal), :is(#hid-modal, #forgot-sheet-modal) .modal-content { transition: none; }
+  :is(#hid-modal, #forgot-sheet-modal).active .modal-content { animation: none; }
+}
+
+/* Compact code entry and a matching recovery sheet. */
+#hid-modal.is-manual .bottom-sheet-body { padding-top: 18px; padding-bottom: 16px; }
+#hid-modal.is-manual h2 { font-size: 23px; margin-bottom: 8px; }
+#hid-modal.is-manual .hid-description { font-size: 14px; margin-bottom: 16px; }
+#hid-modal.is-manual .input-group { margin: 16px 0; }
+#hid-modal.is-manual #hid-back-btn { margin-top: 4px; }
+#forgot-sheet-modal .hid-modal-header > span { font-size: clamp(23px,4vw,29px); }
+#forgot-sheet-modal .recovery-intro { padding: 20px; border: 1px solid #ffffff80; border-radius: 24px; background: #fafaffad; }
+#forgot-sheet-modal .recovery-intro h2 { font-size: 21px; text-align: left; margin-bottom: 8px; }
+#forgot-sheet-modal p { color: #626268; font-size: 14px; line-height: 1.55; margin: 0; }
+#forgot-sheet-modal .hid-service p { color: #1d1d1f; font-size: 17px; }
+#forgot-sheet-modal #otp-email-input { width: 100%; min-width: 0; height: 54px; padding: 0 16px; border: 1px solid #d2d2d7; border-radius: 14px; background: #ffffffc9; font: inherit; font-size: 16px; text-align: left; }
+#forgot-sheet-modal #otp-email-input:focus { outline: none; border-color: #0071e3; box-shadow: 0 0 0 3px #0071e320; }
+#forgot-sheet-modal #otp-error-msg { position: static; margin: 10px 0 0; font-size: 13px; line-height: 1.45; text-align: left; }
+#forgot-sheet-modal .recovery-primary { width: 100%; min-height: 50px; margin: 0; padding: 12px 20px; border: 0; border-radius: 999px; background: #0071e3; color: #fff; font: inherit; font-size: 15px; font-weight: 600; text-transform: none; letter-spacing: 0; box-shadow: none; }
+#forgot-sheet-modal .recovery-back { display: block; width: 100%; min-height: 48px; margin: 8px 0 0; color: #0071e3; font: inherit; font-size: 14px; }
+#forgot-sheet-modal .recovery-success { text-align: center; }
+#forgot-sheet-modal .recovery-success h2 { font-size: 27px; }
+#forgot-sheet-modal .recovery-success p { margin: 12px 0 26px; }
+#forgot-sheet-modal .recovery-mail { display: grid; place-items: center; width: 80px; height: 80px; margin: 0 auto 24px; border-radius: 24px; color: #0071e3; background: #ffffffba; box-shadow: inset 0 1px 2px white; }
+#forgot-sheet-modal .recovery-mail svg { width: 44px; height: 44px; }
+
+/* Touch motion: avoid nested moving blur and keep the bottom edge stable. */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  :is(#hid-modal, #forgot-sheet-modal) {
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: opacity .22s ease, visibility .26s;
+  }
+  :is(#hid-modal, #forgot-sheet-modal) .modal-content {
+    max-height: calc(100svh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: linear-gradient(145deg, #fffffff5, #f2f4f9f2);
+    box-shadow: inset 0 1px 1px #fff, inset 0 -1px 1px #ffffff80, 0 16px 44px #00000026;
+    transform: translate3d(0, calc(100% + 48px), 0);
+    transition: transform .26s cubic-bezier(.4,0,.8,.2), opacity .2s ease;
+  }
+  :is(#hid-modal, #forgot-sheet-modal).active .modal-content {
+    animation: hid-sheet-rise-touch .52s both;
+  }
+  :is(#hid-modal, #forgot-sheet-modal) .close-btn {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  #hid-manual-view h2:focus { outline: none; }
+}
+@keyframes hid-sheet-rise-touch {
+  0% { opacity: 0; transform: translate3d(0, calc(100% + 48px), 0); animation-timing-function: cubic-bezier(.2,.8,.25,1); }
+  72% { opacity: 1; transform: translate3d(0, -3px, 0); animation-timing-function: cubic-bezier(.3,0,.3,1); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(#hid-modal, #forgot-sheet-modal), :is(#hid-modal, #forgot-sheet-modal) .modal-content { transition: none; }
+  :is(#hid-modal, #forgot-sheet-modal).active .modal-content { animation: none; transform: none; }
+}
+
+/* Ritmo tipografico più compatto e regolare, in linea con la pagina Apple di accesso. */
+#login-page-wrapper .auth-title {
+    line-height: 1.04 !important;
+}
+
+#login-page-wrapper .auth-subtitle,
+#login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+    margin-top: 10px !important;
+    margin-bottom: 16px !important;
+    line-height: 1.45 !important;
+}
+
+#login-page-wrapper .segmented-control {
+    margin-bottom: 16px !important;
+}
+
+#login-page-wrapper .forgot-link {
+    margin-top: 8px;
+}
+
+/* On touch screens both sheets use one transition; the keyframe animation
+   competing with the transform transition caused the password sheet to replay. */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+    :is(#hid-modal, #forgot-sheet-modal) .modal-content {
+        transition: transform .36s cubic-bezier(.22, 1, .36, 1), opacity .2s ease;
+    }
+
+    :is(#hid-modal, #forgot-sheet-modal).active .modal-content {
+        animation: none !important;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :is(#hid-modal, #forgot-sheet-modal) .modal-content {
+        transition: none;
+    }
+}
+
+/* Harzafi Account: spacious, native-feeling sign-in on iPhone and compact screens. */
+#login-page-wrapper .auth-title {
+    font-family: var(--font-display), "SF Pro Display", sans-serif !important;
+}
+
+#login-page-wrapper .auth-subtitle,
+#login-page-wrapper .login-privacy,
+#login-page-wrapper .login-actions,
+#login-page-wrapper .forgot-link {
+    font-family: var(--font-text), "SF Pro Text", sans-serif !important;
+}
+
+@media (max-width: 600px) {
+    html,
+    body.auth-page {
+        background: #fff !important;
+    }
+
+    #login-page-wrapper {
+        min-height: 100svh !important;
+        min-height: 100dvh !important;
+        display: grid !important;
+        place-items: start center !important;
+        padding: 0 !important;
+        background: #fff !important;
+    }
+
+    #login-page-wrapper .login-card {
+        width: 100% !important;
+        max-width: none !important;
+        min-height: 100svh !important;
+        min-height: 100dvh !important;
+        height: auto !important;
+        max-height: none !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        animation: none;
+    }
+
+    #login-page-wrapper .login-panel {
+        width: min(100%, 500px) !important;
+        max-width: 500px !important;
+        min-height: 100svh !important;
+        min-height: 100dvh !important;
+        height: auto !important;
+        max-height: none !important;
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+        margin-inline: auto !important;
+        padding: calc(88px + env(safe-area-inset-top, 0px)) clamp(28px, 10vw, 40px) calc(36px + env(safe-area-inset-bottom, 0px)) !important;
+        overflow: visible !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    #login-page-wrapper .login-panel > :not(.login-topbar) {
+        align-self: stretch;
+        flex-shrink: 0;
+    }
+
+    #login-page-wrapper .login-topbar {
+        top: calc(12px + env(safe-area-inset-top, 0px));
+        left: clamp(20px, 6vw, 28px);
+        width: auto;
+        min-height: 44px;
+    }
+
+    #login-page-wrapper .login-close {
+        width: 44px;
+        height: 44px;
+        border: 1px solid #d2d2d7;
+        border-radius: 50%;
+        color: #1d1d1f;
+        background: #fff;
+    }
+
+    #login-page-wrapper .login-close svg {
+        width: 17px;
+        height: 17px;
+        fill: currentColor;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        align-self: center !important;
+        width: min(52vw, 172px) !important;
+        height: 64px !important;
+        margin: 0 auto 30px !important;
+        flex: 0 0 auto !important;
+    }
+
+    #login-page-wrapper .login-hero-mark img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    #login-page-wrapper .auth-eyebrow {
+        display: none !important;
+    }
+
+    #login-page-wrapper .auth-title {
+        width: 100%;
+        margin: 0 !important;
+        color: #1d1d1f !important;
+        font-size: clamp(31px, 8.6vw, 36px) !important;
+        font-weight: 650 !important;
+        line-height: 1.08 !important;
+        letter-spacing: -.045em !important;
+        text-align: left !important;
+        text-wrap: balance;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 10px 0 28px !important;
+        color: #7a7a80 !important;
+        font-size: clamp(18px, 5.2vw, 21px) !important;
+        font-weight: 400 !important;
+        line-height: 1.42 !important;
+        text-align: left !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    #login-page-wrapper .segmented-control {
+        align-self: stretch;
+        width: 100% !important;
+        max-width: 390px;
+        min-height: 44px;
+        margin: 0 0 20px !important;
+        flex: 0 0 auto !important;
+        border-radius: 999px !important;
+    }
+
+    #login-page-wrapper .seg-btn {
+        min-height: 38px;
+        border-radius: 999px !important;
+        font-size: 14px !important;
+    }
+
+    #login-page-wrapper #login-view,
+    #login-page-wrapper #login-form,
+    #login-page-wrapper .login-step,
+    #login-page-wrapper #rules-view {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin-inline: auto !important;
+        flex: 0 0 auto !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field,
+    #login-page-wrapper .selected-account {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 62px !important;
+        max-height: none !important;
+        border: 1px solid transparent !important;
+        border-radius: 999px !important;
+        background: #f2f2f7 !important;
+        box-shadow: none !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field:focus-within {
+        border-color: #0071e3 !important;
+        background: #f7f9ff !important;
+        box-shadow: 0 0 0 3px rgba(0, 113, 227, .12) !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field input {
+        height: 60px !important;
+        padding: 19px 20px 5px !important;
+        font-family: var(--font-text), "SF Pro Text", sans-serif !important;
+        font-size: 17px !important;
+        font-weight: 400 !important;
+    }
+
+    #login-page-wrapper .floating-field-label {
+        left: 20px;
+        font-size: 16px;
+    }
+
+    #login-page-wrapper .selected-account {
+        padding: 8px 14px 8px 18px !important;
+    }
+
+    #login-page-wrapper .error-msg {
+        margin: 8px 4px 0 !important;
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+    }
+
+    #login-page-wrapper .email-recovery-link {
+        display: inline-flex;
+        align-self: flex-start;
+        margin: 18px 0 0 !important;
+        color: #0071e3 !important;
+        font-size: 15px !important;
+        font-weight: 500 !important;
+        line-height: 1.45;
+        text-align: left;
+    }
+
+    #login-page-wrapper .login-privacy {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+        gap: 12px;
+        width: 100%;
+        max-width: 440px;
+        margin: clamp(38px, 10vw, 56px) 0 0 !important;
+        color: #7a7a80 !important;
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        line-height: 1.48 !important;
+        text-align: left !important;
+    }
+
+    #login-page-wrapper .privacy-people,
+    #login-page-wrapper .privacy-people img {
+        display: block;
+        width: 34px;
+        height: 30px;
+        object-fit: contain;
+    }
+
+    #login-page-wrapper .login-privacy a {
+        color: #0071e3 !important;
+        font-weight: 500 !important;
+        text-decoration: none;
+    }
+
+    #login-page-wrapper .login-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px;
+        width: 100%;
+        margin: 22px 0 0 !important;
+    }
+
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social {
+        width: 100% !important;
+        height: 54px !important;
+        min-height: 54px !important;
+        margin: 0 !important;
+        border-radius: 999px !important;
+        font-family: var(--font-text), "SF Pro Text", sans-serif !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        letter-spacing: -.01em !important;
+        text-transform: none !important;
+        box-shadow: none !important;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        justify-content: center !important;
+        gap: 10px !important;
+        padding-inline: 18px !important;
+        border: 1px solid #d2d2d7 !important;
+        color: #1d1d1f !important;
+        background: #fff !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex-basis: 56px;
+        width: 56px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+        height: 24px;
+        background: #d2d2d7;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+        color: #6e6e73;
+    }
+}
+
+@media (max-width: 360px) {
+    #login-page-wrapper .login-panel {
+        padding-right: 26px !important;
+        padding-left: 26px !important;
+    }
+
+    #login-page-wrapper .auth-title {
+        font-size: 30px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex-basis: 46px;
+        width: 46px !important;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        gap: 8px !important;
+        font-size: 14px !important;
+    }
+}
+
+@media (max-height: 620px) and (max-width: 600px) {
+    #login-page-wrapper .login-panel {
+        padding-top: calc(72px + env(safe-area-inset-top, 0px)) !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        height: 48px !important;
+        margin-bottom: 20px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #login-page-wrapper .login-card {
+        animation: none !important;
+    }
+}
+
+/* Final mobile account pass: all sign-in controls fit in the first viewport. */
+#login-page-wrapper .email-help-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 12px 0 0;
+    color: #0071e3;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+#login-page-wrapper .email-help-link > svg {
+    display: block;
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+}
+
+#login-page-wrapper .email-help-link > span {
+    min-width: 0;
+}
+
+#login-page-wrapper .email-help-link .forgot-link {
+    color: #0071e3 !important;
+    text-decoration: none;
+}
+
+@media (max-width: 600px) {
+    .auth-page .login-site-footer {
+        display: none !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        padding: calc(56px + env(safe-area-inset-top, 0px)) clamp(24px, 9vw, 36px) calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+
+    #login-page-wrapper .login-close {
+        border: 1px solid rgba(255, 255, 255, .78) !important;
+        color: #1d1d1f !important;
+        background: rgba(255, 255, 255, .58) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        backdrop-filter: blur(18px) saturate(160%);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 3px 14px rgba(31, 40, 55, .12) !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        width: min(46vw, 156px) !important;
+        height: 46px !important;
+        margin: 0 auto 8px !important;
+    }
+
+    #login-page-wrapper .auth-title {
+        font-size: clamp(29px, 7.8vw, 33px) !important;
+        line-height: 1.06 !important;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        margin: 7px 0 13px !important;
+        font-size: clamp(14px, 3.9vw, 16px) !important;
+        line-height: 1.34 !important;
+    }
+
+    #login-page-wrapper .segmented-control {
+        min-height: 40px !important;
+        margin: 0 0 12px !important;
+    }
+
+    #login-page-wrapper .seg-btn {
+        min-height: 34px !important;
+        font-size: 13px !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field,
+    #login-page-wrapper .selected-account {
+        min-height: 50px !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field input {
+        height: 48px !important;
+        padding: 15px 18px 3px !important;
+        font-size: 16px !important;
+    }
+
+    #login-page-wrapper .floating-field-label {
+        left: 18px !important;
+        font-size: 14px !important;
+    }
+
+    #login-page-wrapper .email-help-link {
+        gap: 7px;
+        margin-top: 9px !important;
+        font-size: 13px !important;
+        line-height: 1.35 !important;
+    }
+
+    #login-page-wrapper .email-help-link > svg {
+        flex-basis: 18px;
+        width: 18px;
+        height: 18px;
+    }
+
+    #login-page-wrapper .login-privacy {
+        grid-template-columns: 23px minmax(0, 1fr) !important;
+        align-items: start;
+        gap: 8px !important;
+        margin: 17px 0 0 !important;
+        font-size: 11px !important;
+        line-height: 1.34 !important;
+    }
+
+    #login-page-wrapper .privacy-people,
+    #login-page-wrapper .privacy-people img {
+        width: 23px !important;
+        height: 23px !important;
+    }
+
+    #login-page-wrapper .login-actions {
+        gap: 8px !important;
+        margin: 14px 0 0 !important;
+    }
+
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social {
+        height: 46px !important;
+        min-height: 46px !important;
+        font-size: 15px !important;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        border: 1px solid #dce1e7 !important;
+        color: #111827 !important;
+        background: #f8f7f5 url("IMMAGINI/SFONDO-HARZAFI-ID.webp") center / 100% 100% no-repeat !important;
+        box-shadow: 0 6px 15px rgba(38, 64, 91, .14), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id .harzafi-id-separator {
+        background: rgba(29, 29, 31, .2) !important;
+    }
+}
+
+@media (max-width: 360px) {
+    #login-page-wrapper .login-panel {
+        padding-right: 22px !important;
+        padding-left: 22px !important;
+    }
+
+    #login-page-wrapper .auth-title {
+        font-size: 28px !important;
+    }
+
+    #login-page-wrapper .email-help-link {
+        font-size: 12.5px !important;
+    }
+}
+
+@media (max-height: 740px) and (max-width: 600px) {
+    #login-page-wrapper .login-panel {
+        padding-top: calc(46px + env(safe-area-inset-top, 0px)) !important;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        height: 38px !important;
+        margin-bottom: 5px !important;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        margin-bottom: 9px !important;
+        font-size: 14px !important;
+        line-height: 1.28 !important;
+    }
+
+    #login-page-wrapper .segmented-control {
+        min-height: 36px !important;
+        margin-bottom: 9px !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field,
+    #login-page-wrapper .selected-account {
+        min-height: 46px !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field input {
+        height: 44px !important;
+    }
+
+    #login-page-wrapper .login-privacy {
+        margin-top: 12px !important;
+        font-size: 10.5px !important;
+        line-height: 1.28 !important;
+    }
+
+    #login-page-wrapper .login-actions {
+        margin-top: 10px !important;
+    }
+
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social {
+        height: 42px !important;
+        min-height: 42px !important;
+    }
+}
+
+/* Final responsive account layout. These rules replace the old fixed-height
+   desktop form and let every breakpoint use the same clear, HIG-sized type. */
+#login-page-wrapper,
+#login-page-wrapper .login-card,
+#login-page-wrapper .login-panel,
+#login-page-wrapper #login-view,
+#login-page-wrapper #login-form,
+#login-page-wrapper .login-step,
+#login-page-wrapper .auth-field,
+#login-page-wrapper .selected-account {
+    box-sizing: border-box;
+}
+
+#login-page-wrapper .login-card {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.auth-page .login-bg-mesh {
+    display: none !important;
+}
+
+@media (min-width: 601px) {
+    html,
+    body.auth-page {
+        min-height: 100%;
+        background: #fff !important;
+    }
+
+    #login-page-wrapper {
+        min-height: 100dvh !important;
+        display: grid !important;
+        place-items: center !important;
+        padding: 24px !important;
+        background: #fff !important;
+    }
+
+    #login-page-wrapper .login-card {
+        width: min(calc(100vw - 48px), 760px) !important;
+        min-height: min(780px, calc(100dvh - 48px)) !important;
+        height: auto !important;
+        max-height: none !important;
+        margin: 0 auto !important;
+        overflow: visible !important;
+        border: 1px solid #e5e5ea !important;
+        border-radius: 30px !important;
+        background: #fff !important;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, .08) !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        width: 100% !important;
+        height: auto !important;
+        min-height: min(780px, calc(100dvh - 48px)) !important;
+        max-height: none !important;
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+        gap: 0 !important;
+        padding: 82px clamp(42px, 8vw, 82px) 42px !important;
+        overflow: visible !important;
+        background: #fff !important;
+    }
+
+    #login-page-wrapper .login-topbar {
+        top: 22px !important;
+        left: 24px !important;
+        width: auto !important;
+        min-height: 44px !important;
+    }
+
+    #login-page-wrapper .login-close {
+        width: 44px !important;
+        height: 44px !important;
+        color: #1d1d1f !important;
+        border: 1px solid rgba(255, 255, 255, .8) !important;
+        background: rgba(255, 255, 255, .62) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        backdrop-filter: blur(18px) saturate(160%);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 3px 14px rgba(31, 40, 55, .12) !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        align-self: center !important;
+        width: min(40vw, 176px) !important;
+        height: 76px !important;
+        flex: 0 0 76px !important;
+        margin: 0 auto 22px !important;
+    }
+
+    #login-page-wrapper .login-hero-mark img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+    }
+
+    #login-page-wrapper .auth-eyebrow {
+        display: none !important;
+    }
+
+    #login-page-wrapper .auth-title,
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .segmented-control,
+    #login-page-wrapper #login-view,
+    #login-page-wrapper #rules-view {
+        width: min(100%, 480px) !important;
+        align-self: center !important;
+    }
+
+    #login-page-wrapper .auth-title {
+        margin: 0 !important;
+        color: #1d1d1f !important;
+        font-family: var(--font-display), "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 32px !important;
+        font-weight: 600 !important;
+        line-height: 1.12 !important;
+        letter-spacing: -.035em !important;
+        text-align: left !important;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        display: block !important;
+        width: min(100%, 480px) !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 9px auto 20px !important;
+        color: #86868b !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 17px !important;
+        font-weight: 400 !important;
+        line-height: 1.38 !important;
+        text-align: left !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    #login-page-wrapper .segmented-control {
+        height: 44px !important;
+        min-height: 44px !important;
+        margin: 0 auto 15px !important;
+        border-radius: 999px !important;
+    }
+
+    #login-page-wrapper .seg-btn {
+        min-height: 36px !important;
+        border-radius: 999px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    #login-page-wrapper #login-view,
+    #login-page-wrapper #login-form,
+    #login-page-wrapper .login-step,
+    #login-page-wrapper #rules-view {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin-inline: auto !important;
+        flex: 0 0 auto !important;
+        overflow: visible !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field,
+    #login-page-wrapper .selected-account {
+        width: 100% !important;
+        min-height: 58px !important;
+        height: 58px !important;
+        max-height: 58px !important;
+        border: 1px solid transparent !important;
+        border-radius: 999px !important;
+        background: #f2f2f7 !important;
+        box-shadow: none !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field:focus-within {
+        border-color: #0071e3 !important;
+        background: #f7f9ff !important;
+        box-shadow: 0 0 0 3px rgba(0, 113, 227, .12) !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field input {
+        width: 100% !important;
+        height: 56px !important;
+        padding: 18px 20px 4px !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 17px !important;
+        font-weight: 400 !important;
+    }
+
+    #login-page-wrapper .floating-field-label {
+        left: 20px !important;
+        font-size: 17px !important;
+        font-weight: 400 !important;
+    }
+
+    #login-page-wrapper .email-help-link {
+        display: block !important;
+        margin: 12px 0 0 !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 15px !important;
+        font-weight: 400 !important;
+        line-height: 1.4 !important;
+    }
+
+    #login-page-wrapper .email-help-link > a {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        color: #0071e3 !important;
+        text-decoration: none !important;
+    }
+
+    #login-page-wrapper .email-help-link svg {
+        display: block !important;
+        flex: 0 0 20px !important;
+        width: 20px !important;
+        height: 20px !important;
+        margin-top: 1px !important;
+    }
+
+    #login-page-wrapper .email-help-link span {
+        min-width: 0 !important;
+    }
+
+    #login-page-wrapper .login-privacy {
+        display: grid !important;
+        grid-template-columns: 30px minmax(0, 1fr) !important;
+        align-items: start !important;
+        justify-items: stretch !important;
+        gap: 10px !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: clamp(42px, 7vh, 64px) 0 0 !important;
+        color: #86868b !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 12px !important;
+        font-weight: 400 !important;
+        line-height: 1.4 !important;
+        text-align: left !important;
+    }
+
+    #login-page-wrapper .privacy-people,
+    #login-page-wrapper .privacy-people img {
+        display: block !important;
+        width: 30px !important;
+        height: 30px !important;
+        object-fit: contain !important;
+    }
+
+    #login-page-wrapper .login-privacy a {
+        color: #0071e3 !important;
+        font-weight: 400 !important;
+        text-decoration: none !important;
+    }
+
+    #login-page-wrapper .login-actions {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin: 24px 0 0 !important;
+    }
+
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social,
+    #login-page-wrapper #login-submit {
+        width: 100% !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        margin: 0 !important;
+        border-radius: 999px !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0 !important;
+        text-transform: none !important;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        justify-content: center !important;
+        gap: 10px !important;
+        padding-inline: 16px !important;
+        border: 1px solid #dce1e7 !important;
+        color: #111827 !important;
+        background: #f8f7f5 url("IMMAGINI/SFONDO-HARZAFI-ID.webp") center / 100% 100% no-repeat !important;
+        box-shadow: 0 6px 15px rgba(38, 64, 91, .14), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex: 0 0 58px !important;
+        width: 58px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+        height: 26px !important;
+        background: rgba(29, 29, 31, .2) !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+        flex: 0 0 16px !important;
+        width: 16px !important;
+        height: 20px !important;
+    }
+
+    #login-page-wrapper #login-password-step > .forgot-link {
+        display: inline-block !important;
+        margin: 12px 0 0 !important;
+        color: #0071e3 !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 15px !important;
+        font-weight: 400 !important;
+    }
+
+    #login-page-wrapper #login-submit {
+        margin-top: 18px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    html,
+    body.auth-page {
+        width: 100%;
+        min-height: 100%;
+        background: #fff !important;
+    }
+
+    #login-page-wrapper {
+        width: 100%;
+        min-height: 100svh !important;
+        min-height: 100dvh !important;
+        display: block !important;
+        padding: 0 !important;
+        background: #fff !important;
+    }
+
+    #login-page-wrapper .login-card {
+        width: 100% !important;
+        min-height: 100svh !important;
+        min-height: 100dvh !important;
+        height: auto !important;
+        max-height: none !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        width: min(100%, 500px) !important;
+        min-height: 100svh !important;
+        min-height: 100dvh !important;
+        height: auto !important;
+        max-height: none !important;
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+        gap: 0 !important;
+        margin-inline: auto !important;
+        padding: max(50px, env(safe-area-inset-top, 0px)) clamp(24px, 8.7vw, 36px) calc(22px + env(safe-area-inset-bottom, 0px)) !important;
+        overflow: visible !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    #login-page-wrapper .login-panel > :not(.login-topbar) {
+        align-self: stretch !important;
+        flex-shrink: 0 !important;
+    }
+
+    #login-page-wrapper .login-topbar {
+        top: max(50px, env(safe-area-inset-top, 0px)) !important;
+        left: clamp(20px, 6vw, 28px) !important;
+        width: auto !important;
+        min-height: 44px !important;
+    }
+
+    #login-page-wrapper .login-close {
+        width: 44px !important;
+        height: 44px !important;
+        border: 1px solid rgba(255, 255, 255, .82) !important;
+        border-radius: 50% !important;
+        color: #1d1d1f !important;
+        background: rgba(255, 255, 255, .62) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        backdrop-filter: blur(18px) saturate(160%);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 3px 14px rgba(31, 40, 55, .12) !important;
+    }
+
+    #login-page-wrapper .login-close svg {
+        width: 19px !important;
+        height: 19px !important;
+        fill: currentColor !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        align-self: center !important;
+        width: min(44vw, 166px) !important;
+        height: 130px !important;
+        flex: 0 0 130px !important;
+        margin: 0 auto 32px !important;
+    }
+
+    #login-page-wrapper .login-hero-mark img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+    }
+
+    #login-page-wrapper .auth-eyebrow {
+        display: none !important;
+    }
+
+    #login-page-wrapper .auth-title {
+        width: 100% !important;
+        margin: 0 !important;
+        color: #1d1d1f !important;
+        font-family: var(--font-display), "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 28px !important;
+        font-weight: 600 !important;
+        line-height: 1.12 !important;
+        letter-spacing: -.035em !important;
+        text-align: left !important;
+        text-wrap: balance;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 10px 0 18px !important;
+        color: #86868b !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 17px !important;
+        font-weight: 400 !important;
+        line-height: 1.32 !important;
+        text-align: left !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    #login-page-wrapper .segmented-control {
+        align-self: stretch !important;
+        width: 100% !important;
+        max-width: 390px !important;
+        height: 44px !important;
+        min-height: 44px !important;
+        margin: 0 0 14px !important;
+        flex: 0 0 auto !important;
+        border-radius: 999px !important;
+    }
+
+    #login-page-wrapper .seg-btn {
+        min-height: 36px !important;
+        border-radius: 999px !important;
+        font-family: var(--font-text), "SF Pro Text", sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    #login-page-wrapper #login-view,
+    #login-page-wrapper #login-form,
+    #login-page-wrapper .login-step,
+    #login-page-wrapper #rules-view {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin-inline: auto !important;
+        flex: 0 0 auto !important;
+        overflow: visible !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field,
+    #login-page-wrapper .selected-account {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 56px !important;
+        min-height: 56px !important;
+        max-height: 56px !important;
+        border: 1px solid transparent !important;
+        border-radius: 999px !important;
+        background: #f2f2f7 !important;
+        box-shadow: none !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field:focus-within {
+        border-color: #0071e3 !important;
+        background: #f7f9ff !important;
+        box-shadow: 0 0 0 3px rgba(0, 113, 227, .12) !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field input {
+        width: 100% !important;
+        height: 54px !important;
+        padding: 17px 20px 3px !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 17px !important;
+        font-weight: 400 !important;
+    }
+
+    #login-page-wrapper .floating-field-label {
+        left: 20px !important;
+        font-size: 17px !important;
+        font-weight: 400 !important;
+    }
+
+    #login-page-wrapper .email-help-link {
+        display: block !important;
+        margin: 11px 0 0 !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 15px !important;
+        font-weight: 400 !important;
+        line-height: 1.4 !important;
+    }
+
+    #login-page-wrapper .email-help-link > a {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        color: #0071e3 !important;
+        text-decoration: none !important;
+    }
+
+    #login-page-wrapper .email-help-link svg {
+        display: block !important;
+        flex: 0 0 21px !important;
+        width: 21px !important;
+        height: 21px !important;
+        margin-top: 1px !important;
+    }
+
+    #login-page-wrapper .email-help-link span {
+        min-width: 0 !important;
+    }
+
+    #login-page-wrapper .login-privacy {
+        display: grid !important;
+        grid-template-columns: 28px minmax(0, 1fr) !important;
+        align-items: start !important;
+        justify-items: stretch !important;
+        gap: 9px !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: clamp(56px, 8vh, 70px) 0 0 !important;
+        color: #86868b !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 12px !important;
+        font-weight: 400 !important;
+        line-height: 1.38 !important;
+        text-align: left !important;
+    }
+
+    #login-page-wrapper .privacy-people,
+    #login-page-wrapper .privacy-people img {
+        display: block !important;
+        width: 28px !important;
+        height: 28px !important;
+        object-fit: contain !important;
+    }
+
+    #login-page-wrapper .login-privacy a {
+        color: #0071e3 !important;
+        font-weight: 400 !important;
+        text-decoration: none !important;
+    }
+
+    #login-page-wrapper .login-actions {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin: 24px 0 0 !important;
+    }
+
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social,
+    #login-page-wrapper #login-submit {
+        width: 100% !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        margin: 0 !important;
+        border-radius: 999px !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0 !important;
+        text-transform: none !important;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        justify-content: center !important;
+        gap: 9px !important;
+        padding-inline: 12px !important;
+        border: 1px solid #dce1e7 !important;
+        color: #111827 !important;
+        background: #f8f7f5 url("IMMAGINI/SFONDO-HARZAFI-ID.webp") center / 100% 100% no-repeat !important;
+        box-shadow: 0 6px 15px rgba(38, 64, 91, .14), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex: 0 0 56px !important;
+        width: 56px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-separator {
+        height: 26px !important;
+        background: rgba(29, 29, 31, .2) !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id .harzafi-id-arrow {
+        flex: 0 0 16px !important;
+        width: 16px !important;
+        height: 20px !important;
+    }
+
+    #login-page-wrapper #login-password-step > .forgot-link {
+        display: inline-block !important;
+        margin: 12px 0 0 !important;
+        color: #0071e3 !important;
+        font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 15px !important;
+        font-weight: 400 !important;
+    }
+
+    #login-page-wrapper #login-submit {
+        margin-top: 18px !important;
+    }
+
+    .auth-page .login-site-footer {
+        display: none !important;
+    }
+}
+
+@media (max-width: 370px) {
+    #login-page-wrapper .login-panel {
+        padding-right: 22px !important;
+        padding-left: 22px !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        height: 64px !important;
+        flex-basis: 64px !important;
+        margin-bottom: 16px !important;
+    }
+
+    #login-page-wrapper .auth-title {
+        font-size: 27px !important;
+    }
+
+    #login-page-wrapper #btn-harzafi-id img {
+        flex-basis: 48px !important;
+        width: 48px !important;
+    }
+
+    #login-page-wrapper .login-actions #btn-harzafi-id {
+        gap: 7px !important;
+        font-size: 14px !important;
+    }
+}
+
+@media (max-height: 800px) and (min-width: 601px) {
+    #login-page-wrapper .login-panel {
+        padding-top: 68px !important;
+        padding-bottom: 32px !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        height: 62px !important;
+        flex-basis: 62px !important;
+        margin-bottom: 16px !important;
+    }
+
+    #login-page-wrapper .login-privacy {
+        margin-top: 38px !important;
+    }
+}
+
+@media (max-height: 740px) and (max-width: 600px) {
+    #login-page-wrapper .login-panel {
+        padding-top: max(46px, env(safe-area-inset-top, 0px)) !important;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        height: 74px !important;
+        flex-basis: 74px !important;
+        margin-bottom: 14px !important;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        margin-bottom: 12px !important;
+        font-size: 17px !important;
+        line-height: 1.28 !important;
+    }
+
+    #login-page-wrapper .segmented-control {
+        margin-bottom: 10px !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field,
+    #login-page-wrapper .selected-account {
+        height: 52px !important;
+        min-height: 52px !important;
+        max-height: 52px !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field input {
+        height: 50px !important;
+    }
+
+    #login-page-wrapper .login-privacy {
+        margin-top: 30px !important;
+        font-size: 11.5px !important;
+    }
+
+    #login-page-wrapper .login-actions {
+        margin-top: 16px !important;
+        gap: 8px !important;
+    }
+
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social,
+    #login-page-wrapper #login-submit {
+        height: 46px !important;
+        min-height: 46px !important;
+    }
+}
+
+@media (max-height: 700px) and (max-width: 600px) {
+    #login-page-wrapper .login-panel {
+        padding-top: max(40px, env(safe-area-inset-top, 0px)) !important;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        height: 68px !important;
+        flex-basis: 68px !important;
+        margin-bottom: 10px !important;
+    }
+
+    #login-page-wrapper .login-privacy {
+        margin-top: 24px !important;
+    }
+
+    #login-page-wrapper .login-actions {
+        margin-top: 12px !important;
+    }
+
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social,
+    #login-page-wrapper #login-submit {
+        height: 42px !important;
+        min-height: 42px !important;
+    }
+}
+
+/* Small finishing touches requested for the Harzafi account screen. */
+#login-page-wrapper .login-hero-mark img {
+    transform: translateY(6px) !important;
+}
+
+#login-page-wrapper .seg-slider {
+    border-radius: 999px !important;
+}
+
+/* Keep the iPhone 16 layout dimensions, while allowing the whole document to scroll. */
+@media (max-width: 600px) {
+    html,
+    body.auth-page {
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        overscroll-behavior-y: auto !important;
+    }
+
+    #login-page-wrapper,
+    #login-page-wrapper .login-card,
+    #login-page-wrapper .login-panel {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        touch-action: pan-y !important;
+    }
+
+    .auth-page .login-site-footer {
+        display: block !important;
+        position: relative !important;
+        margin-top: 0 !important;
+    }
+}
+
+/* Scale typography up when the viewport has enough room for comfortable reading. */
+@media (min-width: 390px) and (min-height: 780px) and (max-width: 600px) {
+    #login-page-wrapper .auth-title {
+        font-size: clamp(30px, 7.8vw, 34px) !important;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        font-size: clamp(18px, 4.8vw, 19.5px) !important;
+        line-height: 1.3 !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field input,
+    #login-page-wrapper .floating-field-label {
+        font-size: clamp(18px, 4.8vw, 19px) !important;
+    }
+
+    #login-page-wrapper .email-help-link {
+        font-size: clamp(16px, 4.3vw, 17px) !important;
+    }
+
+    #login-page-wrapper .login-privacy {
+        font-size: clamp(13px, 3.4vw, 14px) !important;
+    }
+
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social,
+    #login-page-wrapper #login-submit {
+        font-size: 17px !important;
+    }
+}
+
+@media (min-width: 800px) and (min-height: 820px) {
+    #login-page-wrapper .auth-title {
+        font-size: 34px !important;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        font-size: 18px !important;
+    }
+
+    #login-page-wrapper .auth-field.floating-auth-field input,
+    #login-page-wrapper .floating-field-label {
+        font-size: 18px !important;
+    }
+
+    #login-page-wrapper .email-help-link,
+    #login-page-wrapper #login-password-step > .forgot-link {
+        font-size: 16px !important;
+    }
+
+    #login-page-wrapper .login-privacy {
+        font-size: 13px !important;
+    }
+
+    #login-page-wrapper .login-actions .btn-gradient,
+    #login-page-wrapper .login-actions .btn-social,
+    #login-page-wrapper #login-submit {
+        font-size: 17px !important;
+    }
+}
+
+/* Match the compact, clearly separated privacy note from the reference screen. */
+#login-page-wrapper .login-privacy {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-items: start !important;
+    align-items: start !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: clamp(32px, 8vw, 40px) 0 28px !important;
+    padding: 0 !important;
+    color: #8e8e93 !important;
+    font-size: clamp(11px, 3vw, 12px) !important;
+    font-weight: 400 !important;
+    line-height: 1.36 !important;
+    text-align: left !important;
+}
+
+#login-page-wrapper .privacy-people,
+#login-page-wrapper .privacy-people img {
+    display: block !important;
+    width: 26px !important;
+    height: 26px !important;
+    object-fit: contain !important;
+}
+
+#login-page-wrapper .login-privacy a {
+    color: #007aff !important;
+    font-weight: 400 !important;
+    text-decoration: none !important;
+}
+
+#login-page-wrapper .login-privacy + .login-actions {
+    margin-top: 0 !important;
+}
+
+@media (max-width: 600px) {
+    #login-page-wrapper .login-hero-mark {
+        margin-bottom: 22px !important;
+    }
+
+    #login-page-wrapper .auth-title {
+        margin-top: -6px !important;
+    }
+
+    #login-page-wrapper .email-help-link {
+        display: flex !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin: 12px 0 0 !important;
+        text-align: left !important;
+    }
+
+    #login-page-wrapper .email-help-link > a {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        text-align: left !important;
+    }
+
+    #login-page-wrapper .email-help-link > a > svg {
+        align-self: center !important;
+        margin-top: 0 !important;
+    }
+
+    #login-page-wrapper .email-help-link > a > span {
+        min-width: 0 !important;
+        text-align: left !important;
+    }
+}
+
+#login-page-wrapper .email-help-link {
+    display: block !important;
+    width: 100% !important;
+    text-align: left !important;
+}
+
+#login-page-wrapper .email-help-link > a {
+    display: inline !important;
+    width: auto !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-family: var(--font-text), "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+    text-align: left !important;
+    white-space: normal !important;
+}
+
+#login-page-wrapper .email-help-link > a > svg {
+    display: inline-block !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin: 0 !important;
+    vertical-align: middle !important;
+}
+
+#login-page-wrapper .email-help-link > a > span {
+    display: inline !important;
+    text-align: left !important;
+}
+
+#login-page-wrapper .floating-auth-field input:focus + .floating-field-label,
+#login-page-wrapper .floating-auth-field input:not(:placeholder-shown) + .floating-field-label,
+#login-page-wrapper .floating-auth-field input:-webkit-autofill + .floating-field-label {
+    top: 8px !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    transform: none !important;
+}
+
+@media (min-width: 601px) {
+    #login-page-wrapper .login-card {
+        width: min(calc(100vw - 48px), 680px) !important;
+        min-height: min(720px, calc(100dvh - 48px)) !important;
+        border: 0 !important;
+        outline: 0 !important;
+        border-radius: 32px !important;
+        overflow: hidden !important;
+        box-shadow: 0 20px 54px rgba(0, 0, 0, .09) !important;
+    }
+
+    #login-page-wrapper .login-panel {
+        min-height: min(720px, calc(100dvh - 48px)) !important;
+        padding: 72px clamp(36px, 7vw, 58px) 32px !important;
+        border: 0 !important;
+        border-radius: inherit !important;
+    }
+
+    #login-page-wrapper .login-hero-mark {
+        margin-bottom: 18px !important;
+    }
+
+    #login-page-wrapper .auth-subtitle,
+    #login-page-wrapper .login-panel.is-password-step .auth-subtitle {
+        width: min(100%, 480px) !important;
+        max-width: 480px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-align: left !important;
+    }
+}
+
+/* Let the password field emerge from beneath the selected email address. */
+#login-page-wrapper #login-password-step.is-active {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+#login-page-wrapper #login-password-step.is-active .auth-password-field {
+    transform-origin: center top;
+    animation: password-step-drop-in .58s cubic-bezier(.2, .78, .24, 1) both;
+    will-change: clip-path, opacity, transform;
+}
+
+#login-page-wrapper #login-password-step.is-active .email-help-link {
+    transform-origin: center top;
+    animation: password-help-link-drop-in .58s cubic-bezier(.2, .78, .24, 1) both;
+    will-change: opacity, transform;
+}
+
+@keyframes password-step-drop-in {
+    from {
+        opacity: 0;
+        clip-path: inset(0 0 100% 0 round 22px);
+        transform: translate3d(0, -8px, 0);
+    }
+    to {
+        opacity: 1;
+        clip-path: inset(0 0 0 0 round 22px);
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes password-help-link-drop-in {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, -8px, 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #login-page-wrapper #login-password-step.is-active .auth-password-field,
+    #login-page-wrapper #login-password-step.is-active .email-help-link {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        will-change: auto !important;
+    }
+
+    #login-page-wrapper #login-password-step.is-active .auth-password-field {
+        clip-path: none !important;
+    }
+}
+
+/* Password visibility control: soft SF Symbols-style eye transition. */
+#login-page-wrapper .toggle-password-btn {
+    display: grid !important;
+    place-items: center !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    color: #6e6e73 !important;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: color .2s ease, background-color .2s ease, transform .2s cubic-bezier(.2,.8,.2,1) !important;
+}
+
+#login-page-wrapper .toggle-password-btn:hover {
+    color: #424245 !important;
+    background: rgba(0, 113, 227, .07) !important;
+}
+
+#login-page-wrapper .toggle-password-btn:active {
+    transform: translateY(-50%) scale(.91) !important;
+}
+
+#login-page-wrapper .toggle-password-btn:focus-visible {
+    outline: 3px solid rgba(0, 113, 227, .3) !important;
+    outline-offset: 1px;
+}
+
+#login-page-wrapper #password-visibility-icon {
+    width: 21px !important;
+    height: 21px !important;
+    overflow: visible;
+    fill: none !important;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#password-visibility-icon .icon-eye,
+#password-visibility-icon .icon-eye-off {
+    display: inline !important;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: opacity .2s ease, transform .34s cubic-bezier(.2,.8,.2,1);
+}
+
+#password-visibility-icon .icon-eye {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+}
+
+#password-visibility-icon .icon-eye-off {
+    opacity: 0;
+    transform: scale(.72) rotate(-7deg);
+}
+
+#password-visibility-icon .eye-slash {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset .26s cubic-bezier(.2,.8,.2,1) .04s;
+}
+
+#login-page-wrapper .toggle-password-btn.is-visible #password-visibility-icon .icon-eye {
+    opacity: 0;
+    transform: scale(.72) rotate(7deg);
+}
+
+#login-page-wrapper .toggle-password-btn.is-visible #password-visibility-icon .icon-eye-off {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+}
+
+#login-page-wrapper .toggle-password-btn.is-visible #password-visibility-icon .eye-slash {
+    stroke-dashoffset: 0;
+}
+
+/* SF Pro Text regular keeps revealed characters aligned with the Apple reference. */
+#login-page-wrapper .auth-field.floating-auth-field.auth-password-field input#password-input {
+    font-family: var(--font-text) !important;
+    font-size: 17px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-kerning: normal;
+    font-optical-sizing: auto;
+    font-synthesis: none;
+    letter-spacing: normal !important;
+    line-height: normal !important;
+}
+
+#login-page-wrapper #change-email {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px !important;
+    padding: 0 15px !important;
+    color: #0071e3 !important;
+    font-family: var(--font-text) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: #e8f2ff !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: color .2s ease, background-color .2s ease, transform .2s cubic-bezier(.2,.8,.2,1) !important;
+}
+
+#login-page-wrapper #change-email:hover {
+    color: #0066cc !important;
+    background: #dcecff !important;
+}
+
+#login-page-wrapper #change-email:active {
+    transform: scale(.97);
+}
+
+#login-page-wrapper #change-email:focus-visible {
+    outline: 3px solid rgba(0, 113, 227, .28) !important;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #login-page-wrapper .toggle-password-btn,
+    #password-visibility-icon .icon-eye,
+    #password-visibility-icon .icon-eye-off,
+    #password-visibility-icon .eye-slash,
+    #login-page-wrapper #change-email {
+        transition-duration: .01ms !important;
+    }
+}
+
+/* Give the sign-in explanation comfortable reading size without clipping it. */
+#login-page-wrapper .login-panel:not(.is-password-step) > .auth-subtitle {
+    display: block !important;
+    width: min(100%, 520px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 180px !important;
+    overflow: visible !important;
+    font-size: clamp(17px, 4.8vw, 20px) !important;
+    line-height: 1.4 !important;
+}
+
+/* Crossfade the actual password glyphs between bullets and readable text. */
+#login-page-wrapper .auth-password-field .password-visibility-transition {
+    position: absolute;
+    z-index: 1;
+    top: 19px;
+    right: 108px;
+    bottom: 5px;
+    left: 18px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    color: #1d1d1f;
+    font-family: var(--font-text) !important;
+    font-size: 17px !important;
+    font-style: normal;
+    font-weight: 400 !important;
+    letter-spacing: normal;
+    line-height: normal;
+    white-space: pre;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+}
+
+#login-page-wrapper .auth-password-field.password-visibility-switching input#password-input {
+    animation: password-glyphs-in .28s cubic-bezier(.2,.72,.25,1) both;
+}
+
+#login-page-wrapper .auth-password-field.password-visibility-switching .password-visibility-transition {
+    animation: password-glyphs-out .28s cubic-bezier(.2,.72,.25,1) both;
+}
+
+@keyframes password-glyphs-in {
+    from { opacity: 0; filter: blur(3px); }
+    42% { opacity: .42; filter: blur(1.2px); }
+    to { opacity: 1; filter: blur(0); }
+}
+
+@keyframes password-glyphs-out {
+    from { opacity: 1; filter: blur(0); }
+    58% { opacity: .58; filter: blur(1.2px); }
+    to { opacity: 0; filter: blur(3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #login-page-wrapper .auth-password-field.password-visibility-switching input#password-input,
+    #login-page-wrapper .auth-password-field.password-visibility-switching .password-visibility-transition {
+        animation-duration: .01ms !important;
+    }
+}
+
+/* Mobile back control: keep it in the top safe area with a visible glass edge. */
+@media (max-width: 600px) {
+    #login-page-wrapper .login-topbar {
+        position: fixed !important;
+        top: calc(env(safe-area-inset-top, 0px) + 18px) !important;
+        left: max(18px, calc(env(safe-area-inset-left, 0px) + 18px)) !important;
+        z-index: 30 !important;
+        width: auto !important;
+        min-height: 44px !important;
+    }
+
+    #login-page-wrapper .login-close {
+        width: 44px !important;
+        height: 44px !important;
+        border: 1px solid rgba(60, 60, 67, .2) !important;
+        border-radius: 50% !important;
+        color: #1d1d1f !important;
+        background: linear-gradient(145deg, rgba(255,255,255,.9), rgba(244,246,250,.68)) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.98), 0 3px 14px rgba(31,40,55,.14), 0 0 0 1px rgba(60,60,67,.05) !important;
+    }
+
+    #login-page-wrapper .login-close:active {
+        transform: scale(.96);
+    }
+}
+
+#forgot-sheet-modal #forgot-sheet-close svg {
+    display: block !important;
+    flex: 0 0 22px;
+    width: 22px !important;
+    height: 22px !important;
+    fill: currentColor !important;
+    stroke: none !important;
+}
+
+/* Harzafi ID and password recovery sheets use the bundled SF Pro files. */
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header > span {
+    font-family: var(--font-display), "SF Pro Display", sans-serif !important;
+    font-weight: 600 !important;
+    font-optical-sizing: auto;
+    letter-spacing: -.025em;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body,
+:is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body * {
+    font-family: var(--font-text), "SF Pro Text", sans-serif !important;
+    font-optical-sizing: auto;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .bottom-sheet-body :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-display), "SF Pro Display", sans-serif !important;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header .close-btn {
+    display: grid !important;
+    place-items: center !important;
+    line-height: 0 !important;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header .close-btn svg {
+    display: block !important;
+    flex: 0 0 22px !important;
+    width: 22px !important;
+    height: 22px !important;
+    fill: currentColor !important;
+    stroke: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+:is(#hid-modal, #forgot-sheet-modal) .hid-modal-header .close-btn svg path {
+    fill: currentColor !important;
+}
+
+/* Keep login fields visually steady while focused; the floating label and caret
+   still communicate which field is active without tinting the control. */
+#login-page-wrapper .auth-field.floating-auth-field:focus-within {
+    border-color: transparent !important;
+    background: #f2f2f7 !important;
+    box-shadow: none !important;
+}
+
+#login-page-wrapper .auth-field.floating-auth-field input:focus {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+#login-page-wrapper .apple-input:focus,
+#hid-modal #hid-input:focus,
+#forgot-sheet-modal #otp-email-input:focus {
+    border-color: #d2d2d7 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Keep browser autofill seamless with both credential-field backgrounds. */
+#login-page-wrapper .auth-field input:-webkit-autofill,
+#login-page-wrapper .auth-field input:-webkit-autofill:hover,
+#login-page-wrapper .auth-field input:-webkit-autofill:focus,
+#login-page-wrapper #selected-email-display input:-webkit-autofill,
+#login-page-wrapper #selected-email-display input:-webkit-autofill:hover,
+#login-page-wrapper #selected-email-display input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #1d1d1f !important;
+    -webkit-box-shadow: 0 0 0 1000px #f2f2f7 inset !important;
+    background-color: #f2f2f7 !important;
+    caret-color: #0071e3 !important;
+    transition: background-color 9999s ease-out 0s !important;
+}
+
+/* Email and password become two rows of one expanding Apple-style field. */
+#login-page-wrapper #login-password-step .login-credentials-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+    border: 0;
+    border-radius: 22px;
+    background: #f2f2f7;
+    box-shadow: none;
+}
+
+#login-page-wrapper #login-password-step .login-credentials-group > .selected-account,
+#login-page-wrapper #login-password-step .login-credentials-group > .auth-password-field {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 62px !important;
+    min-height: 62px !important;
+    max-height: 62px !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+#login-page-wrapper #login-password-step .login-credentials-group > .selected-account {
+    padding: 8px 10px 8px 16px !important;
+}
+
+#login-page-wrapper #login-password-step .login-credentials-group > .auth-password-field {
+    position: relative;
+}
+
+#login-page-wrapper #login-password-step .login-credentials-group > .auth-password-field::before {
+    position: absolute;
+    top: 0;
+    right: 16px;
+    left: 16px;
+    z-index: 3;
+    height: 1px;
+    background: #d1d1d6;
+    content: "";
+    pointer-events: none;
+}
+
+#login-page-wrapper #login-password-step.is-active .login-credentials-group {
+    transform-origin: center top;
+    animation: login-credentials-expand .58s cubic-bezier(.2, .78, .24, 1) both;
+    will-change: clip-path;
+}
+
+@keyframes login-credentials-expand {
+    0% { clip-path: inset(0 0 50% 0 round 22px); }
+    68%, 100% { clip-path: inset(0 0 0 0 round 22px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #login-page-wrapper #login-password-step.is-active .login-credentials-group {
+        animation: none !important;
+        clip-path: none !important;
+        will-change: auto !important;
+    }
+}
+
+/* Keep the branded Harzafi ID surface clean, without outlines or shine. */
+#login-page-wrapper .login-actions #btn-harzafi-id,
+#login-page-wrapper .login-actions #btn-harzafi-id:hover:not(:disabled),
+#login-page-wrapper .login-actions #btn-harzafi-id:active:not(:disabled),
+#login-page-wrapper .login-actions #btn-harzafi-id:focus {
+    border: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+#login-page-wrapper .login-actions #btn-harzafi-id:hover:not(:disabled),
+#login-page-wrapper .login-actions #btn-harzafi-id:active:not(:disabled) {
+    transform: none !important;
+}
