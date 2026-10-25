@@ -15,6 +15,27 @@
             ], { duration: 320, easing: 'cubic-bezier(.22, .68, 0, 1)', fill: 'none' });
         }
 
+        // Animate the home artwork as soon as its pixels are ready, without
+        // waiting for an intersection observer or hiding it during download.
+        const heroArtwork = document.querySelector('.hero-cover-image');
+        if (heroArtwork) {
+            const playHeroEntrance = () => {
+                if (preference.matches || !heroArtwork.naturalWidth) return;
+                heroArtwork.animate([
+                    { opacity: .48, transform: 'translate3d(0, 18px, 0) scale(1.065)' },
+                    { opacity: 1, transform: 'translate3d(0, -1px, 0) scale(.998)', offset: .78 },
+                    { opacity: 1, transform: 'scale(1)' }
+                ], {
+                    duration: 820,
+                    easing: 'cubic-bezier(.4,0,.2,1)',
+                    fill: 'none'
+                });
+            };
+
+            if (heroArtwork.complete) requestAnimationFrame(playHeroEntrance);
+            else heroArtwork.addEventListener('load', playHeroEntrance, { once: true });
+        }
+
         let navigationPending = false;
         let navigationAnimation = null;
         let pendingUrl = '';
@@ -98,8 +119,11 @@
             if (played.has(element) || element.closest('[hidden], [aria-hidden="true"]') || element.dataset.registerMotion) return;
             // Avoid animating an article and its nested details independently.
             if (element.parentElement?.closest('article, details')) return;
-            if (preference.matches) played.add(element);
-            else observer.observe(element);
+            if (preference.matches) {
+                played.add(element);
+                return;
+            }
+            observer.observe(element);
         });
     };
 

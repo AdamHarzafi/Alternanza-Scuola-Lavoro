@@ -26,6 +26,8 @@
     <meta name="google-site-verification" content="sbEJOTIS_aeemOMbv_Alq3MKfx3Y9eryt8OcIdt8t3E" />
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="dns-prefetch" href="https://challenges.cloudflare.com">
+    <link rel="preload" as="image" href="IMMAGINI/HOMEPAGE-PC.webp" type="image/webp" fetchpriority="high" media="(min-width: 1025px)">
+    <link rel="preload" as="image" href="IMMAGINI/HOMEPAGE-MOBILI.webp" type="image/webp" fetchpriority="high" media="(max-width: 1024px)">
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -41,7 +43,7 @@
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
     <link rel="stylesheet" href="home-cards.css?v=20261017-journey-story-v30">
     <link rel="stylesheet" href="environment-cards.css?v=20261024-environment-heading-unified-green">
-    <script defer src="site-motion.js?v=20261024-page-transitions"></script>
+    <script defer src="site-motion.js?v=20261025-hero-image-entrance-v3"></script>
     <link rel="stylesheet" href="carousel-motion.css?v=20261017-overlay">
     <script defer src="carousel-motion.js?v=20260917-shared"></script>
     <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
@@ -68,7 +70,7 @@
                 <div class="hero-stage">
                     <picture class="hero-cover">
                         <source media="(max-width: 1024px)" srcset="IMMAGINI/HOMEPAGE-MOBILI.webp">
-                        <img class="hero-cover-image" src="IMMAGINI/HOMEPAGE-PC.webp" alt="" fetchpriority="high" decoding="async">
+                        <img class="hero-cover-image" src="IMMAGINI/HOMEPAGE-PC.webp" alt="" fetchpriority="high" loading="eager" decoding="async">
                     </picture>
                 </div>
 
