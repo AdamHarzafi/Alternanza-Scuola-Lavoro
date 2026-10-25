@@ -148,6 +148,21 @@
 .dashboard-menu-toggle:focus-visible,
 .nav-mobile-account:focus-visible { border-radius: 50%; }
 
+/* Match the mobile browser chrome and the iPhone safe area to the navbar canvas. */
+html { background-color: #F5F5F7 !important; }
+
+@media (max-width: 760px) {
+    html::before {
+        content: "";
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 1098;
+        height: env(safe-area-inset-top, 0px);
+        background: #F5F5F7;
+        pointer-events: none;
+    }
+}
+
 /* La dashboard usa un header dedicato, con la stessa gabbia dimensionale. */
 .dashboard-page .dashboard-header {
     position: fixed;
@@ -269,16 +284,8 @@ body.dashboard-page { padding-top: 44px; }
         stroke-linejoin: round;
         vector-effect: non-scaling-stroke;
     }
-    .nav-menu-toggle .menu-glyph,
-    .dashboard-menu-toggle .menu-glyph,
-    .nav-menu-toggle .close-glyph,
-    .dashboard-menu-toggle .close-glyph { transition: opacity .22s ease; }
-    .nav-menu-toggle .close-glyph,
-    .dashboard-menu-toggle .close-glyph { opacity: 0; }
-    .menu-open .nav-menu-toggle .menu-glyph,
-    .menu-open .dashboard-menu-toggle .menu-glyph { opacity: 0; }
-    .menu-open .nav-menu-toggle .close-glyph,
-    .menu-open .dashboard-menu-toggle .close-glyph { opacity: 1; }
+    .nav-menu-toggle .nav-toggle-glyph,
+    .dashboard-menu-toggle .nav-toggle-glyph { overflow: visible; }
 
     :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page)
         .navbar-wrapper .nav-logo {
@@ -597,8 +604,6 @@ body.site-nav-closing { overflow: hidden; }
     .dashboard-menu-toggle path,
     .nav-menu-toggle .menu-glyph,
     .dashboard-menu-toggle .menu-glyph,
-    .nav-menu-toggle .close-glyph,
-    .dashboard-menu-toggle .close-glyph,
     .navbar-wrapper,
     .navbar-wrapper .nav-links,
     .navbar-wrapper .nav-links > a,

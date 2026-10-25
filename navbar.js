@@ -43,6 +43,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const menu = navShell.querySelector('.nav-links, .dashboard-menu');
         if (!toggle || !menu) return;
 
+        // Apple’s compact global navigation morphs each bar through the center
+        // before it becomes a diagonal. Keep the same geometry and timing.
+        const glyph = toggle.querySelector('.nav-toggle-glyph');
+        const appleMenuGlyph = glyph ? (() => {
+            const spline = '0.42, 0, 1, 1; 0, 0, 0.58, 1';
+            const animation = (name, values) =>
+                `<animate data-glyph-${name} attributeName="points" keyTimes="0;0.5;1" dur="0.24s" begin="indefinite" fill="freeze" calcMode="spline" keySplines="${spline}" values="${values}"></animate>`;
+
+            glyph.innerHTML = `
+                <polyline class="menu-glyph menu-glyph-top" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 5, 16 5">
+                    ${animation('open', '2 5, 16 5; 2 9, 16 9; 3.5 3.5, 15 15')}
+                    ${animation('close', '3.5 3.5, 15 15; 2 9, 16 9; 2 5, 16 5')}
+                </polyline>
+                <polyline class="menu-glyph menu-glyph-bottom" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" points="2 12, 16 12">
+                    ${animation('open', '2 12, 16 12; 2 9, 16 9; 3.5 15, 15 3.5')}
+                    ${animation('close', '3.5 15, 15 3.5; 2 9, 16 9; 2 12, 16 12')}
+                </polyline>`;
+
+            return (expanded) => {
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const strokes = [...glyph.querySelectorAll('.menu-glyph')];
+                if (reducedMotion) {
+                    strokes[0]?.setAttribute('points', expanded ? '3.5 3.5, 15 15' : '2 5, 16 5');
+                    strokes[1]?.setAttribute('points', expanded ? '3.5 15, 15 3.5' : '2 12, 16 12');
+                    return;
+                }
+
+                const state = expanded ? 'open' : 'close';
+                strokes.forEach((stroke) => stroke.querySelector(`[data-glyph-${state}]`)?.beginElement());
+            };
+        })() : null;
+
         const menuItems = [...menu.querySelectorAll(':scope > a:not(.nav-login), :scope > button')];
         menuItems.forEach((item, index) => {
             item.style.setProperty('--nav-enter-delay', `${index * 48}ms`);
@@ -52,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const setExpanded = (expanded, { returnFocus = false } = {}) => {
             const wasExpanded = navShell.classList.contains('menu-open');
             const isMobile = window.matchMedia('(max-width: 760px)').matches;
+            if (expanded !== wasExpanded) appleMenuGlyph?.(expanded);
             navShell.classList.toggle('menu-open', expanded);
             toggle.setAttribute('aria-expanded', String(expanded));
             toggle.setAttribute('aria-label', expanded ? 'Chiudi il menu' : 'Apri il menu');
@@ -134,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mobileQuery = window.matchMedia('(max-width: 760px)');
         const syncMenuState = () => {
             if (!mobileQuery.matches) {
+                if (navShell.classList.contains('menu-open')) appleMenuGlyph?.(false);
                 navShell.classList.remove('menu-open');
                 document.body.classList.remove('site-nav-open', 'site-nav-closing');
                 unlockPageScroll();

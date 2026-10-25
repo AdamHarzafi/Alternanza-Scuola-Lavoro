@@ -3472,10 +3472,10 @@ body.auth-page {
     }
 }
 
-/* Mobile back control: keep it in the top safe area with a visible glass edge. */
+/* Mobile back control: keep it attached to the login page so it scrolls with the content. */
 @media (max-width: 600px) {
     #login-page-wrapper .login-topbar {
-        position: fixed !important;
+        position: absolute !important;
         top: calc(env(safe-area-inset-top, 0px) + 18px) !important;
         left: max(18px, calc(env(safe-area-inset-left, 0px) + 18px)) !important;
         z-index: 30 !important;
