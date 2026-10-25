@@ -128,7 +128,7 @@ Il server di sviluppo usa attualmente la porta `3000`, definita in `server.js`. 
 | --- | --- | --- |
 | Interfaccia | HTML, CSS, JavaScript e risorse in `IMMAGINI/`. | Nessun framework frontend da inizializzare. |
 | Autenticazione | Client Firebase Authentication nelle pagine di accesso e dashboard. | Provider, domini autorizzati, account di test e impostazioni della console. |
-| Dati | Client Firestore e lettura delle attività in `dashboard.js`. | Database, dati di test e regole di autorizzazione. |
+| Dati | Client Firestore, interfaccia in `dashboard.js` e snapshot delle regole in `firebase/firestore.rules`. | Database, dati di test e verifica che le regole attive in Firebase coincidano con lo snapshot. |
 | Accesso Google | Flusso con `GoogleAuthProvider`. | Configurazione OAuth e autorizzazioni del dominio, quando richieste. |
 | Controllo anti-bot | Integrazione client Cloudflare Turnstile. | Chiavi, domini e verifica server del token. |
 | Email | Chiamate a un Worker esterno da `login.js` e `main.js`. | Servizio di invio, segreti, autorizzazioni e limiti del Worker. |
@@ -136,7 +136,7 @@ Il server di sviluppo usa attualmente la porta `3000`, definita in `server.js`. 
 
 La configurazione Firebase compare in più file: prima di usare un ambiente di test, individuare tutti i riferimenti e mantenerli coerenti. La configurazione client non sostituisce le regole di accesso al database.
 
-Il repository non include il codice del Worker email né le regole Firestore e Storage. Non è quindi una copia completa dell’infrastruttura remota. Il Worker generato dalla build gestisce gli URL del sito: è distinto dal servizio email.
+Il repository include una copia delle regole Firestore, ma non può dimostrare da solo che coincida con la configurazione attiva nella Console. Non include il codice del Worker email né le regole Storage. Il Worker generato dalla build gestisce gli URL del sito: è distinto dal servizio email.
 
 ## Struttura dei file
 
@@ -206,6 +206,9 @@ Queste scelte progettuali non equivalgono a una certificazione di conformità. P
 
 La documentazione distingue ciò che è presente nel codice da ciò che richiede verifiche sull’ambiente remoto.
 
+- L’accesso degli studenti e dei docenti è basato su profili inseriti e gestiti dall’amministratore. Le regole impediscono al client di aggiungere o modificare profili, ma nello snapshot consentono la lettura delle raccolte `studenti` e `docenti` senza controllo di account o ruolo. Questo permette al login di verificare l’email prima dell’autenticazione; **non** rende però privati i profili: tutti i campi dei documenti sono leggibili da richieste che raggiungono Firestore. Non inserire in queste raccolte dati non necessari o sensibili.
+- Il login mostra messaggi diversi per un’email assente e un’email non abilitata per il ruolo selezionato. Questo può rivelare se l’indirizzo è presente nella lista, ma non consente di aggiungere un account né di superare l’autenticazione. La copia delle regole è in [`firebase/firestore.rules`](firebase/firestore.rules); confrontarla con Firebase Console prima di considerarla la configurazione online.
+- Nello snapshot, i registri e le attività personali richiedono un account autenticato e sono accessibili al proprietario e, secondo le regole, ai docenti autorizzati.
 - Un controllo nel browser o un reindirizzamento dopo il login non sostituisce l’autorizzazione ai dati sul server.
 - Non sono documentate qui garanzie di crittografia end-to-end né l’impossibilità di accesso ai dati da parte di chi gestisce i servizi.
 - Backup, conservazione e cancellazione sono processi operativi: non vengono implementati o verificati dai test di questo repository.

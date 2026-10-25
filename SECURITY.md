@@ -59,7 +59,13 @@ Sono pertinenti i problemi nel codice di Harzafi o nella sua integrazione con i 
 - esposizione involontaria di informazioni nelle risorse distribuite;
 - configurazioni dei servizi del progetto che sembrano consentire operazioni non previste.
 
-Il codice del Worker email e le regole Firebase pubblicate non sono presenti in questo repository. In `firebase/` è disponibile un frammento di regole per il registro personale, ancora da integrare nella configurazione remota. La verifica del servizio richiede accesso autorizzato alle rispettive configurazioni.
+Il repository contiene uno snapshot completo delle regole Firestore in [`firebase/firestore.rules`](firebase/firestore.rules). I registri del progetto riportano una verifica della copia attiva il 20 settembre 2026; è una verifica storica e non dimostra che la Console Firebase usi ancora le stesse regole. Il codice del Worker email e le regole Storage non sono inclusi. Per confermare la configurazione attuale serve confrontare lo snapshot con Firebase Console.
+
+### Regole dei profili e autorizzazione degli account
+
+Nel file `firebase/firestore.rules`, i client non possono creare o modificare documenti in `studenti` e `docenti`; l’inserimento degli account rimane quindi amministrato. La pagina di accesso interroga però queste raccolte prima dell’autenticazione per verificare email e ruolo. Le regole consentono la lettura dei documenti senza richiedere un account o un ruolo (`allow read: if true`). Questo non permette a una persona di registrarsi da sola o di superare la password, ma rende leggibili tutti i campi dei profili a chi può interrogare Firestore. Le regole Firestore non filtrano i campi restituiti: mantenere questi documenti limitati ai soli dati necessari al controllo di accesso.
+
+Il login distingue inoltre il messaggio per un indirizzo non presente da quello per un indirizzo non abilitato al ruolo scelto. La differenza può rivelare la presenza dell’email nella lista; non modifica chi può inserire o abilitare gli account. L’autorizzazione alla lettura dei registri e delle attività personali è separata e si basa sull’UID dell’utente e sul ruolo docente autorizzato.
 
 ### Servizi esterni
 

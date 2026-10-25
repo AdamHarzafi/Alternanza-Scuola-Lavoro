@@ -622,17 +622,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ── Focus trap per i modali ───────────────────────────────
     function trapFocus(modal) {
-        const focusable = modal.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
-        const first = focusable[0];
-        const last  = focusable[focusable.length - 1];
+        const previousFocus = document.activeElement;
+        const focusSelector = 'button,[href],input,select,textarea,[tabindex]';
+        const isVisible = element => {
+            if (!element?.isConnected || element.matches(':disabled') || element.closest('[hidden],[inert],[aria-hidden="true"]')) return false;
+            const style = window.getComputedStyle(element);
+            return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0;
+        };
+        const getFocusable = () => [...modal.querySelectorAll(focusSelector)]
+            .filter(element => element.tabIndex >= 0 && isVisible(element));
+
         function onKey(e) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                e.stopPropagation();
+                const closeButton = getFocusable().find(element => element.matches('.close-btn,[data-modal-close]'));
+                if (closeButton) closeButton.click();
+                else modal.classList.remove('active');
+                return;
+            }
             if (e.key !== 'Tab') return;
-            if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
-            else            { if (document.activeElement === last)  { e.preventDefault(); first.focus(); } }
+
+            const focusable = getFocusable();
+            if (!focusable.length) { e.preventDefault(); return; }
+            const currentIndex = focusable.indexOf(document.activeElement);
+            if (e.shiftKey && currentIndex <= 0) {
+                e.preventDefault();
+                focusable[focusable.length - 1].focus();
+            } else if (!e.shiftKey && (currentIndex === -1 || currentIndex === focusable.length - 1)) {
+                e.preventDefault();
+                focusable[0].focus();
+            }
         }
         modal.addEventListener('keydown', onKey);
-        if (first) first.focus();
-        return () => modal.removeEventListener('keydown', onKey);
+        getFocusable()[0]?.focus();
+        return () => {
+            modal.removeEventListener('keydown', onKey);
+            if (isVisible(previousFocus)) previousFocus.focus();
+        };
     }
 
     const modalObserver = new MutationObserver(() => {

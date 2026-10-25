@@ -5,7 +5,7 @@ const projectRoot = __dirname;
 const distRoot = path.join(projectRoot, 'dist');
 const clientRoot = path.join(distRoot, 'client');
 const serverRoot = path.join(distRoot, 'server');
-const publicExtensions = new Set(['.css', '.html', '.js', '.json', '.txt']);
+const publicExtensions = new Set(['.css', '.html', '.js', '.json', '.txt', '.png']);
 
 fs.rmSync(distRoot, { recursive: true, force: true });
 fs.mkdirSync(clientRoot, { recursive: true });
