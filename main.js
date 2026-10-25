@@ -294,17 +294,9 @@ document.addEventListener("DOMContentLoaded", function() {
     window.populateUserDropdown = function(role) {
         const optionsContainer = document.getElementById('username-options');
         if (!optionsContainer) return;
-        optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center;">Caricamento utenti...</div>';
-        const collectionName = role === 'studente' ? 'studenti' : 'docenti';
-        
-        if (typeof window.db !== 'undefined') {
-            window.db.collection(collectionName).orderBy("nome", "asc").get().then((querySnapshot) => {
-                optionsContainer.innerHTML = ''; 
-                querySnapshot.forEach((doc) => creaOpzioneDropdown(doc.data().nome, doc.data().email || "email_mancante@scuola.it", optionsContainer, 'username'));
-            }).catch(() => { optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--danger);">Errore di connessione al server</div>'; });
-        } else {
-            optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center;">In attesa di connessione...</div>';
-        }
+        // This legacy selector exposed the full roster before authentication.
+        // Account lookup now happens only after a successful password check on login.html.
+        optionsContainer.innerHTML = '<div class="custom-option" style="color:var(--text-light); text-align:center;">Accedi dalla pagina di accesso.</div>';
         resetDropdownDisplay('username-display', 'Seleziona Utente');
     };
 
@@ -722,7 +714,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-    let targetCollectionOTP = 'studenti';
     const sharedOtpView = document.getElementById('shared-otp-view');
     const otpStep1 = document.getElementById('otp-step-1');
     const otpStep3 = document.getElementById('otp-step-3');
@@ -743,10 +734,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const roleTitle = document.getElementById('otp-role-title');
         if(selectedRole === 'studente') { 
             if (roleTitle) roleTitle.innerText = 'Area Studenti';
-            targetCollectionOTP = 'studenti';
         } else { 
             if (roleTitle) roleTitle.innerText = 'Area Docenti';
-            targetCollectionOTP = 'docenti';
         }
     }
 
@@ -777,10 +766,11 @@ document.addEventListener("DOMContentLoaded", function() {
             this.disabled = true;
 
             try {
-                const snapshot = await window.db.collection(targetCollectionOTP).where('email', '==', emailVal).get();
-                if(snapshot.empty) throw new Error("Email non trovata a sistema.");
-
-                await window.auth.sendPasswordResetEmail(emailVal);
+                try {
+                    await window.auth.sendPasswordResetEmail(emailVal);
+                } catch (error) {
+                    if (error.code !== 'auth/user-not-found') throw error;
+                }
 
                 if (otpStep1) otpStep1.style.opacity = '0';
                 setTimeout(() => {
@@ -794,7 +784,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } catch (err) {
                 console.error(err);
                 if (errorDiv) {
-                    errorDiv.innerText = err.message || "Errore di connessione. Riprova.";
+                    errorDiv.innerText = "Non è stato possibile inviare la richiesta. Controlla la connessione e riprova.";
                     errorDiv.style.display = 'block'; 
                     errorDiv.style.animation = 'none'; 
                     void errorDiv.offsetWidth; 

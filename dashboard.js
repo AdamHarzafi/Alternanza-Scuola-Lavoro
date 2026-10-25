@@ -87,6 +87,34 @@
         if (!event.matches) return;
         cards.forEach(({ item }) => { reveal?.unobserve(item); finishEntrance(item); });
     });
+    async function ownProfile(collection, user) {
+        const email = user.email?.trim().toLowerCase();
+        if (!email) return null;
+        const snapshot = await db.collection(collection).where('email', '==', email).limit(1).get();
+        if (snapshot.empty) return null;
+        const profile = snapshot.docs[0].data() || {};
+        return {
+            id: snapshot.docs[0].id,
+            role: collection === 'docenti' ? 'docente' : 'studente',
+            name: typeof profile.nome === 'string' ? profile.nome.trim() : ''
+        };
+    }
+    async function authorizedProfile(user, preferredRole) {
+        if (preferredRole === 'studente') return ownProfile('studenti', user);
+        if (preferredRole === 'docente') {
+            const profile = await ownProfile('docenti', user);
+            if (!profile) return null;
+            const enabled = await TeacherRegister.access(db, user);
+            if (!enabled) return null;
+            return profile;
+        }
+
+        const student = await ownProfile('studenti', user);
+        if (student) return student;
+        const teacher = await ownProfile('docenti', user);
+        if (teacher && await TeacherRegister.access(db, user)) return teacher;
+        return null;
+    }
     auth.onAuthStateChanged(async user => {
         document.body.classList.add('dashboard-pending');
         loadingMessage.textContent = 'Carico...';
@@ -114,41 +142,43 @@
         }
         const cachedUid = sessionStorage.getItem('harzafi_user_uid');
         const hasCurrentSession = cachedUid === user.uid;
-        const cachedName = hasCurrentSession ? sessionStorage.getItem('harzafi_user') : '';
-        // Reuse the login-verified display name for this UID; fetch it only on direct visits.
-        if (hasCurrentSession && cachedName) {
-            nameElement.textContent = cachedName;
-        } else {
-            window.HarzafiSession.profileName(user).then(name => {
-                if (auth.currentUser?.uid !== user.uid) return;
-                nameElement.textContent = name;
-            });
-        }
         if (user.isAnonymous) {
             showDashboard();
             status.textContent = 'Questo accesso Harzafi ID è temporaneo. Esci e accedi con email e password per salvare e ritrovare le tue ore anche su altri dispositivi.';
             return;
         }
         const cachedRole = hasCurrentSession ? sessionStorage.getItem('harzafi_user_role') : '';
-        const cachedStudentProfileId = hasCurrentSession ? sessionStorage.getItem('harzafi_student_profile_id') : '';
-        // Login already verified this student's profile by email. Use that ID only as a
-        // startup hint: Firestore rules still validate ownership, and the registry link
-        // is repaired asynchronously so it does not hold the dashboard behind a write.
-        if (cachedRole === 'studente' && cachedStudentProfileId) {
-            addButton.disabled = false;
-            showDashboard();
-            loadData();
-            TeacherRegister.ensureStudent(db, user, cachedStudentProfileId).catch(error => {
-                console.warn('Collegamento del registro rinviato:', error.code || 'errore di rete');
-            });
-            return;
-        }
+        const preferredRole = ['studente', 'docente'].includes(cachedRole) ? cachedRole : null;
         try {
-            status.textContent = 'Preparazione del registro…';
-            const teacher = await TeacherRegister.access(db, user);
+            status.textContent = 'Verifico il profilo…';
+            const profile = await authorizedProfile(user, preferredRole);
             if (generation !== sessionGeneration || auth.currentUser?.uid !== user.uid) return;
-            if (teacher) { stopTeacher = TeacherRegister.mount(db, user); showDashboard(); return; }
-            await TeacherRegister.ensureStudent(db, user);
+            if (!profile) {
+                sessionStorage.removeItem('harzafi_user');
+                sessionStorage.removeItem('harzafi_user_uid');
+                sessionStorage.removeItem('harzafi_user_role');
+                sessionStorage.removeItem('harzafi_student_profile_id');
+                loadingMessage.textContent = 'Questo account non è abilitato per il registro.';
+                await auth.signOut();
+                if (generation === sessionGeneration) window.location.replace('login.html');
+                return;
+            }
+            const name = profile.name || (typeof user.displayName === 'string' && user.displayName.trim()) || 'Utente';
+            sessionStorage.setItem('harzafi_user', name);
+            sessionStorage.setItem('harzafi_user_uid', user.uid);
+            sessionStorage.setItem('harzafi_user_role', profile.role);
+            if (profile.role === 'studente') sessionStorage.setItem('harzafi_student_profile_id', profile.id);
+            else sessionStorage.removeItem('harzafi_student_profile_id');
+            nameElement.textContent = name;
+
+            if (profile.role === 'docente') {
+                stopTeacher = TeacherRegister.mount(db, user);
+                showDashboard();
+                return;
+            }
+
+            status.textContent = 'Preparazione del registro…';
+            await TeacherRegister.ensureStudent(db, user, profile.id);
             if (generation !== sessionGeneration || auth.currentUser?.uid !== user.uid) return;
             addButton.disabled = false;
             showDashboard();
