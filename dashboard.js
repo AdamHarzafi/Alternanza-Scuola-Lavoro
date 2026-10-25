@@ -19,6 +19,36 @@
     const auth = firebase.auth();
     const list = document.getElementById('timeline-container');
 
+    function sendSuccessfulAccessNotice(user, name) {
+        const email = user.email?.trim().toLowerCase();
+        if (!email || sessionStorage.getItem('harzafi_access_notice_uid') === user.uid) return;
+
+        // Mark before dispatch to avoid duplicate messages on quick page restores.
+        sessionStorage.setItem('harzafi_access_notice_uid', user.uid);
+        try {
+            fetch('https://harzafi-email.allorasonoadam.workers.dev/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    emailDestinatario: email,
+                    idModelloBrevo: 2,
+                    parametriMail: {
+                        nome_utente: name,
+                        email_utente: email,
+                        orario_accesso: new Date().toLocaleString('it-IT')
+                    }
+                }),
+                keepalive: true
+            }).then(response => {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+            }).catch(error => {
+                console.warn('[Notifica accesso] Invio non riuscito:', error.message || 'errore di rete');
+            });
+        } catch (error) {
+            console.warn('[Notifica accesso] Invio non riuscito:', error.message || 'errore di rete');
+        }
+    }
+
     const store = HarzafiHours.create(db, auth, () => firebase.firestore.FieldValue.serverTimestamp());
     const status = document.getElementById('hours-status');
     const addButton = document.getElementById('add-hours');
@@ -173,6 +203,7 @@
 
             if (profile.role === 'docente') {
                 stopTeacher = TeacherRegister.mount(db, user);
+                sendSuccessfulAccessNotice(user, name);
                 showDashboard();
                 return;
             }
@@ -180,6 +211,7 @@
             status.textContent = 'Preparazione del registro…';
             await TeacherRegister.ensureStudent(db, user, profile.id);
             if (generation !== sessionGeneration || auth.currentUser?.uid !== user.uid) return;
+            sendSuccessfulAccessNotice(user, name);
             addButton.disabled = false;
             showDashboard();
             loadData();

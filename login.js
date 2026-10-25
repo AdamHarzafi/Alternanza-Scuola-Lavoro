@@ -7,23 +7,6 @@ function loginLoadingIndicator(status = "Accesso in corso") {
    login.js — logica esclusiva della pagina login.html
    ============================================================ */
 
-// ── Email tramite Cloudflare Worker ──────────────────────────
-async function inviaEmail(emailDestinatario, idModelloBrevo, parametriMail) {
-    const WORKER_URL = "https://harzafi-email.allorasonoadam.workers.dev/";
-    try {
-        const response = await fetch(WORKER_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ emailDestinatario, idModelloBrevo, parametriMail }),
-            keepalive: true
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "Errore sconosciuto");
-    } catch (err) {
-        console.error("❌ Email error:", err);
-    }
-}
-
 // ── Attesa Firebase ───────────────────────────────────────────
 function waitForFirebase(callback) {
     if (typeof firebase !== 'undefined') {
@@ -96,7 +79,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Due passaggi visivi, un solo modulo e gli stessi campi per l'autofill.
     let selectedRole = 'studente';
     let selectedUserEmail = '';
-    let verifiedProfile = null;
     let pendingCredentials = null;
     const submitBtn = document.getElementById('login-submit');
     const passInput = document.getElementById('password-input');
@@ -114,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const emailSubtitle = subtitle?.textContent;
 
     function showEmailStep() {
-        verifiedProfile = null;
         if (!emailStep) return;
         emailHome.prepend(emailInput);
         if (emailHelpLink) emailStep.insertBefore(emailHelpLink, emailStep.querySelector('.login-privacy'));
@@ -140,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         emailError.style.display = 'none';
-        verifiedProfile = null;
         selectedUserEmail = email;
         emailInput.value = email;
         // Ask for the password without querying the administrator-managed roster.
@@ -287,43 +267,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 authenticatedUser = credential.user;
                 const authenticatedEmail = authenticatedUser.email?.trim().toLowerCase();
                 if (!authenticatedEmail || authenticatedEmail !== email) throw new Error('profile-unavailable');
-
-                const collection = role === 'studente' ? 'studenti' : 'docenti';
-                const snapshot = await window.db.collection(collection)
-                    .where('email', '==', authenticatedEmail).limit(1).get();
-                if (snapshot.empty) throw new Error('profile-unavailable');
-
-                const profile = snapshot.docs[0].data() || {};
-                if (role === 'docente') {
-                    const authorization = await window.db.collection('docenti_autorizzati')
-                        .doc(authenticatedUser.uid).get();
-                    if (!authorization.exists || authorization.data().enabled !== true) {
-                        throw new Error('profile-unavailable');
-                    }
-                }
-                verifiedProfile = {
-                    email: authenticatedEmail,
-                    role,
-                    id: snapshot.docs[0].id,
-                    name: typeof profile.nome === 'string' ? profile.nome.trim() : ''
-                };
                 const providerName = typeof authenticatedUser.displayName === 'string'
                     ? authenticatedUser.displayName.trim()
                     : '';
-                const uName = verifiedProfile.name || providerName || 'Utente';
+                const uName = providerName || 'Utente';
 
-                // Keep the important access notification, sending it only after
-                // both authentication and the role-specific profile check succeed.
-                void inviaEmail(authenticatedEmail, 2, {
-                    nome_utente: uName,
-                    email_utente: authenticatedEmail,
-                    orario_accesso: new Date().toLocaleString('it-IT')
-                });
+                // Dashboard revalidates the role/profile before showing any data.
+                // Keep this page limited to Firebase sign-in so the handoff is fast.
+                sessionStorage.removeItem('harzafi_access_notice_uid');
                 if (submitBtn) {
                     submitBtn.innerText = 'Accedi';
                     submitBtn.disabled = false;
                 }
-                entraNelPortale(uName, verifiedProfile);
+                entraNelPortale(uName, { email: authenticatedEmail, role });
             } catch {
                 if (authenticatedUser && window.auth.currentUser?.uid === authenticatedUser.uid) {
                     try { await window.auth.signOut(); } catch (_) {}
