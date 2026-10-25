@@ -43,25 +43,31 @@
     <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
     <link rel="stylesheet" href="home-cards.css?v=20261017-journey-story-v30">
     <link rel="stylesheet" href="environment-cards.css?v=20261024-environment-heading-unified-green">
-    <script defer src="site-motion.js?v=20261025-hero-image-entrance-v3"></script>
+    <script defer src="site-motion.js?v=20261025-hero-image-entrance-v4"></script>
     <link rel="stylesheet" href="carousel-motion.css?v=20261017-overlay">
     <script defer src="carousel-motion.js?v=20260917-shared"></script>
     <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
     <link rel="stylesheet" href="page-design.css?v=20261017-nav-button-weight">
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261025-apple-nav-v16">
+    <script defer src="navbar.js?v=20261025-apple-nav-v16"></script>
 </head>
 <body class="home-page">
 
     <div id="landing-view">
         <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
+                    <div class="nav-content"><button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path class="menu-line-top" d="M4 7h16"/><path class="menu-line-middle" d="M4 12h16"/><path class="menu-line-bottom" d="M4 17h16"/></svg>
+            </button>
             <button class="nav-logo" onclick="window.scrollTo(0,0)" aria-label="Torna all'inizio della pagina">
                 <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi">
             </button>
-            <div class="nav-links">
+            <div class="nav-links" id="site-primary-links">
                 <a href="#features">Funzionalità</a>
                 <a href="supporto.html">Supporto</a>
                 <a href="#footer">Contatti</a>
             </div>
-            <a href="login.html" class="btn-premium nav-login">Accedi</a>
+            <a class="nav-mobile-account" href="login.html" aria-label="Accedi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.45-3.45 2.9-5.4 6.5-5.4s6.05 1.95 6.5 5.4"/></svg></a>
+        </div>
         </nav>
 
         <header class="hero-wrapper">
@@ -477,7 +483,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-functions-compat.js"></script>
 
     <script defer src="carousel-player.js?v=20261017-player-rest"></script>
-    <script defer src="auth-session.js?v=20261023-login-startup"></script>
+    <script defer src="auth-session.js?v=20261025-account-nav-v1"></script>
     <script defer src="main.js?v=20261025-private-profile-checks"></script>
 </body>
 </html>

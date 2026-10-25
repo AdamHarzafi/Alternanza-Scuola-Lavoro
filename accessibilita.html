@@ -13,24 +13,30 @@
     <link rel="icon" type="image/webp" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="stylesheet" href="accessibilita.css">
     <link rel="stylesheet" href="modern.css?v=20261017-access-cards-borderless">
-    <script defer src="site-motion.js?v=20261024-page-transitions"></script>
+    <script defer src="site-motion.js?v=20261025-navigation-persistence-v4"></script>
     <link rel="stylesheet" href="carousel-motion.css?v=20260917-shared">
     <script defer src="carousel-motion.js?v=20260917-shared"></script>
     <script defer src="carousel-player.js?v=20261017-access-carousel"></script>
     <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
     <link rel="stylesheet" href="page-design.css?v=20261017-shared-page-style">
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261025-apple-nav-v16">
+    <script defer src="navbar.js?v=20261025-apple-nav-v16"></script>
 </head>
 <body class="accessibility-page">
     <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
+                <div class="nav-content"><button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path class="menu-line-top" d="M4 7h16"/><path class="menu-line-middle" d="M4 12h16"/><path class="menu-line-bottom" d="M4 17h16"/></svg>
+        </button>
         <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
             <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi">
         </a>
-        <div class="nav-links">
+        <div class="nav-links" id="site-primary-links">
             <a href="index.html#features">Funzionalità</a>
             <a href="supporto.html">Supporto</a>
             <a href="index.html#footer">Contatti</a>
         </div>
-        <a href="login.html" class="btn-premium nav-login">Accedi</a>
+        <a class="nav-mobile-account" href="login.html" aria-label="Accedi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.45-3.45 2.9-5.4 6.5-5.4s6.05 1.95 6.5 5.4"/></svg></a>
+        </div>
     </nav>
 
     <main class="page-content">
@@ -250,6 +256,6 @@
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
-    <script defer src="auth-session.js?v=20261023-login-startup"></script>
+    <script defer src="auth-session.js?v=20261025-account-nav-v1"></script>
 </body>
 </html>

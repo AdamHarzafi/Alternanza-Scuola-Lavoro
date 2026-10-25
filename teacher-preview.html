@@ -13,17 +13,20 @@
     <link rel="stylesheet" href="dashboard.css?v=20260919-refined">
     <link rel="stylesheet" href="register-refinements.css?v=20260919-refined">
     <link rel="stylesheet" href="teacher-register.css?v=20260924">
-    <script defer src="site-motion.js?v=20261024-page-transitions"></script>
+    <script defer src="site-motion.js?v=20261025-navigation-persistence-v4"></script>
     <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
     <link rel="stylesheet" href="page-design.css?v=20261017-shared-page-style">
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261025-apple-nav-v16">
+    <script defer src="navbar.js?v=20261025-apple-nav-v16"></script>
 </head>
 <body class="dashboard-page">
     <header class="dashboard-header">
         <div class="header-inner">
+            <button class="dashboard-menu-toggle" type="button" aria-expanded="false" aria-controls="dashboard-menu" aria-label="Apri il menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="menu-line-top" d="M4 7h16"/><path class="menu-line-middle" d="M4 12h16"/><path class="menu-line-bottom" d="M4 17h16"/></svg></button>
             <a class="dashboard-brand" href="index.html" aria-label="Harzafi FSL — Home">
                 <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi"><i aria-hidden="true"></i><span>FSL</span>
             </a>
-            <nav aria-label="Navigazione dashboard">
+            <nav class="dashboard-menu" id="dashboard-menu" aria-label="Navigazione dashboard">
                 <a href="#esperienze">Esperienze</a>
                 <button id="btn-logout" type="button">Esci</button>
             </nav>

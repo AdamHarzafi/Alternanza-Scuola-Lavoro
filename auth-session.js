@@ -55,12 +55,17 @@
     const links = Array.from(document.querySelectorAll(
         'a.nav-login[href="login.html"], a.hero-login[href="login.html"]'
     ));
+    const accountIcons = Array.from(document.querySelectorAll('a.nav-mobile-account[href="login.html"]'));
     const originalLabels = links.map(link => link.textContent);
     function updateNavigation(user) {
         links.forEach((link, index) => {
             link.href = user ? 'dashboard.html' : 'login.html';
             link.textContent = user ? 'Il mio registro' : originalLabels[index];
             link.removeAttribute('data-auth-pending');
+        });
+        accountIcons.forEach(link => {
+            link.href = user ? 'dashboard.html' : 'login.html';
+            link.setAttribute('aria-label', user ? 'Apri il tuo registro' : 'Accedi');
         });
         if (!user) {
             sessionStorage.removeItem('harzafi_user');
