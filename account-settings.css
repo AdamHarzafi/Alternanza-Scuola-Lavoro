@@ -169,6 +169,7 @@ body.settings-page :is(code,pre,kbd,samp) { font-family:var(--font-mono) !import
 .settings-name-fields input:focus-visible { outline-offset:0; }
 @media(max-width:959px) {
     .settings-personal-photo { margin:20px 0 32px; }
+    .settings-shell[data-view="personal"] #settings-personal .settings-view-heading { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 }
 @media(max-width:600px) {
     .settings-editor-dialog { inset:auto 0 0; width:100%; max-width:none; max-height:calc(100svh - 12px); max-height:calc(100dvh - 12px); margin:0; border-radius:26px 26px 0 0; }

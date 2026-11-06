@@ -118,6 +118,8 @@
         sidebar.hidden = !!activeView && !desktopQuery.matches;
         views.hidden = !activeView;
         content.dataset.view = activeView || 'overview';
+        byId('settings-toolbar-title').textContent = activeView && !desktopQuery.matches
+            ? sections[activeView].querySelector('h2').textContent : 'Account Harzafi';
         for (const [key, panel] of Object.entries(sections)) panel.hidden = key !== activeView;
         for (const button of viewButtons) {
             if (button.dataset.settingsView === activeView) button.setAttribute('aria-current', 'true');

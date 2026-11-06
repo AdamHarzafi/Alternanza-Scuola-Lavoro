@@ -1187,7 +1187,10 @@ body .navbar-wrapper.home-mainnav .home-nav-actions {
 body .navbar-wrapper.home-mainnav .home-nav-actions > button.nav-mobile-account {
     appearance: none;
     border: 0;
-    font: inherit;
+    font-family: var(--font-text, "SF Pro Text", sans-serif);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
     cursor: pointer;
 }
 
