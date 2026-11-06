@@ -40,14 +40,40 @@
         const date = new Date(value);
         return Number.isFinite(date.getTime()) ? date.toISOString() : null;
     }
-    function describe(user, profile) {
-        const name = text(profile.data.nome) || text(user.displayName);
+    function identity(data, user, preferences = {}) {
+        const raw = text(data.nome) || text(user.displayName);
+        let givenName = text(preferences.givenName) || text(data.nomeProprio) || text(data.givenName) || text(data.firstName);
+        let familyName = text(preferences.familyName) || text(data.cognome) || text(data.familyName) || text(data.lastName);
+        const without = (full, part) => {
+            const value = full.replace(/\s+/g, ' '), known = part.replace(/\s+/g, ' ');
+            const lower = value.toLocaleLowerCase('it-IT'), key = known.toLocaleLowerCase('it-IT');
+            if (lower.startsWith(key + ' ')) return value.slice(known.length + 1).trim();
+            if (lower.endsWith(' ' + key)) return value.slice(0, -known.length - 1).trim();
+            return '';
+        };
+        if (givenName && !familyName) familyName = without(raw, givenName);
+        if (familyName && !givenName) givenName = without(raw, familyName);
+        const structured = !!givenName && !!familyName;
+        const words = raw.split(/\s+/).filter(Boolean);
+        const name = structured ? givenName + ' ' + familyName : raw;
+        if (!givenName && !familyName) {
+            givenName = words[0] || '';
+            familyName = words.slice(1).join(' ');
+        }
+        const first = value => Array.from(value)[0] || '';
+        const initials = structured ? first(givenName) + first(familyName)
+            : words.length ? first(words[0]) + (words.length > 1 ? first(words.at(-1)) : '') : 'H';
+        return { name, givenName, familyName, initials: initials.toLocaleUpperCase('it-IT') };
+    }
+    function describe(user, profile, preferences = {}) {
+        const person = identity(profile.data, user, preferences);
+        const name = person.name;
         const email = emailOf(user);
         const providerIds = [...new Set((user.providerData || []).map(provider => provider?.providerId).filter(Boolean))];
         const providerNames = { password: 'Email e password', 'google.com': 'Account Google', 'apple.com': 'Account Apple', phone: 'Numero di telefono', 'microsoft.com': 'Account Microsoft' };
-        const fields = [{ label: 'Nome del profilo', value: name || 'Non disponibile' }, { label: 'Email', value: email }, { label: 'Ruolo', value: profile.role === 'docente' ? 'Docente autorizzato' : 'Studente' }];
+        const fields = [{ label: 'Nome', value: name || 'Non disponibile' }, { label: 'Email', value: email }, { label: 'Ruolo', value: profile.role === 'docente' ? 'Docente autorizzato' : 'Studente' }];
         for (const [label, keys] of [
-            ['Cognome', ['cognome']], ['Classe', ['classe']], ['Sezione', ['sezione']],
+            ['Classe', ['classe']], ['Sezione', ['sezione']],
             ['Anno scolastico', ['annoScolastico', 'anno_scolastico']], ['Istituto', ['istituto', 'scuola']],
             ['Telefono del profilo', ['telefono', 'phoneNumber']]
         ]) {
@@ -56,11 +82,10 @@
         }
         const phone = text(user.phoneNumber);
         if (phone) fields.push({ label: 'Numero per l’accesso', value: phone });
-        const words = name.split(/\s+/).filter(Boolean);
-        const initials = words.length ? Array.from(words[0])[0] + (words.length > 1 ? Array.from(words.at(-1))[0] : '') : 'H';
         return {
             uid: text(user.uid), profileId: text(profile.id), role: profile.role, name: name || 'Il tuo account',
-            email, initials: initials.toLocaleUpperCase('it-IT'), fields,
+            email, initials: person.initials, givenName:person.givenName, familyName:person.familyName, fields,
+            photoData: typeof preferences.photoData === 'string' ? preferences.photoData : '',
             emailVerified: user.emailVerified === true,
             providers: providerIds.map(id => providerNames[id] || 'Altro servizio di accesso'),
             passwordAccess: providerIds.includes('password'),
@@ -73,8 +98,8 @@
             account: { identificativo: account.uid, nome: account.name, email: account.email, ruolo: account.role,
                 emailVerificata: account.emailVerified, metodiDiAccesso: [...account.providers],
                 creatoIl: account.createdAt, ultimoAccesso: account.lastSignInAt },
-            profilo: { riferimento: account.profileId, informazioni: account.fields.map(field => ({ ...field })) }
+            profilo: { riferimento: account.profileId, informazioni: account.fields.map(field => ({ ...field })), foto: account.photoData || null }
         };
     }
-    return { loadProfile, describe, exportSummary };
+    return { loadProfile, describe, exportSummary, identity };
 });

@@ -21,11 +21,92 @@
     const sections = Object.fromEntries(viewButtons.map(button => [button.dataset.settingsView, byId(button.getAttribute('aria-controls'))]));
     const timers = new Set();
     const model = window.HarzafiAccountSettings;
+    const preferencesStore = window.HarzafiAccountPreferences;
+    const photoTools = window.HarzafiProfilePhoto;
     const auth = window.HarzafiSession?.auth;
     const db = typeof window.firebase?.firestore === 'function' ? window.firebase.firestore() : null;
     let account = null;
     let generation = 0;
     let activeView = null;
+    let profileRecord = null;
+    let preferences = { givenName:'', familyName:'', photoData:'' };
+    let preferencesReady = false, profileWritePending = false, photoEditor = null;
+    const photoStatus = byId('settings-photo-status');
+    const nameDialog = byId('settings-name-dialog');
+    const nameSave = byId('settings-name-save'), nameCancel = byId('settings-name-cancel');
+    const givenNameInput = byId('settings-given-name'), familyNameInput = byId('settings-family-name');
+    let nameOwner = null, nameOperation = 0;
+
+    function profileControls() {
+        const disabled = !preferencesReady || profileWritePending || !currentAccount();
+        byId('settings-photo-edit').disabled = disabled;
+        refreshButton.disabled = profileWritePending;
+        const button = byId('settings-edit-name');
+        if (button) button.disabled = disabled;
+    }
+    function closeName() {
+        ++nameOperation; nameOwner = null;
+        if (nameDialog.open) nameDialog.close();
+        givenNameInput.value = familyNameInput.value = '';
+        givenNameInput.setCustomValidity(''); familyNameInput.setCustomValidity('');
+        nameSave.disabled = false; nameSave.textContent = 'Salva'; nameCancel.textContent = 'Annulla';
+        message(byId('settings-name-status'), '');
+    }
+    function editName() {
+        const value = currentAccount();
+        if (!value || !preferencesReady || profileWritePending) return;
+        closeName(); nameOwner = { uid:value.uid, version:generation };
+        givenNameInput.value = value.givenName.length <= 80 ? value.givenName : '';
+        familyNameInput.value = value.familyName.length <= 80 ? value.familyName : '';
+        nameDialog.showModal();
+    }
+    async function saveProfilePatch(patch) {
+        const value = currentAccount(), user = auth?.currentUser, version = generation;
+        if (!value || !preferencesReady || profileWritePending) throw new Error('account-unavailable');
+        profileWritePending = true; profileControls();
+        try {
+            await preferencesStore.save(db, user, patch, () => window.firebase.firestore.FieldValue.serverTimestamp());
+            if (version !== generation || auth.currentUser?.uid !== value.uid) throw new Error('account-changed');
+            preferences = preferencesStore.normalize({ ...preferences, ...patch });
+            render(model.describe(user, profileRecord, preferences), user);
+        } finally {
+            if (version === generation && auth?.currentUser?.uid === value.uid) { profileWritePending = false; profileControls(); }
+        }
+    }
+    nameCancel.addEventListener('click', closeName);
+    nameDialog.addEventListener('cancel', event => { event.preventDefault(); closeName(); });
+    for (const input of [givenNameInput, familyNameInput]) input.addEventListener('input', () => input.setCustomValidity(''));
+    byId('settings-name-form').addEventListener('submit', async event => {
+        event.preventDefault();
+        if (!nameOwner || profileWritePending || nameOwner.uid !== currentAccount()?.uid || nameOwner.version !== generation) return;
+        const givenName = givenNameInput.value.trim(), familyName = familyNameInput.value.trim();
+        if (!givenName || !familyName) {
+            const missing = !givenName ? givenNameInput : familyNameInput;
+            missing.setCustomValidity(!givenName ? 'Inserisci il nome.' : 'Inserisci il cognome.'); missing.reportValidity(); return;
+        }
+        const id = nameOperation;
+        nameSave.disabled = true; nameSave.textContent = 'Salvo…'; nameCancel.textContent = 'Chiudi';
+        message(byId('settings-name-status'), 'Salvataggio in corso…');
+        try {
+            await saveProfilePatch({ givenName, familyName });
+            if (id !== nameOperation || !nameOwner || nameOwner.version !== generation) return;
+            closeName(); message(photoStatus, 'Nome aggiornato.');
+        } catch (_) {
+            if (id !== nameOperation || !nameOwner || nameOwner.version !== generation) return;
+            nameSave.disabled = false; nameSave.textContent = 'Salva'; nameCancel.textContent = 'Annulla';
+            message(byId('settings-name-status'), 'Non è stato possibile salvare il nome. Riprova tra qualche istante.', true);
+        }
+    });
+    if (photoTools) photoEditor = photoTools.attach({
+        getAccount: () => {
+            const value = currentAccount();
+            return value && preferencesReady ? { uid:value.uid, initials:value.initials, photoData:value.photoData, version:generation } : null;
+        },
+        savePhoto: async photoData => {
+            await saveProfilePatch({ photoData });
+            message(photoStatus, photoData ? 'Foto del profilo aggiornata.' : 'Foto rimossa. Ora il tuo account mostra le tue iniziali.');
+        }
+    });
 
     function updateNavigation({ focus = false } = {}) {
         const previous = activeView;
@@ -74,12 +155,16 @@
     }
     function clearAccount() {
         account = null;
+        profileRecord = null;
+        preferences = { givenName:'', familyName:'', photoData:'' };
+        preferencesReady = false; profileWritePending = false;
+        photoEditor?.reset(); closeName();
         content.hidden = true;
         refreshButton.hidden = true;
         updateNavigation();
         timers.forEach(timer => clearTimeout(timer));
         timers.clear();
-        for (const id of ['settings-avatar', 'settings-name', 'settings-email', 'settings-role', 'settings-provider', 'settings-verification', 'settings-created', 'settings-last-login', 'settings-uid', 'settings-profile-id']) byId(id).textContent = '';
+        for (const id of ['settings-avatar', 'settings-personal-avatar', 'settings-name', 'settings-email', 'settings-role', 'settings-provider', 'settings-verification', 'settings-created', 'settings-last-login', 'settings-uid', 'settings-profile-id']) byId(id).textContent = '';
         byId('settings-profile-data').replaceChildren();
         byId('settings-password-action').hidden = true;
         byId('settings-provider-note').hidden = true;
@@ -90,6 +175,7 @@
         verifyButton.textContent = 'Verifica il tuo indirizzo email';
         message(securityStatus, '');
         message(pageStatus, '');
+        message(photoStatus, ''); profileControls();
     }
     function showError(error) {
         state.hidden = false;
@@ -107,7 +193,10 @@
     }
     function render(value, user) {
         account = value;
-        byId('settings-avatar').textContent = value.initials;
+        for (const id of ['settings-avatar','settings-personal-avatar']) {
+            if (photoTools) photoTools.renderAvatar(byId(id), value);
+            else byId(id).textContent = value.initials;
+        }
         byId('settings-name').textContent = value.name;
         byId('settings-email').textContent = value.email;
         byId('settings-role').textContent = value.role === 'docente' ? 'Docente autorizzato' : 'Studente';
@@ -115,6 +204,14 @@
             const row = document.createElement('div');
             const label = document.createElement('dt'); label.textContent = field.label;
             const data = document.createElement('dd'); data.textContent = field.value;
+            if (field.label === 'Nome') {
+                row.className = 'settings-name-row'; label.className = 'settings-visually-hidden';
+                const button = document.createElement('button'); button.type = 'button'; button.id = 'settings-edit-name';
+                button.setAttribute('aria-label', 'Modifica nome');
+                const caption = document.createElement('span'); caption.textContent = 'Nome';
+                const name = document.createElement('span'); name.textContent = field.value;
+                button.append(caption, name); button.addEventListener('click', editName); data.replaceChildren(button);
+            }
             row.append(label, data);
             return row;
         });
@@ -133,6 +230,7 @@
         content.hidden = false;
         refreshButton.hidden = false;
         updateNavigation();
+        profileControls();
     }
     async function load(user, refresh = false) {
         const version = ++generation;
@@ -160,7 +258,15 @@
             } catch (_) { /* The account still works when browser storage is unavailable. */ }
             const profile = await model.loadProfile(db, user, preferredRole);
             if (version !== generation || auth.currentUser?.uid !== uid) return;
-            render(model.describe(user, profile), user);
+            let personal = { givenName:'', familyName:'', photoData:'' }, personalReady = false;
+            if (preferencesStore && photoTools) {
+                try { personal = await preferencesStore.load(db, user); personalReady = true; }
+                catch (_) { /* Core account information stays available when personal preferences cannot be read. */ }
+            }
+            if (version !== generation || auth.currentUser?.uid !== uid) return;
+            profileRecord = profile; preferences = personal; preferencesReady = personalReady;
+            render(model.describe(user, profile, personal), user);
+            if (!personalReady) message(photoStatus, 'Non è possibile modificare il profilo in questo momento. Prova ad aggiornare i dati.', true);
             if (refresh) message(pageStatus, 'Le informazioni del tuo account sono aggiornate.');
         } catch (error) {
             if (version !== generation || auth.currentUser?.uid !== uid) return;

@@ -10,7 +10,7 @@
     <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="preload" href="fonts/SF-Pro-Variable-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
-    <link rel="stylesheet" href="account-settings.css?v=20261106-account-native-v2">
+    <link rel="stylesheet" href="account-settings.css?v=20261106-profile-photo-v3">
     <link rel="stylesheet" href="navbar-refinement.css?v=20261105-mobile-frost-left-v9">
     <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
@@ -18,8 +18,10 @@
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
     <script defer src="auth-session.js?v=20261025-account-nav-v1"></script>
-    <script defer src="account-settings-model.js?v=20261106-account-v1"></script>
-    <script defer src="account-settings.js?v=20261106-account-native-v2"></script>
+    <script defer src="account-settings-model.js?v=20261106-profile-photo-v3"></script>
+    <script defer src="account-preferences.js?v=20261106-profile-photo-v3"></script>
+    <script defer src="account-profile-photo.js?v=20261106-profile-photo-v3"></script>
+    <script defer src="account-settings.js?v=20261106-profile-photo-v3"></script>
 </head>
 <body class="account-privacy-page settings-page">
     <svg class="settings-icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -82,8 +84,13 @@
             <div class="settings-views" id="settings-views" hidden>
                 <section class="settings-view" id="settings-personal" aria-labelledby="profile-title" hidden>
                     <header class="settings-view-heading"><h2 id="profile-title" tabindex="-1">Informazioni personali</h2><p>I dati che accompagnano il tuo profilo su Harzafi FSL.</p></header>
+                    <div class="settings-personal-photo">
+                        <div class="settings-avatar" id="settings-personal-avatar" aria-hidden="true"></div>
+                        <button class="settings-photo-edit" id="settings-photo-edit" type="button">Modifica</button>
+                        <p class="settings-photo-status" id="settings-photo-status" role="status" aria-live="polite"></p>
+                    </div>
                     <dl class="settings-data settings-group" id="settings-profile-data"></dl>
-                    <p class="settings-caption">Un dato non è corretto? <a id="settings-correction" href="mailto:harzafi.support@gmail.com?subject=Correzione%20dati%20account">Contatta l’assistenza</a> per aggiornarlo.</p>
+                    <p class="settings-caption">Per aggiornare gli altri dati del profilo, <a id="settings-correction" href="mailto:harzafi.support@gmail.com?subject=Correzione%20dati%20account">contatta l’assistenza</a>.</p>
                 </section>
                 <section class="settings-view" id="settings-security" aria-labelledby="security-title" hidden>
                     <header class="settings-view-heading"><h2 id="security-title" tabindex="-1">Accesso e sicurezza</h2><p>Le informazioni sul tuo accesso e i controlli per proteggerlo.</p></header>
@@ -120,6 +127,38 @@
         </div>
         <p class="settings-page-status" id="settings-page-status" role="status" aria-live="polite"></p>
     </main>
+    <dialog class="settings-editor-dialog settings-photo-dialog" id="settings-photo-dialog" aria-labelledby="settings-photo-title">
+        <header class="settings-editor-toolbar">
+            <button id="settings-photo-cancel" type="button">Annulla</button>
+            <h2 id="settings-photo-title">Foto del profilo</h2>
+            <button class="settings-editor-save" id="settings-photo-save" type="button" disabled>Salva</button>
+        </header>
+        <div class="settings-editor-body">
+            <div class="settings-photo-preview"><canvas id="settings-photo-canvas" width="512" height="512" tabindex="0" aria-label="Sposta la foto per scegliere il ritaglio. Puoi usare anche i tasti freccia."></canvas></div>
+            <p class="settings-editor-hint">Sposta la foto per scegliere il ritaglio.</p>
+            <div class="settings-photo-zoom"><label for="settings-photo-zoom">Zoom</label><input id="settings-photo-zoom" type="range" min="1" max="3" step=".01" value="1" disabled></div>
+            <div class="settings-photo-actions">
+                <button class="settings-photo-choose" id="settings-photo-choose" type="button">Scegli una foto</button>
+                <input id="settings-photo-input" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" hidden>
+                <button class="settings-photo-remove" id="settings-photo-remove" type="button" hidden>Rimuovi foto</button>
+            </div>
+            <p class="settings-editor-status" id="settings-photo-editor-status" role="status" aria-live="polite"></p>
+        </div>
+    </dialog>
+    <dialog class="settings-editor-dialog settings-name-dialog" id="settings-name-dialog" aria-labelledby="settings-name-title">
+        <header class="settings-editor-toolbar">
+            <button id="settings-name-cancel" type="button">Annulla</button>
+            <h2 id="settings-name-title">Nome</h2>
+            <button class="settings-editor-save" id="settings-name-save" type="submit" form="settings-name-form">Salva</button>
+        </header>
+        <form id="settings-name-form" class="settings-editor-body settings-name-form" method="dialog">
+            <div class="settings-name-fields">
+                <div><label for="settings-given-name">Nome</label><input id="settings-given-name" name="givenName" type="text" autocomplete="given-name" maxlength="80" required></div>
+                <div><label for="settings-family-name">Cognome</label><input id="settings-family-name" name="familyName" type="text" autocomplete="family-name" maxlength="80" required></div>
+            </div>
+            <p class="settings-editor-status" id="settings-name-status" role="status" aria-live="polite"></p>
+        </form>
+    </dialog>
     <footer class="settings-footer"><span>© 2026 Harzafi FSL</span><nav aria-label="Informazioni utili"><a href="privacy.html">Privacy</a><a href="termini.html">Termini</a><a href="supporto.html">Supporto</a></nav></footer>
 </body>
 </html>
