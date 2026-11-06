@@ -9,31 +9,38 @@
     <meta name="theme-color" content="#f5f5f7">
     <link rel="icon" type="image/webp" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="stylesheet" href="style.css?v=20260830-mobile-carousel-v3">
-    <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
+    <link rel="stylesheet" href="modern.css?v=20261103-footer-active-link-underline-v1">
     <link rel="stylesheet" href="supporto.css?v=20260918-question-logo-large">
     <script defer src="site-motion.js?v=20261025-navigation-persistence-v4"></script>
-    <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
+    <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
     <link rel="stylesheet" href="page-design.css?v=20261017-shared-page-style">
-    <link rel="stylesheet" href="navbar-refinement.css?v=20261025-status-bar-gray-v27">
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261105-mobile-frost-left-v9">
 </head>
 <body class="support-page">
-    <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
-                <div class="nav-content"><button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu"><svg class="nav-toggle-glyph" viewBox="0 0 18 18" aria-hidden="true"><g class="menu-glyph"><path d="M1.5 5.5h15"/><path d="M1.5 12.5h15"/></g><g class="close-glyph"><polyline points="3.5 3.5 14.5 14.5"/><polyline points="14.5 3.5 3.5 14.5"/></g></svg></button>
-        <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
-            <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi">
-        </a>
-        <div class="nav-links" id="site-primary-links">
-            <a href="index.html#features">Funzionalità</a>
-            <a href="supporto.html" aria-current="page">Supporto</a>
-            <a href="#footer">Contatti</a>
-        </div>
-        <a class="nav-mobile-account" href="login.html" aria-label="Accedi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.45-3.45 2.9-5.4 6.5-5.4s6.05 1.95 6.5 5.4"/></svg></a>
-        </div>
-    </nav>
+    <nav class="navbar-wrapper glass home-mainnav" aria-label="Navigazione principale">
+            <div class="nav-content">
+                <div class="home-nav-brand">
+                    <a class="nav-logo" href="index.html#home-hero" aria-label="Harzafi FSL — inizio">
+                        Harzafi FSL
+                    </a>
+                </div>
+                <div class="nav-links" id="site-primary-links">
+                    <a href="index.html#features">Esplora</a>
+                    <a href="supporto.html" aria-current="page">Supporto</a>
+                    <a href="index.html#footer">Contatti</a>
+                </div>
+                <div class="home-nav-actions">
+                    <button class="nav-menu-toggle home-nav-chevron" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
+                        <svg class="nav-toggle-glyph" viewBox="0 0 16 9" aria-hidden="true"><path d="M3.5 2.25 8 6.75l4.5-4.5"/></svg>
+                    </button>
+                    <a class="nav-mobile-account home-nav-action" href="login.html">Accedi</a>
+                </div>
+            </div>
+        </nav>
 
     <main class="support-main">
         <header class="support-hero">
-            <img class="support-hero-logo" src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi" decoding="async" fetchpriority="high">
+            <img class="support-hero-logo" src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" alt="Harzafi FSL" decoding="async" fetchpriority="high">
             <h1><strong>Supporto.</strong><span>Qui per aiutarti.</span></h1>
         </header>
 
@@ -102,7 +109,7 @@
         <div class="harzafi-footer-inner reveal active">
             <div class="harzafi-footer-main">
                 <div class="harzafi-footer-brand">
-                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi"></a>
+                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" alt="Harzafi FSL"></a>
                     <h2>Un registro più semplice. <span>Creato con cura.</span></h2>
                 </div>
                 <div class="harzafi-footer-profile">
@@ -132,7 +139,7 @@
         </div>
     </footer>
 
-    <script defer src="navbar.js?v=20261025-apple-menu-morph-v26"></script>
+    <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>

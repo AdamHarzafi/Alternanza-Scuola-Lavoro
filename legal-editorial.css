@@ -127,9 +127,9 @@ body.legal-editorial-page {
     min-width: 0;
     min-height: 0;
     padding: clamp(32px, 5vw, 56px);
-    border: 1px solid #eeeeF1;
+    border: 0;
     border-radius: 30px;
-    background: #fafafa;
+    background: #f5f5f7;
     color: var(--legal-ink);
     box-shadow: none;
     transform: none;
@@ -137,16 +137,7 @@ body.legal-editorial-page {
 }
 .legal-editorial-page .privacy-policy-card:hover { box-shadow: none; transform: none; border-color: var(--legal-line); }
 .legal-editorial-page .privacy-policy-card::after { display: none; }
-.legal-editorial-page .privacy-card-heading { display: flex; gap: 14px; align-items: center; margin: 0 0 24px; }
-.legal-editorial-page .privacy-card-number {
-    display: inline-flex; align-items: center; justify-content: center;
-    flex: 0 0 34px; width: 34px; height: 34px; min-width: 34px; min-height: 34px; padding: 0;
-    border: 0; border-radius: 10px; margin: 0;
-    background: #edf5ff; color: var(--legal-blue);
-    font-family: 'SF Pro Text', sans-serif;
-    font-size: .875rem; font-weight: 700; line-height: 1;
-    letter-spacing: 0; font-variant-numeric: lining-nums tabular-nums;
-}
+.legal-editorial-page .privacy-card-heading { display: block; margin: 0 0 24px; }
 .legal-editorial-page .privacy-card-heading h2 {
     font-size: clamp(1.5rem, 3.2vw, 2.25rem);
     font-weight: 600; letter-spacing: -.035em; line-height: 1.3;
@@ -180,7 +171,7 @@ body.legal-editorial-page {
 .legal-editorial-page .privacy-support-link { display: block; margin-top: 16px; }
 .legal-skip-link { position: fixed; top: 12px; left: 12px; transform: translateY(-180%); z-index: 10000; padding: 12px 18px; background: #fff; color: #0066cc; }
 .legal-skip-link:focus { transform: none; }
-.legal-index { border: 1px solid var(--legal-line); border-radius: 24px; background: #fff; overflow: hidden; }
+.legal-index { border: 0; border-radius: 24px; background: #f5f5f7; overflow: hidden; }
 .legal-index > summary {
     list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 24px;
     padding: 24px 28px; cursor: pointer; font-size: 1.125rem; font-weight: 500; letter-spacing: -.025em;
@@ -224,7 +215,6 @@ body.legal-editorial-page {
     .legal-editorial-page .privacy-status-note { padding: 20px; }
     .legal-editorial-page .privacy-contents ol { grid-template-columns: 1fr; }
     .legal-editorial-page .privacy-policy-card { padding: 28px 24px; border-radius: 26px; }
-    .legal-editorial-page .privacy-card-heading { gap: 12px; }
     .legal-editorial-page .privacy-contact-strip { margin-top: 36px; }
     .legal-index > summary { padding: 20px; }
     .legal-editorial-page .privacy-contents { padding: 0 20px 20px; }
@@ -234,6 +224,107 @@ body.legal-editorial-page {
     .legal-editorial-page .privacy-hero-logo { width: 96px; margin-bottom: 16px; }
     .legal-editorial-page .privacy-hero h1 { font-size: clamp(2rem, 5vw, 3rem); }
 }
+
+/* Shared Privacy and Terms intro: matching artwork and display typography. */
+.legal-document-page .privacy-intro-screen {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: calc(72px + env(safe-area-inset-top)) 24px 38px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.legal-document-page .privacy-hero {
+    width: min(100%, 1120px);
+    min-height: 0;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.legal-document-page .privacy-hero-logo {
+    display: block;
+    width: min(230px, 36vw);
+    height: auto;
+    max-height: 220px;
+    margin: 0 auto clamp(44px, 7vw, 72px);
+    object-fit: contain;
+}
+
+.legal-document-page .privacy-hero h1 {
+    max-width: 1100px;
+    font-family: var(--font-display, "SF Pro Display"), -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: clamp(3.1rem, 7.2vw, 7rem);
+    font-weight: 600;
+    line-height: .92;
+    letter-spacing: -.045em;
+}
+
+.legal-document-page .privacy-hero h1 span { display: block; }
+
+.legal-document-page .privacy-overview {
+    width: min(100%, 1160px);
+    max-width: none;
+    margin: 0 auto;
+    min-height: 74svh;
+    padding: clamp(64px, 9vh, 96px) 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    text-align: center;
+}
+
+.legal-document-page .privacy-overview-logo {
+    display: block;
+    width: 112px;
+    height: auto;
+    margin: 0 auto clamp(26px, 4vw, 40px);
+    object-fit: contain;
+}
+
+.legal-document-page .privacy-overview h2 {
+    max-width: 780px;
+    margin: 0 auto 24px;
+    color: #1d1d1f;
+    font-family: "SF Pro Display Privacy", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: clamp(1.8rem, 3.3vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+}
+
+.legal-document-page :is(.privacy-overview, .terms-overview) > p {
+    width: min(100%, 816.66px);
+    max-width: 816.66px;
+    margin: 0 auto;
+    color: #6e6e73;
+    font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: clamp(1rem, 1.35vw, 1.125rem);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.65;
+    text-align: center;
+    text-wrap: pretty;
+}
+
+@media (max-width: 760px) {
+    .legal-document-page .privacy-intro-screen {
+        width: calc(100% + 32px);
+        margin-inline: -16px;
+        padding: calc(64px + env(safe-area-inset-top)) 5px 30px;
+    }
+    .legal-document-page .privacy-hero { padding-inline: 10px; }
+    .legal-document-page .privacy-hero-logo { width: min(150px, 43vw); max-height: 150px; margin-bottom: 42px; }
+    .legal-document-page .privacy-hero h1 { font-size: clamp(3rem, 14.7vw, 4.6rem); line-height: .94; }
+    .legal-document-page .privacy-overview { width: 100%; min-height: 70svh; padding: 60px 10px; }
+    .legal-document-page .privacy-overview-logo { width: 96px; margin-bottom: 28px; }
+    .legal-document-page .privacy-overview h2 { max-width: 520px; margin-bottom: 18px; font-size: clamp(1.55rem, 7vw, 2rem); line-height: 1.12; }
+    .legal-document-page :is(.privacy-overview, .terms-overview) > p { width: calc(100% - 10px); font-size: 1rem; line-height: 1.55; }
+}
+
 @media print {
     .legal-editorial-page .navbar-wrapper, .legal-editorial-page .harzafi-footer, .legal-editorial-page .privacy-contents, .legal-skip-link, .legal-editorial-page .privacy-hero-logo { display: none; }
     .legal-editorial-page .privacy-main, .legal-editorial-page .privacy-hero { padding: 0; }
@@ -245,3 +336,29 @@ body.legal-editorial-page {
     .legal-editorial-page .privacy-main * { color: #111; box-shadow: none; }
     .legal-editorial-page .privacy-hero h1 { font-size: 28pt; }
 }
+
+/* Privacy page: use the same quiet gray surface as the contact panel. */
+.legal-document-page .privacy-policy-card,
+.legal-document-page .privacy-status-note,
+.legal-document-page .legal-index {
+    border: 0;
+    border-radius: 30px;
+    background: #f5f5f7;
+    box-shadow: none;
+}
+.legal-document-page .privacy-policy-card:hover {
+    border: 0;
+    background: #f5f5f7;
+    box-shadow: none;
+    transform: none;
+}
+.legal-document-page .privacy-policy-card .privacy-card-note {
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+.legal-document-page .privacy-facts > div { border-color: #dedee3; }
+.legal-document-page .legal-index > summary:focus-visible { outline-offset: -6px; }
+
+.legal-document-page .terms-overview { text-align: center; }
+.legal-document-page .terms-overview .privacy-date { display: inline-block; }

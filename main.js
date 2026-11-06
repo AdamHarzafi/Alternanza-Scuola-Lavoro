@@ -86,19 +86,23 @@ window.addEventListener('load', () => {
 document.addEventListener("DOMContentLoaded", function() {
     const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
     const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
+        entries.forEach(entry => {
+            const element = entry.target;
+            const scrollStoryStatement = element.matches('.home-scroll-story__statement');
+
+            if (entry.isIntersecting) {
+                element.classList.remove('is-exiting-up', 'is-exiting-down');
+                element.classList.add('active');
+                if (!scrollStoryStatement) observer.unobserve(element);
+            } else if (scrollStoryStatement && element.classList.contains('active')) {
+                const exitsAbove = entry.boundingClientRect.bottom <= 0;
+                element.classList.remove('active');
+                element.classList.toggle('is-exiting-up', exitsAbove);
+                element.classList.toggle('is-exiting-down', !exitsAbove);
+            }
+        });
     }, observerOptions);
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    const navbar = document.querySelector('.navbar-wrapper');
-    let isScrolled = false;
-    window.addEventListener('scroll', () => {
-        const shouldBeScrolled = window.scrollY > 40;
-        if (shouldBeScrolled !== isScrolled) {
-            isScrolled = shouldBeScrolled;
-            if (isScrolled) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
-        }
-    }, { passive: true });
 
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -106,7 +110,12 @@ document.addEventListener("DOMContentLoaded", function() {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
             const targetElement = document.querySelector(targetId);
-            if (targetElement) { const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 80; window.scrollTo({ top: offsetPosition, behavior: 'smooth' }); }
+            if (targetElement) {
+                const globalNav = document.querySelector('.navbar-wrapper');
+                const headerOffset = Math.ceil((globalNav?.getBoundingClientRect().height || 44) + 12);
+                const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            }
         });
     });
 
@@ -126,69 +135,6 @@ document.addEventListener("DOMContentLoaded", function() {
         onlyWhenOverflow: true,
         pauseOnFocus: true
     });
-    setupCarouselPlayer({
-        trackId: 'environment-cards-track',
-        itemSelector: '.environment-card',
-        playerId: 'environment-carousel-player',
-        edgeContainerId: 'environment-cards-shell',
-        label: 'informazioni ambientali',
-        onlyWhenOverflow: true,
-        pauseOnFocus: true,
-        suspendWhile: () => document.body.classList.contains('access-modal-open')
-    });
-
-    const environmentModal = document.getElementById('environment-detail-modal');
-    const environmentModalPanel = environmentModal?.querySelector('.environment-modal-panel');
-    const environmentModalScroll = environmentModal?.querySelector('.access-modal-scroll');
-    const environmentModalClose = environmentModal?.querySelector('.access-modal-close');
-    const environmentModalEyebrow = document.getElementById('environment-modal-eyebrow');
-    const environmentModalTitle = document.getElementById('environment-modal-title');
-    const environmentModalContent = document.getElementById('environment-modal-content');
-    let environmentModalTrigger = null;
-    let environmentModalFocusCleanup = null;
-
-    const closeEnvironmentModal = () => {
-        if (!environmentModal?.classList.contains('is-open')) return;
-        environmentModal.classList.remove('is-open');
-        environmentModal.setAttribute('aria-hidden', 'true');
-        document.body.classList.remove('access-modal-open');
-        environmentModalTrigger?.setAttribute('aria-expanded', 'false');
-        document.dispatchEvent(new CustomEvent('accessmodalchange'));
-        environmentModalFocusCleanup?.();
-        environmentModalFocusCleanup = null;
-        window.requestAnimationFrame(() => environmentModalTrigger?.focus());
-    };
-
-    const openEnvironmentModal = (trigger) => {
-        const template = document.getElementById(trigger.dataset.environmentDetail);
-        if (!(template instanceof HTMLTemplateElement) || !environmentModal || !environmentModalTitle || !environmentModalContent || !environmentModalEyebrow) return;
-
-        document.querySelectorAll('[data-environment-detail]').forEach((button) => button.setAttribute('aria-expanded', 'false'));
-        environmentModalTrigger = trigger;
-        trigger.setAttribute('aria-expanded', 'true');
-        environmentModalEyebrow.textContent = trigger.dataset.modalEyebrow || '';
-        environmentModalTitle.textContent = trigger.dataset.modalTitle || '';
-        environmentModalContent.replaceChildren(template.content.cloneNode(true));
-        if (environmentModalScroll) environmentModalScroll.scrollTop = 0;
-        environmentModal.setAttribute('aria-hidden', 'false');
-        environmentModal.classList.add('is-open');
-        document.body.classList.add('access-modal-open');
-        document.dispatchEvent(new CustomEvent('accessmodalchange'));
-        environmentModalFocusCleanup = trapFocus(environmentModalPanel);
-    };
-
-    document.querySelectorAll('[data-environment-detail]').forEach((button) => {
-        button.addEventListener('click', () => openEnvironmentModal(button));
-    });
-
-    environmentModalClose?.addEventListener('click', closeEnvironmentModal);
-    environmentModal?.addEventListener('click', (event) => {
-        if (event.target === environmentModal) closeEnvironmentModal();
-    });
-    environmentModal?.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') closeEnvironmentModal();
-    });
-
     function trapFocus(modal) {
         const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea,[tabindex]:not([tabindex="-1"])');
         const firstFocusable = focusableElements[0];
@@ -560,96 +506,88 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
+    
 
     const btnHarzafiId = document.getElementById('btn-harzafi-id');
     if (btnHarzafiId && hidModal) {
-        btnHarzafiId.addEventListener('click', () => { hidModal.classList.add('active'); if (document.activeElement) document.activeElement.blur(); });
+        btnHarzafiId.addEventListener('click', () => {
+            hidModal.classList.add('active');
+            if (document.activeElement) document.activeElement.blur();
+        });
     }
     const hidCloseBtn = document.getElementById('hid-close-btn');
     if (hidCloseBtn && hidModal) {
-        hidCloseBtn.addEventListener('click', () => { hidModal.classList.remove('active'); });
+        hidCloseBtn.addEventListener('click', () => hidModal.classList.remove('active'));
     }
     const hidCancelBtn = document.getElementById('hid-cancel-btn');
     if (hidCancelBtn && hidModal) {
-        hidCancelBtn.addEventListener('click', () => { hidModal.classList.remove('active'); });
+        hidCancelBtn.addEventListener('click', () => hidModal.classList.remove('active'));
     }
     const hidOpenManual = document.getElementById('hid-open-manual');
     if (hidOpenManual) {
-        hidOpenManual.addEventListener('click', (e) => { 
-            e.preventDefault(); 
+        hidOpenManual.addEventListener('click', e => {
+            e.preventDefault();
             const scanView = document.getElementById('hid-scan-view');
             const manualView = document.getElementById('hid-manual-view');
             const hidInput = document.getElementById('hid-input');
-            if (scanView) scanView.style.display = 'none'; 
-            if (manualView) manualView.style.display = 'block'; 
-            if (hidInput) hidInput.focus(); 
+            if (scanView) scanView.style.display = 'none';
+            if (manualView) manualView.style.display = 'block';
+            if (hidInput) hidInput.focus();
         });
     }
     const hidBackBtn = document.getElementById('hid-back-btn');
     if (hidBackBtn) {
-        hidBackBtn.addEventListener('click', () => { 
+        hidBackBtn.addEventListener('click', () => {
             const scanView = document.getElementById('hid-scan-view');
             const manualView = document.getElementById('hid-manual-view');
             const hidError = document.getElementById('hid-error');
-            if (manualView) manualView.style.display = 'none'; 
-            if (scanView) scanView.style.display = 'block'; 
-            if (hidError) hidError.style.display = 'none'; 
+            if (manualView) manualView.style.display = 'none';
+            if (scanView) scanView.style.display = 'block';
+            if (hidError) hidError.style.display = 'none';
         });
     }
-
     const hidSubmitBtn = document.getElementById('hid-submit-btn');
     if (hidSubmitBtn) {
-        hidSubmitBtn.addEventListener('click', async () => { 
+        hidSubmitBtn.addEventListener('click', async () => {
             if (document.activeElement) document.activeElement.blur();
             const errorMsg = document.getElementById('hid-error');
             const originalBtnText = hidSubmitBtn.innerHTML;
             const hidInputEl = document.getElementById('hid-input');
             const inputHidVal = hidInputEl ? hidInputEl.value.trim() : '';
-
             const isVpn = await checkVPN();
-            if (isVpn) { if (errorMsg) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; } return; }
-            
+            if (isVpn) {
+                if (errorMsg) { errorMsg.innerText = "Disattivare la VPN per continuare."; errorMsg.style.display = 'block'; }
+                return;
+            }
             if (inputHidVal.length === 0) return;
-
             hidSubmitBtn.innerHTML = "VERIFICA IN CORSO...";
             hidSubmitBtn.disabled = true;
             if (errorMsg) errorMsg.style.display = 'none';
-
             if (typeof window.db !== 'undefined') {
-                window.db.collection("studenti").where("HID", "==", inputHidVal).get().then(async (snap) => {
+                window.db.collection("studenti").where("HID", "==", inputHidVal).get().then(async snap => {
                     if (!snap.empty) {
                         const userData = snap.docs[0].data();
-
                         if (typeof window.auth !== 'undefined') {
-                            try {
-                                await window.auth.signInAnonymously();
-                            } catch (err) {
-                                console.warn("Autenticazione anonima fallita, potrebbero mancare i permessi:", err);
-                            }
+                            try { await window.auth.signInAnonymously(); }
+                            catch (err) { console.warn("Autenticazione anonima fallita, potrebbero mancare i permessi:", err); }
                         }
-
-                        if (hidModal) hidModal.classList.remove('active'); 
+                        if (hidModal) hidModal.classList.remove('active');
                         hidSubmitBtn.innerHTML = originalBtnText;
                         hidSubmitBtn.disabled = false;
-                        if (hidInputEl) hidInputEl.value = ""; 
-                        entraNelPortale(userData.nome); 
-                    } else {
-                        throw new Error("HID non valido.");
-                    }
+                        if (hidInputEl) hidInputEl.value = "";
+                        entraNelPortale(userData.nome);
+                    } else { throw new Error("HID non valido."); }
                 }).catch(() => {
                     if (errorMsg) {
-                        errorMsg.innerText = "HID non valido. Riprova."; 
-                        errorMsg.style.display = 'block'; 
+                        errorMsg.innerText = "HID non valido. Riprova.";
+                        errorMsg.style.display = 'block';
                         errorMsg.style.animation = 'none'; void errorMsg.offsetWidth; errorMsg.style.animation = 'shake 0.4s';
                     }
                     hidSubmitBtn.innerHTML = originalBtnText;
                     hidSubmitBtn.disabled = false;
                 });
             } else {
-                if (errorMsg) {
-                    errorMsg.innerText = "Database offline."; 
-                    errorMsg.style.display = 'block';
-                }
+                if (errorMsg) { errorMsg.innerText = "Database offline."; errorMsg.style.display = 'block'; }
                 hidSubmitBtn.innerHTML = originalBtnText;
                 hidSubmitBtn.disabled = false;
             }

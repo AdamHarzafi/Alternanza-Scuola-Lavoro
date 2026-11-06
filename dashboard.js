@@ -463,7 +463,7 @@
     }
 
     function errorMessage(error) {
-        if (error.code === 'permission-denied') return 'Accesso negato: occorre configurare le regole Firebase del registro personale.';
+        if (error.code === 'permission-denied') return 'Accesso negato: non hai i permessi necessari per consultare questo registro.';
         if (error.code === 'unavailable') return 'Connessione non disponibile. Riprova quando torni online.';
         return error.code ? 'Operazione non riuscita. Riprova tra poco.' : error.message;
     }
@@ -535,13 +535,13 @@
         document.getElementById('hours-fields').disabled = true;
         document.getElementById('save-hours').disabled = true;
         document.getElementById('cancel-hours').disabled = true;
-        formStatus.textContent = 'Salvataggio su Firebase in corso…';
+        formStatus.textContent = 'Salvataggio delle ore di FSL in corso…';
         try {
             if (editing) await store.edit(editing.id, values, editing.predefined);
             else await store.add(values);
             if (auth.currentUser?.uid !== uid) return;
             RegisterUI.close(dialog);
-            status.textContent = 'Ore salvate su Firebase.';
+            status.textContent = 'Ore di FSL salvate nel Registro Harzafi.';
             showDashboardToast(
                 editing ? 'Modifica salvata' : 'Esperienza aggiunta',
                 editing ? 'Le informazioni sono aggiornate nel tuo registro.' : 'La nuova attività è nel tuo registro.'

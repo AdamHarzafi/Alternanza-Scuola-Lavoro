@@ -15,6 +15,15 @@
     font-display: swap;
 }
 
+/* SF Pro Display Medium locale per il titolo editoriale della privacy. */
+@font-face {
+    font-family: "SF Pro Display Privacy";
+    src: url("fonts/sf-pro-display-medium.woff") format("woff");
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+}
+
 :root {
     --font-text: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
     --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
@@ -34,8 +43,14 @@ body * {
     font-family: var(--font-text) !important;
 }
 
-body :is(h1, h2, h3, h4, h5, h6, .hero-kicker, .apple-title-main, .apple-title-sub, .apple-card-heading, .partners-title, .support-effort-content h2) {
+body :is(h1, h2, h3, h4, h5, h6, .hero-kicker, .hero-description, .apple-title-main, .apple-title-sub, .apple-card-heading, .partners-title) {
     font-family: var(--font-display) !important;
+}
+
+@media (max-width: 734px) {
+    body .home-page .hero-description {
+        font-family: var(--font-text) !important;
+    }
 }
 
 body :is(h1, h2, h3, h4, h5, h6) * {

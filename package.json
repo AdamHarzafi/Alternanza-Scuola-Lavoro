@@ -9,8 +9,5 @@
     "build": "node build-site.js",
     "lint": "node -c server.js",
     "test": "node --test tests/auth.test tests/*.test.cjs"
-  },
-  "dependencies": {
-    "express": "^4.21.2"
   }
 }

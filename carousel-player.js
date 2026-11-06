@@ -41,6 +41,8 @@ window.setupHarzafiCarousel = ({
     let isPaused = reducedMotion;
     let isEnded = false;
     let isCarouselVisible = false;
+    let cycleDeadline = null;
+    let remainingCycleTime = duration;
 
     // Dimensioni per il morphing
     const REST_WIDTH = 8;
@@ -77,6 +79,19 @@ window.setupHarzafiCarousel = ({
     };
 
     const maxScroll = () => Math.max(0, track.scrollWidth - track.clientWidth);
+
+    const clearCycleTimer = () => {
+        clearTimeout(cycleTimer);
+        cycleTimer = null;
+        cycleDeadline = null;
+    };
+
+    const pauseCycleTimer = () => {
+        if (cycleTimer !== null && cycleDeadline !== null) {
+            remainingCycleTime = Math.max(0, cycleDeadline - performance.now());
+        }
+        clearCycleTimer();
+    };
 
     // SISTEMA DI SICUREZZA: Spegne il JS se il player è nascosto dal CSS (PC)
     const isPlayerHiddenByCSS = () => {
@@ -120,7 +135,7 @@ window.setupHarzafiCarousel = ({
     };
 
     const syncToggle = () => {
-        player.classList.toggle('is-paused', isPaused || !isCarouselVisible || document.hidden);
+        player.classList.toggle('is-paused', isPaused || !isCarouselVisible || document.hidden || Boolean(suspendWhile?.()));
         player.classList.toggle('is-user-paused', isPaused && !isEnded);
         const state = isEnded ? 'ended' : (isPaused ? 'paused' : 'playing');
         toggle.dataset.state = state;
@@ -184,7 +199,7 @@ window.setupHarzafiCarousel = ({
         targets = computeTargets();
         isDragging = true;
         player.classList.add('is-dragging');
-        clearTimeout(cycleTimer);
+        pauseCycleTimer();
         if (isEnded) {
             isEnded = false;
             syncToggle();
@@ -232,6 +247,8 @@ window.setupHarzafiCarousel = ({
         syncSteps(true);
         if (!isPaused && !isEnded) {
             scheduleNext(duration);
+        } else if (isPaused && !isEnded) {
+            remainingCycleTime = duration;
         }
     };
 
@@ -296,28 +313,34 @@ window.setupHarzafiCarousel = ({
 
     const enterEnded = () => {
         isEnded = true;
-        clearTimeout(cycleTimer);
+        clearCycleTimer();
         syncToggle();
     };
 
     const scheduleNext = (wait = duration) => {
-        clearTimeout(cycleTimer);
+        clearCycleTimer();
+        const delay = Math.max(0, wait);
+        remainingCycleTime = delay;
         if (!updateOverflowStatus() || isPlayerHiddenByCSS()) return; // Spegne il JS se non serve
         if (isPaused || isEnded || !isCarouselVisible || document.hidden || items.length < 2 || suspendWhile?.()) return;
+        cycleDeadline = performance.now() + delay;
         cycleTimer = setTimeout(() => {
+            cycleTimer = null;
+            cycleDeadline = null;
+            remainingCycleTime = duration;
             const nextIndex = nextAutoplayIndex();
             if (nextIndex < 0) {
                 enterEnded();
                 return;
             }
             goTo(nextIndex);
-        }, wait);
+        }, delay);
     };
 
     const goTo = (index) => {
         if (!updateOverflowStatus() || isPlayerHiddenByCSS()) return;
         const target = Math.max(0, Math.min(items.length - 1, index));
-        clearTimeout(cycleTimer);
+        clearCycleTimer();
         cancelScrollAnimation();
         if (isEnded) {
             isEnded = false;
@@ -378,11 +401,10 @@ window.setupHarzafiCarousel = ({
             return;
         }
         isPaused = !isPaused;
-        clearTimeout(cycleTimer);
+        if (isPaused) pauseCycleTimer();
         syncToggle();
         if (!isPaused) {
-            syncSteps(true);
-            scheduleNext();
+            scheduleNext(remainingCycleTime);
         }
     });
 
@@ -428,7 +450,7 @@ window.setupHarzafiCarousel = ({
 
     if (pauseOnFocus) track.addEventListener('focusin', () => {
         isPaused = true;
-        clearTimeout(cycleTimer);
+        pauseCycleTimer();
         syncToggle();
     });
 
@@ -436,12 +458,13 @@ window.setupHarzafiCarousel = ({
         reducedMotion = event.matches;
         if (reducedMotion) {
             isPaused = true;
-            clearTimeout(cycleTimer);
+            pauseCycleTimer();
             syncToggle();
         }
     });
 
     window.addEventListener('resize', () => {
+        pauseCycleTimer();
         const isActive = updateOverflowStatus() && !isPlayerHiddenByCSS();
         targets = computeTargets();
         cancelScrollAnimation();
@@ -453,22 +476,24 @@ window.setupHarzafiCarousel = ({
             window.setTimeout(() => { programmaticScroll = false; }, 150);
             updateEdges();
             syncToggle();
-            scheduleNext();
-        } else {
-            clearTimeout(cycleTimer);
+            scheduleNext(remainingCycleTime);
         }
     }, { passive: true });
 
     document.addEventListener('visibilitychange', () => {
-        clearTimeout(cycleTimer);
+        pauseCycleTimer();
         syncToggle();
-        if (!document.hidden && !isPaused && !isEnded) scheduleNext();
+        if (!document.hidden && !isPaused && !isEnded) scheduleNext(remainingCycleTime);
     });
 
     if (typeof suspendWhile === 'function') {
         document.addEventListener('accessmodalchange', () => {
-            clearTimeout(cycleTimer);
-            if (!suspendWhile() && !isPaused && !isEnded) scheduleNext();
+            syncToggle();
+            if (suspendWhile()) {
+                pauseCycleTimer();
+            } else if (!isPaused && !isEnded) {
+                scheduleNext(remainingCycleTime);
+            }
         });
     }
 
@@ -478,12 +503,11 @@ window.setupHarzafiCarousel = ({
             if (nextVisibility === isCarouselVisible) return;
 
             isCarouselVisible = nextVisibility;
-            clearTimeout(cycleTimer);
+            pauseCycleTimer();
             syncToggle();
 
             if (isCarouselVisible && !isPaused && !isEnded) {
-                syncSteps(true);
-                scheduleNext();
+                scheduleNext(remainingCycleTime);
             }
         }, { threshold: 0.35 });
         carouselVisibilityObserver.observe(edgeContainer || track);
@@ -530,7 +554,7 @@ window.setupHarzafiCarousel = ({
     return {
         pause() {
             isPaused = true;
-            clearTimeout(cycleTimer);
+            pauseCycleTimer();
             syncToggle();
         }
     };

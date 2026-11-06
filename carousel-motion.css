@@ -92,9 +92,14 @@ body .carousel-timeline-step::after {
     transform: none !important;
 }
 
-body .carousel-player:not(.is-paused):not(.is-dragging):not(.is-animating) .carousel-timeline-step.is-active::after {
+body .carousel-player:not(.is-dragging):not(.is-animating) .carousel-timeline-step.is-active::after {
     opacity: 1;
     animation: sharedCarouselTimelineFill var(--carousel-duration, 6500ms) linear forwards;
+}
+
+body .carousel-player.is-paused:not(.is-dragging):not(.is-animating) .carousel-timeline-step.is-active::after {
+    opacity: 1 !important;
+    animation-play-state: paused !important;
 }
 
 @keyframes sharedCarouselTimelineFill {
@@ -125,9 +130,9 @@ body .carousel-player.is-user-paused .carousel-timeline-step.is-active {
 }
 
 body .carousel-player.is-user-paused .carousel-timeline-step.is-active::after {
-    display: none !important;
-    opacity: 0 !important;
-    animation: none !important;
+    display: block !important;
+    opacity: 1 !important;
+    animation-play-state: paused !important;
 }
 
 /* ==========================================================================
@@ -198,6 +203,8 @@ body .carousel-play-toggle[data-state="ended"] .carousel-icon-replay {
 body .carousel-player.has-scroll-reveal {
     --player-orb-size: 56px;
     --player-orb-offset: 35px;
+    --player-mini-width: 72px;
+    --player-mini-height: 39px;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -221,14 +228,43 @@ body .has-scroll-reveal .carousel-timeline::before {
     backdrop-filter: blur(20px) saturate(170%);
     clip-path: inset(0 calc((100% - var(--player-orb-size)) / 2) round 999px);
     translate: var(--player-orb-offset) 12px;
-    scale: .85;
+    scale: .93;
     transition: clip-path .28s cubic-bezier(.4, 0, .6, 1), translate .28s ease, scale .28s ease;
+}
+
+@keyframes carouselPlayerCapsuleReveal {
+    0% {
+        clip-path: inset(0 calc((100% - var(--player-orb-size)) / 2) round 999px);
+        translate: var(--player-orb-offset) 12px;
+        scale: .93;
+        animation-timing-function: cubic-bezier(.4, 0, .6, 1);
+    }
+    42% {
+        clip-path: inset(
+            calc((100% - var(--player-mini-height)) / 2)
+            calc((100% - var(--player-mini-width)) / 2)
+            round 999px
+        );
+        translate: calc(var(--player-orb-offset) - 3px) 12px;
+        scale: .93;
+        animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+    }
+    100% {
+        clip-path: inset(0 0 round 999px);
+        translate: 0 0;
+        scale: 1;
+    }
 }
 
 body .has-scroll-reveal .carousel-timeline-step {
     opacity: 0;
     visibility: hidden;
     transition: opacity .12s ease, visibility 0s linear .12s, width .32s cubic-bezier(.22, 1, .36, 1), flex-basis .32s ease, transform .22s ease;
+}
+
+body .carousel-player.has-scroll-reveal:not(.is-player-visible):not(:focus-within) .carousel-timeline-step.is-active {
+    width: 8px;
+    flex-basis: 8px;
 }
 
 body .has-scroll-reveal .carousel-play-toggle {
@@ -247,16 +283,13 @@ body .carousel-player.has-scroll-reveal:is(.is-player-visible, :focus-within) {
 }
 
 body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-timeline::before {
-    clip-path: inset(0 0 round 999px);
-    translate: 0 0;
-    scale: 1;
-    transition: clip-path .58s cubic-bezier(.22, 1, .36, 1) .18s, translate .58s cubic-bezier(.22, 1, .36, 1) .18s, scale .18s ease;
+    animation: carouselPlayerCapsuleReveal 430ms linear .2s both;
 }
 
 body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-timeline-step {
     opacity: 1;
     visibility: visible;
-    transition: opacity .24s ease .4s, visibility 0s .4s, width .32s cubic-bezier(.22, 1, .36, 1), flex-basis .32s ease, transform .22s ease;
+    transition: opacity .24s ease .4s, visibility 0s .4s, width .32s cubic-bezier(.22, 1, .36, 1) .4s, flex-basis .32s ease .4s, transform .22s ease;
 }
 
 body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-play-toggle {
@@ -264,13 +297,15 @@ body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-play-tog
     visibility: visible;
     translate: 0 0;
     scale: 1;
-    transition: opacity .24s ease .55s, visibility 0s .55s, translate .36s cubic-bezier(.22, 1, .36, 1) .5s, scale .36s cubic-bezier(.22, 1, .36, 1) .5s, transform .24s ease;
+    transition: opacity .18s ease .72s, visibility 0s .72s, translate .24s cubic-bezier(.22, 1, .36, 1) .72s, scale .24s cubic-bezier(.22, 1, .36, 1) .72s, transform .24s ease;
 }
 
 @media (max-width: 760px) {
     body .carousel-player.has-scroll-reveal {
         --player-orb-size: 54px;
         --player-orb-offset: 33px;
+        --player-mini-width: 69px;
+        --player-mini-height: 39px;
     }
 }
 
@@ -281,5 +316,10 @@ body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-play-tog
         transition: none !important;
         translate: none !important;
         scale: none !important;
+    }
+
+    body .has-scroll-reveal:is(.is-player-visible, :focus-within) .carousel-timeline::before {
+        animation: none !important;
+        clip-path: inset(0 0 round 999px);
     }
 }

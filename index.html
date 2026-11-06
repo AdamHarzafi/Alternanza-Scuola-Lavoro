@@ -18,7 +18,7 @@
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Harzafi FSL",
-        "alternateName": "Harzafi",
+        "alternateName": "Registro Harzafi FSL",
         "url": "https://adamharzafi.github.io/Alternanza-Scuola-Lavoro/"
     }
     </script>
@@ -26,8 +26,8 @@
     <meta name="google-site-verification" content="sbEJOTIS_aeemOMbv_Alq3MKfx3Y9eryt8OcIdt8t3E" />
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="dns-prefetch" href="https://challenges.cloudflare.com">
-    <link rel="preload" as="image" href="IMMAGINI/HOMEPAGE-PC.webp" type="image/webp" fetchpriority="high" media="(min-width: 1025px)">
-    <link rel="preload" as="image" href="IMMAGINI/HOMEPAGE-MOBILI.webp" type="image/webp" fetchpriority="high" media="(max-width: 1024px)">
+    <link rel="preload" as="image" href="IMMAGINI/HOMEPAGE.webp" type="image/webp" media="(min-width: 761px)" fetchpriority="high">
+    <link rel="preload" as="image" href="IMMAGINI/HOMEPAGE-MOBILE-OPT.webp" type="image/webp" media="(max-width: 760px)" fetchpriority="high">
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -40,79 +40,101 @@
     <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
     <!-- Font SF Pro locali. -->
     <link rel="stylesheet" href="style.css?v=20261017-mobile-oltre-line">
-    <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="home-cards.css?v=20261017-journey-story-v30">
-    <link rel="stylesheet" href="environment-cards.css?v=20261024-environment-heading-unified-green">
-    <script defer src="site-motion.js?v=20261025-hero-image-entrance-v4"></script>
-    <link rel="stylesheet" href="carousel-motion.css?v=20261017-overlay">
+    <link rel="stylesheet" href="modern.css?v=20261103-footer-active-link-underline-v1">
+    <link rel="stylesheet" href="home-cards.css?v=20261104-ipad-hero-bottom-v3">
+    <link rel="stylesheet" href="home-experience.css?v=20261104-tablet-layout-v1">
+    <script defer src="home-experience.js?v=20261103-privacy-symbols-apple-v1"></script>
+    <script defer src="site-motion.js?v=20261103-static-detail-cards-v2"></script>
+    <link rel="stylesheet" href="carousel-motion.css?v=20261103-pause-resume-progress-v1">
     <script defer src="carousel-motion.js?v=20260917-shared"></script>
-    <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
+    <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
     <link rel="stylesheet" href="page-design.css?v=20261017-nav-button-weight">
-    <link rel="stylesheet" href="navbar-refinement.css?v=20261025-status-bar-gray-v27">
-    <script defer src="navbar.js?v=20261025-apple-menu-morph-v26"></script>
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261105-mobile-frost-left-v9">
+    <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
 </head>
 <body class="home-page">
 
     <div id="landing-view">
-        <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
-                    <div class="nav-content"><button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
-                <svg class="nav-toggle-glyph" viewBox="0 0 18 18" aria-hidden="true"><g class="menu-glyph"><path d="M1.5 5.5h15"/><path d="M1.5 12.5h15"/></g><g class="close-glyph"><polyline points="3.5 3.5 14.5 14.5"/><polyline points="14.5 3.5 3.5 14.5"/></g></svg>
-            </button>
-            <button class="nav-logo" onclick="window.scrollTo(0,0)" aria-label="Torna all'inizio della pagina">
-                <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi">
-            </button>
-            <div class="nav-links" id="site-primary-links">
-                <a href="#features">Funzionalità</a>
-                <a href="supporto.html">Supporto</a>
-                <a href="#footer">Contatti</a>
+        <nav class="navbar-wrapper glass home-mainnav" aria-label="Navigazione principale">
+            <div class="nav-content">
+                <div class="home-nav-brand">
+                    <a class="nav-logo" href="#home-hero" aria-label="Harzafi FSL — inizio">
+                        Harzafi FSL
+                    </a>
+                </div>
+                <div class="nav-links" id="site-primary-links">
+                    <a href="#features">Esplora</a>
+                    <a href="supporto.html">Supporto</a>
+                    <a href="#footer">Contatti</a>
+                </div>
+                <div class="home-nav-actions">
+                    <button class="nav-menu-toggle home-nav-chevron" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
+                        <svg class="nav-toggle-glyph" viewBox="0 0 16 9" aria-hidden="true"><path d="M3.5 2.25 8 6.75l4.5-4.5"/></svg>
+                    </button>
+                    <a class="nav-mobile-account home-nav-action" href="login.html">Accedi</a>
+                </div>
             </div>
-            <a class="nav-mobile-account" href="login.html" aria-label="Accedi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.45-3.45 2.9-5.4 6.5-5.4s6.05 1.95 6.5 5.4"/></svg></a>
-        </div>
         </nav>
 
-        <header class="hero-wrapper">
+        <main class="home-content-flow" id="main-content">
+        <div class="home-scroll-sequence">
+        <header class="hero-wrapper section-hero" id="home-hero">
             <div class="hero-mesh" aria-hidden="true"></div>
             <div class="hero-shell">
                 <div class="hero-stage">
                     <picture class="hero-cover">
-                        <source media="(max-width: 1024px)" srcset="IMMAGINI/HOMEPAGE-MOBILI.webp">
-                        <img class="hero-cover-image" src="IMMAGINI/HOMEPAGE-PC.webp" alt="" fetchpriority="high" loading="eager" decoding="async">
+                        <source media="(max-width: 760px)" srcset="IMMAGINI/HOMEPAGE-MOBILE-OPT.webp" type="image/webp" width="1600" height="2867">
+                        <img class="hero-cover-image" src="IMMAGINI/HOMEPAGE.webp" alt="Studentessa laureata con toga e tocco" width="3919" height="3919" fetchpriority="high" loading="eager" decoding="async">
                     </picture>
+                    <div class="hero-gradient" aria-hidden="true"></div>
                 </div>
 
                 <div class="hero-copy-row">
                     <div class="hero-copy reveal" style="transition-delay: 0.16s;">
-                        <p class="hero-kicker">Harzafi FSL</p>
-                        <h1>Il primo registro FSL.<span>Pensato per andare <br class="hero-mobile-break">oltre.</span></h1>
+                        <h1 class="hero-lockup"><img src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" alt="Logo Harzafi" width="378" height="62" fetchpriority="high" decoding="async"></h1>
+                        <p class="hero-description hero-tagline typography-eyebrow-elevated typography-hero-tagline">Potenza pura. Direttamente nelle tue mani.</p>
                     </div>
                     <div class="hero-cta-panel reveal" style="transition-delay: 0.24s;" aria-label="Azioni principali">
-                        <a href="#features" class="hero-discover">Scopri il progetto <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                        <a href="#features" class="hero-discover">Scopri il progetto</a>
                         <a href="login.html" class="hero-login">Accedi</a>
                     </div>
                 </div>
             </div>
         </header>
 
+        <section class="home-scroll-story" aria-labelledby="home-scroll-story-title">
+            <div class="home-scroll-story__content">
+                <h2 class="home-scroll-story__statement reveal" id="home-scroll-story-title" style="transition-delay: 0ms;">
+                    Harzafi FSL unisce prestazioni straordinarie a un’eleganza assoluta.
+                </h2>
+                <p class="home-scroll-story__statement reveal" style="transition-delay: 100ms;">
+                    Così puoi lavorare, crescere e dare forma alle tue idee con una fluidità mai vista.
+                </p>
+                <p class="home-scroll-story__statement reveal" style="transition-delay: 200ms;">
+                    Una nuova dimensione del tuo potenziale ti aspetta.
+                </p>
+            </div>
+        </section>
+        </div>
+
         <!-- Sezione Funzionalità FSL in stile Harzafi -->
         <section id="features" class="apple-features-section">
             <div class="apple-features-container">
                 <div class="apple-features-header">
                     <h2 class="apple-features-title">
-                        <span class="apple-title-main">Guarda cosa ti sei perso.</span>
+                        <span class="apple-title-main">Prima di&nbsp;tutto, le&nbsp;novità.</span>
                     </h2>
                 </div>
 
                 <div class="apple-features-carousel" id="apple-features-carousel">
-                    <div class="apple-features-grid" id="apple-features-track" tabindex="0" role="region" aria-label="Funzionalità Harzafi">
+                    <div class="apple-features-grid" id="apple-features-track" tabindex="0" role="region" aria-label="Funzionalità Harzafi FSL">
                     <!-- Riquadro 1: Monitoraggio in Tempo Reale -->
                     <article class="apple-card feature-card feature-card--progress">
                         <div class="apple-card-top">
-                            <span class="apple-card-eyebrow">IL TUO PERCORSO</span>
-                            <h3 class="apple-card-heading">Le tue ore. Sempre sotto controllo.</h3>
-                            <p class="apple-card-desc">Segui i progressi FSL in tempo reale, con dati chiari e immediati.</p>
+                            <h3 class="apple-card-heading">Tieni sotto controllo le tue ore FSL. Ritrova ogni attività e segui i progressi del tuo percorso.</h3>
                         </div>
                         <div class="apple-card-media feature-card-media">
-                            <img src="IMMAGINI/GRAFICO-ORARIO.webp" alt="Grafico ad anelli del percorso FSL" width="2160" height="2160" loading="lazy" decoding="async">
+                            <img src="IMMAGINI/PRIMO%20FOTO%20BOX.webp" alt="Anteprima di Harzafi FSL su tablet e telefono con una studentessa laureata" loading="lazy" decoding="async">
                         </div>
                     </article>
 
@@ -140,15 +162,15 @@
                         </div>
                     </article>
 
-                    <!-- Riquadro 4: Harzafi ID -->
+                    <!-- Riquadro 4: Accesso -->
                     <article class="apple-card feature-card feature-card--id">
                         <div class="apple-card-top">
-                            <span class="apple-card-eyebrow">HARZAFI ID</span>
-                            <h3 class="apple-card-heading">Un tocco. E sei dentro.</h3>
-                            <p class="apple-card-desc">Avvicina la Harzafi Card al tuo smartphone per accedere e registrare le attività in un istante.</p>
+                            <span class="apple-card-eyebrow">ACCESSO</span>
+                            <h3 class="apple-card-heading">Il tuo account, al sicuro.</h3>
+                            <p class="apple-card-desc">Accedi al Registro Harzafi FSL e ritrova le ore di FSL e le attività del tuo percorso.</p>
                         </div>
                         <div class="apple-card-media feature-card-media">
-                            <img src="IMMAGINI/HARZAFI-CARD-BOX.webp" alt="Harzafi Card" loading="lazy" decoding="async">
+                            <img src="IMMAGINI/ICONA%20PRIVACY%20HARZAFI.svg" alt="Icona della privacy Harzafi" loading="lazy" decoding="async">
                         </div>
                     </article>
                 </div>
@@ -168,42 +190,84 @@
             </div>
         </section>
 
-        <section class="journey-story-banner" aria-labelledby="journey-story-title">
-            <h2 class="journey-story-title" id="journey-story-title">Ogni attività, facile da ritrovare.</h2>
-            <a class="journey-story-section-link" href="dashboard.html">
-                Scopri Harzafi
-                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
+        <section class="pathway-experience" aria-labelledby="pathway-experience-title">
+            <div class="pathway-experience__intro reveal">
+                <p class="pathway-kicker">IL TUO PERCORSO, A COLPO D’OCCHIO</p>
+                <h2 id="pathway-experience-title">Ogni ora racconta qualcosa.</h2>
+            </div>
+
+            <figure class="pathway-product-stage reveal">
+                <img class="pathway-product-image" src="IMMAGINI/PC-HARZAFI-BOX.webp" alt="Computer portatile con il portale Harzafi FSL" width="3344" height="1882" loading="lazy" decoding="async">
+            </figure>
+
+            <p class="pathway-experience__closing reveal">Harzafi FSL le dà un posto.</p>
         </section>
 
-        <section class="journey-story-section" aria-label="Significato delle icone delle esperienze">
-            <div class="journey-story-container">
-                <div class="journey-story-panel">
-                    <div class="journey-story-highlights">
-                        <article class="journey-story-highlight">
-                            <div class="journey-story-highlight-media">
-                                <img src="IMMAGINI/CERTIFICAZIONE.webp" alt="" width="2160" height="2160" loading="lazy" decoding="async">
-                            </div>
-                            <div class="journey-story-highlight-copy">
-                                <p class="journey-story-eyebrow">CERTIFICATO</p>
-                                <h3>Attività con attestato</h3>
-                                <p>L’icona segnala che per questa esperienza era previsto un certificato.</p>
-                            </div>
-                        </article>
-
-                        <article class="journey-story-highlight">
-                            <div class="journey-story-highlight-media">
-                                <img src="IMMAGINI/LEZIONE.webp" alt="" width="2160" height="2160" loading="lazy" decoding="async">
-                            </div>
-                            <div class="journey-story-highlight-copy">
-                                <p class="journey-story-eyebrow">LEZIONE</p>
-                                <h3>Lezione frequentata</h3>
-                                <p>L’icona segnala che hai partecipato a una lezione o a un incontro formativo.</p>
-                            </div>
-                        </article>
-                    </div>
+        <section class="journey-feature-section" aria-labelledby="journey-feature-title">
+            <article class="journey-feature-card">
+                <div class="journey-feature-copy">
+                    <h2 id="journey-feature-title">Dalle lezioni agli attestati.</h2>
+                    <p>Le lezioni frequentate e le attività con attestato restano raccolte nel tuo percorso, pronte da ritrovare quando ti servono.</p>
                 </div>
+
+                <div class="journey-feature-visual">
+                    <img class="journey-feature-image" src="IMMAGINI/MOCKUP%20ICONE%20E%20ATTESTATI.webp" alt="Mockup Harzafi su smartphone con le icone delle lezioni e delle attività con attestato" loading="lazy" decoding="async">
+                </div>
+            </article>
+        </section>
+
+        <section class="pathway-details" aria-labelledby="pathway-details-title">
+            <div class="pathway-details__header reveal">
+                <h2 class="apple-showcase-title pathway-details__title" id="pathway-details-title">
+                    <span class="apple-title-main">Più di un registro.</span>
+                    <span class="apple-title-sub">Un modo più semplice di andare avanti.</span>
+                </h2>
             </div>
+
+            <div class="pathway-details__grid">
+                <article class="pathway-detail-card pathway-detail-card--progress">
+                    <div class="pathway-detail-card__copy">
+                        <h3>Nel 2025, abbiamo protetto e verificato oltre 10 mila richieste sconosciute.</h3>
+                    </div>
+                    <img src="IMMAGINI/ICON%20SHIELD.svg" alt="" width="229" height="289" loading="lazy" decoding="async">
+                </article>
+
+                <article class="pathway-detail-card pathway-detail-card--current">
+                    <div class="pathway-detail-card__copy">
+                        <h3>Tutto aggiornato. Tutto al suo posto.</h3>
+                    </div>
+                    <svg class="pathway-checkmark" viewBox="0 0 19 19" width="19" height="19" aria-hidden="true">
+                        <path class="pathway-checkmark__ring" d="M9.495 19C14.688 19 19 14.696 19 9.5S14.679 0 9.485 0C4.3 0 0 4.304 0 9.5S4.31 19 9.495 19zm0-1.578a7.883 7.883 0 01-7.9-7.922c0-4.397 3.505-7.922 7.89-7.922A7.9 7.9 0 0117.413 9.5a7.892 7.892 0 01-7.918 7.922z"/>
+                        <path class="pathway-checkmark__tick" d="M5.85 10.15 8.43 13.18 13.15 5.92" pathLength="1" fill="none" stroke="currentColor" stroke-width="1.58" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </article>
+
+                <article class="pathway-detail-card pathway-detail-card--verified">
+                    <div class="pathway-detail-card__copy">
+                        <h3 class="pathway-privacy-title" aria-label="I tuoi dati. Scopri come vengono usati, chi li tratta e quali diritti puoi esercitare.">
+                            <span class="pathway-privacy-words" aria-hidden="true">
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">I</span><span class="pathway-privacy-word__text">I</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">tuoi</span><span class="pathway-privacy-word__text">tuoi</span></span>
+                                <span class="pathway-privacy-word pathway-privacy-word--focus"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">dati.</span><span class="pathway-privacy-word__text">dati.</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">Scopri</span><span class="pathway-privacy-word__text">Scopri</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">come</span><span class="pathway-privacy-word__text">come</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">vengono</span><span class="pathway-privacy-word__text">vengono</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">usati,</span><span class="pathway-privacy-word__text">usati,</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">chi</span><span class="pathway-privacy-word__text">chi</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">li</span><span class="pathway-privacy-word__text">li</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">tratta</span><span class="pathway-privacy-word__text">tratta</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">e</span><span class="pathway-privacy-word__text">e</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">quali</span><span class="pathway-privacy-word__text">quali</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">diritti</span><span class="pathway-privacy-word__text">diritti</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">puoi</span><span class="pathway-privacy-word__text">puoi</span></span>
+                                <span class="pathway-privacy-word"><span class="pathway-privacy-word__dots" aria-hidden="true"></span><span class="pathway-privacy-word__measure">esercitare.</span><span class="pathway-privacy-word__text">esercitare.</span></span>
+                            </span>
+                        </h3>
+                    </div>
+                    <img class="pathway-privacy-icon" src="IMMAGINI/ICONA%20SICUREZZA%20MANO.svg?v=20261103-sicurezza-mano-v1" alt="Icona sicurezza della mano" width="130" height="130" loading="lazy" decoding="async">
+                </article>
+            </div>
+
         </section>
 
         <!-- Sezione Serve Aiuto -->
@@ -217,7 +281,7 @@
                 </div>
 
                 <div class="apple-cards-carousel-shell" id="apple-cards-carousel-shell">
-                    <div class="apple-cards-carousel" id="apple-cards-carousel" tabindex="0" role="region" aria-label="Riquadri di supporto Harzafi e servizi">
+                    <div class="apple-cards-carousel" id="apple-cards-carousel" tabindex="0" role="region" aria-label="Riquadri di supporto Harzafi FSL">
                 <!-- Riquadro 1: Specialist Harzafi con immagine ottimizzata -->
                     <div class="apple-card specialist-card" id="apple-card-specialist">
                         <div class="apple-card-top">
@@ -233,8 +297,8 @@
                     <div class="apple-card photo-card" id="apple-card-intelligence" data-nosnippet>
                         <div class="apple-card-top">
                             <span class="apple-card-eyebrow">GUIDA RAPIDA</span>
-                            <h3 class="apple-card-heading">Impara a usare Harzafi in pochi minuti.</h3>
-                            <p class="apple-card-desc">Scopri come accedere, controllare le ore FSL, consultare le attività e usare Harzafi ID.</p>
+                            <h3 class="apple-card-heading">Impara a usare Harzafi FSL in pochi minuti.</h3>
+                            <p class="apple-card-desc">Scopri come accedere, controllare le ore FSL e ritrovare le attività del tuo percorso.</p>
                         </div>
                         <div class="apple-card-media photo-media guide-photo-media">
                             <img src="IMMAGINI/PC-HARZAFI-BOX.webp" alt="Computer con il portale Harzafi" class="harzafi-guide-photo" loading="lazy" decoding="async">
@@ -245,17 +309,11 @@
                     <div class="apple-card setup-card" id="apple-card-setup">
                         <div class="apple-card-top">
                             <span class="apple-card-eyebrow">PRIMO ACCESSO</span>
-                            <h3 class="apple-card-heading">Configura il tuo accesso a Harzafi.</h3>
-                            <p class="apple-card-desc">Scegli il metodo di autenticazione, verifica le credenziali e scopri come usare Harzafi ID in sicurezza.</p>
+                            <h3 class="apple-card-heading">Configura il tuo accesso a Harzafi FSL.</h3>
+                            <p class="apple-card-desc">Configura le credenziali e scopri come proteggere il tuo accesso.</p>
                         </div>
                         <div class="apple-card-media setup-media">
-                            <div class="apple-setup-graphics" aria-hidden="true">
-                                <div class="setup-icon-item icon-cloud">
-                                    <svg viewBox="0 0 64 64" fill="none" stroke="#0071e3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M48 44h4a10 10 0 0 0 0-20 15 15 0 0 0-29-5A11 11 0 0 0 12 30a10 10 0 0 0 2 20h34" />
-                                        <polyline points="26 36 32 42 42 30" stroke-width="4" />
-                                    </svg>
-                                </div>
+                            <img src="IMMAGINI/PRIMO%20ACCESSO.webp" alt="Icone Harzafi per il primo accesso: cloud, impronta digitale, dispositivi e sicurezza" class="setup-photo" loading="lazy" decoding="async">
                                 <div class="setup-icon-item icon-touchid">
                                     <svg viewBox="0 0 64 64" fill="none" stroke="#0071e3" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M32 10a18 18 0 0 1 18 18c0 10-3 18-9 24" />
@@ -318,131 +376,14 @@
                 </div>
             </div>
         </section>
-
-        <section class="support-effort-section" aria-labelledby="support-effort-title">
-            <div class="support-effort-box reveal">
-                <img class="support-effort-backdrop" src="IMMAGINI/DONAZIONI.webp" loading="lazy" decoding="async" alt="">
-                <div class="support-effort-content">
-                    <h2 id="support-effort-title">
-                        <span class="support-effort-title-line">Le tue donazioni</span>
-                        <span class="support-effort-title-line">fanno la differenza,</span>
-                        <span class="support-effort-title-line">ogni giorno.</span>
-                    </h2>
-                    <button class="support-effort-button" type="button" disabled>
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <defs>
-                                <linearGradient id="donation-heart-gradient" x1="4" y1="3" x2="20" y2="21" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#ff4f9a"/>
-                                    <stop offset="1" stop-color="#8a54e8"/>
-                                </linearGradient>
-                            </defs>
-                            <path fill="url(#donation-heart-gradient)" d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.53L12 21.35Z"/>
-                        </svg>
-                        <span>DISPONIBILE DAL 14/04</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <section class="environment-section" aria-labelledby="environment-title">
-            <div class="environment-inner">
-                <header class="environment-heading">
-                    <h2 id="environment-title"><img class="environment-heading-logo" src="IMMAGINI/LOGO%20HARZAFI%20AMBIENTE.webp" alt="Harzafi" width="300" height="150"><span class="environment-heading-accent">e l’ambiente.</span></h2>
-                    <a class="environment-heading-link" href="https://cloud.google.com/sustainability" target="_blank" rel="noopener noreferrer">Per saperne di più, scopri le iniziative per infrastrutture digitali più efficienti.</a>
-                </header>
-
-                <div class="environment-cards-shell" id="environment-cards-shell">
-                    <div class="environment-cards" id="environment-cards-track" tabindex="0" role="region" aria-label="Informazioni sull’ambiente e sull’infrastruttura di Harzafi">
-                        <article class="environment-card environment-card--violet">
-                            <svg class="environment-card-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                                <path d="M18.4 8.8 5.8 30.6a3.3 3.3 0 0 0 2.9 4.9h9.1M29.5 8.8l12.7 21.8a3.3 3.3 0 0 1-2.9 4.9h-9.1M24 39.2l-6.2-10.7m6.2 10.7 6.2-10.7M18.4 8.8l5.6 9.7m-5.6-9.7 3.2 5.5M29.5 8.8l-5.5 9.7m5.5-9.7-3.2 5.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <h3 class="environment-card-title">Una piattaforma <span>condivisa.</span></h3>
-                            <button class="environment-card-plus" type="button" data-environment-detail="environment-detail-platform" data-modal-eyebrow="INFRASTRUTTURA" data-modal-title="Una piattaforma condivisa." aria-label="Approfondisci l’infrastruttura digitale usata da Harzafi" aria-haspopup="dialog" aria-controls="environment-detail-modal" aria-expanded="false"><span class="environment-card-plus-disc" aria-hidden="true"><svg class="environment-card-plus-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span></button>
-                        </article>
-
-                        <article class="environment-card environment-card--orange">
-                            <svg class="environment-card-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                                <path d="M27.2 4.8 11.5 26h11.2l-2 17.2L36.5 21H25.2l2-16.2Z" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <h3 class="environment-card-title">Più efficienza, <span>nei data center.</span></h3>
-                            <button class="environment-card-plus" type="button" data-environment-detail="environment-detail-efficiency" data-modal-eyebrow="EFFICIENZA ENERGETICA" data-modal-title="Data center più efficienti." aria-label="Approfondisci i dati sull’efficienza energetica" aria-haspopup="dialog" aria-controls="environment-detail-modal" aria-expanded="false"><span class="environment-card-plus-disc" aria-hidden="true"><svg class="environment-card-plus-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span></button>
-                        </article>
-
-                        <article class="environment-card environment-card--teal">
-                            <svg class="environment-card-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                                <path d="M24 4.8v6.1m0 26.2v6.1m19.2-19.2h-6.1m-26.2 0H4.8m32.8-13.6-4.3 4.3M14.7 33.3l-4.3 4.3m27.2 0-4.3-4.3m-18.6-18.6-4.3-4.3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-                                <circle cx="24" cy="24" r="8.3" stroke="currentColor" stroke-width="2.4"/>
-                                <path d="M24 19.7v4.8l3.2 2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <h3 class="environment-card-title">Energia rinnovabile, <span>su base annuale.</span></h3>
-                            <button class="environment-card-plus" type="button" data-environment-detail="environment-detail-renewables" data-modal-eyebrow="ENERGIA RINNOVABILE" data-modal-title="Energia rinnovabile, su base annuale." aria-label="Approfondisci i dati sull’energia rinnovabile" aria-haspopup="dialog" aria-controls="environment-detail-modal" aria-expanded="false"><span class="environment-card-plus-disc" aria-hidden="true"><svg class="environment-card-plus-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span></button>
-                        </article>
-                    </div>
-
-                    <template id="environment-detail-platform">
-                        <p class="environment-modal-intro">Per alcune funzioni del progetto, come l’accesso e l’archivio dei dati, Harzafi usa Firebase.</p>
-                        <ul class="environment-modal-list">
-                            <li><strong>Una base condivisa.</strong><span>Firebase e Google Cloud condividono alcuni prodotti e la relativa infrastruttura.</span></li>
-                            <li><strong>Un dato da contestualizzare.</strong><span>L’uso di questa piattaforma non misura da solo l’impronta ambientale specifica di Harzafi.</span></li>
-                        </ul>
-                        <a class="environment-modal-source" href="https://firebase.google.com/firebase-and-gcp" target="_blank" rel="noopener noreferrer">Scopri come si collegano Firebase e Google Cloud <span aria-hidden="true">↗</span></a>
-                    </template>
-
-                    <template id="environment-detail-efficiency">
-                        <p class="environment-modal-intro">Google dichiara che i propri data center sono in media oltre 1,5 volte più efficienti dal punto di vista energetico rispetto a un data center aziendale tipico.</p>
-                        <ul class="environment-modal-list">
-                            <li><strong>Il confronto è di Google.</strong><span>Il dato riguarda i data center gestiti da Google e il confronto indicato nella sua documentazione.</span></li>
-                            <li><strong>Non è una misura di Harzafi.</strong><span>Il consumo energetico del progetto non è stato calcolato.</span></li>
-                        </ul>
-                        <a class="environment-modal-source" href="https://cloud.google.com/blog/topics/sustainability/cop28-how-to-decarbonize-your-google-cloud-carbon-footprint" target="_blank" rel="noopener noreferrer">Consulta la fonte Google Cloud <span aria-hidden="true">↗</span></a>
-                    </template>
-
-                    <template id="environment-detail-renewables">
-                        <p class="environment-modal-intro">Google dichiara di aver abbinato ogni anno il 100% del proprio consumo elettrico globale con acquisti di energia rinnovabile.</p>
-                        <ul class="environment-modal-list">
-                            <li><strong>Il dato è annuale e globale.</strong><span>Non significa che ogni data center usi energia rinnovabile in ogni ora.</span></li>
-                            <li><strong>Il dato riguarda Google.</strong><span>Non rappresenta una misurazione dell’elettricità consumata da Harzafi.</span></li>
-                        </ul>
-                        <a class="environment-modal-source" href="https://cloud.google.com/blog/products/infrastructure/expanding-cloud-infrastructure-around-the-world" target="_blank" rel="noopener noreferrer">Consulta la fonte Google Cloud <span aria-hidden="true">↗</span></a>
-                    </template>
-
-                    <div class="carousel-player environment-carousel-player" id="environment-carousel-player" style="--carousel-duration: 7000ms;" aria-label="Scorrimento automatico delle informazioni ambientali">
-                        <div class="carousel-timeline" role="group" aria-label="Seleziona un’informazione ambientale">
-                            <button class="carousel-timeline-step is-active" type="button" data-carousel-index="0" aria-label="Mostra informazione ambientale 1" aria-current="true"></button>
-                            <button class="carousel-timeline-step" type="button" data-carousel-index="1" aria-label="Mostra informazione ambientale 2" aria-current="false"></button>
-                            <button class="carousel-timeline-step" type="button" data-carousel-index="2" aria-label="Mostra informazione ambientale 3" aria-current="false"></button>
-                        </div>
-                        <button class="carousel-play-toggle" type="button" aria-label="Metti in pausa le informazioni ambientali" aria-pressed="false">
-                            <span class="carousel-pause-symbol" aria-hidden="true"><i></i><i></i></span>
-                            <svg class="carousel-play-symbol" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z" fill="currentColor"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <p class="environment-note">Le informazioni ambientali riportate sono dichiarazioni pubbliche di Google. L’impronta specifica di Harzafi non è stata calcolata.</p>
-            </div>
-        </section>
-
-        <div class="access-modal-overlay environment-modal-overlay" id="environment-detail-modal" aria-hidden="true">
-            <section class="access-modal-panel environment-modal-panel" role="dialog" aria-modal="true" aria-labelledby="environment-modal-title" aria-describedby="environment-modal-content" tabindex="-1">
-                <button class="access-modal-close" type="button" aria-label="Chiudi i dettagli">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
-                </button>
-                <div class="access-modal-scroll">
-                    <span class="access-modal-eyebrow" id="environment-modal-eyebrow"></span>
-                    <h2 id="environment-modal-title"></h2>
-                    <div class="access-modal-content environment-modal-content" id="environment-modal-content"></div>
-                </div>
-            </section>
-        </div>
+    </main>
 
         <footer id="footer" class="harzafi-footer">
             <div class="harzafi-footer-inner reveal">
                 <div class="harzafi-footer-main">
                     <div class="harzafi-footer-brand">
                         <a href="index.html" aria-label="Harzafi FSL — Home">
-                            <img src="IMMAGINI/LOGO-HARZAFI.webp" loading="lazy" decoding="async" alt="Harzafi">
+                            <img src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" loading="lazy" decoding="async" alt="Harzafi FSL">
                         </a>
                         <h2>Un registro più semplice. <span>Creato con cura.</span></h2>
                     </div>
@@ -482,8 +423,8 @@
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-functions-compat.js"></script>
 
-    <script defer src="carousel-player.js?v=20261017-player-rest"></script>
+    <script defer src="carousel-player.js?v=20261105-modal-pause-v2"></script>
     <script defer src="auth-session.js?v=20261025-account-nav-v1"></script>
-    <script defer src="main.js?v=20261025-private-profile-checks"></script>
+    <script defer src="main.js?v=20261103-scroll-story-exit-v1"></script>
 </body>
 </html>

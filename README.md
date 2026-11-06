@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="IMMAGINI/LOGO-HARZAFI.webp" width="200" alt="Harzafi">
+  <img src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" width="200" alt="Harzafi">
 </p>
 
 <h1 align="center">Harzafi FSL</h1>
@@ -89,6 +89,7 @@ Per dimostrazioni e sviluppo, utilizzare esclusivamente account di test e dati f
 | [Home](index.html) | Presentazione del progetto e sezioni informative. |
 | [Accesso](login.html) | Accesso all’account e percorsi di recupero. |
 | [Dashboard](dashboard.html) | Riepilogo delle ore ed esperienze con dettagli espandibili. |
+| [Impostazioni](impostazioni.html) | Pagina riservata: dati del proprio account, sicurezza dell’accesso e riepilogo scaricabile. |
 | [Il tuo account](privacy-account.html) | Spiegazioni semplici sull’account e collegamenti di approfondimento. |
 | [Norme sulla privacy](privacy.html) | Informativa sul trattamento dei dati. |
 | [Accessibilità](accessibilita.html) | Informazioni e riferimenti dedicati all’accessibilità. |
@@ -118,9 +119,9 @@ npm run dev
 
 Aprire [http://localhost:3000](http://localhost:3000). Interrompere il server con `Ctrl+C`.
 
-Il server di sviluppo usa attualmente la porta `3000`, definita in `server.js`. Il valore `PORT` presente in `.env.example` non viene letto automaticamente dal server.
+Il server di sviluppo usa la porta `3000`. Puoi cambiarla con la variabile di ambiente `PORT`; `HOST` permette di scegliere l’interfaccia di ascolto. Il server usa soltanto i moduli inclusi in Node.js.
 
-> Il server locale espone la cartella del progetto ed è in ascolto su tutte le interfacce di rete. Usarlo solo per lo sviluppo in un ambiente fidato: non è il server di produzione e non deve contenere segreti o esportazioni di dati.
+Il server ascolta su `127.0.0.1` e serve soltanto le pagine e le risorse pubbliche. I percorsi inesistenti restituiscono la pagina 404; configurazioni, test e strumenti di sviluppo sono esclusi anche dalla build pubblicabile.
 
 ## Servizi e configurazione
 
@@ -236,7 +237,7 @@ Il testo applicabile è riportato in [LICENSE.md](LICENSE.md), nelle versioni it
 ---
 
 <p align="center">
-  <img src="IMMAGINI/LOGO-HARZAFI.webp" width="110" alt="Harzafi"><br>
+  <img src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" width="110" alt="Harzafi"><br>
   <strong>Un progetto di Harzafi Adam.</strong><br>
   <sub>Esperienze al centro. Attenzione ai dettagli.</sub>
 </p>

@@ -12,6 +12,22 @@ body.home-page {
     overflow-x: clip;
 }
 
+/* Sfondo Apple limitato alla sola hero iniziale. */
+.home-page .hero-wrapper {
+    background: linear-gradient(
+        180deg,
+        #f5f5f7 0%,
+        #f5f5f7 76%,
+        #fafafc 91%,
+        #fff 100%
+    );
+}
+
+.home-page .hero-mesh,
+.home-page .hero-mesh::after {
+    display: none;
+}
+
 .home-page #landing-view,
 .home-page .apple-features-section,
 .home-page .apple-features-container {
@@ -24,20 +40,7 @@ body.home-page {
 }
 
 .home-page .hero-wrapper::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0;
-    height: clamp(120px, 12vw, 200px);
-    z-index: 1;
-    pointer-events: none;
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, .18) 25%,
-        rgba(255, 255, 255, .58) 55%,
-        rgba(255, 255, 255, .9) 80%,
-        #fff 100%
-    );
+    content: none;
 }
 
 /* ==========================================================================
@@ -76,10 +79,10 @@ body.home-page {
 
 /* ==========================================================================
    GALLERIA FUNZIONALITÀ — riquadri grandi come quelli Apple
-   Desktop: 1258 × 678 px, con il riquadro successivo che "spunta" a destra.
+   Desktop: 1260 × 680 px, con il riquadro successivo che spunta a destra.
    ========================================================================== */
 .home-page .apple-features-section {
-    --gallery-card-w: 1258px;
+    --gallery-card-w: 1260px;
     --gallery-gutter: clamp(20px, 5vw, 48px);
     --gallery-gap: 22px;
     /* Allinea il primo riquadro alla colonna del titolo e lascia scorrere
@@ -204,7 +207,7 @@ body.home-page {
     width: 100%;
     max-width: none;
     height: auto;
-    aspect-ratio: 1258 / 678;
+    aspect-ratio: 1260 / 680;
     min-height: 520px;
     border-radius: clamp(24px, 2.4vw, 32px);
     overflow: hidden;
@@ -248,7 +251,17 @@ body.home-page {
     overflow: hidden;
 }
 
-.home-page .feature-card-media > img {
+.home-page .feature-card-media > img,
+.home-page .feature-card-media > picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.home-page .feature-card-media > picture > img {
     display: block;
     width: 100%;
     height: 100%;
@@ -259,32 +272,38 @@ body.home-page {
 
 /* ==========================================================================
    POSIZIONI DIVERSE DEL TESTO (desktop)
-   1 · in alto al centro      2 · in basso a sinistra
+   1 · al centro a sinistra  2 · in basso a sinistra
    3 · in alto a sinistra     4 · al centro a destra
    ========================================================================== */
 
-/* 1 — Il tuo percorso: testo in alto, centrato. Grafico sotto. */
+/* 1 — Registro FSL: testo a sinistra, immagine centrata sulla destra. */
 .home-page .feature-card--progress .apple-card-top {
-    top: var(--card-inset);
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(72%, 760px);
-    text-align: center;
+    top: 50%;
+    left: 48px;
+    transform: translateY(-50%);
+    width: min(400px, 40%);
+    text-align: left;
 }
 
-.home-page .feature-card--progress .apple-card-eyebrow,
-.home-page .feature-card--progress .apple-card-desc {
-    margin-inline: auto;
+.home-page .feature-card--progress .apple-card-heading {
+    color: rgba(0, 0, 0, .88);
+    font-family: var(--font-display, "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.1428571429;
+    letter-spacing: .007em;
+    text-wrap: pretty;
 }
 
 .home-page .feature-card--progress .feature-card-media {
-    inset: 40% 0 0 0;
-    padding: 0 0 clamp(20px, 3vw, 36px);
+    inset: 0 0 0 48%;
+    width: auto;
 }
 
 .home-page .feature-card--progress .feature-card-media > img {
-    max-width: 520px;
-    max-height: 520px;
+    transform: none;
+    transform-origin: right top;
+    object-position: right top;
 }
 
 /* 2 — Privacy: testo in basso a sinistra (sopra la zona del player). Logo a destra. */
@@ -363,35 +382,291 @@ body.home-page {
     transition: opacity .2s ease, visibility 0s linear .2s !important;
 }
 
-/* ==========================================================================
-   Titolo donazioni — stesso stile di "Guarda cosa ti sei perso."
-   (56px, grassetto, interlinea 1.07, tracking -0.03em). Resta bianco perché
-   sta sopra l'immagine viola. Su mobile restano le misure già esistenti.
-   ========================================================================== */
+Entrata composta del testo, senza effetto rimbalzo. */
+.home-page .hero-copy.reveal,
+.home-page .hero-cta-panel.reveal {
+    transition:
+        opacity .78s cubic-bezier(.2, .7, .2, 1),
+        transform .78s cubic-bezier(.2, .7, .2, 1);
+}
+
+.home-page .hero-copy.reveal { transform: translate3d(0, 18px, 0); }
+.home-page .hero-copy.reveal.active,
+.home-page .hero-cta-panel.reveal.active { transform: translate3d(0, 0, 0); }
+
+/* Testi di servizio della homepage: proporzioni e spaziatura più vicine ad Apple. */
+.home-page .hero-cta-panel a {
+    font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+}
+
+/* Hero iniziale: un'unica immagine centrata su desktop, tablet e mobile. */
+.home-page .hero-lockup {
+    width: 378px;
+    height: 62px;
+    margin: 0;
+    font-size: 0;
+    line-height: 0;
+}
+
+.home-page .hero-lockup img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: left center;
+}
+
+.home-page .hero-description {
+    position: relative;
+    display: block;
+    max-width: 688px;
+    margin: 7px 0 0;
+    color: #1d1d1f;
+    font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: .007em;
+    line-height: 1.1428571429;
+}
+
 @media (min-width: 761px) {
-    .home-page .support-effort-box .support-effort-content h2 {
-        max-width: none;
-        font-size: clamp(1.9rem, 4.4vw, 3.5rem);
-        font-weight: 700;
-        line-height: 1.07;
-        letter-spacing: -0.01em;
+    .home-page .hero-stage::after {
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 60%;
+        background: linear-gradient(
+            0deg,
+            #f5f5f7 0%,
+            rgba(245, 245, 247, .78) 35%,
+            rgba(245, 245, 247, .42) 68%,
+            rgba(245, 245, 247, 0) 100%
+        );
+    }
+
+    .home-page .hero-cover-image {
+        object-fit: contain;
+        object-position: center center;
+    }
+
+    .home-page .hero-copy-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        gap: clamp(20px, 3vw, 48px);
+    }
+
+    .home-page .hero-copy {
+        max-width: min(760px, 60vw);
+    }
+
+    .home-page .hero-cta-panel {
+        gap: 12px;
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .home-page .hero-cta-panel a {
+        min-height: 44px;
+        padding: 11px 21px;
+        border: 1px solid #1d1d1f;
+        border-radius: 999px;
+        box-shadow: none;
+        white-space: nowrap;
+        transition: color .2s ease, background-color .2s ease, border-color .2s ease;
+    }
+
+    .home-page .hero-discover {
+        color: #1d1d1f;
+        background: transparent;
+    }
+
+    .home-page .hero-login {
+        min-width: 0;
+        color: #fff;
+        background: #1d1d1f;
+    }
+
+    .home-page .hero-cta-panel a:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .home-page .hero-discover:hover {
+        color: #fff;
+        background: #1d1d1f;
+    }
+
+    .home-page .hero-login:hover {
+        color: #fff;
+        background: #3a3a3c;
     }
 }
 
 @media (max-width: 760px) {
-    .home-page .support-effort-box .support-effort-content h2 {
-        font-weight: 700;
-        line-height: 1.07;
-        letter-spacing: -0.01em;
+    .home-page .hero-wrapper {
+        height: 100svh;
+        min-height: 100svh;
+    }
+
+    .home-page .hero-shell {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100svh;
+        min-height: 100svh;
+        padding: max(48px, calc(48px + env(safe-area-inset-top, 0px))) 0 0;
+    }
+
+    .home-page .hero-stage {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: calc(100svh - 48px - env(safe-area-inset-top, 0px));
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .home-page .hero-stage::after {
+        content: "";
+        position: absolute;
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        height: 100%;
+        pointer-events: none;
+        display: block;
+        background: linear-gradient(
+            0deg,
+            #f5f5f7 0%,
+            rgba(245, 245, 247, .78) 35%,
+            rgba(245, 245, 247, .42) 68%,
+            rgba(245, 245, 247, 0) 100%
+        );
+    }
+
+    .home-page .hero-cover {
+        inset: 0;
+    }
+
+    .home-page .hero-cover-image {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: 48% top !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+    }
+
+    .home-page .hero-copy-row {
+        position: absolute;
+        right: 0;
+        bottom: max(20px, calc(14px + env(safe-area-inset-bottom, 0px)));
+        left: 0;
+        display: block;
+        margin: 0;
+        padding: 0 20px;
+        z-index: 3;
+        text-align: center;
+    }
+
+    .home-page .hero-copy {
+        max-width: 100%;
+    }
+
+    .home-page .hero-lockup {
+        width: min(82vw, 378px);
+        height: auto;
+        aspect-ratio: 378 / 62;
+        margin: 0 auto;
+    }
+
+    .home-page .hero-lockup img {
+        object-position: center;
+    }
+
+    .home-page .hero-description {
+        width: min(280px, calc(100vw - 32px));
+        max-width: 280px;
+        margin: 0 auto;
+        color: #1d1d1f;
+        font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -.022em;
+        line-height: 1.2353641176;
+    }
+
+    .home-page .hero-kicker {
+        margin-bottom: 4px;
+        font-size: .95rem;
+    }
+
+    .home-page .hero-copy h1 {
+        font-size: clamp(2rem, 9vw, 2.5rem);
+        line-height: 1.04;
+    }
+
+    .home-page .hero-cta-panel {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 18px;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .home-page .hero-cta-panel a {
+        min-height: 44px;
+        padding: 11px 21px;
+        border: 1px solid #1d1d1f;
+        border-radius: 999px;
+        box-shadow: none;
+        white-space: nowrap;
+    }
+
+    .home-page .hero-discover {
+        color: #1d1d1f;
+        background: transparent;
+    }
+
+    .home-page .hero-login {
+        min-width: 0;
+        color: #fff;
+        background: #1d1d1f;
     }
 }
 
-/* Testi di servizio della homepage: proporzioni e spaziatura più vicine ad Apple. */
-.home-page .hero-cta-panel a {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
+/* Scala tipografica dell'hero allineata alla pagina Apple Vision Pro. */
+@media only screen and (max-width: 1068px) and (min-width: 735px) {
+    .home-page .hero-description {
+        width: auto;
+        max-width: min(688px, calc(100vw - 48px));
+        margin: 7px 0 0;
+        font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: .009em;
+        line-height: 1.1666666667;
+    }
+}
+
+@media only screen and (max-width: 1068px) and (min-height: 726px) and (max-height: 959px) {
+    .home-page .hero-stage::after {
+        height: 100%;
+    }
 }
 
 .home-page .nav-login {
@@ -404,7 +679,7 @@ body.home-page {
     margin-bottom: 12px;
     color: #6e6e73;
     font-size: 12px;
-    font-weight: 400;
+        font-weight: 600;
     line-height: 1.3334;
     letter-spacing: 0.03em;
 }
@@ -457,23 +732,28 @@ body.home-page {
 .home-page .journey-story-banner {
     box-sizing: border-box;
     width: min(1258px, calc(100% - 2 * clamp(20px, 5vw, 48px)));
-    margin: 0 auto;
+    margin: 0 auto 28px;
     padding: 0;
-    position: relative;
-    background: #fff;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    background: #f5f5f7;
 }
 
 .home-page .journey-story-section {
     box-sizing: border-box;
-    width: 100%;
-    margin: 0 0 clamp(84px, 10vw, 132px);
-    padding: 0 clamp(20px, 2vw, 34px) 80px;
-    background: #fff;
+    width: min(1258px, calc(100% - 2 * clamp(20px, 5vw, 48px)));
+    margin: 0 auto clamp(54px, 6vw, 80px);
+    padding: clamp(14px, 2vw, 20px);
+    border: 1px solid rgba(29, 29, 31, .045);
+    border-radius: 32px;
+    background: #f5f5f7;
 }
 
 .home-page .journey-story-container {
     width: 100%;
-    max-width: 1600px;
+    max-width: none;
     margin-inline: auto;
 }
 
@@ -491,9 +771,8 @@ body.home-page {
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: static;
+    margin-bottom: 8px;
     color: #06c;
     font-family: var(--font-text);
     font-size: 16px;
@@ -515,125 +794,132 @@ body.home-page {
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    max-width: 1260px;
-    min-height: 635px;
+    max-width: none;
+    min-height: 0;
     margin-inline: auto;
-    padding: 120px 0;
-    overflow: hidden;
-    border: 1px solid #e8e8ed;
-    border-radius: 24px;
-    background: #fff;
-    box-shadow: 0 8px 28px rgba(29, 29, 31, .045);
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
 .home-page .journey-story-title {
     position: relative;
-    top: -31px;
-    max-width: 725px;
+    top: 0;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    flex: 1 1 auto;
     margin: 0;
     color: #1d1d1f;
-    font-family: var(--font-display);
-    font-size: clamp(2.25rem, 5.47vw, 3.5rem);
-    font-weight: 600;
-    line-height: 1.0714;
-    letter-spacing: -0.025em;
     text-align: left;
-    text-wrap: balance;
 }
+
+.home-page .journey-story-highlight:first-child .journey-story-eyebrow { color: #a66000; }
+.home-page .journey-story-highlight:nth-child(2) .journey-story-eyebrow { color: #0071e3; }
 
 .home-page .journey-story-highlights {
     width: 100%;
-    max-width: 790px;
+    max-width: none;
     margin-inline: auto;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0;
+    gap: 14px;
 }
 
 .home-page .journey-story-highlight {
+    box-sizing: border-box;
     min-width: 0;
-    min-height: 500px;
+    min-height: 180px;
+    padding: 22px;
+    border: 1px solid rgba(29, 29, 31, .045);
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 3px 14px rgba(29, 29, 31, .035);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    text-align: center;
+    gap: 20px;
+    text-align: left;
 }
 
 .home-page .journey-story-highlight-media {
     box-sizing: border-box;
-    width: 100%;
-    height: 330px;
-    min-height: 330px;
+    width: 104px;
+    height: 104px;
+    min-height: 104px;
     flex: 0 0 auto;
-    padding: 0 16px 8px;
+    padding: 0;
     display: grid;
-    place-items: start center;
+    place-items: center;
 }
 
 .home-page .journey-story-highlight-media img {
     display: block;
-    width: min(100%, 260px);
-    height: auto;
-    aspect-ratio: 1;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
 }
 
 .home-page .journey-story-eyebrow {
-    margin: 0 9px 9px;
-    color: #b64400;
+    margin: 0 0 7px;
+    color: #6e6e73;
     font-family: var(--font-text);
-    font-size: 12px;
-    font-weight: 400;
+    font-size: 11px;
+    font-weight: 600;
     line-height: 1.3334;
-    letter-spacing: normal;
+    letter-spacing: .08em;
     text-transform: uppercase;
 }
 
 .home-page .journey-story-highlight-copy {
     box-sizing: border-box;
-    width: min(100%, 500px);
+    width: auto;
+    min-width: 0;
+    flex: 1 1 auto;
     margin-top: 0;
-    padding: 0 18px 0;
+    padding: 0;
 }
 
 .home-page .journey-story-highlight-copy h3 {
     margin: 0;
     color: #1d1d1f;
     font-family: var(--font-display);
-    font-size: 28px;
+    font-size: 21px;
     font-weight: 600;
-    line-height: 1.1429;
+    line-height: 1.18;
     letter-spacing: -.02em;
     text-wrap: balance;
 }
 
 .home-page .journey-story-highlight-copy > p:last-child {
-    max-width: 430px;
-    margin: 12px auto 0;
+    max-width: 440px;
+    margin: 7px 0 0;
     color: #6e6e73;
     font-family: var(--font-text);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 400;
     line-height: 1.45;
 }
 
 @media (max-width: 900px) {
     .home-page .journey-story-section {
-        padding-inline: 24px;
+        padding: 16px;
     }
 
     .home-page .journey-story-highlight {
-        min-height: 500px;
+        min-height: 164px;
+        padding: 18px;
+        gap: 16px;
     }
 
     .home-page .journey-story-highlight-media {
-        height: 260px;
-        min-height: 260px;
-    }
-
-    .home-page .journey-story-highlight-media img {
-        width: min(100%, 210px);
+        width: 88px;
+        height: 88px;
+        min-height: 88px;
     }
 }
 
@@ -641,12 +927,17 @@ body.home-page {
     .home-page .journey-story-banner {
         width: calc(100% - 40px);
         margin-inline: auto;
-        padding: 0 0 24px;
+        margin-bottom: 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
     }
 
     .home-page .journey-story-section {
-        margin: 0 0 88px;
-        padding: 0 14px 14px;
+        width: calc(100% - 32px);
+        margin: 0 auto 48px;
+        padding: 12px;
+        border-radius: 24px;
     }
 
     .home-page .journey-story-section-header {
@@ -659,10 +950,9 @@ body.home-page {
     }
 
     .home-page .journey-story-section-link {
-        position: static;
         display: flex;
         width: max-content;
-        margin: 4px 0 0;
+        margin: 0;
         padding: 0;
         font-size: 13px;
     }
@@ -675,53 +965,51 @@ body.home-page {
     .home-page .journey-story-panel {
         max-width: 100%;
         min-height: 0;
-        padding: 72px 20px;
-        border-radius: 24px;
+        padding: 0;
     }
 
     .home-page .journey-story-title {
         top: 0;
+        width: 100%;
         margin: 0;
-        font-size: clamp(2.35rem, 11vw, 3rem);
-        line-height: 1.02;
     }
 
     .home-page .journey-story-highlights {
         grid-template-columns: 1fr;
-        gap: 34px;
+        gap: 16px;
     }
 
     .home-page .journey-story-highlight {
         min-height: 0;
+        padding: 16px;
+        gap: 14px;
+        border-radius: 20px;
         transform: none;
     }
 
     .home-page .journey-story-highlight-media {
-        width: 100%;
-        height: 210px;
-        min-height: 0;
+        width: 76px;
+        height: 76px;
+        min-height: 76px;
         flex: 0 0 auto;
-        padding: 0 12px 12px;
     }
 
     .home-page .journey-story-eyebrow {
-        margin-bottom: 9px;
-    }
-
-    .home-page .journey-story-highlight-media img {
-        width: min(64vw, 190px);
+        margin-bottom: 6px;
+        font-size: 10px;
     }
 
     .home-page .journey-story-highlight-copy {
-        padding: 0 8px;
+        padding: 0;
     }
 
     .home-page .journey-story-highlight-copy h3 {
-        font-size: 28px;
+        font-size: 18px;
     }
 
     .home-page .journey-story-highlight-copy > p:last-child {
-        font-size: 15px;
+        margin-top: 6px;
+        font-size: 13px;
     }
 
 }
@@ -795,11 +1083,11 @@ body.home-page {
    ========================================================================== */
 @media (max-width: 760px) {
     .home-page .apple-features-section {
-        margin: 80px 0 70px;
+        margin: 80px 0 28px;
     }
 
     .home-page .apple-features-grid {
-        grid-auto-columns: calc(100% - 28px);
+        grid-auto-columns: min(323.88px, calc(100vw - 40px));
         gap: 14px;
     }
 
@@ -810,7 +1098,7 @@ body.home-page {
         flex-direction: column;
         aspect-ratio: auto;
         min-height: 0;
-        height: clamp(540px, 150vw, 640px);
+        height: 480px;
         border-radius: 28px;
     }
 
@@ -844,9 +1132,19 @@ body.home-page {
         padding: 16px 20px 0;
     }
 
-    /* 1 — alto, centrato */
+    /* 1 — testo centrato in alto, immagine sotto */
     .home-page .feature-card--progress .apple-card-top {
         text-align: center;
+    }
+
+    .home-page .feature-card--progress .apple-card-heading {
+        max-width: 300px;
+        margin-inline: auto;
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.2352941176;
+        letter-spacing: -.01em;
+        text-wrap: balance;
     }
 
     .home-page .feature-card--progress .feature-card-media {
@@ -854,8 +1152,9 @@ body.home-page {
     }
 
     .home-page .feature-card--progress .feature-card-media > img {
-        max-width: 260px;
-        max-height: 260px;
+        transform: none;
+        transform-origin: center;
+        object-position: center;
     }
 
     /* 2 — immagine in alto, testo in basso */
@@ -947,7 +1246,67 @@ body.home-page {
 .home-page .feature-card--privacy .apple-card-eyebrow { opacity: .82; }
 .home-page .feature-card--privacy .apple-card-desc { opacity: .88; }
 
+/* Sfumatura hero ispirata ai valori Apple forniti. */
+.home-page .hero-gradient {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 45%;
+    pointer-events: none;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, .65),
+        rgba(255, 255, 255, .3) 50%,
+        rgba(255, 255, 255, 0)
+    );
+}
+
+/* La foto si dissolve sullo sfondo invece di terminare con un bordo netto. */
+.home-page .hero-cover-image {
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        #000 0%,
+        #000 86%,
+        rgba(0, 0, 0, .72) 92%,
+        rgba(0, 0, 0, .32) 97%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        #000 0%,
+        #000 86%,
+        rgba(0, 0, 0, .72) 92%,
+        rgba(0, 0, 0, .32) 97%,
+        transparent 100%
+    );
+}
+
+/* Disattiva il vecchio velo applicato direttamente alla foto. */
+.home-page .hero-stage::after {
+    content: none;
+}
+
 @media (max-width: 760px) {
+    .home-page .hero-cover-image {
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            #000 0%,
+            #000 89%,
+            rgba(0, 0, 0, .62) 95%,
+            transparent 100%
+        ) !important;
+        mask-image: linear-gradient(
+            to bottom,
+            #000 0%,
+            #000 89%,
+            rgba(0, 0, 0, .62) 95%,
+            transparent 100%
+        ) !important;
+    }
+
     .home-page .feature-card--privacy {
         position: relative;
         flex-direction: column;
@@ -972,5 +1331,761 @@ body.home-page {
         left: var(--card-inset);
         width: auto;
         padding: 0;
+    }
+}
+
+/* Layout finale della home: local nav persistente e hero a piena altezza utile. */
+@media (min-width: 761px) {
+    .home-page .hero-wrapper {
+        height: calc(100svh - 96px);
+        min-height: max(620px, calc(100svh - 96px));
+    }
+
+    .home-page .hero-shell {
+        display: block;
+        height: 100%;
+        min-height: 100%;
+        padding: 0;
+    }
+
+    .home-page .hero-stage {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+    }
+
+    .home-page .hero-copy-row {
+        position: absolute;
+        right: 0;
+        bottom: clamp(32px, 5vh, 64px);
+        left: 0;
+        z-index: 3;
+    }
+}
+
+@media (max-width: 760px) {
+    .home-page .hero-wrapper {
+        height: calc(100svh - 100px - env(safe-area-inset-top, 0px));
+        min-height: max(470px, calc(100svh - 100px - env(safe-area-inset-top, 0px)));
+    }
+
+    .home-page .hero-shell {
+        height: 100%;
+        min-height: 100%;
+        padding-top: 0;
+    }
+
+    .home-page .hero-stage { height: 100%; }
+}
+
+/* La barra unica sovrapposta all'hero non deve lasciare una fascia vuota in fondo. */
+.home-page .hero-wrapper {
+    height: 100svh;
+    min-height: max(620px, 100svh);
+}
+
+.home-page .home-content-flow > section {
+    scroll-margin-top: 58px;
+}
+
+@media (max-width: 760px) {
+    .home-page .hero-wrapper {
+        height: 100svh;
+        min-height: max(470px, 100svh);
+    }
+
+    .home-page .home-content-flow > section {
+        scroll-margin-top: calc(60px + env(safe-area-inset-top, 0px));
+    }
+}
+
+/* iPad mini portrait: keep the square artwork intact and stack the lockup
+   and actions so they never collide with the image or each other. */
+@media (min-width: 761px) and (max-width: 833px) and (orientation: portrait) {
+    .home-page .hero-wrapper {
+        height: 100svh;
+        min-height: max(720px, 100svh);
+    }
+
+    .home-page .hero-shell {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100svh;
+        min-height: 100svh;
+        padding: 0;
+    }
+
+    .home-page .hero-stage {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .home-page .hero-stage::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        display: block;
+        height: 45%;
+        pointer-events: none;
+        background: linear-gradient(
+            0deg,
+            rgba(245, 245, 247, .65),
+            rgba(245, 245, 247, .3) 50%,
+            rgba(245, 245, 247, 0)
+        );
+    }
+
+    .home-page .hero-cover {
+        top: 0;
+        right: 0;
+        bottom: auto;
+        left: 0;
+        width: 100%;
+        height: min(100vw, 90svh);
+    }
+
+    .home-page .hero-cover-image {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        object-position: center top !important;
+        -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 88%, rgba(0, 0, 0, .55) 95%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 0%, #000 88%, rgba(0, 0, 0, .55) 95%, transparent 100%);
+    }
+
+    .home-page .hero-copy-row {
+        position: absolute;
+        right: 0;
+        bottom: clamp(24px, 10svh, 112px);
+        left: 0;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 14px;
+        margin: 0;
+        padding: 0 28px;
+        text-align: center;
+    }
+
+    .home-page .hero-copy {
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .home-page .hero-lockup {
+        width: min(378px, 70vw);
+        height: auto;
+        aspect-ratio: 378 / 62;
+        margin: 0 auto;
+    }
+
+    .home-page .hero-lockup img { object-position: center; }
+
+    .home-page .hero-description {
+        width: min(688px, 100%);
+        max-width: 688px;
+        margin: 7px auto 0;
+        font-size: clamp(24px, 3.8vw, 30px);
+        line-height: 1.17;
+        text-align: center;
+        text-wrap: balance;
+    }
+
+    .home-page .hero-cta-panel {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin: 0;
+    }
+}
+
+/* Scroll story: three editorial statements revealed as the section enters view. */
+.home-page .home-scroll-story {
+    position: relative;
+    display: grid;
+    min-height: max(760px, 100svh);
+    place-items: center;
+    box-sizing: border-box;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(100px, 12vh, 150px) 24px;
+    background: #fff;
+}
+
+.home-page .home-scroll-story__content {
+    position: relative;
+    width: min(754px, 100%);
+    margin: 0 auto;
+    text-align: center;
+}
+
+.home-page .home-scroll-story__statement {
+    display: block;
+    max-width: 754px;
+    margin: 0 auto;
+    color: #1d1d1f;
+    font-family: var(--font-display, "SF Pro Display", sans-serif);
+    font-size: 48px;
+    font-weight: 600;
+    letter-spacing: -.025em;
+    line-height: 1.08;
+    text-wrap: balance;
+}
+
+/* Hero mobile: lockup, tagline e CTA compatti e centrati come nel riferimento. */
+@media (max-width: 760px) {
+    .home-page .hero-copy-row {
+        top: auto;
+        bottom: max(32px, calc(24px + env(safe-area-inset-bottom, 0px)));
+        transform: none;
+    }
+
+    .home-page .hero-lockup {
+        width: min(273px, 82vw);
+    }
+
+    .home-page .hero-description {
+        width: min(280px, calc(100vw - 32px));
+        max-width: 280px;
+        margin: 7px auto 0;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: -.01em;
+        line-height: 21px;
+        text-wrap: balance;
+    }
+
+    .home-page .hero-cta-panel {
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    .home-page .hero-cta-panel a {
+        min-height: 0;
+        padding: 9px 17px;
+        font-size: 14px;
+        line-height: 16.5px;
+    }
+
+    .home-page .hero-login {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+}
+
+.home-page .home-scroll-story__statement + .home-scroll-story__statement {
+    padding-top: 50px;
+}
+
+.home-page .home-scroll-story__statement.reveal {
+    transition:
+        opacity .72s cubic-bezier(.22, .68, 0, 1),
+        transform .72s cubic-bezier(.22, .68, 0, 1);
+}
+
+.home-page .home-scroll-story__statement.reveal:not(.active) {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+}
+
+.home-page .home-scroll-story__statement.reveal.is-exiting-up:not(.active) {
+    transform: translate3d(0, -22px, 0);
+}
+
+.home-page .home-scroll-story__statement.reveal.is-exiting-down:not(.active) {
+    transform: translate3d(0, 22px, 0);
+}
+
+.home-page .home-scroll-story__statement.reveal.active {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+@media (min-width: 761px) and (max-width: 1100px) {
+    .home-page .home-scroll-story {
+        min-height: max(720px, 92svh);
+    }
+
+    .home-page .home-scroll-story__statement {
+        font-size: clamp(36px, 4.4vw, 46px);
+    }
+}
+
+@media (max-width: 760px) {
+    .home-page .home-scroll-story {
+        min-height: max(680px, 92svh);
+        padding: 104px 22px;
+    }
+
+    .home-page .home-scroll-story__content {
+        width: min(100%, 520px);
+    }
+
+    .home-page .home-scroll-story__statement {
+        font-size: clamp(30px, 8vw, 38px);
+        line-height: 1.1;
+        letter-spacing: -.02em;
+    }
+
+    .home-page .home-scroll-story__statement + .home-scroll-story__statement {
+        padding-top: 34px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-page .home-scroll-story__statement.reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* La hero resta dietro mentre il pannello narrativo le scorre sopra. */
+.home-page .home-scroll-sequence {
+    position: relative;
+    isolation: isolate;
+}
+
+.home-page .home-scroll-sequence > .hero-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+}
+
+.home-page .home-scroll-sequence > .home-scroll-story {
+    position: relative;
+    z-index: 1;
+    margin-top: 0;
+    border-radius: 34px 34px 0 0;
+    background: transparent;
+}
+
+.home-page .home-scroll-sequence > .home-scroll-story::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: #fbfbfd;
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .home-page .home-scroll-sequence > .home-scroll-story::before {
+        background: rgba(251, 251, 253, .78);
+        -webkit-backdrop-filter: saturate(1.08) blur(22px);
+        backdrop-filter: saturate(1.08) blur(22px);
+    }
+}
+
+@media (max-width: 760px) {
+    .home-page .home-scroll-sequence > .home-scroll-story {
+        border-radius: 26px 26px 0 0;
+    }
+
+    @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+        .home-page .home-scroll-sequence > .home-scroll-story::before {
+            background: rgba(251, 251, 253, .82);
+            -webkit-backdrop-filter: saturate(1.06) blur(18px);
+            backdrop-filter: saturate(1.06) blur(18px);
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-page .home-scroll-sequence > .hero-wrapper {
+        position: relative;
+    }
+}
+
+/* Immagine del riquadro Primo accesso */
+.home-page .apple-card.setup-card,
+.home-page .apple-card.setup-card .setup-media {
+    background-color: #fff;
+}
+
+.home-page .setup-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    object-fit: contain;
+    object-position: center;
+    transition: transform 0.3s ease-out;
+}
+
+.home-page .apple-card.setup-card:hover .setup-photo {
+    transform: scale(1.02);
+}
+
+/* Riquadro panoramica del percorso, composto in HTML e CSS */
+.home-page .journey-feature-section {
+    box-sizing: border-box;
+    width: 100%;
+    padding: clamp(48px, 7.5vw, 104px) max(20px, 5vw);
+    background: #fff;
+}
+
+.home-page .journey-feature-card {
+    box-sizing: border-box;
+    width: min(1258px, 100%);
+    min-height: clamp(500px, 57vw, 635px);
+    margin: 0 auto;
+    padding: clamp(36px, 7vw, 88px);
+    display: grid;
+    grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+    align-items: center;
+    gap: clamp(32px, 6vw, 84px);
+    overflow: hidden;
+    border: 0;
+    border-radius: clamp(22px, 2.5vw, 32px);
+    background: #f5f5f7;
+}
+
+.home-page .journey-feature-copy { max-width: 440px; }
+
+.home-page .journey-feature-visual {
+    position: relative;
+    width: 100%;
+    min-height: 460px;
+    align-self: stretch;
+}
+
+.home-page .journey-feature-image {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: min(125%, 560px);
+    max-height: none;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    transform: translateX(-50%);
+}
+
+.home-page .journey-feature-eyebrow {
+    margin: 0 0 14px;
+    color: #6e6e73;
+    font-family: var(--font-text);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: .08em;
+}
+
+.home-page .journey-feature-copy h2 {
+    margin: 0;
+    color: #1d1d1f;
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 4vw, 3.8rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -.045em;
+    text-wrap: balance;
+}
+
+.home-page .journey-feature-copy > p:last-child {
+    max-width: 400px;
+    margin: 20px 0 0;
+    color: #6e6e73;
+    font-family: var(--font-text);
+    font-size: clamp(1rem, 1.35vw, 1.15rem);
+    line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+    .home-page .journey-feature-section { padding: 36px 16px; }
+
+    .home-page .journey-feature-card {
+        min-height: 0;
+        padding: 30px 22px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+        border-radius: 24px;
+    }
+
+    .home-page .journey-feature-copy h2 {
+        max-width: 460px;
+        font-size: clamp(2rem, 9vw, 2.7rem);
+    }
+
+    .home-page .journey-feature-copy > p:last-child { margin-top: 14px; font-size: 15px; }
+
+    .home-page .journey-feature-visual {
+        height: clamp(280px, 86vw, 340px);
+        min-height: 0;
+        margin-bottom: -30px;
+        overflow: hidden;
+    }
+    .home-page .journey-feature-image {
+        top: 0;
+        width: min(100%, 320px);
+    }
+}
+
+/* Tablet: hero proporzionata in verticale e azioni raccolte accanto al testo
+   in landscape. Le misure seguono lo spazio disponibile, non un singolo modello. */
+@media (min-width: 761px) and (max-width: 1366px) {
+    .home-page .hero-wrapper {
+        height: 100svh;
+        min-height: max(680px, 100svh);
+    }
+
+    .home-page .hero-shell,
+    .home-page .hero-stage {
+        height: 100%;
+        min-height: 100%;
+    }
+
+    .home-page .hero-cover-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center center;
+    }
+
+    .home-page .hero-stage::after {
+        content: "";
+        display: block;
+        height: 48%;
+        background: linear-gradient(
+            0deg,
+            #f5f5f7 0%,
+            rgba(245, 245, 247, .86) 28%,
+            rgba(245, 245, 247, .42) 62%,
+            rgba(245, 245, 247, 0) 100%
+        );
+    }
+
+    .home-page .hero-copy-row {
+        width: min(1040px, calc(100% - 64px));
+        right: 0;
+        left: 0;
+        bottom: clamp(28px, 5.5svh, 72px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(20px, 3vw, 42px);
+        margin-inline: auto;
+        padding: 0;
+        text-align: left;
+    }
+
+    .home-page .hero-copy {
+        flex: 1 1 auto;
+        width: auto;
+        max-width: 640px;
+        min-width: 0;
+    }
+
+    .home-page .hero-lockup {
+        width: clamp(220px, 28vw, 330px);
+        height: auto;
+        aspect-ratio: 378 / 62;
+    }
+
+    .home-page .hero-description {
+        width: auto;
+        max-width: 620px;
+        margin: 5px 0 0;
+        font-size: clamp(20px, 2.3vw, 28px);
+        line-height: 1.17;
+        text-wrap: pretty;
+    }
+
+    .home-page .hero-cta-panel {
+        flex: 0 0 auto;
+        justify-content: center;
+        gap: 9px;
+        margin: 0;
+    }
+
+    .home-page .hero-cta-panel a {
+        min-height: 42px;
+        padding-inline: clamp(13px, 1.6vw, 19px);
+        font-size: 15px;
+    }
+
+    /* Il carosello di supporto conserva card leggibili e gesto swipe sui tablet. */
+    .home-page .apple-cards-carousel {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-inline: clamp(24px, 4vw, 48px);
+        scroll-padding-inline: clamp(24px, 4vw, 48px);
+        overscroll-behavior-x: contain;
+    }
+
+    .home-page .apple-cards-carousel > .apple-card {
+        flex: 0 0 min(380px, calc(100vw - 96px));
+        width: min(380px, calc(100vw - 96px));
+        max-width: none;
+    }
+
+    #support-carousel-player {
+        display: flex !important;
+    }
+
+    .home-page .journey-feature-card {
+        gap: clamp(24px, 4vw, 48px);
+        padding: clamp(32px, 5vw, 64px);
+    }
+}
+
+/* In portrait il copy diventa un blocco compatto e centrato: nessun elemento
+   resta isolato ai lati, anche su tablet piccoli o con zoom del browser. */
+@media (min-width: 761px) and (max-width: 1100px) and (orientation: portrait) {
+    .home-page .hero-copy-row {
+        width: min(760px, calc(100% - 56px));
+        bottom: max(28px, calc(24px + env(safe-area-inset-bottom, 0px)));
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .home-page .hero-copy {
+        flex: 0 1 auto;
+        width: 100%;
+        max-width: 720px;
+        text-align: center;
+    }
+
+    .home-page .hero-lockup {
+        width: clamp(220px, 34vw, 300px);
+        margin-inline: auto;
+    }
+
+    .home-page .hero-lockup img {
+        object-position: center;
+    }
+
+    .home-page .hero-description {
+        max-width: min(650px, 100%);
+        margin: 6px auto 0;
+        font-size: clamp(22px, 2.8vw, 30px);
+        line-height: 1.14;
+        text-wrap: balance;
+    }
+
+    .home-page .hero-cta-panel {
+        gap: 10px;
+    }
+
+    .home-page .journey-feature-section {
+        padding: 64px clamp(24px, 5vw, 52px);
+    }
+
+    .home-page .journey-feature-card {
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+        padding: clamp(30px, 5vw, 48px);
+    }
+
+    .home-page .journey-feature-copy {
+        max-width: 720px;
+    }
+
+    .home-page .journey-feature-copy h2 {
+        max-width: 700px;
+        font-size: clamp(2.4rem, 5vw, 3.4rem);
+    }
+
+    .home-page .journey-feature-visual {
+        height: clamp(300px, 52vw, 480px);
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .home-page .journey-feature-image {
+        width: min(100%, 520px);
+    }
+}
+
+@media (min-width: 761px) and (max-width: 833px) and (orientation: portrait) {
+    /* Il tablet compatto usa un hero della stessa altezza del contenuto: la
+       fascia azzurra successiva non resta separata dalla foto da spazio vuoto. */
+    .home-page .hero-wrapper {
+        height: min(100svh, calc(100vw + 220px));
+        min-height: min(100svh, calc(100vw + 220px));
+    }
+
+    .home-page .hero-shell {
+        height: 100%;
+        min-height: 0;
+    }
+
+    .home-page .hero-stage {
+        height: 100%;
+        min-height: 0;
+    }
+
+    .home-page .hero-copy-row {
+        bottom: max(18px, calc(16px + env(safe-area-inset-bottom, 0px)));
+    }
+}
+
+/* Schermi tablet landscape poco alti: riduce gli ingombri mantenendo la foto. */
+@media (min-width: 761px) and (max-width: 1366px) and (orientation: landscape) and (max-height: 900px) {
+    .home-page .hero-copy-row {
+        width: min(1000px, calc(100% - 56px));
+        bottom: clamp(24px, 4.5svh, 48px);
+    }
+
+    .home-page .hero-lockup {
+        width: clamp(210px, 24vw, 300px);
+    }
+
+    .home-page .hero-description {
+        font-size: clamp(19px, 2.05vw, 25px);
+    }
+
+    .home-page .apple-features-section {
+        margin-top: 88px;
+    }
+}
+
+/* iPad Pro 13" portrait: la foto arriva fino al bordo inferiore dell'hero. */
+@media (min-width: 1000px) and (max-width: 1100px) and (orientation: portrait) {
+    .home-page .hero-gradient {
+        height: 26%;
+        background: linear-gradient(
+            0deg,
+            rgba(245, 245, 247, .64) 0%,
+            rgba(245, 245, 247, .34) 18%,
+            rgba(245, 245, 247, .1) 48%,
+            rgba(245, 245, 247, 0) 100%
+        );
+    }
+
+    .home-page .hero-cover {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+    }
+
+    .home-page .hero-cover-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center bottom;
+        -webkit-mask-image: none;
+        mask-image: none;
     }
 }

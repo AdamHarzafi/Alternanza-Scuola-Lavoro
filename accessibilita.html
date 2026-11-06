@@ -12,58 +12,57 @@
     <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="icon" type="image/webp" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="stylesheet" href="accessibilita.css">
-    <link rel="stylesheet" href="modern.css?v=20261017-access-cards-borderless">
+    <link rel="stylesheet" href="modern.css?v=20261104-legge-card-v12">
     <script defer src="site-motion.js?v=20261025-navigation-persistence-v4"></script>
-    <link rel="stylesheet" href="carousel-motion.css?v=20260917-shared">
+    <link rel="stylesheet" href="carousel-motion.css?v=20261103-pause-resume-progress-v1">
     <script defer src="carousel-motion.js?v=20260917-shared"></script>
-    <script defer src="carousel-player.js?v=20261017-access-carousel"></script>
-    <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
+    <script defer src="carousel-player.js?v=20261105-modal-pause-v2"></script>
+    <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
     <link rel="stylesheet" href="page-design.css?v=20261017-shared-page-style">
-    <link rel="stylesheet" href="navbar-refinement.css?v=20261025-status-bar-gray-v27">
-    <script defer src="navbar.js?v=20261025-apple-menu-morph-v26"></script>
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261105-mobile-frost-left-v9">
+    <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
 </head>
 <body class="accessibility-page">
-    <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
-                <div class="nav-content"><button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
-            <svg class="nav-toggle-glyph" viewBox="0 0 18 18" aria-hidden="true"><g class="menu-glyph"><path d="M1.5 5.5h15"/><path d="M1.5 12.5h15"/></g><g class="close-glyph"><polyline points="3.5 3.5 14.5 14.5"/><polyline points="14.5 3.5 3.5 14.5"/></g></svg>
-        </button>
-        <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
-            <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi">
-        </a>
-        <div class="nav-links" id="site-primary-links">
-            <a href="index.html#features">Funzionalità</a>
-            <a href="supporto.html">Supporto</a>
-            <a href="index.html#footer">Contatti</a>
-        </div>
-        <a class="nav-mobile-account" href="login.html" aria-label="Accedi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.45-3.45 2.9-5.4 6.5-5.4s6.05 1.95 6.5 5.4"/></svg></a>
-        </div>
-    </nav>
+    <nav class="navbar-wrapper glass home-mainnav" aria-label="Navigazione principale">
+            <div class="nav-content">
+                <div class="home-nav-brand">
+                    <a class="nav-logo" href="index.html#home-hero" aria-label="Harzafi FSL — inizio">
+                        Harzafi FSL
+                    </a>
+                </div>
+                <div class="nav-links" id="site-primary-links">
+                    <a href="index.html#features">Esplora</a>
+                    <a href="supporto.html">Supporto</a>
+                    <a href="index.html#footer">Contatti</a>
+                </div>
+                <div class="home-nav-actions">
+                    <button class="nav-menu-toggle home-nav-chevron" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
+                        <svg class="nav-toggle-glyph" viewBox="0 0 16 9" aria-hidden="true"><path d="M3.5 2.25 8 6.75l4.5-4.5"/></svg>
+                    </button>
+                    <a class="nav-mobile-account home-nav-action" href="login.html">Accedi</a>
+                </div>
+            </div>
+        </nav>
 
     <main class="page-content">
         <header class="accessibility-hero reveal">
             <img class="accessibility-hero-logo" src="IMMAGINI/ACCESSIBILITA-LOGO.webp" alt="Accessibilità Harzafi">
             <h1>
-                <span>L'accessibilità non è un'opzione.</span>
-                <span>È il punto di partenza.</span>
+                <span>Il digitale non deve escludere.</span>
+                <span>Deve aprire possibilità.</span>
             </h1>
         </header>
 
         <section class="access-editorial-section" aria-labelledby="access-features-title">
             <header class="access-section-header reveal">
                 <h2 id="access-features-title">
-                    <span class="access-title-main">Bellezza e funzionalità,</span>
-                    <span class="access-title-sub">naturalmente accessibili.</span>
+                    <span class="access-title-main">Funzioni pensate per come vedi, senti, parli e ti muovi. E per come pensi.</span>
                 </h2>
             </header>
 
             <div class="access-card-track" id="access-features-track" tabindex="0" role="region" aria-label="Funzioni di accessibilità del portale">
                 <article class="access-info-card access-info-card--blue reveal is-current">
-                    <span class="access-card-eyebrow">PERCEZIONE</span>
-                    <h3>Disabilità visive.</h3>
-                    <p class="access-card-summary">Descrizioni alternative, compatibilità con screen reader, contrasto elevato e zoom fino al 200%.</p>
-                    <div class="access-card-visual" aria-hidden="true">
-                        <img class="access-card-image access-card-image--vision" src="IMMAGINI/DISABILITA-VISIVE-BOX.webp" alt="" loading="eager" fetchpriority="low" decoding="async">
-                    </div>
+                    <h3>Esplora il sito e i contenuti anche senza vedere lo schermo.</h3>
                     <button class="access-card-more" type="button" data-access-detail="access-detail-vision" data-modal-eyebrow="PERCEZIONE" data-modal-title="Disabilità visive." aria-label="Apri tutti i dettagli sulle funzioni per le disabilità visive">
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
@@ -79,12 +78,7 @@
                 </article>
 
                 <article class="access-info-card access-info-card--violet reveal">
-                    <span class="access-card-eyebrow">INTERAZIONE</span>
-                    <h3>Disabilità motorie.</h3>
-                    <p class="access-card-summary">Navigazione completa da tastiera, focus sempre visibile e interazioni semplici e prevedibili.</p>
-                    <div class="access-card-visual" aria-hidden="true">
-                        <img class="access-card-image access-card-image--motor" src="IMMAGINI/DISABILITA-MOTORIE-BOX.webp" alt="" loading="eager" fetchpriority="low" decoding="async">
-                    </div>
+                    <h3>Naviga e controlla il sito senza usare le mani o il mouse.</h3>
                     <button class="access-card-more" type="button" data-access-detail="access-detail-motor" data-modal-eyebrow="INTERAZIONE" data-modal-title="Disabilità motorie." aria-label="Apri tutti i dettagli sulle funzioni per le disabilità motorie">
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
@@ -98,12 +92,7 @@
                 </article>
 
                 <article class="access-info-card access-info-card--green reveal">
-                    <span class="access-card-eyebrow">COMPRENSIONE</span>
-                    <h3>Accessibilità cognitiva e uditiva.</h3>
-                    <p class="access-card-summary">Struttura ordinata, sottotitoli e trascrizioni, linguaggio semplice e contenuti immediati.</p>
-                    <div class="access-card-visual" aria-hidden="true">
-                        <img class="access-card-image access-card-image--cognitive" src="IMMAGINI/ACCESSIBILITA-COGNITIVA-UDITIVA-BOX.webp" alt="" loading="eager" fetchpriority="low" decoding="async">
-                    </div>
+                    <h3>Leggi trascrizioni e sottotitoli in tempo reale per tutti i contenuti audio.</h3>
                     <button class="access-card-more" type="button" data-access-detail="access-detail-cognitive" data-modal-eyebrow="COMPRENSIONE" data-modal-title="Accessibilità cognitiva e uditiva." aria-label="Apri tutti i dettagli sull'accessibilità cognitiva e uditiva">
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
@@ -134,21 +123,18 @@
         <section class="access-editorial-section access-editorial-section--standards" aria-labelledby="access-standards-title">
             <header class="access-section-header reveal">
                 <h2 id="access-standards-title">
-                    <span class="access-title-main">Standard chiari,</span>
-                    <span class="access-title-sub">impegno continuo.</span>
+                    Requisiti definiti, miglioramento costante.
                 </h2>
             </header>
 
             <div class="access-card-track" id="access-standards-track" tabindex="0" role="region" aria-label="Conformità e impegni per l'accessibilità">
                 <article class="access-info-card access-info-card--neutral reveal is-current">
-                    <span class="access-card-eyebrow">WCAG 2.1</span>
-                    <h3>Conforme al livello AA.</h3>
-                    <p class="access-card-summary">Requisiti tecnici verificati, eccezioni documentate e miglioramento continuo del portale.</p>
+                    <h3>Progettato secondo gli standard di accessibilità più elevati.</h3>
                     <button class="access-card-more" type="button" data-access-detail="access-detail-wcag" data-modal-eyebrow="WCAG 2.1" data-modal-title="Conforme al livello AA." aria-label="Apri tutti i dettagli sulla conformità WCAG 2.1">
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
                     <template id="access-detail-wcag">
-                        <p class="access-detail-intro">Il Portale Registro FSL Harzafi rispetta i requisiti tecnici WCAG 2.1, Livello AA, con alcune eccezioni documentate.</p>
+                        <p class="access-detail-intro">Il Portale Registro FSL Harzafi FSL rispetta i requisiti tecnici WCAG 2.1, Livello AA, con alcune eccezioni documentate.</p>
                         <span class="access-status-pill">Conforme con eccezioni</span>
                         <div class="access-detail-callout">
                             <strong>Un processo continuo.</strong>
@@ -158,9 +144,7 @@
                 </article>
 
                 <article class="access-info-card access-info-card--warm reveal">
-                    <span class="access-card-eyebrow">STATO</span>
-                    <h3>Dichiarazione trasparente.</h3>
-                    <p class="access-card-summary">Nessun onere sproporzionato, nessun contenuto escluso e stato dichiarato con chiarezza.</p>
+                    <h3>Nessun compromesso. Nessun contenuto escluso.</h3>
                     <button class="access-card-more" type="button" data-access-detail="access-detail-status" data-modal-eyebrow="STATO" data-modal-title="Dichiarazione trasparente." aria-label="Apri tutti i dettagli sullo stato della dichiarazione">
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
@@ -175,9 +159,7 @@
                 </article>
 
                 <article class="access-info-card access-info-card--dark reveal">
-                    <span class="access-card-eyebrow">ITALIA · UE</span>
-                    <h3>Un impegno anche legale.</h3>
-                    <p class="access-card-summary">Dichiarazione sempre raggiungibile, conformità ufficiale e riferimenti italiani ed europei.</p>
+                    <h3>Un diritto garantito a norma di legge.</h3>
                     <button class="access-card-more" type="button" data-access-detail="access-detail-legal" data-modal-eyebrow="ITALIA · UE" data-modal-title="Un impegno anche legale." aria-label="Apri tutti i dettagli sull'impegno legale">
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
@@ -222,7 +204,7 @@
         <div class="harzafi-footer-inner reveal">
             <div class="harzafi-footer-main">
                 <div class="harzafi-footer-brand">
-                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi"></a>
+                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" alt="Harzafi FSL"></a>
                     <h2>Un registro più semplice. <span>Creato con cura.</span></h2>
                 </div>
                 <div class="harzafi-footer-profile">

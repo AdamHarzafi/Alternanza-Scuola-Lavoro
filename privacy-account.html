@@ -13,38 +13,43 @@
     
     <link rel="apple-touch-icon" sizes="180x180" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="icon" type="image/webp" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
-    <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
-    <link rel="stylesheet" href="account-privacy.css?v=20261017-nav-button-match">
-    <meta name="description" content="Il tuo account Harzafi, in parole semplici. Scopri come funziona l’accesso, come vengono protetti i dati e a chi rivolgerti.">
-    <script defer src="carousel-player.js?v=20260917-shared-motion"></script>
+    <link rel="stylesheet" href="modern.css?v=20261103-footer-active-link-underline-v1">
+    <link rel="stylesheet" href="account-privacy.css?v=20261104-account-display-typography-v2">
+    <meta name="description" content="Il tuo account su Harzafi FSL, in parole semplici. Scopri come funziona l’accesso, come vengono protetti i dati e a chi rivolgerti.">
+    <script defer src="carousel-player.js?v=20261105-modal-pause-v2"></script>
     <script defer src="account-privacy.js?v=20260906-rail-end"></script>
     <script defer src="site-motion.js?v=20261025-navigation-persistence-v4"></script>
-    <link rel="stylesheet" href="carousel-motion.css?v=20260917-shared">
+    <link rel="stylesheet" href="carousel-motion.css?v=20261103-pause-resume-progress-v1">
     <script defer src="carousel-motion.js?v=20260917-shared"></script>
-    <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
+    <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
     <link rel="stylesheet" href="page-design.css?v=20261017-nav-button-weight">
-    <link rel="stylesheet" href="navbar-refinement.css?v=20261025-status-bar-gray-v27">
-    <script defer src="navbar.js?v=20261025-apple-menu-morph-v26"></script>
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261105-mobile-frost-left-v9">
+    <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
 </head>
 <body class="account-privacy-page">
 
     <a class="account-skip-link" href="#contenuto">Vai al contenuto</a>
 
-    <nav class="navbar-wrapper glass" id="navbar" aria-label="Navigazione principale">
-                <div class="nav-content"><button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
-            <svg class="nav-toggle-glyph" viewBox="0 0 18 18" aria-hidden="true"><g class="menu-glyph"><path d="M1.5 5.5h15"/><path d="M1.5 12.5h15"/></g><g class="close-glyph"><polyline points="3.5 3.5 14.5 14.5"/><polyline points="14.5 3.5 3.5 14.5"/></g></svg>
-        </button>
-        <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
-            <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi">
-        </a>
-        <div class="nav-links" id="site-primary-links">
-            <a href="index.html#features">Funzionalità</a>
-            <a href="supporto.html">Supporto</a>
-            <a href="index.html#footer">Contatti</a>
-        </div>
-        <a class="nav-mobile-account" href="login.html" aria-label="Accedi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.45-3.45 2.9-5.4 6.5-5.4s6.05 1.95 6.5 5.4"/></svg></a>
-        </div>
-    </nav>
+    <nav class="navbar-wrapper glass home-mainnav" aria-label="Navigazione principale">
+            <div class="nav-content">
+                <div class="home-nav-brand">
+                    <a class="nav-logo" href="index.html#home-hero" aria-label="Harzafi FSL — inizio">
+                        Harzafi FSL
+                    </a>
+                </div>
+                <div class="nav-links" id="site-primary-links">
+                    <a href="index.html#features">Esplora</a>
+                    <a href="supporto.html">Supporto</a>
+                    <a href="index.html#footer">Contatti</a>
+                </div>
+                <div class="home-nav-actions">
+                    <button class="nav-menu-toggle home-nav-chevron" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
+                        <svg class="nav-toggle-glyph" viewBox="0 0 16 9" aria-hidden="true"><path d="M3.5 2.25 8 6.75l4.5-4.5"/></svg>
+                    </button>
+                    <a class="nav-mobile-account home-nav-action" href="login.html">Accedi</a>
+                </div>
+            </div>
+        </nav>
 
     <main id="contenuto" class="account-story">
         <header class="account-hero">
@@ -53,8 +58,8 @@
         </header>
         <section class="account-belief account-container" id="riservatezza" aria-labelledby="belief-title">
             <img src="IMMAGINI/LOGO-PRIVACY-ACCOUNT-SECURITY.webp" width="2160" height="2160" alt="Icona della privacy" decoding="async">
-            <h2 id="belief-title">La riservatezza è<br>uno spazio inviolabile.</h2>
-            <p>Da Harzafi progettiamo il futuro digitale partendo da una certezza: i tuoi dati appartengono alla tua vita, non ai nostri server.</p>
+            <h2 id="belief-title">I tuoi dati,<br>spiegati con chiarezza.</h2>
+            <p>Il tuo percorso viene conservato nei servizi che fanno funzionare Harzafi FSL. Qui trovi una sintesi di come vengono usati i dati, chi può consultarli e quali verifiche restano aperte.</p>
         </section>
         <section class="account-basics" aria-labelledby="basics-title">
             <div class="account-container account-section-heading">
@@ -74,8 +79,8 @@
                     <article class="account-card account-card-security" aria-labelledby="account-card-title-2">
                         <div class="account-card-media"><img class="account-card-art account-card-lock" src="IMMAGINI/LOGO-HARZAFI-PRIVACY-BOX.webp" width="800" height="800" alt="" loading="lazy" decoding="async"></div>
                         <div class="account-card-copy">
-                            <h3 id="account-card-title-2"><span>Protetti.</span><br>Non per magia.</h3>
-                            <p>I docenti autorizzati vedono i registri collegati, incluse le attività modificate o eliminate e le relative ore. Le eliminate non entrano nei totali; per le modificate sono mostrati i dati attuali.</p>
+                            <h3 id="account-card-title-2"><span>Accessi.</span><br>Da conoscere.</h3>
+                            <p>Nel codice e nelle regole condivise, i docenti abilitati possono consultare i registri degli studenti presenti nel portale, non solo quelli di una singola classe. Le attività eliminate restano visibili e non entrano nei totali. Le regole online devono ancora essere verificate.</p>
                             <a class="account-text-link" href="privacy.html#accessi">Chi può vedere i dati <span aria-hidden="true">↗</span></a>
                         </div>
                     </article>
@@ -110,16 +115,16 @@
                 </button>
             </div>
             <div class="account-disclosure account-container">
-                <p>Harzafi è un progetto personale indipendente, non un servizio ufficiale della scuola.</p>
+                <p>Harzafi FSL è un progetto personale indipendente, non un servizio ufficiale della scuola.</p>
                 <p>Questa pagina è una sintesi. L’<a href="privacy.html">informativa completa</a> descrive anche gli aspetti ancora da definire, tra cui i tempi di conservazione e la verifica degli accessi ai dati.</p>
             </div>
         </section>
         <section class="account-values" aria-labelledby="values-title">
             <div class="account-container">
                 <h2 id="values-title">Seguiamo sempre quello<br> in cui crediamo.</h2>
-                <div class="account-values-track" id="account-values-track" tabindex="0" role="region" aria-label="I valori di Harzafi">
+                <div class="account-values-track" id="account-values-track" tabindex="0" role="region" aria-label="I valori di Harzafi FSL">
                     <article class="account-value">
-                        <img class="account-value-icon" src="IMMAGINI/ACCESSIBILITA-LOGO.webp" width="1080" height="1080" alt="" loading="lazy" decoding="async">
+                        <img class="account-value-icon" src="IMMAGINI/ACCESSIBILITA-LOGO.webp" alt="" width="38" height="38" loading="lazy" decoding="async">
                         <h3>Accessibilità</h3>
                         <p>Leggere, orientarsi, trovare ciò che serve. L’attenzione alle persone parte anche da qui.</p>
                         <a href="accessibilita.html">Scopri l’accessibilità <span aria-hidden="true">›</span></a>
@@ -139,7 +144,7 @@
                     <article class="account-value">
                         <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7h32a3 3 0 0 1 3 3v23a3 3 0 0 1-3 3H21L9 44v-8H8a3 3 0 0 1-3-3V10a3 3 0 0 1 3-3Z"/><path d="M14 17h20M14 25h14"/></svg>
                         <h3>Ascolto</h3>
-                        <p>Una domanda, una difficoltà, un’idea. Ogni segnalazione può aiutarci a rendere Harzafi più chiaro e utile.</p>
+                        <p>Una domanda, una difficoltà, un’idea. Ogni segnalazione può aiutarci a rendere Harzafi FSL più chiaro e utile.</p>
                         <a href="supporto.html">Parla con noi <span aria-hidden="true">›</span></a>
                     </article>
                 </div>
@@ -155,7 +160,7 @@
         <div class="harzafi-footer-inner">
             <div class="harzafi-footer-main">
                 <div class="harzafi-footer-brand">
-                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi"></a>
+                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" alt="Harzafi FSL"></a>
                     <h2>Un registro più semplice. <span>Creato con cura.</span></h2>
                 </div>
                 <div class="harzafi-footer-profile">
@@ -185,28 +190,7 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const navbar = document.getElementById('navbar');
-            let isScrolled = false;
-
-            // Funzione di gestione dello scroll ottimizzata
-            function handleScroll() {
-                const should = window.scrollY > 40;
-                if (should !== isScrolled) {
-                    isScrolled = should;
-                    navbar.classList.toggle('scrolled', isScrolled);
-                }
-            }
-
-            // Applica immediatamente all'apertura per prevenire scatti durante i refresh
-            handleScroll();
-            
-            // Applica durante lo scroll
-            window.addEventListener('scroll', handleScroll, { passive: true });
-        });
-    </script>
-    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
     <script defer src="auth-session.js?v=20261025-account-nav-v1"></script>

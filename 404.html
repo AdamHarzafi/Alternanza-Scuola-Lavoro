@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Pagina non trovata - Registro FSL Harzafi</title>
+    <title>Pagina non trovata — Harzafi FSL</title>
+    <script>
+        // Keep assets and links valid even when a missing URL has nested segments.
+        const siteBase = document.createElement('base');
+        siteBase.href = location.pathname.startsWith('/Alternanza-Scuola-Lavoro/')
+            ? '/Alternanza-Scuola-Lavoro/' : '/';
+        document.head.appendChild(siteBase);
+    </script>
     <meta name="robots" content="noimageindex">
     
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,28 +19,35 @@
     
     <link rel="icon" type="image/webp" sizes="32x32" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="modern.css?v=20260905-privacy-refinement">
+    <link rel="stylesheet" href="modern.css?v=20261103-footer-active-link-underline-v1">
     <script defer src="site-motion.js?v=20261025-navigation-persistence-v4"></script>
-    <link rel="stylesheet" href="fonts.css?v=20261023-font-load-optimized">
+    <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
     <link rel="stylesheet" href="page-design.css?v=20261017-shared-page-style">
-    <link rel="stylesheet" href="navbar-refinement.css?v=20261025-status-bar-gray-v27">
-    <script defer src="navbar.js?v=20261025-apple-menu-morph-v26"></script>
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261105-mobile-frost-left-v9">
+    <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
 </head>
 <body class="error-page">
 
-    <nav class="navbar-wrapper glass" aria-label="Navigazione principale">
-                <div class="nav-content"><button class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu"><svg class="nav-toggle-glyph" viewBox="0 0 18 18" aria-hidden="true"><g class="menu-glyph"><path d="M1.5 5.5h15"/><path d="M1.5 12.5h15"/></g><g class="close-glyph"><polyline points="3.5 3.5 14.5 14.5"/><polyline points="14.5 3.5 3.5 14.5"/></g></svg></button>
-        <a class="nav-logo" href="index.html" aria-label="Torna alla home page">
-            <img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi">
-        </a>
-        <div class="nav-links" id="site-primary-links">
-            <a href="index.html#features">Funzionalità</a>
-            <a href="supporto.html">Supporto</a>
-            <a href="index.html#footer">Contatti</a>
-        </div>
-        <a class="nav-mobile-account" href="login.html" aria-label="Accedi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.45-3.45 2.9-5.4 6.5-5.4s6.05 1.95 6.5 5.4"/></svg></a>
-        </div>
-    </nav>
+    <nav class="navbar-wrapper glass home-mainnav" aria-label="Navigazione principale">
+            <div class="nav-content">
+                <div class="home-nav-brand">
+                    <a class="nav-logo" href="index.html#home-hero" aria-label="Harzafi FSL — inizio">
+                        Harzafi FSL
+                    </a>
+                </div>
+                <div class="nav-links" id="site-primary-links">
+                    <a href="index.html#features">Esplora</a>
+                    <a href="supporto.html">Supporto</a>
+                    <a href="index.html#footer">Contatti</a>
+                </div>
+                <div class="home-nav-actions">
+                    <button class="nav-menu-toggle home-nav-chevron" type="button" aria-expanded="false" aria-controls="site-primary-links" aria-label="Apri il menu">
+                        <svg class="nav-toggle-glyph" viewBox="0 0 16 9" aria-hidden="true"><path d="M3.5 2.25 8 6.75l4.5-4.5"/></svg>
+                    </button>
+                    <a class="nav-mobile-account home-nav-action" href="login.html">Accedi</a>
+                </div>
+            </div>
+        </nav>
 
     <main class="error-main">
         <section class="error-card reveal active" aria-labelledby="error-title">
@@ -48,7 +62,7 @@
         <div class="harzafi-footer-inner reveal active">
             <div class="harzafi-footer-main">
                 <div class="harzafi-footer-brand">
-                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO-HARZAFI.webp" alt="Harzafi"></a>
+                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" alt="Harzafi FSL"></a>
                     <h2>Un registro più semplice. <span>Creato con cura.</span></h2>
                 </div>
                 <div class="harzafi-footer-profile">

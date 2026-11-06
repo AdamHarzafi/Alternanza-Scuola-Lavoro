@@ -1,0 +1,711 @@
+/* ==========================================================================
+   Home — racconto del percorso su superficie bianca continua
+   ========================================================================== */
+
+.home-page .pathway-experience,
+.home-page .pathway-details {
+    color: var(--page-ink, #1d1d1f);
+    background: var(--surface-solid, #fff);
+}
+
+.home-page .pathway-experience {
+    overflow: hidden;
+    padding: clamp(90px, 9vw, 140px) max(20px, 5vw) clamp(64px, 7vw, 96px);
+}
+
+.home-page .pathway-experience__intro {
+    width: min(980px, 100%);
+    margin: 0 auto clamp(28px, 4vw, 52px);
+    text-align: center;
+}
+
+.home-page .pathway-kicker {
+    margin: 0 0 13px;
+    color: #1d1d1f;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.17;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+}
+
+.home-page .pathway-experience__intro h2,
+.home-page .pathway-experience__closing {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 5.56vw, 5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -.045em;
+    text-wrap: balance;
+}
+
+.home-page .pathway-experience__intro h2 {
+    margin: 13px 0 0;
+    color: #1d1d1f;
+}
+
+.home-page .pathway-product-stage {
+    width: min(980px, 100%);
+    margin: 0 auto clamp(24px, 3vw, 40px);
+}
+
+.home-page .pathway-product-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    transform-origin: center bottom;
+}
+
+.home-page .pathway-experience__closing {
+    margin: 0 auto;
+    color: var(--page-muted, #86868b);
+    text-align: center;
+}
+
+.home-page .pathway-details {
+    padding: clamp(76px, 8vw, 120px) max(20px, 5vw) clamp(90px, 10vw, 140px);
+}
+
+.home-page .pathway-details__header,
+.home-page .pathway-details__grid {
+    width: min(1224px, 100%);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.home-page .pathway-details__header {
+    margin-bottom: clamp(42px, 5vw, 68px);
+}
+
+.home-page .pathway-details__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+}
+
+.home-page .pathway-detail-card {
+    position: relative;
+    min-height: clamp(440px, 42vw, 560px);
+    overflow: hidden;
+    border: 1px solid var(--page-line, rgba(29, 29, 31, .09));
+    border-radius: clamp(22px, 2.6vw, 32px);
+    color: var(--page-ink, #1d1d1f);
+    background: var(--surface-solid, #fff);
+}
+
+.home-page .pathway-detail-card--progress::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    background: linear-gradient(112deg, transparent 25%, rgba(255, 255, 255, .34) 47%, transparent 67%);
+    transform: translateX(-115%);
+}
+
+.home-page .pathway-detail-card--progress {
+    grid-column: 1 / -1;
+    min-height: clamp(500px, 48vw, 620px);
+    color: #fff;
+    background: var(--page-blue, #0071e3);
+}
+
+.home-page .pathway-detail-card__copy {
+    position: relative;
+    z-index: 2;
+    width: min(480px, 72%);
+    padding: clamp(28px, 4.5vw, 56px);
+}
+
+.home-page .pathway-detail-card__eyebrow {
+    margin: 0 0 12px;
+    color: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.33;
+    letter-spacing: .07em;
+}
+
+.home-page .pathway-detail-card h3 {
+    margin: 0;
+    color: inherit;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.45vw, 3.45rem);
+    font-weight: 600;
+    line-height: .98;
+    letter-spacing: -.048em;
+}
+
+.home-page .pathway-detail-card__copy > p:last-child {
+    margin: 20px 0 0;
+    color: inherit;
+    font-size: clamp(1rem, 1.6vw, 1.25rem);
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: -.015em;
+    opacity: .76;
+}
+
+.home-page .pathway-detail-card img {
+    position: absolute;
+    z-index: 1;
+    width: min(52%, 590px);
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
+
+.home-page .pathway-detail-card--progress img {
+    top: 50%;
+    right: 14%;
+    bottom: auto;
+    width: min(28%, 320px);
+    max-height: 52%;
+    filter: none;
+    transform: translateY(-50%);
+}
+
+.home-page .pathway-detail-card--progress .pathway-detail-card__copy {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: min(500px, 48%);
+    transform: translateY(-50%);
+}
+
+.home-page .pathway-detail-card--progress h3 {
+    font-size: clamp(2.2rem, 3.4vw, 3.25rem);
+    line-height: 1.04;
+    letter-spacing: -.045em;
+}
+
+.home-page .pathway-checkmark {
+    position: absolute;
+    top: 16%;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    width: min(28%, 180px);
+    height: auto;
+    overflow: visible;
+    color: var(--page-ink, #1d1d1f);
+    fill: currentColor;
+    filter: none;
+    transform: translateX(-50%);
+}
+
+.home-page .pathway-detail-card--current {
+    color: var(--page-ink, #1d1d1f);
+    background: linear-gradient(150deg, #f5f5f7, #fff);
+}
+
+.home-page .pathway-detail-card--current .pathway-detail-card__copy {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.home-page .pathway-detail-card--verified {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    color: #f5f5f7;
+    background: #171718;
+}
+
+.home-page .pathway-detail-card--verified .pathway-detail-card__copy {
+    width: min(100%, 720px);
+    padding: 0 clamp(28px, 5vw, 56px) 36px;
+    text-align: center;
+}
+
+.home-page .pathway-detail-card--verified h3 {
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    line-height: 1.04;
+    letter-spacing: -.048em;
+}
+
+.home-page .pathway-privacy-title {
+    max-width: 100%;
+    overflow: visible;
+    text-align: center;
+    white-space: normal;
+}
+
+.home-page .pathway-privacy-words {
+    display: inline;
+    width: auto;
+    white-space: normal;
+}
+
+.home-page .pathway-privacy-word {
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+
+.home-page .pathway-privacy-word__measure {
+    display: inline-block;
+    visibility: hidden;
+    white-space: nowrap;
+}
+
+.home-page .pathway-privacy-word__dots,
+.home-page .pathway-privacy-word__text {
+    position: absolute;
+    inset: 0;
+    white-space: nowrap;
+}
+
+.home-page .pathway-privacy-word__text {
+    overflow: visible;
+}
+
+.home-page .pathway-privacy-word__dots {
+    visibility: hidden;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    transform: scale(.9);
+    transition: opacity .2s ease, transform .28s cubic-bezier(.22, 1, .36, 1);
+}
+
+.home-page .pathway-privacy-dot {
+    display: block;
+    width: .15em;
+    height: .15em;
+    flex: 0 0 .15em;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 7px rgba(255, 255, 255, .2);
+}
+
+.home-page .pathway-privacy-word__text {
+    opacity: 1;
+    filter: none;
+    transform: scaleX(var(--scramble-scale, 1));
+    transform-origin: left center;
+    transition: opacity .2s ease, filter .2s ease, transform .2s ease;
+}
+
+.home-page .pathway-privacy-word.is-word-active .pathway-privacy-word__text {
+    transition: opacity .2s ease, filter .2s ease;
+}
+
+.home-page .pathway-privacy-sequence-ready .pathway-privacy-word--focus .pathway-privacy-word__dots {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.home-page .pathway-privacy-sequence-ready .pathway-privacy-word--focus .pathway-privacy-word__text {
+    opacity: .4;
+    filter: blur(8px);
+}
+
+.home-page .pathway-privacy-sequence-ready .pathway-privacy-word:not(.pathway-privacy-word--focus):not(.is-word-active):not(.is-word-resolved) .pathway-privacy-word__dots {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.home-page .pathway-privacy-sequence-ready .pathway-privacy-word:not(.pathway-privacy-word--focus):not(.is-word-active):not(.is-word-resolved) .pathway-privacy-word__text {
+    opacity: 0;
+}
+
+.home-page .pathway-privacy-sequence-ready .pathway-privacy-word.is-word-active .pathway-privacy-word__dots {
+    visibility: visible;
+    opacity: 0;
+    transform: scale(.86);
+}
+
+.home-page .pathway-privacy-sequence-ready .pathway-privacy-word.is-word-active .pathway-privacy-word__text,
+.home-page .pathway-privacy-sequence-ready .pathway-privacy-word.is-word-resolved .pathway-privacy-word__text {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+.home-page .pathway-privacy-sequence-ready .pathway-privacy-word.is-word-resolved .pathway-privacy-word__dots {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--verified.is-motion-visible .pathway-privacy-word--focus .pathway-privacy-word__text {
+    animation: pathwayPrivacyFocus .78s cubic-bezier(.22, 1, .36, 1) .16s both;
+}
+
+@keyframes pathwayPrivacyFocus {
+    0% { opacity: .42; filter: blur(8px); }
+    38% { opacity: .22; filter: blur(14px); }
+    100% { opacity: 1; filter: blur(0); }
+}
+
+.home-page .pathway-detail-card--verified img {
+    position: relative;
+    inset: auto;
+    order: -1;
+    width: clamp(88px, 18vw, 140px);
+    height: auto;
+    flex: none;
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, .24));
+    transform: none;
+}
+
+.home-page .pathway-detail-card--verified .pathway-privacy-icon {
+    width: clamp(88px, 18vw, 140px);
+}
+
+/* ==========================================================================
+   Motion progressivo: attivo solo dopo l'inizializzazione JavaScript.
+   ========================================================================== */
+
+.home-page .pathway-motion-ready .pathway-product-image,
+.home-page .pathway-motion-ready .pathway-detail-card--progress .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--progress img {
+    opacity: 0;
+    translate: 0 30px;
+    filter: blur(6px);
+    transition:
+        opacity .52s ease,
+        translate .72s cubic-bezier(.22, 1, .36, 1),
+        scale .72s cubic-bezier(.22, 1, .36, 1),
+        filter .58s ease;
+    will-change: opacity, translate, scale, filter;
+}
+
+.home-page .pathway-motion-ready .pathway-product-image {
+    scale: .955;
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--progress img {
+    scale: .76;
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--verified .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--verified .pathway-privacy-icon {
+    opacity: 0;
+    translate: 0 22px;
+    scale: .94;
+    filter: blur(6px);
+    transition:
+        opacity .48s ease,
+        translate .68s cubic-bezier(.22, 1, .36, 1),
+        scale .68s cubic-bezier(.22, 1, .36, 1),
+        filter .52s ease;
+    will-change: opacity, translate, scale, filter;
+}
+
+.home-page .pathway-motion-ready .motion-from-top:not(.is-motion-visible) .pathway-product-image,
+.home-page .pathway-motion-ready .pathway-detail-card--progress.motion-from-top:not(.is-motion-visible) .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--progress.motion-from-top:not(.is-motion-visible) img,
+.home-page .pathway-motion-ready .pathway-detail-card--verified.motion-from-top:not(.is-motion-visible) .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--verified.motion-from-top:not(.is-motion-visible) .pathway-privacy-icon,
+.home-page .pathway-motion-ready .motion-exit-top:not(.is-motion-visible) .pathway-product-image,
+.home-page .pathway-motion-ready .pathway-detail-card--progress.motion-exit-top:not(.is-motion-visible) .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--progress.motion-exit-top:not(.is-motion-visible) img,
+.home-page .pathway-motion-ready .pathway-detail-card--verified.motion-exit-top:not(.is-motion-visible) .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--verified.motion-exit-top:not(.is-motion-visible) .pathway-privacy-icon {
+    translate: 0 -30px;
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--verified.motion-from-bottom:not(.is-motion-visible) .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--verified.motion-from-bottom:not(.is-motion-visible) .pathway-privacy-icon,
+.home-page .pathway-motion-ready .pathway-detail-card--verified.motion-exit-bottom:not(.is-motion-visible) .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--verified.motion-exit-bottom:not(.is-motion-visible) .pathway-privacy-icon {
+    translate: 0 30px;
+}
+
+.home-page .pathway-motion-ready .is-motion-visible .pathway-product-image,
+.home-page .pathway-motion-ready .pathway-detail-card--progress.is-motion-visible .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--progress.is-motion-visible img {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    filter: blur(0);
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--verified.is-motion-visible .pathway-detail-card__copy,
+.home-page .pathway-motion-ready .pathway-detail-card--verified.is-motion-visible .pathway-privacy-icon {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    filter: blur(0);
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--verified.is-motion-visible .pathway-privacy-icon {
+    transition-delay: .04s;
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--verified.is-motion-visible .pathway-detail-card__copy {
+    transition-delay: .14s;
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--progress.is-motion-visible .pathway-detail-card__copy {
+    transition-delay: .04s;
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--progress.is-motion-visible img {
+    transition-delay: .12s;
+    transition-timing-function:
+        ease,
+        cubic-bezier(.2, 1.25, .35, 1),
+        cubic-bezier(.2, 1.25, .35, 1),
+        ease;
+}
+
+.home-page .pathway-motion-ready .pathway-checkmark__tick {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 280ms cubic-bezier(.4, 0, .2, 1);
+}
+
+.home-page .pathway-motion-ready .pathway-detail-card--current.is-motion-visible .pathway-checkmark__tick {
+    stroke-dashoffset: 0;
+    transition-delay: 80ms;
+}
+
+.home-page .pathway-detail-card--progress.is-motion-visible::after {
+    animation: pathwaySurfaceShine 1.25s cubic-bezier(.22, 1, .36, 1) .24s both;
+}
+
+@keyframes pathwaySurfaceShine {
+    0% {
+        opacity: 0;
+        transform: translateX(-115%);
+    }
+    24% {
+        opacity: .7;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(115%);
+    }
+}
+
+@media (max-width: 780px) {
+    .home-page .pathway-experience {
+        padding-top: 48px;
+        padding-right: 18px;
+        padding-left: 18px;
+    }
+
+    .home-page .pathway-experience__intro h2,
+    .home-page .pathway-experience__closing {
+        font-size: clamp(2.35rem, 10.5vw, 3.9rem);
+    }
+
+    .home-page .pathway-kicker {
+        margin-bottom: 10px;
+        font-size: clamp(1rem, 4.5vw, 1.25rem);
+        line-height: 1.2;
+    }
+
+    .home-page .pathway-product-stage {
+        width: min(680px, 112%);
+        margin-left: -6%;
+    }
+
+    .home-page .pathway-details__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-page .pathway-detail-card,
+    .home-page .pathway-detail-card--progress {
+        grid-column: auto;
+        min-height: 500px;
+    }
+
+    .home-page .pathway-detail-card__copy {
+        width: 88%;
+    }
+
+    .home-page .pathway-detail-card--current {
+        display: flex;
+        min-height: 380px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(24px, 6vw, 36px);
+        padding: 28px;
+    }
+
+    .home-page .pathway-detail-card--current .pathway-detail-card__copy {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        width: 100%;
+        padding: 0;
+        text-align: center;
+    }
+
+    .home-page .pathway-detail-card--current .pathway-checkmark {
+        position: relative;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        width: clamp(92px, 24vw, 120px);
+        margin: 0;
+        transform: none;
+    }
+
+    .home-page .pathway-detail-card--verified .pathway-detail-card__copy {
+        width: 100%;
+        padding: 0 28px 32px;
+    }
+
+    .home-page .pathway-detail-card--verified .pathway-privacy-icon {
+        width: clamp(88px, 24vw, 116px);
+        transform: none;
+    }
+
+    .home-page .pathway-detail-card img,
+    .home-page .pathway-detail-card--current img,
+    .home-page .pathway-detail-card--verified img {
+        width: min(70%, 380px);
+    }
+
+    .home-page .pathway-detail-card--progress .pathway-detail-card__copy {
+        top: 0;
+        width: 100%;
+        transform: none;
+    }
+
+    .home-page .pathway-detail-card--progress img {
+        top: auto;
+        right: 50%;
+        bottom: 8%;
+        width: min(34%, 190px);
+        max-height: 37%;
+        transform: translateX(50%);
+    }
+
+    .home-page .pathway-checkmark {
+        top: 16%;
+        right: auto;
+        bottom: auto;
+        left: 50%;
+        width: min(30%, 150px);
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 480px) {
+    .home-page .pathway-detail-card,
+    .home-page .pathway-detail-card--progress {
+        min-height: 470px;
+    }
+
+    .home-page .pathway-detail-card--current {
+        min-height: 350px;
+    }
+
+    .home-page .pathway-detail-card__copy {
+        width: 100%;
+        padding: 32px 28px;
+    }
+
+    .home-page .pathway-detail-card h3 {
+        font-size: clamp(2rem, 9.5vw, 2.7rem);
+    }
+
+    .home-page .pathway-detail-card--progress img {
+        right: 50%;
+        bottom: 7%;
+    }
+}
+
+/* Portrait tablet: le schede del percorso usano una colonna ampia e leggibile. */
+@media (min-width: 781px) and (max-width: 1100px) and (orientation: portrait) {
+    .home-page .pathway-experience {
+        padding: 76px clamp(24px, 5vw, 52px) 56px;
+    }
+
+    .home-page .pathway-experience__intro h2,
+    .home-page .pathway-experience__closing {
+        font-size: clamp(3rem, 6.6vw, 4.5rem);
+    }
+
+    .home-page .pathway-product-stage {
+        width: min(900px, 100%);
+    }
+
+    .home-page .pathway-details {
+        padding: 64px clamp(24px, 5vw, 52px) 80px;
+    }
+
+    .home-page .pathway-details__grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    .home-page .pathway-detail-card,
+    .home-page .pathway-detail-card--progress {
+        grid-column: auto;
+        min-height: clamp(390px, 54vw, 520px);
+    }
+
+    .home-page .pathway-detail-card--progress .pathway-detail-card__copy {
+        width: min(52%, 510px);
+    }
+
+    .home-page .pathway-detail-card--progress img {
+        right: 12%;
+        width: min(30%, 300px);
+    }
+
+    .home-page .pathway-detail-card--current {
+        min-height: 340px;
+    }
+
+    .home-page .pathway-detail-card--verified {
+        min-height: 380px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-page .pathway-motion-ready .pathway-checkmark__tick {
+        stroke-dashoffset: 0;
+        transition: none;
+    }
+
+    .home-page .pathway-motion-ready .pathway-product-image,
+    .home-page .pathway-motion-ready .pathway-detail-card--progress .pathway-detail-card__copy,
+    .home-page .pathway-motion-ready .pathway-detail-card--progress img,
+    .home-page .pathway-motion-ready .pathway-detail-card--verified .pathway-detail-card__copy,
+    .home-page .pathway-motion-ready .pathway-detail-card--verified .pathway-privacy-icon,
+    .home-page .pathway-motion-ready .pathway-privacy-word__dots,
+    .home-page .pathway-motion-ready .pathway-privacy-word__text {
+        opacity: 1;
+        translate: none;
+        scale: none;
+        filter: none;
+        animation: none;
+        transition: none;
+    }
+
+    .home-page .pathway-motion-ready .pathway-privacy-word__dots {
+        visibility: hidden;
+    }
+
+    .home-page .pathway-detail-card--progress::after {
+        transition: none;
+        animation: none;
+    }
+}
+
+@media (forced-colors: active) {
+    .home-page .pathway-detail-card {
+        border-color: CanvasText;
+    }
+}

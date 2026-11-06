@@ -358,6 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {
         effect.onfinish = () => sheetResizes.delete(sheet);
     }
 
+
     // ── Harzafi ID ───────────────────────────────────────────
     const btnHid = document.getElementById('btn-harzafi-id');
     const hidModalEl = document.getElementById('hid-modal');
@@ -387,7 +388,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (sView) sView.style.display = 'none';
                 if (mView) mView.style.display = 'block';
             });
-            // On touch screens, let the sheet settle before the user opens the keyboard.
             const focusTarget = compactMotion.matches ? mView?.querySelector('h2') : hInput;
             if (focusTarget) {
                 if (compactMotion.matches) focusTarget.setAttribute('tabindex', '-1');
@@ -406,7 +406,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (mView) mView.style.display = 'none';
                 if (sView) sView.style.display = 'block';
             });
-            if (hErr) hErr.style.display       = 'none';
+            if (hErr) hErr.style.display = 'none';
         });
     }
 
@@ -414,15 +414,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (hidSubmitBtnEl) {
         hidSubmitBtnEl.addEventListener('click', async () => {
             if (document.activeElement) document.activeElement.blur();
-            const hidErrorEl  = document.getElementById('hid-error');
-            const origText    = hidSubmitBtnEl.innerHTML;
-            const inputEl     = document.getElementById('hid-input');
-            const inputVal    = inputEl ? inputEl.value.trim() : '';
-
+            const hidErrorEl = document.getElementById('hid-error');
+            const origText = hidSubmitBtnEl.innerHTML;
+            const inputEl = document.getElementById('hid-input');
+            const inputVal = inputEl ? inputEl.value.trim() : '';
             if (!inputVal.length) return;
-
             hidSubmitBtnEl.innerHTML = loginLoadingIndicator();
-            hidSubmitBtnEl.disabled  = true;
+            hidSubmitBtnEl.disabled = true;
             if (hidErrorEl) hidErrorEl.style.display = 'none';
 
             if (typeof window.db !== 'undefined') {
@@ -430,12 +428,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(async snap => {
                         if (!snap.empty) {
                             const userData = snap.docs[0].data();
-                            if (typeof window.auth !== 'undefined') {
-                                await window.auth.signInAnonymously();
-                            }
+                            if (typeof window.auth !== 'undefined') await window.auth.signInAnonymously();
                             if (hidModalEl) hidModalEl.classList.remove('active');
                             hidSubmitBtnEl.innerHTML = origText;
-                            hidSubmitBtnEl.disabled  = false;
+                            hidSubmitBtnEl.disabled = false;
                             if (inputEl) inputEl.value = "";
                             entraNelPortale(userData.nome);
                         } else { throw new Error("HID non valido."); }
@@ -449,7 +445,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             hidErrorEl.style.animation = 'shake 0.4s';
                         }
                         hidSubmitBtnEl.innerHTML = origText;
-                        hidSubmitBtnEl.disabled  = false;
+                        hidSubmitBtnEl.disabled = false;
                     });
             } else {
                 if (hidErrorEl) {
@@ -457,7 +453,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     hidErrorEl.style.display = 'block';
                 }
                 hidSubmitBtnEl.innerHTML = origText;
-                hidSubmitBtnEl.disabled  = false;
+                hidSubmitBtnEl.disabled = false;
             }
         });
     }

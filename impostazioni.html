@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Impostazioni — Harzafi FSL</title>
+    <meta name="description" content="I dati del tuo account Harzafi FSL e i controlli per il tuo accesso, in un unico posto.">
+    <meta name="robots" content="noindex, nofollow, noimageindex">
+    <meta name="theme-color" content="#f5f5f7">
+    <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
+    <link rel="preload" href="fonts/SF-Pro-Variable-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
+    <link rel="stylesheet" href="account-settings.css?v=20261106-account-v1">
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261105-mobile-frost-left-v9">
+    <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
+    <script defer src="auth-session.js?v=20261025-account-nav-v1"></script>
+    <script defer src="account-settings-model.js?v=20261106-account-v1"></script>
+    <script defer src="account-settings.js?v=20261106-account-v1"></script>
+</head>
+<body class="account-privacy-page settings-page">
+    <a class="settings-skip" href="#settings-main">Vai alle impostazioni</a>
+    <nav class="navbar-wrapper glass home-mainnav" aria-label="Navigazione principale">
+        <div class="nav-content">
+            <div class="home-nav-brand"><a class="nav-logo" href="index.html#home-hero" aria-label="Harzafi FSL — inizio">Harzafi FSL</a></div>
+            <div class="nav-links" id="settings-navigation">
+                <a href="dashboard.html">Il mio registro</a>
+                <a href="impostazioni.html" aria-current="page">Impostazioni</a>
+                <a href="supporto.html">Supporto</a>
+            </div>
+            <div class="home-nav-actions">
+                <button class="nav-menu-toggle home-nav-chevron" type="button" aria-expanded="false" aria-controls="settings-navigation" aria-label="Apri il menu"><svg class="nav-toggle-glyph" viewBox="0 0 16 9" aria-hidden="true"><path d="M3.5 2.25 8 6.75l4.5-4.5"/></svg></button>
+                <button id="settings-logout" class="nav-mobile-account home-nav-action" type="button">Esci</button>
+            </div>
+        </div>
+    </nav>
+    <main class="settings-main" id="settings-main">
+        <a class="settings-back" href="dashboard.html"><span aria-hidden="true">‹</span> Il mio registro</a>
+        <header class="settings-heading">
+            <h1>Impostazioni.</h1>
+            <p>Il tuo account, in ogni dettaglio.</p>
+        </header>
+        <section class="settings-state" id="settings-state" aria-live="polite" aria-busy="true">
+            <span class="settings-spinner" aria-hidden="true"></span>
+            <h2 id="settings-state-title">Carico il tuo account…</h2>
+            <p id="settings-state-copy">Un momento, stiamo recuperando le tue informazioni.</p>
+            <button class="settings-primary" id="settings-retry" type="button" hidden>Riprova</button>
+        </section>
+        <noscript><p>Attiva JavaScript per accedere alle impostazioni del tuo account.</p></noscript>
+        <div id="settings-content" hidden>
+            <section class="settings-profile" aria-label="Il tuo account">
+                <div class="settings-avatar" id="settings-avatar" aria-hidden="true"></div>
+                <div class="settings-profile-copy"><h2 id="settings-name"></h2><p id="settings-email"></p><span class="settings-role" id="settings-role"></span></div>
+                <button class="settings-text-button" id="settings-refresh" type="button">Aggiorna dati <span aria-hidden="true">↻</span></button>
+            </section>
+            <div class="settings-grid">
+                <section class="settings-panel" aria-labelledby="profile-title">
+                    <header><span class="settings-symbol" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="16" cy="10" r="5"/><path d="M6 28v-3a10 10 0 0 1 20 0v3" stroke-linecap="round"/></svg></span><h2 id="profile-title">Informazioni personali.</h2></header>
+                    <dl class="settings-data" id="settings-profile-data"></dl>
+                    <p class="settings-note">Per correggere i dati del profilo, <a id="settings-correction" href="mailto:harzafi.support@gmail.com?subject=Correzione%20dati%20account">contatta l’assistenza</a>.</p>
+                </section>
+                <section class="settings-panel" aria-labelledby="security-title">
+                    <header><span class="settings-symbol" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="14" width="20" height="15" rx="4"/><path d="M10 14V9a6 6 0 0 1 12 0v5"/><circle cx="16" cy="21" r="1.5" fill="currentColor" stroke="none"/><path d="M16 22v3"/></svg></span><h2 id="security-title">Accesso e sicurezza.</h2></header>
+                    <dl class="settings-data">
+                        <div><dt>Metodo di accesso</dt><dd id="settings-provider"></dd></div>
+                        <div><dt>Stato dell’email</dt><dd id="settings-verification"></dd></div>
+                        <div><dt>Account creato il</dt><dd id="settings-created"></dd></div>
+                        <div><dt>Ultimo accesso</dt><dd id="settings-last-login"></dd></div>
+                    </dl>
+                    <p class="settings-note" id="settings-provider-note" hidden>Per modificare le credenziali, usa le impostazioni del servizio con cui accedi.</p>
+                    <div class="settings-security-action" id="settings-password-action" hidden>
+                        <h3>Una nuova password, quando vuoi.</h3>
+                        <p>Ricevi via email un link per scegliere una nuova password.</p>
+                        <button class="settings-secondary" id="settings-reset-password" type="button">Modifica password</button>
+                    </div>
+                    <button class="settings-text-button settings-verify" id="settings-verify-email" type="button" hidden>Verifica il tuo indirizzo email</button>
+                    <p class="settings-action-status" id="settings-security-status" role="status" aria-live="polite"></p>
+                </section>
+            </div>
+            <section class="settings-panel settings-privacy" aria-labelledby="data-title">
+                <div><h2 id="data-title">I tuoi dati, a portata di mano.</h2><p>Scarica un riepilogo delle informazioni del tuo account. Per le esperienze e le ore di FSL, consulta il tuo registro.</p><button class="settings-secondary" id="settings-download" type="button">Scarica i dati dell’account <span aria-hidden="true">↓</span></button></div>
+                <nav aria-label="Informazioni sui tuoi dati"><a href="privacy-account.html">Il tuo account e la privacy <span aria-hidden="true">›</span></a><a href="privacy.html">Come vengono gestiti i dati <span aria-hidden="true">›</span></a><a href="mailto:harzafi.support@gmail.com?subject=Richiesta%20sui%20dati%20dell%27account">Invia una richiesta sui tuoi dati <span aria-hidden="true">›</span></a></nav>
+            </section>
+            <details class="settings-details">
+                <summary>Dettagli dell’account <span aria-hidden="true">+</span></summary>
+                <div class="settings-details-body"><p>L’identificativo aiuta l’assistenza a riconoscere il tuo account.</p><div class="settings-id-row"><div><h3>Identificativo account</h3><code id="settings-uid"></code></div><button class="settings-text-button" id="settings-copy-id" type="button">Copia</button></div><div class="settings-profile-reference"><h3>Riferimento del profilo</h3><code id="settings-profile-id"></code></div></div>
+            </details>
+        </div>
+        <p class="settings-page-status" id="settings-page-status" role="status" aria-live="polite"></p>
+    </main>
+    <footer class="settings-footer"><span>© 2026 Harzafi FSL</span><nav aria-label="Informazioni utili"><a href="privacy.html">Privacy</a><a href="termini.html">Termini</a><a href="supporto.html">Supporto</a></nav></footer>
+</body>
+</html>

@@ -196,3 +196,12 @@ body.account-privacy-page { margin: 0; color: #1d1d1f; background: #fff; font-fa
     .carousel-timeline-step:hover { transform: scale(1.12); }
     .carousel-play-toggle:hover { transform: scale(1.06); background: #e8e8ed; }
 }
+
+/* La pagina account usa riquadri puliti, senza ombre. */
+.account-privacy-page :is(.account-card, .account-value, .apple-summary-box, .privacy-section) {
+    box-shadow: none !important;
+}
+
+.account-privacy-page :is(.account-hero h1, .account-belief h2, .account-section-heading h2, .account-card h3, .account-value h3) {
+    font-family: var(--font-display, "SF Pro Display"), -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+}

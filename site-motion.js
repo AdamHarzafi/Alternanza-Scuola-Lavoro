@@ -14,12 +14,11 @@
             const playHeroEntrance = () => {
                 if (preference.matches || !heroArtwork.naturalWidth) return;
                 heroArtwork.animate([
-                    { opacity: .48, transform: 'translate3d(0, 18px, 0) scale(1.065)' },
-                    { opacity: 1, transform: 'translate3d(0, -1px, 0) scale(.998)', offset: .78 },
+                    { opacity: 1, transform: 'translate3d(0, 24px, 0) scale(1.075)' },
                     { opacity: 1, transform: 'scale(1)' }
                 ], {
-                    duration: 820,
-                    easing: 'cubic-bezier(.4,0,.2,1)',
+                    duration: 1350,
+                    easing: 'cubic-bezier(.16, 1, .3, 1)',
                     fill: 'none'
                 });
             };
@@ -55,6 +54,7 @@
         const elements = [...root.querySelectorAll(selector)];
         if (root.matches?.(selector)) elements.unshift(root);
         elements.forEach(element => {
+            if (element.matches('.pathway-detail-card--current, .pathway-detail-card--verified')) return;
             if (played.has(element) || element.closest('[hidden], [aria-hidden="true"]') || element.dataset.registerMotion) return;
             // Avoid animating an article and its nested details independently.
             if (element.parentElement?.closest('article, details')) return;
