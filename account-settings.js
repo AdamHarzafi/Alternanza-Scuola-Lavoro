@@ -13,12 +13,60 @@
     const verifyButton = byId('settings-verify-email');
     const logoutButton = byId('settings-logout');
     const refreshButton = byId('settings-refresh');
+    const backButton = byId('settings-back');
+    const sidebar = byId('settings-sidebar');
+    const views = byId('settings-views');
+    const viewButtons = [...document.querySelectorAll('[data-settings-view]')];
+    const desktopQuery = window.matchMedia('(min-width:960px)');
+    const sections = Object.fromEntries(viewButtons.map(button => [button.dataset.settingsView, byId(button.getAttribute('aria-controls'))]));
     const timers = new Set();
     const model = window.HarzafiAccountSettings;
     const auth = window.HarzafiSession?.auth;
     const db = typeof window.firebase?.firestore === 'function' ? window.firebase.firestore() : null;
     let account = null;
     let generation = 0;
+    let activeView = null;
+
+    function updateNavigation({ focus = false } = {}) {
+        const previous = activeView;
+        const requested = Object.keys(sections).find(key => '#' + sections[key].id === window.location.hash);
+        activeView = account ? requested || (desktopQuery.matches ? 'personal' : null) : null;
+        if (previous !== activeView) message(pageStatus, '');
+        if (activeView) sections[activeView].append(pageStatus);
+        else content.after(pageStatus);
+        sidebar.hidden = !!activeView && !desktopQuery.matches;
+        views.hidden = !activeView;
+        content.dataset.view = activeView || 'overview';
+        for (const [key, panel] of Object.entries(sections)) panel.hidden = key !== activeView;
+        for (const button of viewButtons) {
+            if (button.dataset.settingsView === activeView) button.setAttribute('aria-current', 'true');
+            else button.removeAttribute('aria-current');
+        }
+        backButton.setAttribute('aria-label', activeView && !desktopQuery.matches ? 'Torna alle impostazioni' : 'Torna al mio registro');
+        if (focus && account) {
+            if (activeView) sections[activeView].querySelector('h2').focus({ preventScroll: true });
+            else viewButtons.find(button => button.dataset.settingsView === previous)?.focus({ preventScroll: true });
+            if (!desktopQuery.matches) window.scrollTo(0, 0);
+        }
+    }
+    viewButtons.forEach(button => button.addEventListener('click', () => {
+        if (!currentAccount()) return;
+        const hash = '#' + sections[button.dataset.settingsView].id;
+        if (window.location.hash !== hash) history.pushState({ harzafiSettingsView: true }, '', hash);
+        updateNavigation({ focus: true });
+    }));
+    backButton.addEventListener('click', event => {
+        if (!account || desktopQuery.matches || !activeView) return;
+        event.preventDefault();
+        if (history.state?.harzafiSettingsView) history.back();
+        else {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+            updateNavigation({ focus: true });
+        }
+    });
+    window.addEventListener('popstate', () => updateNavigation({ focus: true }));
+    window.addEventListener('hashchange', () => updateNavigation({ focus: true }));
+    desktopQuery.addEventListener('change', () => updateNavigation());
 
     function message(element, value, error = false) {
         element.textContent = value;
@@ -27,6 +75,8 @@
     function clearAccount() {
         account = null;
         content.hidden = true;
+        refreshButton.hidden = true;
+        updateNavigation();
         timers.forEach(timer => clearTimeout(timer));
         timers.clear();
         for (const id of ['settings-avatar', 'settings-name', 'settings-email', 'settings-role', 'settings-provider', 'settings-verification', 'settings-created', 'settings-last-login', 'settings-uid', 'settings-profile-id']) byId(id).textContent = '';
@@ -38,7 +88,6 @@
         resetButton.textContent = 'Modifica password';
         verifyButton.disabled = false;
         verifyButton.textContent = 'Verifica il tuo indirizzo email';
-        content.querySelector('details').open = false;
         message(securityStatus, '');
         message(pageStatus, '');
     }
@@ -82,6 +131,8 @@
         state.setAttribute('aria-busy', 'false');
         state.hidden = true;
         content.hidden = false;
+        refreshButton.hidden = false;
+        updateNavigation();
     }
     async function load(user, refresh = false) {
         const version = ++generation;
@@ -142,7 +193,7 @@
             if (version !== generation || !currentAccount()) return;
             button.textContent = 'Richiesta inviata';
             message(securityStatus, kind === 'verify'
-                ? 'Controlla la tua email e apri il link di verifica. Quando hai finito, premi «Aggiorna dati».'
+                ? 'Controlla la tua email e apri il link di verifica. Quando hai finito, usa il pulsante di aggiornamento in alto.'
                 : 'Richiesta inviata. Controlla la tua email per scegliere una nuova password, anche nella cartella spam.');
             const timer = setTimeout(() => {
                 timers.delete(timer);
@@ -192,18 +243,24 @@
         setTimeout(() => URL.revokeObjectURL(url), 1000);
         message(pageStatus, 'Il riepilogo dell’account è pronto per il download.');
     });
+    const signOutButtons = [logoutButton, ...document.querySelectorAll('[data-settings-logout]')];
+    document.querySelectorAll('[data-settings-logout]').forEach(button => button.addEventListener('click', () => logoutButton.click()));
+    function pendingSignOut(pending) {
+        signOutButtons.forEach(button => {
+            button.disabled = pending;
+            button.textContent = pending ? 'Esco…' : button === logoutButton ? 'Esci' : 'Esci dall’account';
+        });
+    }
     logoutButton.addEventListener('click', async () => {
         if (!auth || logoutButton.disabled) return;
-        logoutButton.disabled = true;
-        logoutButton.textContent = 'Esco…';
+        pendingSignOut(true);
         try {
             await auth.signOut();
             ++generation;
             clearAccount();
             window.location.replace('login.html');
         } catch {
-            logoutButton.disabled = false;
-            logoutButton.textContent = 'Esci';
+            pendingSignOut(false);
             message(pageStatus, 'Non è stato possibile terminare la sessione. Riprova.', true);
         }
     });
