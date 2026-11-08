@@ -1,0 +1,4 @@
+PDF font instances derived from the existing SF-Pro-Variable-latin.woff2 font.
+Static instances: wdth=100, opsz=17, wght=400 (regular) / 700 (bold).
+Generated using fontTools varLib.instancer 4.68.0; WOFF compression.
+Latin extended characters retained. Font ownership and source: SF-Pro-source.txt.
