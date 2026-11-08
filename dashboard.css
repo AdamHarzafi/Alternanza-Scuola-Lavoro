@@ -495,8 +495,9 @@ button:disabled { opacity:.55; cursor:wait; }
     padding: 13px 16px;
     border: 1px solid rgba(255,255,255,.28);
     border-radius: 28px;
-    background: linear-gradient(155deg, rgba(255,255,255,.08), rgba(255,255,255,.015) 65%), rgba(64,61,58,.82);
-    box-shadow: 0 1px 0 rgba(0,0,0,.25), 0 12px 32px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(255,255,255,.1);
+    color-scheme: light;
+    background: linear-gradient(155deg, rgba(255,255,255,.28), rgba(255,255,255,.08) 65%), rgba(250,250,252,.84);
+    box-shadow: 0 1px 0 rgba(29,29,31,.08), 0 12px 32px rgba(29,29,31,.12), inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(29,29,31,.035);
     -webkit-backdrop-filter: blur(28px) saturate(125%);
     backdrop-filter: blur(28px) saturate(125%);
     opacity: 0;
@@ -542,7 +543,7 @@ button:disabled { opacity:.55; cursor:wait; }
     grid-template-columns: minmax(0,1fr) auto;
     min-width: 0;
     gap: 3px;
-    color: #fff;
+    color: #1d1d1f;
     font-family: var(--font-text) !important;
     text-align: left;
 }
@@ -554,10 +555,10 @@ button:disabled { opacity:.55; cursor:wait; }
     letter-spacing: -.015em;
     overflow-wrap: anywhere;
 }
-.dashboard-success-toast-copy time { color:rgba(255,255,255,.78); font-family:var(--font-text) !important; font-size:13px; line-height:1.45; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.dashboard-success-toast-copy time { color:#5d5d63; font-family:var(--font-text) !important; font-size:13px; line-height:1.45; font-variant-numeric:tabular-nums; white-space:nowrap; }
 .dashboard-success-toast-copy > span {
     grid-column: 1 / -1;
-    color: rgba(255,255,255,.96);
+    color: #333336;
     font-family: var(--font-text) !important;
     font-size: 14px;
     font-weight: 400;
@@ -579,10 +580,10 @@ button:disabled { opacity:.55; cursor:wait; }
     }
 }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
-    .dashboard-page .dashboard-success-toast { background:#56514d; }
+    .dashboard-page .dashboard-success-toast { background:#f2f2f7; }
 }
 @media (prefers-reduced-transparency:reduce) {
-    .dashboard-page .dashboard-success-toast { background:#56514d; backdrop-filter:none; -webkit-backdrop-filter:none; }
+    .dashboard-page .dashboard-success-toast { background:#f2f2f7; backdrop-filter:none; -webkit-backdrop-filter:none; }
 }
 @media (forced-colors:active) {
     .dashboard-page .dashboard-success-toast { background:Canvas; border-color:CanvasText; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; }
