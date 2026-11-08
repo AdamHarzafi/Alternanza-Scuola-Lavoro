@@ -12,7 +12,7 @@
     <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="preload" href="fonts/SF-Pro-Variable-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
-    <link rel="stylesheet" href="account-settings.css?v=20261108-settings-pane-v2">
+    <link rel="stylesheet" href="account-settings.css?v=20261108-optimized-menu-icons-v3">
     <link rel="stylesheet" href="loading-indicator.css?v=20261108-ios14-v1">
     <script defer src="loading-indicator.js?v=20261108-ios14-v1"></script>
     <link rel="stylesheet" href="navbar-refinement.css?v=20261108-frosted-glass-v11">
@@ -30,11 +30,6 @@
 </head>
 <body class="account-privacy-page settings-page">
     <svg class="settings-icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
-        <symbol id="settings-icon-person" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="2"/><path d="M5.5 16v-.6a3 3 0 0 1 6 0v.6M14 9h4M14 12h4M14 15h3"/></symbol>
-        <symbol id="settings-icon-security" viewBox="0 0 24 24"><path d="m12 2.8 8 3v5.6c0 4.3-3 7.8-8 10-5-2.2-8-5.7-8-10V5.8z"/><circle cx="12" cy="10" r="2"/><path d="M12 12v4"/></symbol>
-        <symbol id="settings-icon-privacy" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
-        <symbol id="settings-icon-details" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v.1"/></symbol>
-        <symbol id="settings-icon-support" viewBox="0 0 24 24"><path d="M4 17.5a8.5 8.5 0 1 1 4 2.5L3 21zM9.7 9a2.4 2.4 0 1 1 3 2.3c-.7.3-.7.7-.7 1.7M12 16v.1"/></symbol>
         <symbol id="settings-icon-chevron" viewBox="0 0 16 16"><path d="m6 3 5 5-5 5"/></symbol>
         <symbol id="settings-icon-back" viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7"/></symbol>
         <symbol id="settings-icon-refresh" viewBox="0 0 24 24"><path d="M19.5 8a8 8 0 1 0 .4 7M20 3v5.5h-5.5"/></symbol>
@@ -75,14 +70,14 @@
                 </section>
                 <nav class="settings-menu" aria-label="Impostazioni dell’account">
                     <div class="settings-menu-group">
-                        <button class="settings-menu-row" type="button" data-settings-view="personal" aria-controls="settings-personal"><span class="settings-row-icon"><svg aria-hidden="true"><use href="#settings-icon-person"/></svg></span><span>Informazioni personali</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></button>
-                        <button class="settings-menu-row" type="button" data-settings-view="security" aria-controls="settings-security"><span class="settings-row-icon"><svg aria-hidden="true"><use href="#settings-icon-security"/></svg></span><span>Accesso e sicurezza</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></button>
+                        <button class="settings-menu-row" type="button" data-settings-view="personal" aria-controls="settings-personal"><span class="settings-row-icon" aria-hidden="true"><img src="IMMAGINI/IMPOSTAZIONI-PERSONALI.webp" alt="" width="30" height="30" decoding="async"></span><span>Informazioni personali</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></button>
+                        <button class="settings-menu-row" type="button" data-settings-view="security" aria-controls="settings-security"><span class="settings-row-icon" aria-hidden="true"><img src="IMMAGINI/IMPOSTAZIONI-SICUREZZA.webp" alt="" width="30" height="30" decoding="async"></span><span>Accesso e sicurezza</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></button>
                     </div>
                     <div class="settings-menu-group">
-                        <button class="settings-menu-row" type="button" data-settings-view="privacy" aria-controls="settings-privacy"><span class="settings-row-icon"><svg aria-hidden="true"><use href="#settings-icon-privacy"/></svg></span><span>Dati e privacy</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></button>
-                        <button class="settings-menu-row" type="button" data-settings-view="details" aria-controls="settings-details"><span class="settings-row-icon"><svg aria-hidden="true"><use href="#settings-icon-details"/></svg></span><span>Dettagli dell’account</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></button>
+                        <button class="settings-menu-row" type="button" data-settings-view="privacy" aria-controls="settings-privacy"><span class="settings-row-icon" aria-hidden="true"><img src="IMMAGINI/IMPOSTAZIONI-PRIVACY.webp" alt="" width="30" height="30" decoding="async"></span><span>Dati e privacy</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></button>
+                        <button class="settings-menu-row" type="button" data-settings-view="details" aria-controls="settings-details"><span class="settings-row-icon" aria-hidden="true"><img src="IMMAGINI/IMPOSTAZIONI-DETTAGLI.webp" alt="" width="30" height="30" decoding="async"></span><span>Dettagli dell’account</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></button>
                     </div>
-                    <div class="settings-menu-group"><a class="settings-menu-row" href="supporto.html"><span class="settings-row-icon"><svg aria-hidden="true"><use href="#settings-icon-support"/></svg></span><span>Supporto</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></a></div>
+                    <div class="settings-menu-group"><a class="settings-menu-row" href="supporto.html"><span class="settings-row-icon" aria-hidden="true"><img src="IMMAGINI/IMPOSTAZIONI-SUPPORTO.webp" alt="" width="30" height="30" decoding="async"></span><span>Supporto</span><svg class="settings-row-chevron" aria-hidden="true"><use href="#settings-icon-chevron"/></svg></a></div>
                 </nav>
                 <button class="settings-signout" data-settings-logout type="button">Esci dall’account</button>
             </aside>
@@ -108,7 +103,7 @@
                     <p class="settings-caption" id="settings-provider-note" hidden>Per modificare le credenziali, usa le impostazioni del servizio con cui accedi.</p>
                     <div class="settings-action-section" id="settings-password-action" hidden>
                         <h3>Password</h3>
-                        <div class="settings-group"><button class="settings-action-row" id="settings-reset-password" type="button">Modifica password</button></div>
+                        <div class="settings-group settings-action-group"><button class="settings-action-row" id="settings-reset-password" type="button">Modifica password</button></div>
                         <p class="settings-caption">Ricevi via email un link per scegliere una nuova password.</p>
                     </div>
                     <button class="settings-action-row settings-standalone" id="settings-verify-email" type="button" hidden>Verifica il tuo indirizzo email</button>
@@ -117,7 +112,7 @@
                 <section class="settings-view" id="settings-privacy" aria-labelledby="data-title" hidden>
                     <header class="settings-view-heading"><h2 id="data-title" tabindex="-1">Dati e privacy</h2><p>Le tue informazioni, sempre a portata di mano.</p></header>
                     <h3 class="settings-section-label">Una copia dei tuoi dati</h3>
-                    <div class="settings-group"><button class="settings-action-row settings-download" id="settings-download" type="button">Scarica i dati dell’account</button></div>
+                    <div class="settings-group settings-action-group"><button class="settings-action-row settings-download" id="settings-download" type="button">Scarica i dati dell’account</button></div>
                     <p class="settings-caption">Ricevi un PDF con il logo Harzafi FSL, le informazioni personali, la foto del profilo se presente, i dati di accesso e i riferimenti dell’account. Il documento viene creato sul tuo dispositivo. Per le esperienze e le ore di FSL, consulta il tuo registro.</p>
                     <h3 class="settings-section-label">Informazioni e richieste</h3>
                     <div class="settings-group settings-links"><a href="privacy-account.html">Il tuo account e la privacy <svg aria-hidden="true"><use href="#settings-icon-chevron"/></svg></a><a href="privacy.html">Come vengono gestiti i dati <svg aria-hidden="true"><use href="#settings-icon-chevron"/></svg></a><a href="mailto:harzafi.support@gmail.com?subject=Richiesta%20sui%20dati%20dell%27account">Invia una richiesta sui tuoi dati <svg aria-hidden="true"><use href="#settings-icon-chevron"/></svg></a></div>
