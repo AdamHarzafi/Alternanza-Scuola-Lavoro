@@ -12,6 +12,7 @@
     const resetButton = byId('settings-reset-password');
     const verifyButton = byId('settings-verify-email');
     const logoutButton = byId('settings-logout');
+    const downloadButton = byId('settings-download');
     const refreshButton = byId('settings-refresh');
     const backButton = byId('settings-back');
     const sidebar = byId('settings-sidebar');
@@ -36,6 +37,7 @@
     const nameSave = byId('settings-name-save'), nameCancel = byId('settings-name-cancel');
     const givenNameInput = byId('settings-given-name'), familyNameInput = byId('settings-family-name');
     let nameOwner = null, nameOperation = 0;
+    let downloadOperation = 0, downloadPending = false;
 
     function profileControls() {
         const disabled = !preferencesReady || profileWritePending || !currentAccount();
@@ -156,6 +158,9 @@
         element.dataset.error = String(error);
     }
     function clearAccount() {
+        ++downloadOperation; downloadPending = false;
+        downloadButton.disabled = false; downloadButton.textContent = 'Scarica i dati dell’account';
+        downloadButton.removeAttribute('aria-busy');
         account = null;
         profileRecord = null;
         preferences = { givenName:'', familyName:'', photoData:'' };
@@ -341,15 +346,37 @@
             message(pageStatus, 'L’identificativo è selezionato: puoi copiarlo dal tuo dispositivo.');
         }
     });
-    byId('settings-download').addEventListener('click', () => {
+    downloadButton.addEventListener('click', async () => {
         const value = currentAccount();
-        if (!value) return;
-        const url = URL.createObjectURL(new Blob([JSON.stringify(model.exportSummary(value), null, 2)], { type: 'application/json;charset=utf-8' }));
-        const link = document.createElement('a');
-        link.href = url; link.download = 'harzafi-fsl-account.json'; link.hidden = true;
-        document.body.appendChild(link); link.click(); link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-        message(pageStatus, 'Il riepilogo dell’account è pronto per il download.');
+        if (!value || downloadPending) return;
+        const operation = ++downloadOperation, version = generation;
+        const isCurrent = () => operation === downloadOperation && version === generation && currentAccount() === value;
+        downloadPending = true; downloadButton.disabled = true;
+        downloadButton.innerHTML = window.HarzafiLoading ? window.HarzafiLoading.buttonMarkup('Preparo il PDF…') : 'Preparo il PDF…';
+        downloadButton.setAttribute('aria-busy', 'true');
+        message(pageStatus, 'Sto preparando il documento PDF con le informazioni del tuo account.');
+        try {
+            if (!window.HarzafiAccountPdf) throw new Error('PDF unavailable');
+            const result = await window.HarzafiAccountPdf.generate(model.exportSummary(value), { isCurrent });
+            if (!isCurrent()) return;
+            const url = URL.createObjectURL(new Blob([result.bytes], { type:'application/pdf' }));
+            const link = document.createElement('a');
+            link.href = url; link.download = result.filename; link.hidden = true;
+            document.body.appendChild(link); link.click(); link.remove();
+            // Keep the object URL alive long enough for mobile browsers to consume it.
+            setTimeout(() => URL.revokeObjectURL(url), 60000);
+            message(pageStatus, 'Il documento PDF con i dati del tuo account è pronto. Il download è stato avviato.');
+        } catch (error) {
+            if (version !== generation || !currentAccount() || operation !== downloadOperation) return;
+            message(pageStatus, error.code === 'export-cancelled'
+                ? 'Le informazioni sono cambiate. Premi di nuovo Scarica per creare un PDF aggiornato.'
+                : 'Non è stato possibile preparare il PDF. Controlla la connessione e riprova.', true);
+        } finally {
+            if (operation === downloadOperation && version === generation) {
+                downloadPending = false; downloadButton.disabled = false;
+                downloadButton.textContent = 'Scarica i dati dell’account'; downloadButton.removeAttribute('aria-busy');
+            }
+        }
     });
     const signOutButtons = [logoutButton, ...document.querySelectorAll('[data-settings-logout]')];
     document.querySelectorAll('[data-settings-logout]').forEach(button => button.addEventListener('click', () => logoutButton.click()));

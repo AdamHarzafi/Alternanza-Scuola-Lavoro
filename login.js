@@ -1,6 +1,8 @@
 // Shared visual indicator; the status remains available to screen readers.
 function loginLoadingIndicator(status = "Accesso in corso") {
-    return `<svg class="hid-spinner" viewBox="0 0 32 32" aria-hidden="true"><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M16 3v5"/><path d="M22.5 4.7 20 9" opacity=".92"/><path d="m27.3 9.5-4.3 2.5" opacity=".84"/><path d="M29 16h-5" opacity=".76"/><path d="m27.3 22.5-4.3-2.5" opacity=".68"/><path d="M22.5 27.3 20 23" opacity=".6"/><path d="M16 29v-5" opacity=".52"/><path d="m9.5 27.3 2.5-4.3" opacity=".44"/><path d="m4.7 22.5 4.3-2.5" opacity=".36"/><path d="M3 16h5" opacity=".28"/><path d="m4.7 9.5 4.3 2.5" opacity=".2"/><path d="m9.5 4.7 2.5 4.3" opacity=".12"/></g></svg><span class="sr-only">${status}</span>`;
+    if (window.HarzafiLoading) return window.HarzafiLoading.labelled(status);
+    const label = String(status).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return '<span class="apple-ios14-spinner apple-spinner--inline" aria-hidden="true">' + '<span class="spinner-blade"></span>'.repeat(8) + '</span><span class="apple-loading-sr-only">' + label + '</span>';
 }
 
 /* ============================================================

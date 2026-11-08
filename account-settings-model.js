@@ -95,7 +95,7 @@
     function exportSummary(account, at = new Date()) {
         return {
             servizio: 'Harzafi FSL', esportatoIl: at.toISOString(),
-            account: { identificativo: account.uid, nome: account.name, email: account.email, ruolo: account.role,
+            account: { identificativo: account.uid, nome: account.name, nomeProprio:account.givenName, cognome:account.familyName, email: account.email, ruolo: account.role,
                 emailVerificata: account.emailVerified, metodiDiAccesso: [...account.providers],
                 creatoIl: account.createdAt, ultimoAccesso: account.lastSignInAt },
             profilo: { riferimento: account.profileId, informazioni: account.fields.map(field => ({ ...field })), foto: account.photoData || null }

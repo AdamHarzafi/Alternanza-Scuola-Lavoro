@@ -877,11 +877,9 @@
         #btn-harzafi-id img { width: auto; height: 18px; }
         #btn-harzafi-id span { color: #0284c7; }
 
-        @keyframes spin-circle { to { transform: rotate(360deg); } }
         @keyframes fastFadeIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
         
         .btn-loader { display: flex; align-items: center; justify-content: center; gap: 10px; animation: fastFadeIn 0.2s var(--apple-ease) forwards; width: 100%; }
-        .btn-spinner { width: 20px; height: 20px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin-circle 0.6s linear infinite; }
 
         .divider { display: flex; align-items: center; text-align: center; margin: 15px 0; color: var(--text-light); font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }

@@ -452,7 +452,7 @@ document.addEventListener("DOMContentLoaded", function() {
         googleBtn.addEventListener('click', async () => {
             if (document.activeElement) document.activeElement.blur();
             const originalGoogleBtn = googleBtn.innerHTML;
-            googleBtn.innerHTML = `<div class="btn-loader"><div class="btn-spinner"></div><span class="btn-text-main" style="margin-left: 5px;">CARICO...</span></div>`; 
+            googleBtn.innerHTML = `<div class="btn-loader">${window.HarzafiLoading?.markup(true) || ''}<span class="btn-text-main" style="margin-left: 5px;">CARICO...</span></div>`; 
             googleBtn.disabled = true; 
             if (googleErrorMsg) googleErrorMsg.style.display = 'none';
             
@@ -700,7 +700,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             
             if (errorDiv) errorDiv.style.display = 'none';
-            this.innerHTML = '<div class="btn-loader"><div class="btn-spinner"></div><span>Invio in corso...</span></div>';
+            this.innerHTML = '<div class="btn-loader">' + (window.HarzafiLoading?.markup(true) || '') + '<span>Invio in corso...</span></div>';
             this.disabled = true;
 
             try {

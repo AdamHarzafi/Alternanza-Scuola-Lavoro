@@ -10,7 +10,9 @@
     <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="preload" href="fonts/SF-Pro-Variable-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
-    <link rel="stylesheet" href="account-settings.css?v=20261106-refined-account-name-v6">
+    <link rel="stylesheet" href="account-settings.css?v=20261108-ios14-loader-v7">
+    <link rel="stylesheet" href="loading-indicator.css?v=20261108-ios14-v1">
+    <script defer src="loading-indicator.js?v=20261108-ios14-v1"></script>
     <link rel="stylesheet" href="navbar-refinement.css?v=20261106-account-button-type-v10">
     <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
@@ -18,10 +20,11 @@
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
     <script defer src="auth-session.js?v=20261025-account-nav-v1"></script>
-    <script defer src="account-settings-model.js?v=20261106-profile-photo-v4"></script>
+    <script defer src="account-settings-model.js?v=20261108-account-pdf-v1"></script>
     <script defer src="account-preferences.js?v=20261106-profile-photo-v4"></script>
     <script defer src="account-profile-photo.js?v=20261106-profile-photo-v4"></script>
-    <script defer src="account-settings.js?v=20261106-profile-photo-v4"></script>
+    <script defer src="account-pdf.js?v=20261108-account-pdf-v1"></script>
+    <script defer src="account-settings.js?v=20261108-account-pdf-v1"></script>
 </head>
 <body class="account-privacy-page settings-page">
     <svg class="settings-icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -56,7 +59,7 @@
             <button class="settings-round-button" id="settings-refresh" type="button" aria-label="Aggiorna dati dell’account" hidden><svg aria-hidden="true"><use href="#settings-icon-refresh"/></svg></button>
         </header>
         <section class="settings-state" id="settings-state" aria-live="polite" aria-busy="true">
-            <span class="settings-spinner" aria-hidden="true"></span>
+            <span class="settings-spinner" data-apple-spinner aria-hidden="true"></span>
             <h2 id="settings-state-title">Carico il tuo account…</h2>
             <p id="settings-state-copy">Un momento, stiamo recuperando le tue informazioni.</p>
             <button class="settings-primary" id="settings-retry" type="button" hidden>Riprova</button>
@@ -113,7 +116,7 @@
                     <header class="settings-view-heading"><h2 id="data-title" tabindex="-1">Dati e privacy</h2><p>Le tue informazioni, sempre a portata di mano.</p></header>
                     <h3 class="settings-section-label">Una copia dei tuoi dati</h3>
                     <div class="settings-group"><button class="settings-action-row settings-download" id="settings-download" type="button">Scarica i dati dell’account</button></div>
-                    <p class="settings-caption">Il riepilogo include le informazioni del tuo account. Per le esperienze e le ore di FSL, consulta il tuo registro.</p>
+                    <p class="settings-caption">Ricevi un PDF con il logo Harzafi FSL, le informazioni personali, la foto del profilo se presente, i dati di accesso e i riferimenti dell’account. Il documento viene creato sul tuo dispositivo. Per le esperienze e le ore di FSL, consulta il tuo registro.</p>
                     <h3 class="settings-section-label">Informazioni e richieste</h3>
                     <div class="settings-group settings-links"><a href="privacy-account.html">Il tuo account e la privacy <svg aria-hidden="true"><use href="#settings-icon-chevron"/></svg></a><a href="privacy.html">Come vengono gestiti i dati <svg aria-hidden="true"><use href="#settings-icon-chevron"/></svg></a><a href="mailto:harzafi.support@gmail.com?subject=Richiesta%20sui%20dati%20dell%27account">Invia una richiesta sui tuoi dati <svg aria-hidden="true"><use href="#settings-icon-chevron"/></svg></a></div>
                 </section>

@@ -81,8 +81,6 @@ body.settings-page :is(code,pre,kbd,samp) { font-family:var(--font-mono) !import
 .settings-state h2 { margin:0; max-width:520px; font-size:24px; letter-spacing:-.025em; line-height:1.2; font-weight:600; }
 .settings-state p { margin:0; max-width:440px; color:var(--settings-muted); font-size:16px; line-height:1.5; }
 .settings-primary { min-height:44px; padding:11px 22px; border:0; border-radius:99px; background:#0071e3; color:#fff; font-size:15px !important; }
-.settings-spinner { width:26px; height:26px; border:2px solid #d2d2d7; border-top-color:#6e6e73; border-radius:50%; animation:settings-spin .8s linear infinite; }
-@keyframes settings-spin { to { transform:rotate(360deg); } }
 .settings-footer { width:min(980px,calc(100% - 48px)); margin:0 auto; padding:24px 0 32px; display:flex; justify-content:space-between; align-items:center; gap:20px; color:var(--settings-muted); font-size:12px; }
 .settings-footer nav { display:flex; gap:22px; }
 .settings-footer a { color:var(--settings-muted); }
@@ -184,4 +182,4 @@ body.settings-page :is(code,pre,kbd,samp) { font-family:var(--font-mono) !import
     .settings-editor-body { padding-right:16px; padding-left:16px; }
     .settings-name-fields > div { grid-template-columns:72px minmax(0,1fr); gap:8px; }
 }
-@media(prefers-reduced-motion:reduce) { .settings-spinner,.settings-view,.settings-editor-dialog[open] { animation:none; } }
+@media(prefers-reduced-motion:reduce) { .settings-view,.settings-editor-dialog[open] { animation:none; } }

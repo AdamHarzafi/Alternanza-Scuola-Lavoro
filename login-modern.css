@@ -986,19 +986,6 @@ body.auth-page {
     gap: 9px;
 }
 
-.login-button-spinner {
-    width: 17px;
-    height: 17px;
-    flex: 0 0 17px;
-    border: 2px solid rgba(255, 255, 255, .42);
-    border-top-color: #ffffff;
-    border-radius: 50%;
-    animation: login-spinner .72s linear infinite;
-}
-
-@keyframes login-spinner {
-    to { transform: rotate(360deg); }
-}
 
 .auth-password-field input {
     padding-right: 108px !important;
@@ -1533,8 +1520,6 @@ body.auth-page {
 :is(#hid-modal, #forgot-sheet-modal) .hid-scan-card p { margin: 0; color: #626268; font-size: 13px; line-height: 1.5; }
 :is(#hid-modal, #forgot-sheet-modal) .hid-scan-action { display: flex; justify-content: center; margin: 26px 0 8px; }
 :is(#hid-modal, #forgot-sheet-modal) .hid-wait-button { display: grid; place-items: center; width: 150px; height: 54px; border: 0; border-radius: 999px; color: #fff; background: #0085f7; opacity: 1; cursor: default; }
-.auth-page .hid-spinner { width: 26px; height: 26px; animation: hid-spinner .9s steps(12,end) infinite; }
-@keyframes hid-spinner { to { transform: rotate(360deg); } }
 :is(#hid-modal, #forgot-sheet-modal) .hid-manual-link { margin: 0; font-size: 16px; }
 :is(#hid-modal, #forgot-sheet-modal) #hid-submit-btn { border-radius: 999px; }
 @media(max-width:600px) {
@@ -1552,11 +1537,9 @@ body.auth-page {
  :is(#hid-modal, #forgot-sheet-modal) .hid-scan-card h2 { font-size: 17px; }
  :is(#hid-modal, #forgot-sheet-modal) .hid-scan-card p { font-size: 12px; }
 }
-@media(prefers-reduced-motion:reduce) { :is(#hid-modal, #forgot-sheet-modal), :is(#hid-modal, #forgot-sheet-modal) .modal-content { transition: none; } .auth-page .hid-spinner { animation: none; } }
+@media(prefers-reduced-motion:reduce) { :is(#hid-modal, #forgot-sheet-modal), :is(#hid-modal, #forgot-sheet-modal) .modal-content { transition: none; } }
 @media(prefers-reduced-transparency:reduce) { :is(#hid-modal, #forgot-sheet-modal) .modal-content { background: #f0f1f4; backdrop-filter: none; } }
 
-/* Keep the shared access indicator centered without changing button geometry. */
-.auth-page button .hid-spinner { display: inline-block; vertical-align: middle; flex-shrink: 0; }
 
 /* Keep the base sheet position/transition shared; only Harzafi ID uses its bounce. */
 :is(#hid-modal, #forgot-sheet-modal) { transition: opacity .28s ease, visibility .28s; }
