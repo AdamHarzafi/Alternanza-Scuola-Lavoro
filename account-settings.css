@@ -47,6 +47,28 @@ body.settings-page :is(code,pre,kbd,samp) { font-family:var(--font-mono) !import
 .settings-signout:hover:not(:disabled) { text-decoration:underline; text-underline-offset:3px; }
 .settings-views { min-width:0; padding-top:8px; }
 .settings-view { min-width:0; }
+/* Desktop section changes animate the details column only. The new root
+   snapshot immediately shows the unchanged sidebar, toolbar and navigation. */
+@media(min-width:960px) {
+    :root[data-page-motion-scope="panel"] .settings-page #settings-views { view-transition-name:harzafi-settings-pane; }
+    :root[data-page-motion-scope="panel"]::view-transition-group(root),
+    :root[data-page-motion-scope="panel"]::view-transition-old(root),
+    :root[data-page-motion-scope="panel"]::view-transition-new(root),
+    :root[data-page-motion-scope="panel"]::view-transition-group(harzafi-navigation),
+    :root[data-page-motion-scope="panel"]::view-transition-old(harzafi-navigation),
+    :root[data-page-motion-scope="panel"]::view-transition-new(harzafi-navigation) { animation:none; }
+    :root[data-page-motion-scope="panel"]::view-transition-old(root),
+    :root[data-page-motion-scope="panel"]::view-transition-old(harzafi-navigation) { display:none; }
+    :root[data-page-motion-scope="panel"]::view-transition-group(harzafi-settings-pane) { animation-duration:.46s; }
+    :root[data-page-motion-scope="panel"]::view-transition-old(harzafi-settings-pane) {
+        animation:harzafi-page-out .2s cubic-bezier(.4,0,1,1) both;
+        mix-blend-mode:normal;
+    }
+    :root[data-page-motion-scope="panel"]::view-transition-new(harzafi-settings-pane) {
+        animation:harzafi-page-in .46s cubic-bezier(.22,1,.36,1) both;
+        mix-blend-mode:normal;
+    }
+}
 .settings-view-heading { margin-bottom:28px; }
 .settings-view-heading h2 { margin:0; font-size:28px; line-height:1.18; font-weight:600; letter-spacing:-.022em; }
 .settings-view-heading p { max-width:490px; margin:12px 0 0; color:var(--settings-muted); font-size:16px; line-height:1.5; letter-spacing:-.01em; }

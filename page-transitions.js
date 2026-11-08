@@ -34,6 +34,12 @@
     }
     const initialHint = readHint();
     direction(initialHint);
+    function clearView() {
+        const previous = activeView;
+        activeView = null;
+        previous?.skipTransition();
+        delete root.dataset.pageMotionScope;
+    }
     function cancel() {
         ++epoch;
         firstEntry = true;
@@ -41,7 +47,7 @@
         resolveEntry();
         running.forEach(animation => animation.cancel()); running.clear();
         ghosts.forEach(element => element.remove()); ghosts.clear();
-        activeView?.skipTransition(); activeView = null;
+        clearView();
     }
     function animate(element, frames, options) {
         if (!element || !enabled() || !element.isConnected) return null;
@@ -117,19 +123,23 @@
         const version = epoch;
         requestAnimationFrame(() => { if (version === epoch) enter(content,{duration:460,distance:12,opacity:.35}); });
     }
-    function transition(update, {back=false,guard=()=>true} = {}) {
+    function transition(update, {back=false,guard=()=>true,scope=null} = {}) {
         if (!guard()) return;
-        activeView?.skipTransition(); activeView = null;
+        clearView();
         direction(back ? 'back' : 'forward');
         if (enabled() && typeof document.startViewTransition === 'function') {
             try {
+                if (scope === 'panel') root.dataset.pageMotionScope = 'panel';
                 const view = document.startViewTransition(() => { if (guard()) update(); });
                 activeView = view;
                 view.ready.catch(() => {});
                 view.updateCallbackDone.catch(() => {});
-                view.finished.then(() => { if (activeView === view) activeView = null; }, () => { if (activeView === view) activeView = null; });
+                const release = () => {
+                    if (activeView === view) { activeView = null; delete root.dataset.pageMotionScope; }
+                };
+                view.finished.then(release,release);
                 return;
-            } catch (_) { /* Standard navigation remains available without native transitions. */ }
+            } catch (_) { delete root.dataset.pageMotionScope; /* Standard navigation remains available without native transitions. */ }
         }
         const target = update();
         if (guard()) enter(target,{axis:'x',back,distance:12});

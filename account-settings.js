@@ -139,13 +139,20 @@
     }
     function animateNavigation({ focus = true, back = false } = {}) {
         if (!account || !window.HarzafiMotion) return updateNavigation({focus});
+        const requested = Object.keys(sections).find(key => '#' + sections[key].id === window.location.hash);
+        const next = requested || (desktopQuery.matches ? 'personal' : null);
+        if (next === activeView) {
+            ++viewNavigation; window.HarzafiMotion.cancel();
+            return updateNavigation({focus});
+        }
         const version = generation, uid = account.uid, operation = ++viewNavigation;
         const guard = () => version === generation && operation === viewNavigation && currentAccount()?.uid === uid;
-        window.HarzafiMotion.transition(() => updateNavigation({focus}), {back,guard});
+        window.HarzafiMotion.transition(() => updateNavigation({focus}), {back,guard,scope:desktopQuery.matches ? 'panel' : null});
     }
     viewButtons.forEach(button => button.addEventListener('click', () => {
         if (!currentAccount()) return;
         const hash = '#' + sections[button.dataset.settingsView].id;
+        if (activeView === button.dataset.settingsView && (!window.location.hash || window.location.hash === hash)) return;
         if (window.location.hash !== hash) history.pushState({ harzafiSettingsView: true, harzafiSettingsIndex:++viewHistoryIndex }, '', hash);
         animateNavigation();
     }));
@@ -170,7 +177,10 @@
         viewHistoryIndex = Number.isFinite(history.state?.harzafiSettingsIndex) ? history.state.harzafiSettingsIndex : 0;
         animateNavigation({back:!Object.keys(sections).some(key => '#' + sections[key].id === window.location.hash)});
     });
-    desktopQuery.addEventListener('change', () => updateNavigation());
+    desktopQuery.addEventListener('change', () => {
+        ++viewNavigation; window.HarzafiMotion?.cancel();
+        updateNavigation();
+    });
 
     function message(element, value, error = false) {
         element.textContent = value;
