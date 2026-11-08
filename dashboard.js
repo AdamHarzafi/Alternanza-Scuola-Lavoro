@@ -61,20 +61,52 @@
     const successToast = document.getElementById('dashboard-success-toast');
     const successToastTitle = document.getElementById('dashboard-success-title');
     const successToastMessage = document.getElementById('dashboard-success-message');
-    let successToastTimer;
+    const successToastTime = document.getElementById('dashboard-toast-time');
+    const successToastHome = successToast?.parentElement;
+    let successToastTimer, successToastExitTimer;
+    function closeToastLayer() {
+        if (!successToast || successToast.classList.contains('is-visible')) return;
+        try { if (successToast.matches(':popover-open')) successToast.hidePopover(); } catch (_) { /* Older browsers use the fixed banner. */ }
+        if (successToastHome && successToast.parentElement !== successToastHome) successToastHome.append(successToast);
+    }
+    function hideDashboardToast(immediate = false) {
+        window.clearTimeout(successToastTimer);
+        window.clearTimeout(successToastExitTimer);
+        if (!successToast) return;
+        successToast.classList.remove('is-visible');
+        successToast.setAttribute('aria-hidden', 'true');
+        if (immediate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) closeToastLayer();
+        else successToastExitTimer = window.setTimeout(closeToastLayer, 440);
+    }
     function showDashboardToast(title, message, isError = false) {
         if (!successToast || !successToastTitle || !successToastMessage) return;
         window.clearTimeout(successToastTimer);
+        window.clearTimeout(successToastExitTimer);
         successToastTitle.textContent = title;
         successToastMessage.textContent = message;
+        if (successToastTime) {
+            const now = new Date();
+            successToastTime.dateTime = now.toISOString();
+            successToastTime.textContent = new Intl.DateTimeFormat('it-IT',{hour:'2-digit',minute:'2-digit'}).format(now);
+        }
         successToast.classList.toggle('is-error', isError);
         successToast.setAttribute('aria-hidden', 'false');
+        // Reinsert an existing popover after any newly opened modal. Calling
+        // showPopover() on an already open notification does not raise it again.
+        try { if (successToast.matches(':popover-open')) successToast.hidePopover(); } catch (_) {}
+        const host = document.querySelector('dialog[open]:not(.is-closing)') || successToastHome;
+        if (host && successToast.parentElement !== host) host.append(successToast);
+        if (typeof successToast.showPopover === 'function') {
+            try { successToast.showPopover(); } catch (_) { /* The modal host also supports the fixed fallback. */ }
+        }
+        successToast.getBoundingClientRect(); // Establish the hidden frame before its entrance.
         successToast.classList.add('is-visible');
-        successToastTimer = window.setTimeout(() => {
-            successToast.classList.remove('is-visible');
-            successToast.setAttribute('aria-hidden', 'true');
-        }, 5000);
+        successToastTimer = window.setTimeout(hideDashboardToast, 5000);
     }
+    document.querySelectorAll('dialog').forEach(modal => modal.addEventListener('close', () => {
+        if (modal.contains(successToast)) hideDashboardToast(true);
+    }));
+    window.addEventListener('pagehide', () => hideDashboardToast(true));
     const retry = document.getElementById('retry-hours');
     let unsubscribe, animation;
     let stopTeacher, sessionGeneration = 0;

@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="stylesheet" href="modern.css?v=20261103-footer-active-link-underline-v1">
-    <link rel="stylesheet" href="dashboard.css?v=20261106-account-settings-v2">
+    <link rel="stylesheet" href="dashboard.css?v=20261108-native-notification-v3">
     <link rel="stylesheet" href="register-refinements.css?v=20260919-refined">
     <link rel="stylesheet" href="teacher-register.css?v=20260925-hero-scroll">
     <style>
@@ -48,13 +48,14 @@
         </div>
     </header>
 
-    <div id="dashboard-success-toast" class="dashboard-success-toast" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true">
+    <div id="dashboard-success-toast" class="dashboard-success-toast" popover="manual" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true">
         <span class="dashboard-success-toast-logo" aria-hidden="true">
             <img class="dashboard-toast-icon-success" src="IMMAGINI/LOGO%20SPUNTA%20BLU.webp" alt="">
             <img class="dashboard-toast-icon-error" src="IMMAGINI/LOGO%20ERRATO.webp" alt="">
         </span>
         <span class="dashboard-success-toast-copy">
             <strong id="dashboard-success-title"></strong>
+            <time id="dashboard-toast-time" aria-hidden="true"></time>
             <span id="dashboard-success-message"></span>
         </span>
     </div>
@@ -207,6 +208,6 @@
     <script defer src="hours-store.js?v=20260924-teachers"></script>
     <script defer src="teacher-model.js?v=20260924"></script>
     <script defer src="teacher-register.js?v=20261106-account-settings-v2"></script>
-    <script defer src="dashboard.js?v=20261108-fluid-pages-v1"></script>
+    <script defer src="dashboard.js?v=20261108-native-notification-v2"></script>
 </body>
 </html>

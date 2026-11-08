@@ -479,28 +479,30 @@ button:disabled { opacity:.55; cursor:wait; }
     }
 }
 
-/* Conferma delle modifiche: notifica compatta, con brand e testo leggibile. */
+/* Notification glass above the fixed navbar, including the iPhone safe area. */
 .dashboard-page .dashboard-success-toast {
     position: fixed;
-    z-index: 1000;
-    top: max(16px, env(safe-area-inset-top));
-    right: max(18px, env(safe-area-inset-right));
+    z-index: 1200;
+    inset: auto;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    right: max(18px, calc(env(safe-area-inset-right, 0px) + 12px));
+    margin: 0;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     width: min(430px, calc(100vw - 36px));
     min-height: 78px;
-    padding: 13px 17px;
-    border: 1px solid rgba(255,255,255,.7);
-    border-radius: 30px;
-    background: linear-gradient(135deg, rgba(255,255,255,.66), rgba(241,245,251,.48));
-    box-shadow: 0 14px 42px rgba(29,29,31,.13), inset 0 1px 1px rgba(255,255,255,.82);
-    -webkit-backdrop-filter: saturate(190%) blur(34px);
-    backdrop-filter: saturate(190%) blur(34px);
+    padding: 13px 16px;
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 28px;
+    background: linear-gradient(155deg, rgba(255,255,255,.08), rgba(255,255,255,.015) 65%), rgba(64,61,58,.82);
+    box-shadow: 0 1px 0 rgba(0,0,0,.25), 0 12px 32px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(255,255,255,.1);
+    -webkit-backdrop-filter: blur(28px) saturate(125%);
+    backdrop-filter: blur(28px) saturate(125%);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translate3d(18px, -18px, 0);
+    transform: translate3d(0, -16px, 0) scale(.98);
     transition: opacity .3s ease, transform .42s cubic-bezier(.22,1,.36,1), visibility 0s linear .42s;
 }
 .dashboard-page .dashboard-success-toast.is-visible {
@@ -512,13 +514,13 @@ button:disabled { opacity:.55; cursor:wait; }
 .dashboard-success-toast-logo {
     position: relative;
     display: block;
-    flex: 0 0 50px;
-    width: 50px;
-    height: 50px;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,.76);
-    border-radius: 17px;
-    box-shadow: 0 2px 9px rgba(29,29,31,.12);
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.16);
 }
 .dashboard-success-toast-logo img {
     position: absolute;
@@ -536,39 +538,55 @@ button:disabled { opacity:.55; cursor:wait; }
 .dashboard-success-toast.is-error .dashboard-toast-icon-error { opacity: 1; visibility: visible; }
 .dashboard-success-toast-copy {
     display: grid;
+    flex: 1 1 auto;
+    grid-template-columns: minmax(0,1fr) auto;
     min-width: 0;
     gap: 3px;
-    color: var(--ink);
+    color: #fff;
     font-family: var(--font-text) !important;
     text-align: left;
 }
 .dashboard-success-toast-copy strong {
     font-family: var(--font-display) !important;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 650;
     line-height: 1.25;
     letter-spacing: -.015em;
+    overflow-wrap: anywhere;
 }
+.dashboard-success-toast-copy time { color:rgba(255,255,255,.78); font-family:var(--font-text) !important; font-size:13px; line-height:1.45; font-variant-numeric:tabular-nums; white-space:nowrap; }
 .dashboard-success-toast-copy > span {
-    color: #515154;
+    grid-column: 1 / -1;
+    color: rgba(255,255,255,.96);
     font-family: var(--font-text) !important;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 1.4;
+    overflow-wrap: anywhere;
 }
-@media (max-width: 700px) {
+@media (max-width: 833px) {
     .dashboard-page .dashboard-success-toast {
-        top: max(10px, env(safe-area-inset-top));
-        right: 12px;
-        left: 12px;
+        top: calc(env(safe-area-inset-top, 0px) + 8px);
+        right: max(12px, calc(env(safe-area-inset-right, 0px) + 8px));
+        left: max(12px, calc(env(safe-area-inset-left, 0px) + 8px));
         width: auto;
-        min-height: 72px;
-        padding: 11px 13px;
-        transform: translate3d(0,-20px,0);
+        min-height: 78px;
+        padding: 12px 14px;
+        transform: translate3d(0,-16px,0) scale(.98);
     }
     .dashboard-page .dashboard-success-toast.is-visible {
         transform: translate3d(0,0,0);
     }
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+    .dashboard-page .dashboard-success-toast { background:#56514d; }
+}
+@media (prefers-reduced-transparency:reduce) {
+    .dashboard-page .dashboard-success-toast { background:#56514d; backdrop-filter:none; -webkit-backdrop-filter:none; }
+}
+@media (forced-colors:active) {
+    .dashboard-page .dashboard-success-toast { background:Canvas; border-color:CanvasText; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; }
+    .dashboard-success-toast-copy, .dashboard-success-toast-copy > span, .dashboard-success-toast-copy time { color:CanvasText; }
 }
 @media (prefers-reduced-motion: reduce) {
     .dashboard-page .dashboard-success-toast,
