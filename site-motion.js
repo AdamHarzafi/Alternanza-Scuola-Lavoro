@@ -3,8 +3,9 @@
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const canAnimate = typeof Element.prototype.animate === 'function';
     const played = new WeakSet();
+    const waitingImages = new WeakSet();
     const running = new Map();
-    const selector = 'h1, .account-hero-logo, .account-belief > img, .account-belief > h2, .account-belief > p, .legal-editorial-page .privacy-hero-logo, .legal-overview, .legal-editorial-page .privacy-policy-card, .legal-editorial-page .privacy-contact-strip, main article, main details, .harzafi-footer-inner';
+    const selector = 'h1, .support-hero-logo, .accessibility-hero-logo, .account-hero-logo, .account-belief > img, .account-belief > h2, .account-belief > p, .legal-editorial-page .privacy-hero-logo, .legal-overview, .legal-editorial-page .privacy-policy-card, .legal-editorial-page .privacy-contact-strip, main article, main details, .harzafi-footer-inner';
 
     if (!preference.matches && canAnimate) {
         // Animate the home artwork as soon as its pixels are ready, without
@@ -56,6 +57,13 @@
         elements.forEach(element => {
             if (element.matches('.pathway-detail-card--current, .pathway-detail-card--verified')) return;
             if (played.has(element) || element.closest('[hidden], [aria-hidden="true"]') || element.dataset.registerMotion) return;
+            if (element instanceof HTMLImageElement && (!element.complete || !element.naturalWidth)) {
+                if (!waitingImages.has(element)) {
+                    waitingImages.add(element);
+                    element.addEventListener('load', () => { waitingImages.delete(element); register(element); }, {once:true});
+                }
+                return;
+            }
             // Avoid animating an article and its nested details independently.
             if (element.parentElement?.closest('article, details')) return;
             if (preference.matches) {

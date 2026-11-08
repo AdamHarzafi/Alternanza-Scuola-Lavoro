@@ -4,7 +4,10 @@
     const loadingMessage = document.getElementById('dashboard-loading-message');
     const loadingRetry = document.getElementById('dashboard-loading-retry');
     loadingRetry.addEventListener('click', () => window.location.reload());
-    function showDashboard() { document.body.classList.remove('dashboard-pending'); }
+    function showDashboard() {
+        window.HarzafiMotion?.complete(document.querySelector('.dashboard-spinner'), document.querySelector('main'));
+        document.body.classList.remove('dashboard-pending');
+    }
 
     const nameElement = document.getElementById('hero-user-name');
     nameElement.textContent = 'Utente';
@@ -146,6 +149,7 @@
         return null;
     }
     auth.onAuthStateChanged(async user => {
+        window.HarzafiMotion?.cancel();
         document.body.classList.add('dashboard-pending');
         loadingMessage.textContent = 'Carico...';
         loadingRetry.hidden = true;
@@ -217,6 +221,7 @@
             loadData();
         } catch (error) {
             if (generation !== sessionGeneration) return;
+            window.HarzafiMotion?.complete(document.querySelector('.dashboard-spinner'), loadingMessage);
             document.querySelector('.dashboard-spinner').style.display = 'none';
             loadingMessage.textContent = 'Non è possibile verificare il tuo accesso al registro.';
             loadingRetry.hidden = false;

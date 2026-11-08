@@ -1,0 +1,30 @@
+/* Same-origin page transitions. Content stays readable when this API is absent. */
+@view-transition { navigation:auto; }
+:root { --page-motion-in:14px; --page-motion-out:-14px; }
+:root[data-page-motion-direction="back"] { --page-motion-in:-14px; --page-motion-out:14px; }
+.navbar-wrapper.home-mainnav { view-transition-name:harzafi-navigation; }
+::view-transition { pointer-events:none; }
+::view-transition-group(root) { animation-duration:.46s; }
+::view-transition-old(root) {
+    animation:harzafi-page-out .2s cubic-bezier(.4,0,1,1) both;
+    mix-blend-mode:normal;
+}
+::view-transition-new(root) {
+    animation:harzafi-page-in .46s cubic-bezier(.22,1,.36,1) both;
+    mix-blend-mode:normal;
+}
+::view-transition-old(harzafi-navigation) { animation:harzafi-navigation-out .16s ease-out both; }
+::view-transition-new(harzafi-navigation) { animation:harzafi-navigation-in .24s ease-out both; }
+@keyframes harzafi-page-out { from { opacity:1; transform:translateX(0); } to { opacity:0; transform:translateX(var(--page-motion-out)); } }
+@keyframes harzafi-page-in { from { opacity:0; transform:translateX(var(--page-motion-in)); } to { opacity:1; transform:translateX(0); } }
+@keyframes harzafi-navigation-out { from { opacity:1; } to { opacity:0; } }
+@keyframes harzafi-navigation-in { from { opacity:0; } to { opacity:1; } }
+.page-loading-ghost { position:fixed !important; margin:0 !important; pointer-events:none !important; z-index:1100; }
+@media (prefers-reduced-motion:reduce) {
+    @view-transition { navigation:none; }
+    ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation:none !important; }
+}
+@media print {
+    @view-transition { navigation:none; }
+    .page-loading-ghost { display:none !important; }
+}

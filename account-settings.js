@@ -38,6 +38,8 @@
     const givenNameInput = byId('settings-given-name'), familyNameInput = byId('settings-family-name');
     let nameOwner = null, nameOperation = 0;
     let downloadOperation = 0, downloadPending = false;
+    let viewNavigation = 0;
+    let popstateHash = null, viewHistoryIndex = Number.isFinite(history.state?.harzafiSettingsIndex) ? history.state.harzafiSettingsIndex : 0;
 
     function profileControls() {
         const disabled = !preferencesReady || profileWritePending || !currentAccount();
@@ -133,12 +135,19 @@
             else viewButtons.find(button => button.dataset.settingsView === previous)?.focus({ preventScroll: true });
             if (!desktopQuery.matches) window.scrollTo(0, 0);
         }
+        return activeView ? sections[activeView] : sidebar;
+    }
+    function animateNavigation({ focus = true, back = false } = {}) {
+        if (!account || !window.HarzafiMotion) return updateNavigation({focus});
+        const version = generation, uid = account.uid, operation = ++viewNavigation;
+        const guard = () => version === generation && operation === viewNavigation && currentAccount()?.uid === uid;
+        window.HarzafiMotion.transition(() => updateNavigation({focus}), {back,guard});
     }
     viewButtons.forEach(button => button.addEventListener('click', () => {
         if (!currentAccount()) return;
         const hash = '#' + sections[button.dataset.settingsView].id;
-        if (window.location.hash !== hash) history.pushState({ harzafiSettingsView: true }, '', hash);
-        updateNavigation({ focus: true });
+        if (window.location.hash !== hash) history.pushState({ harzafiSettingsView: true, harzafiSettingsIndex:++viewHistoryIndex }, '', hash);
+        animateNavigation();
     }));
     backButton.addEventListener('click', event => {
         if (!account || desktopQuery.matches || !activeView) return;
@@ -146,11 +155,21 @@
         if (history.state?.harzafiSettingsView) history.back();
         else {
             history.replaceState(null, '', window.location.pathname + window.location.search);
-            updateNavigation({ focus: true });
+            animateNavigation({back:true});
         }
     });
-    window.addEventListener('popstate', () => updateNavigation({ focus: true }));
-    window.addEventListener('hashchange', () => updateNavigation({ focus: true }));
+    window.addEventListener('popstate', () => {
+        const nextIndex = Number.isFinite(history.state?.harzafiSettingsIndex) ? history.state.harzafiSettingsIndex : 0;
+        const back = nextIndex < viewHistoryIndex;
+        viewHistoryIndex = nextIndex; popstateHash = window.location.hash;
+        animateNavigation({back});
+    });
+    window.addEventListener('hashchange', () => {
+        const handled = popstateHash === window.location.hash; popstateHash = null;
+        if (handled) return;
+        viewHistoryIndex = Number.isFinite(history.state?.harzafiSettingsIndex) ? history.state.harzafiSettingsIndex : 0;
+        animateNavigation({back:!Object.keys(sections).some(key => '#' + sections[key].id === window.location.hash)});
+    });
     desktopQuery.addEventListener('change', () => updateNavigation());
 
     function message(element, value, error = false) {
@@ -158,6 +177,7 @@
         element.dataset.error = String(error);
     }
     function clearAccount() {
+        ++viewNavigation; window.HarzafiMotion?.cancel();
         ++downloadOperation; downloadPending = false;
         downloadButton.disabled = false; downloadButton.textContent = 'Scarica i dati dell’account';
         downloadButton.removeAttribute('aria-busy');
@@ -185,6 +205,7 @@
         message(photoStatus, ''); profileControls();
     }
     function showError(error) {
+        window.HarzafiMotion?.complete(spinner, state);
         state.hidden = false;
         state.setAttribute('aria-busy', 'false');
         spinner.hidden = true;
@@ -232,6 +253,7 @@
         byId('settings-password-action').hidden = !value.passwordAccess;
         byId('settings-provider-note').hidden = value.passwordAccess;
         verifyButton.hidden = value.emailVerified || !value.passwordAccess || typeof user.sendEmailVerification !== 'function';
+        if (!state.hidden) window.HarzafiMotion?.complete(spinner, content);
         state.setAttribute('aria-busy', 'false');
         state.hidden = true;
         content.hidden = false;
@@ -248,6 +270,7 @@
         state.setAttribute('aria-busy', 'true');
         stateTitle.textContent = 'Carico il tuo account…';
         stateCopy.textContent = 'Un momento, stiamo recuperando le tue informazioni.';
+        window.HarzafiMotion?.enter(state,{distance:6,opacity:.65,duration:220});
         if (!user || user.isAnonymous || !user.email) {
             window.location.replace('login.html');
             return;
@@ -373,6 +396,7 @@
                 : 'Non è stato possibile preparare il PDF. Controlla la connessione e riprova.', true);
         } finally {
             if (operation === downloadOperation && version === generation) {
+                window.HarzafiMotion?.complete(downloadButton,pageStatus);
                 downloadPending = false; downloadButton.disabled = false;
                 downloadButton.textContent = 'Scarica i dati dell’account'; downloadButton.removeAttribute('aria-busy');
             }

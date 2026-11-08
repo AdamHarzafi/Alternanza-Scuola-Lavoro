@@ -25,6 +25,7 @@
         const mode = urlParams.get('mode');
 
         function showLinkError(message) {
+            window.HarzafiMotion?.complete(loadingMsg, errorMsg);
             resetShell.classList.add('is-link-invalid');
             loadingMsg.style.display = 'none';
             resetForm.style.display = 'none';
@@ -35,6 +36,7 @@
         }
 
         function showVerifiedAccount(email) {
+            window.HarzafiMotion?.complete(loadingMsg, resetForm);
             resetShell.classList.remove('is-link-invalid');
             loadingMsg.style.display = 'none';
             errorMsg.style.display = 'none';

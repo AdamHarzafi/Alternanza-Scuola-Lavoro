@@ -46,8 +46,7 @@ body.settings-page :is(code,pre,kbd,samp) { font-family:var(--font-mono) !import
 .settings-signout { display:block; width:100%; min-height:48px; margin-top:14px; border:0; background:none; color:#b42318; font-size:15px !important; }
 .settings-signout:hover:not(:disabled) { text-decoration:underline; text-underline-offset:3px; }
 .settings-views { min-width:0; padding-top:8px; }
-.settings-view { min-width:0; animation:settings-view-in .22s ease both; }
-@keyframes settings-view-in { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:none; } }
+.settings-view { min-width:0; }
 .settings-view-heading { margin-bottom:28px; }
 .settings-view-heading h2 { margin:0; font-size:28px; line-height:1.18; font-weight:600; letter-spacing:-.022em; }
 .settings-view-heading p { max-width:490px; margin:12px 0 0; color:var(--settings-muted); font-size:16px; line-height:1.5; letter-spacing:-.01em; }
