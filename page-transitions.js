@@ -7,7 +7,13 @@
     const running = new Map(), ghosts = new Set();
     const HINT = 'harzafi_page_motion';
     let arrival = false, activeView = null, epoch = 0;
+    let firstEntry = false, preparingEntry = false;
+    let resolveEntry;
+    const ready = new Promise(resolve => { resolveEntry = resolve; });
     const enabled = () => !preference.matches && document.visibilityState !== 'hidden' && typeof Element.prototype.animate === 'function';
+    // Registered in the head, before the first paint. CSS also has a timed
+    // fallback: a missing event or interrupted script can never hide the page.
+    if (enabled()) root.dataset.pageEntrance = 'pending';
     const direction = value => { root.dataset.pageMotionDirection = value === 'back' ? 'back' : 'forward'; };
     const historyDirection = activation => {
         const from = activation?.from?.index, to = activation?.entry?.index;
@@ -30,6 +36,9 @@
     direction(initialHint);
     function cancel() {
         ++epoch;
+        firstEntry = true;
+        delete root.dataset.pageEntrance;
+        resolveEntry();
         running.forEach(animation => animation.cancel()); running.clear();
         ghosts.forEach(element => element.remove()); ghosts.clear();
         activeView?.skipTransition(); activeView = null;
@@ -51,6 +60,34 @@
             from.translate = axis === 'x' ? offset + 'px 0' : '0 ' + offset + 'px'; to.translate = '0 0';
         }
         animate(element, [from,to], {duration});
+    }
+    function startFirstEntry() {
+        if (firstEntry || !document.body) return;
+        firstEntry = true;
+        delete root.dataset.pageEntrance;
+        // Only opacity on the body: translating it would move fixed navigation
+        // and change the positioning of dialogs and mobile menus.
+        if (!arrival && enabled()) animate(document.body,[{opacity:0},{opacity:1}],{duration:680});
+        resolveEntry();
+    }
+    function prepareFirstEntry() {
+        if (firstEntry || preparingEntry || !document.body) return;
+        if (!enabled() || arrival) { startFirstEntry(); return; }
+        preparingEntry = true;
+        const images = [...document.images].filter(image => {
+            const rect = image.getBoundingClientRect();
+            return image.loading !== 'lazy' && rect.width > 0 && rect.bottom > 0 && rect.top < innerHeight;
+        }).slice(0,4);
+        const assets = [document.fonts?.ready, ...images.map(image => {
+            if (typeof image.decode === 'function') return image.decode();
+            if (image.complete) return Promise.resolve();
+            return new Promise(resolve => { image.addEventListener('load',resolve,{once:true}); image.addEventListener('error',resolve,{once:true}); });
+        })];
+        // Await the first screen's typography and artwork, never below-fold
+        // lazy images or an unresponsive network service.
+        let deadline;
+        Promise.race([Promise.allSettled(assets),new Promise(resolve => { deadline = setTimeout(resolve,500); })])
+            .then(() => { clearTimeout(deadline); requestAnimationFrame(startFirstEntry); });
     }
     function fadeSpinner(host) {
         if (!enabled() || !document.body) return;
@@ -97,7 +134,8 @@
         const target = update();
         if (guard()) enter(target,{axis:'x',back,distance:12});
     }
-    window.HarzafiMotion = {enter,complete,transition,cancel};
+    window.HarzafiMotion = {enter,complete,transition,cancel,ready};
+    document.addEventListener('DOMContentLoaded',prepareFirstEntry,{once:true});
     window.addEventListener('pageswap', event => {
         const activation = event.activation;
         const value = historyDirection(activation); direction(value);
@@ -110,17 +148,22 @@
         const hint = readHint() || initialHint;
         direction(activation?.from ? historyDirection(activation) : hint || 'forward');
         arrival = !!event.viewTransition && !preference.matches;
+        if (arrival) { firstEntry = true; delete root.dataset.pageEntrance; resolveEntry(); }
+        else prepareFirstEntry();
         if (preference.matches) event.viewTransition?.skipTransition();
         event.viewTransition?.ready.catch(() => {});
     });
     window.addEventListener('pageshow', event => {
-        if (event.persisted) cancel();
-        if (!arrival) enter(document.body,{distance:0,opacity:.8,duration:320});
+        if (event.persisted) {
+            cancel();
+            if (!arrival) enter(document.body,{distance:0,opacity:.25,duration:460});
+        } else prepareFirstEntry();
     });
     window.addEventListener('pagehide', () => { cancel(); arrival = false; });
     preference.addEventListener('change', event => { if (event.matches) cancel(); });
     window.addEventListener('scroll', () => { ghosts.forEach(element => element.remove()); ghosts.clear(); }, {passive:true,capture:true});
     document.addEventListener('focusin', event => {
+        if (!firstEntry) startFirstEntry();
         running.forEach((animation,element) => { if (element.contains(event.target)) { animation.cancel(); running.delete(element); } });
     });
     document.addEventListener('click', event => {

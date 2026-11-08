@@ -20,11 +20,19 @@
 @keyframes harzafi-navigation-out { from { opacity:1; } to { opacity:0; } }
 @keyframes harzafi-navigation-in { from { opacity:0; } to { opacity:1; } }
 .page-loading-ghost { position:fixed !important; margin:0 !important; pointer-events:none !important; z-index:1100; }
+/* A visible first entrance also works for reloads, bookmarks and shared links.
+   This CSS watchdog reveals the page even if JavaScript is interrupted. */
+html[data-page-entrance="pending"] body {
+    animation:harzafi-first-entry-fallback .68s cubic-bezier(.22,1,.36,1) .9s both;
+}
+@keyframes harzafi-first-entry-fallback { from { opacity:0; } to { opacity:1; } }
 @media (prefers-reduced-motion:reduce) {
     @view-transition { navigation:none; }
     ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation:none !important; }
+    html[data-page-entrance="pending"] body { animation:none !important; }
 }
 @media print {
     @view-transition { navigation:none; }
     .page-loading-ghost { display:none !important; }
+    html[data-page-entrance="pending"] body { animation:none !important; }
 }

@@ -24,8 +24,9 @@
                 });
             };
 
-            if (heroArtwork.complete) requestAnimationFrame(playHeroEntrance);
-            else heroArtwork.addEventListener('load', playHeroEntrance, { once: true });
+            const readyHero = () => Promise.resolve(window.HarzafiMotion?.ready).then(() => requestAnimationFrame(playHeroEntrance));
+            if (heroArtwork.complete) readyHero();
+            else heroArtwork.addEventListener('load', readyHero, { once: true });
         }
 
     }
@@ -74,7 +75,7 @@
         });
     };
 
-    register(document);
+    Promise.resolve(window.HarzafiMotion?.ready).then(() => register(document));
     const changes = new MutationObserver(records => records.forEach(record => record.addedNodes.forEach(register)));
     changes.observe(document.body, { childList: true, subtree: true });
     preference.addEventListener('change', event => {

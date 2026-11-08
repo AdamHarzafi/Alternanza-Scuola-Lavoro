@@ -709,7 +709,7 @@ body.site-nav-closing { overflow: hidden; }
     --r-localnav-menu-link-color: #000;
     --r-localnav-menu-link-opacity: .8;
     --localnav-keyline-color: rgba(0, 0, 0, .16);
-    --localnav-background: rgba(250, 250, 252, .8);
+    --localnav-background: rgba(255, 255, 255, .72);
     top: 0;
     right: 0;
     left: 0;
@@ -731,27 +731,7 @@ body.site-nav-closing { overflow: hidden; }
 }
 
 .navbar-wrapper.home-mainnav::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    margin-top: calc(-1 * var(--r-globalnav-height));
-    padding-top: var(--r-globalnav-height);
-    box-sizing: content-box;
-    background: var(--localnav-background);
-    pointer-events: none;
-    border: 0;
-    transition: none;
-}
-
-@supports (backdrop-filter: initial) or (-webkit-backdrop-filter: initial) {
-    .navbar-wrapper.home-mainnav::before {
-        backdrop-filter: saturate(180%) blur(20px);
-        -webkit-backdrop-filter: saturate(180%) blur(20px);
-    }
+    content: none;
 }
 
 .navbar-wrapper.home-mainnav::after {
@@ -966,10 +946,6 @@ body.site-nav-closing { overflow: hidden; }
     .navbar-wrapper.home-mainnav .home-nav-chevron .nav-toggle-glyph { transition: none !important; }
 }
 
-@supports not (backdrop-filter: initial) {
-    .navbar-wrapper.home-mainnav::before { background: #FAFAFCCC; }
-}
-
 /* Keep the homepage local nav above legacy navbar selectors in the cascade. */
 .navbar-wrapper.home-mainnav,
 .navbar-wrapper.home-mainnav.scrolled {
@@ -986,6 +962,29 @@ body.site-nav-closing { overflow: hidden; }
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     transition: none;
+}
+
+/* One glass surface, directly on the fixed navbar. No opaque layer beneath it.
+   Preserve the existing 52/48 px geometry and the stronger mobile menu scrim. */
+body[class] .navbar-wrapper.home-mainnav,
+body[class] .navbar-wrapper.home-mainnav.scrolled {
+    background: var(--localnav-background, rgba(255,255,255,.72));
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border:0;
+    box-shadow:none;
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+    body[class] .navbar-wrapper.home-mainnav,
+    body[class] .navbar-wrapper.home-mainnav.scrolled { background:rgba(255,255,255,.96); }
+}
+@media (prefers-reduced-transparency:reduce) {
+    body[class] .navbar-wrapper.home-mainnav,
+    body[class] .navbar-wrapper.home-mainnav.scrolled { background:#fff; backdrop-filter:none; -webkit-backdrop-filter:none; }
+}
+@media (forced-colors:active) {
+    body[class] .navbar-wrapper.home-mainnav,
+    body[class] .navbar-wrapper.home-mainnav.scrolled { background:Canvas; backdrop-filter:none; -webkit-backdrop-filter:none; }
 }
 
 .navbar-wrapper.home-mainnav .nav-content {
