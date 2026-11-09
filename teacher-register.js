@@ -43,11 +43,80 @@
         const search = root.querySelector('input'), filter = root.querySelector('[data-filter]'), sort = root.querySelector('[data-sort]'), exportButton = root.querySelector('.teacher-export');
         const detail = el('dialog', 'student-detail');
         detail.setAttribute('aria-labelledby', 'student-detail-title');
-        detail.innerHTML = `<div class="student-detail-scroll" tabindex="0" role="region" aria-label="Esperienze dello studente"><div class="student-detail-head"><div><p class="eyebrow">Registro studente</p><h2 id="student-detail-title"></h2></div><button class="student-close" type="button" aria-label="Chiudi registro studente">×</button></div><div class="student-detail-summary"></div><div class="student-detail-controls"><div class="student-tabs" role="group" aria-label="Stato delle esperienze"><button type="button" data-state="active" aria-pressed="true">Attive</button><button type="button" data-state="deleted" aria-pressed="false">Eliminate</button></div><label class="sr-only" for="teacher-category">Categoria</label><select id="teacher-category"><option value="all">Tutte le categorie</option><option value="formazione">Formazione scolastica</option><option value="certificazioni">Esperienza con attestazione</option></select><button type="button" class="detail-export">Esporta</button></div><p class="detail-status" role="status"></p><div class="student-experiences"></div></div>`;
+        detail.innerHTML = `
+            <button class="student-close" type="button" aria-label="Chiudi registro studente"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M 12.12 10 l 4.07 -4.06 a 1.5 1.5 0 1 0 -2.11 -2.12 L 10 7.88 L 5.94 3.81 A 1.5 1.5 0 1 0 3.82 5.93 L 7.88 10 L 3.81 14.06 a 1.5 1.5 0 0 0 0 2.12 a 1.51 1.51 0 0 0 2.13 0 L 10 12.12 l 4.06 4.07 a 1.45 1.45 0 0 0 1.06 0.44 a 1.5 1.5 0 0 0 1.06 -2.56 Z"/></svg></button>
+            <div class="student-detail-scroll" tabindex="0" role="region" aria-label="Registro dello studente">
+                <header class="student-detail-head">
+                    <div class="student-profile-avatar"></div>
+                    <div class="student-profile-copy"><p class="eyebrow">Registro studente</p><h2 id="student-detail-title" tabindex="-1"></h2><p class="student-profile-context"></p><div class="student-profile-load"><p class="student-photo-status" role="status" aria-live="polite"></p><button class="student-photo-retry" type="button" hidden>Riprova</button></div></div>
+                </header>
+                <section class="student-detail-summary" aria-label="Riepilogo delle ore e delle esperienze"></section>
+                <p class="student-account-note" hidden></p>
+                <div class="student-detail-controls">
+                    <div class="student-tabs" role="group" aria-label="Stato delle esperienze"><button type="button" data-state="active" aria-pressed="true">Attive</button><button type="button" data-state="deleted" aria-pressed="false">Eliminate</button></div>
+                    <label class="sr-only" for="teacher-category">Categoria delle esperienze</label><select id="teacher-category"><option value="all">Tutte le categorie</option><option value="formazione">Formazione</option><option value="certificazioni">Con attestazione</option></select>
+                    <button type="button" class="detail-export" title="Esporta tutte le attività in CSV"><span class="detail-export-label">Esporta</span><svg class="detail-export-symbol" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 13v4h14v-4"/></svg></button>
+                </div>
+                <div class="student-list-heading"><h3 tabindex="-1">Le esperienze.</h3><p class="detail-status" role="status" aria-live="polite"></p></div>
+                <div class="student-experiences"></div>
+                <details class="student-detail-note"><summary>Come leggere questo registro</summary><p>Le ore totali comprendono soltanto le esperienze attive. Le attività eliminate restano consultabili e sono escluse dai conteggi. Per le attività modificate trovi i valori attuali e la data di aggiornamento, quando disponibile; non è conservato uno storico completo delle versioni precedenti. La validazione ufficiale del percorso spetta all’istituto.</p></details>
+            </div>`;
         document.body.append(detail);
         let disposed = false, roster, registry, defaults, errorMessage = '', selected = null, selectedState = 'active';
         const rootCache = new Map();
         const accounts = new Map(), cards = new Map(), stops = [];
+        const detailRows = new Map();
+        let profileStop = null, profileUid = null, profileVersion = 0, profileImageVersion = 0, profileTimeout = null, closeTimer = null;
+        const avatar = detail.querySelector('.student-profile-avatar'), photoStatus = detail.querySelector('.student-photo-status'), photoRetry = detail.querySelector('.student-photo-retry');
+        const fallbackPhoto = 'IMMAGINI/PROFILO-UTENTE-LOGO.webp';
+        const experiences = count => `${count} ${count === 1 ? 'esperienza' : 'esperienze'}`;
+        function defaultAvatar() {
+            ++profileImageVersion;
+            const image = el('img'); image.src = fallbackPhoto; image.alt = ''; image.width = image.height = 96; image.decoding = 'async';
+            avatar.replaceChildren(image); avatar.dataset.photo = 'default';
+        }
+        function profileMessage(message = '', retry = false, loading = false) {
+            photoStatus.replaceChildren();
+            if (loading && window.HarzafiLoading) photoStatus.insertAdjacentHTML('beforeend', window.HarzafiLoading.markup(true));
+            photoStatus.append(document.createTextNode(message));
+            photoRetry.hidden = !retry;
+        }
+        function stopProfile() {
+            ++profileVersion; ++profileImageVersion; clearTimeout(profileTimeout); profileTimeout = null;
+            profileStop?.(); profileStop = null; profileUid = null;
+        }
+        function loadProfile(student, force = false) {
+            const uid = student.accountUid;
+            if (!force && profileUid === uid) return;
+            stopProfile(); defaultAvatar(); profileMessage();
+            if (!uid || disposed || authChanged() || !detail.open) return;
+            profileUid = uid;
+            const version = profileVersion, studentId = student.id;
+            const current = () => !disposed && !authChanged() && detail.open && selected === studentId && profileUid === uid && profileVersion === version;
+            const failed = () => {
+                if (!current()) return;
+                clearTimeout(profileTimeout); defaultAvatar(); profileMessage('La foto del profilo non è disponibile.', true);
+            };
+            profileMessage('Carico la foto del profilo…', false, true);
+            profileTimeout = setTimeout(failed, 8000);
+            try {
+                profileStop = db.collection('account_preferences').doc(uid).onSnapshot({ includeMetadataChanges:true }, snapshot => {
+                    if (!current() || snapshot.metadata?.hasPendingWrites || snapshot.metadata?.fromCache) return;
+                    clearTimeout(profileTimeout);
+                    const value = window.HarzafiAccountPreferences.normalize(snapshot.exists ? snapshot.data() : {});
+                    if (!value.photoData) { defaultAvatar(); profileMessage(); return; }
+                    const imageVersion = ++profileImageVersion;
+                    const image = el('img'); image.alt = `Foto del profilo di ${student.nome}`; image.width = image.height = 96; image.decoding = 'async';
+                    image.onload = () => {
+                        if (!current() || imageVersion !== profileImageVersion) return;
+                        avatar.replaceChildren(image); avatar.dataset.photo = 'personal'; profileMessage();
+                    };
+                    image.onerror = () => { if (current() && imageVersion === profileImageVersion) failed(); };
+                    image.src = value.photoData;
+                }, failed);
+            } catch (_) { failed(); }
+        }
+        defaultAvatar();
         let records = [], updateQueued = false;
         function schedule() { if (disposed || updateQueued) return; updateQueued = true; requestAnimationFrame(() => { updateQueued = false; if (!disposed) render(); }); }
         function fail() { errorMessage = 'Non è possibile aggiornare tutti i registri. Ricarica la pagina per riprovare. I dati incompleti non vengono esportati.'; schedule(); }
@@ -101,7 +170,7 @@
                 const state = links.length === 1 ? accounts.get(links[0].id) : null;
                 const incomplete = links.length > 1 || !!state && (state.failed || !state.personal || !state.overrides);
                 const rows = M.merge(defaults, state?.overrides || [], state?.personal || []);
-                return { ...student, nome: M.text(student.nome) || 'Studente', rows, ...M.summarize(rows), unlinked: !links.length, incomplete, cached: [...rootCache.values()].some(Boolean) || !!(state?.personalCached || state?.overridesCached) };
+                return { ...student, nome: M.text(student.nome) || 'Studente', accountUid:links.length === 1 ? links[0].id : null, rows, ...M.summarize(rows), unlinked: !links.length, incomplete, cached: [...rootCache.values()].some(Boolean) || !!(state?.personalCached || state?.overridesCached) };
             });
             const ready = records.filter(row => !row.incomplete);
             const incomplete = !!errorMessage || ready.length !== records.length;
@@ -134,47 +203,124 @@
             exportButton.disabled = incomplete || !records.length || records.some(r => r.cached);
             if (detail.open && selected) renderDetail();
         }
-        function openStudent(id) { selected = id; selectedState = 'active'; detail.querySelector('select').value = 'all'; renderDetail(); detail.showModal(); detail.querySelector('.student-detail-scroll').scrollTop = 0; document.documentElement.classList.add('register-modal-open'); }
+        function openStudent(id) {
+            if (disposed || authChanged() || !records.some(row => row.id === id && !row.incomplete)) return;
+            clearTimeout(closeTimer); detail.classList.remove('is-closing'); stopProfile(); defaultAvatar(); profileMessage();
+            selected = id; selectedState = 'active'; detail.querySelector('select').value = 'all';
+            detail.querySelector('.student-detail-note').open = false;
+            detailRows.clear(); detail.querySelector('.student-experiences').replaceChildren(); renderDetail();
+            document.documentElement.style.setProperty('--student-scrollbar-gap', `${Math.max(0, innerWidth - document.documentElement.clientWidth)}px`);
+            document.documentElement.classList.add('register-modal-open', 'teacher-student-open');
+            detail.showModal(); detail.querySelector('.student-detail-scroll').scrollTop = 0;
+            loadProfile(records.find(row => row.id === id));
+            requestAnimationFrame(() => { if (detail.open && selected === id) detail.querySelector('h2').focus({preventScroll:true}); });
+        }
+        function closeStudent(immediate = false) {
+            if (!detail.open || detail.classList.contains('is-closing')) return;
+            stopProfile();
+            if (immediate || matchMedia('(prefers-reduced-motion: reduce)').matches) detail.close();
+            else { detail.classList.add('is-closing'); closeTimer = setTimeout(() => detail.close(), 180); }
+        }
+        function formatDate(value) {
+            const key = RegisterUI.dateKey(value);
+            return key ? new Intl.DateTimeFormat('it-IT', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(key + 'T12:00:00Z')) : M.text(value) || 'Data non disponibile';
+        }
+        function changedDate(row) {
+            const value = row.deleted ? row.deletedAt : row.updatedAt;
+            const date = typeof value?.toDate === 'function' ? value.toDate() : null;
+            return date && Number.isFinite(date.getTime()) ? `${row.deleted ? 'Eliminata' : 'Aggiornata'} il ${date.toLocaleString('it-IT')}` : row.deleted ? 'La data di eliminazione non è disponibile per questa esperienza.' : '';
+        }
         function renderDetail() {
             const student = records.find(row => row.id === selected);
             if (!student) { detail.close(); return; }
             detail.querySelector('h2').textContent = student.nome;
-            const summary = detail.querySelector('.student-detail-summary'); summary.replaceChildren(ring(student));
+            detail.querySelector('.student-profile-context').textContent = [M.text(student.classe) ? `Classe ${M.text(student.classe)}` : '', 'Registro FSL'].filter(Boolean).join(' · ');
+            if (detail.open) loadProfile(student);
+            const summary = detail.querySelector('.student-detail-summary');
             const modified = student.active.filter(row => row.modified), modifiedHours = modified.reduce((sum, row) => sum + row.ore, 0), deletedHours = student.deleted.reduce((sum, row) => sum + row.ore, 0);
-            const copy = el('div'); copy.append(el('strong', '', `${student.active.length} esperienze attive`), el('p', '', `${format(student.formazione)} h di formazione scolastica · ${format(student.certificazioni)} h con attestazione`), el('p', '', `${modified.length} modificate attive · ${format(modifiedHours)} h`), el('p', '', `${student.deleted.length} eliminate · ${format(deletedHours)} h, escluse dai totali`), el('p', 'teacher-footnote', student.unlinked ? 'Account non ancora collegato: sono mostrate soltanto le attività predefinite.' : 'Apri le schede per consultare i dettagli delle singole attività.'), el('p', 'teacher-footnote', 'Le attività modificate mostrano i valori attuali e la data di aggiornamento, quando disponibile. Non è disponibile uno storico completo delle versioni precedenti.')); summary.append(copy);
+            const hours = el('div', 'student-total-card'), legend = el('dl', 'student-hours-breakdown');
+            for (const [label, amount, cls] of [['Formazione', student.formazione, 'school-hours'], ['Con attestazione', student.certificazioni, 'certificate-hours']]) {
+                const pair = el('div', cls); pair.append(el('dt', '', label), el('dd', '', `${format(amount)} h`)); legend.append(pair);
+            }
+            hours.append(ring(student), legend);
+            const activitySummary = el('div', 'student-activity-card'), metrics = el('dl', 'student-detail-metrics');
+            const active = el('div', 'student-active-metric'); active.append(el('dt', '', 'Esperienze attive'), el('dd', '', student.active.length)); metrics.append(active);
+            for (const [label, count, amount, note] of [['Modificate', modified.length, modifiedHours, 'nelle attività attive'], ['Eliminate', student.deleted.length, deletedHours, 'escluse dal totale']]) {
+                const pair = el('div'); pair.append(el('dt', '', label), el('dd', '', count), el('p', '', `${format(amount)} h · ${note}`)); metrics.append(pair);
+            }
+            activitySummary.append(metrics); summary.replaceChildren(hours, activitySummary);
+            const note = detail.querySelector('.student-account-note'); note.hidden = !student.unlinked;
+            note.textContent = student.unlinked ? 'Questo account non è ancora collegato al profilo. Il riepilogo comprende soltanto le attività predefinite.' : '';
             detail.querySelectorAll('[data-state]').forEach(button => { const active = button.dataset.state === 'active'; button.textContent = `${active ? 'Attive' : 'Eliminate'} (${active ? student.active.length : student.deleted.length})`; button.setAttribute('aria-pressed', String(button.dataset.state === selectedState)); });
             const category = detail.querySelector('select').value;
             const rows = (selectedState === 'deleted' ? student.deleted : student.active).filter(row => category === 'all' || row.category === category);
-            const list = detail.querySelector('.student-experiences'); list.replaceChildren();
-            detail.querySelector('.detail-status').textContent = student.incomplete ? 'Aggiornamento non disponibile. Ricarica la pagina per verificare il registro.' : selectedState === 'deleted' ? 'Attività rimosse dallo studente e conservate per la consultazione docente.' : `${rows.length} esperienze visualizzate`;
-            detail.querySelector('.detail-export').disabled = student.incomplete || student.cached;
+            const list = detail.querySelector('.student-experiences');
+            const visibleLabel = selectedState === 'deleted' ? (rows.length === 1 ? 'eliminata' : 'eliminate') : (rows.length === 1 ? 'visualizzata' : 'visualizzate');
+            detail.querySelector('.detail-status').textContent = errorMessage || student.incomplete ? 'Aggiornamento non disponibile. Ricarica la pagina per verificare il registro.' : `${experiences(rows.length)} ${visibleLabel}${selectedState === 'deleted' ? ' · escluse dai totali' : ''}${student.cached ? ' · dati memorizzati, verifica la connessione' : ''}`;
+            detail.querySelector('.detail-export').disabled = !!errorMessage || student.incomplete || student.cached;
+            detail.querySelector('.detail-export').setAttribute('aria-label', `Esporta tutte le attività di ${student.nome} in CSV`);
             rows.sort(RegisterUI.compare);
+            const keys = new Set(rows.map(row => `${row.source}:${row.id}`));
+            let lostFocus = false;
+            detailRows.forEach((value, key) => { if (!keys.has(key)) { lostFocus ||= value.node.contains(document.activeElement); value.node.remove(); detailRows.delete(key); } });
+            list.querySelectorAll('.teacher-empty').forEach(node => node.remove());
             rows.forEach(row => {
-                const item = el('article', 'teacher-experience'); const heading = el('div', 'teacher-experience-heading'); heading.append(el('h3', '', row.titolo), el('strong', '', `${format(row.ore)} h`));
+                const key = `${row.source}:${row.id}`, changed = changedDate(row);
+                const signature = JSON.stringify([row.titolo, row.descrizione, row.ore, row.category, row.data, row.modified, row.deleted, changed]);
+                const previous = detailRows.get(key);
+                if (previous?.signature === signature) return;
+                const item = el('details', 'teacher-experience'); item.open = previous?.node.open || false;
+                const toggle = el('summary'), heading = el('div', 'teacher-experience-heading'), title = el('div', 'teacher-experience-title'), amount = el('div', 'teacher-experience-amount');
+                title.append(el('h4', '', row.titolo), el('p', 'teacher-date', formatDate(row.data)));
+                amount.append(el('strong', '', `${format(row.ore)} h`));
+                amount.insertAdjacentHTML('beforeend', '<svg viewBox="0 0 16 9" width="16" height="9" aria-hidden="true"><path d="m3.5 2.25 4.5 4.5 4.5-4.5"/></svg>');
+                heading.append(title, amount);
                 const badges = el('div', 'teacher-badges'); badges.append(el('span', '', row.source === 'predefined' ? 'Predefinita' : 'Personale'), el('span', '', labels[row.category]));
                 if (row.modified) badges.append(el('span', 'modified-badge', 'Modificata'));
                 if (row.deleted) badges.append(el('span', 'deleted-count', 'Eliminata'));
-                item.append(heading, badges, el('p', 'teacher-date', M.text(row.data) || 'Data non disponibile'));
-                if (row.descrizione) item.append(el('p', '', row.descrizione));
-                const changed = row.deleted ? row.deletedAt : row.updatedAt;
-                if (changed?.toDate) item.append(el('p', 'teacher-date', `${row.deleted ? 'Eliminata' : 'Modificata'} il ${changed.toDate().toLocaleString('it-IT')}`));
-                else if (row.deleted) item.append(el('p', 'teacher-date', 'Data di eliminazione non disponibile per questa voce precedente.'));
-                list.append(item);
+                toggle.append(heading, badges);
+                const copy = el('div', 'teacher-experience-copy'); copy.append(el('p', '', row.descrizione || 'Non sono presenti ulteriori dettagli per questa esperienza.'));
+                if (changed) copy.append(el('p', 'teacher-date', changed));
+                item.append(toggle, copy);
+                const focused = previous?.node.contains(document.activeElement);
+                if (previous) previous.node.replaceWith(item);
+                detailRows.set(key, {node:item, signature});
+                if (focused) toggle.focus({preventScroll:true});
             });
+            rows.forEach((row, index) => { const node = detailRows.get(`${row.source}:${row.id}`).node; if (list.children[index] !== node) list.insertBefore(node, list.children[index] || null); });
             if (!rows.length) list.append(el('p', 'teacher-empty', selectedState === 'deleted' ? 'Nessuna attività eliminata in questa categoria.' : 'Nessuna esperienza in questa categoria.'));
+            if (lostFocus) detail.querySelector('.student-list-heading h3').focus({preventScroll:true});
         }
         function download(items, filename) { const url = URL.createObjectURL(new Blob([M.csv(items)], { type: 'text/csv;charset=utf-8;' })); const a = el('a'); a.href = url; a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
         exportButton.addEventListener('click', () => download(records, 'resoconto-fsl-classe.csv'));
         detail.querySelector('.detail-export').addEventListener('click', () => download(records.filter(row => row.id === selected), 'resoconto-fsl-studente.csv'));
-        detail.querySelector('.student-close').addEventListener('click', () => detail.close());
-        detail.addEventListener('close', () => { document.documentElement.classList.remove('register-modal-open'); cards.get(selected)?.focus({ preventScroll: true }); selected = null; });
+        detail.querySelector('.student-close').addEventListener('click', () => closeStudent());
+        detail.addEventListener('cancel', event => { event.preventDefault(); closeStudent(); });
+        detail.addEventListener('keydown', event => {
+            if (event.key !== 'Tab') return;
+            const focusable = Array.from(detail.querySelectorAll('button:not([disabled]), select:not([disabled]), summary, a[href], [tabindex]:not([tabindex="-1"])'))
+                .filter(node => node.getClientRects().length && getComputedStyle(node).visibility !== 'hidden');
+            const first = focusable[0], last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        });
+        detail.addEventListener('click', event => { const r = detail.getBoundingClientRect(); if (event.target === detail && (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom)) closeStudent(); });
+        detail.addEventListener('close', () => {
+            clearTimeout(closeTimer); closeTimer = null; detail.classList.remove('is-closing'); stopProfile(); defaultAvatar(); profileMessage();
+            document.documentElement.classList.remove('register-modal-open', 'teacher-student-open'); document.documentElement.style.removeProperty('--student-scrollbar-gap');
+            const id = selected; selected = null;
+            if (!disposed) (cards.get(id) || search).focus({preventScroll:true});
+        });
+        photoRetry.addEventListener('click', () => { const student = records.find(row => row.id === selected); if (student) loadProfile(student, true); });
+        const pageHidden = () => { clearTimeout(closeTimer); detail.classList.remove('is-closing'); closeStudent(true); };
+        window.addEventListener('pagehide', pageHidden);
         detail.querySelectorAll('[data-state]').forEach(button => button.addEventListener('click', () => { selectedState = button.dataset.state; renderDetail(); }));
         detail.querySelector('select').addEventListener('change', renderDetail);
         search.addEventListener('input', schedule); filter.addEventListener('change', schedule); sort.addEventListener('change', schedule);
         watch('studenti', value => { roster = value; syncAccounts(); });
         watch('registri', value => { registry = value; syncAccounts(); });
         watch('attivita_predefinite', value => { defaults = value; });
-        return () => { disposed = true; stops.forEach(stop => stop()); accounts.forEach(state => state.stops.forEach(stop => stop())); detail.close(); detail.remove(); main.replaceChildren(...original); nav.href = oldNav.href; nav.textContent = oldNav.text; document.title = originalTitle; document.body.classList.remove('teacher-page'); document.documentElement.classList.remove('register-modal-open'); };
+        return () => { disposed = true; clearTimeout(closeTimer); stopProfile(); window.removeEventListener('pagehide', pageHidden); stops.forEach(stop => stop()); accounts.forEach(state => state.stops.forEach(stop => stop())); detail.close(); detail.remove(); main.replaceChildren(...original); nav.href = oldNav.href; nav.textContent = oldNav.text; document.title = originalTitle; document.body.classList.remove('teacher-page'); document.documentElement.classList.remove('register-modal-open', 'teacher-student-open'); document.documentElement.style.removeProperty('--student-scrollbar-gap'); };
     }
     window.TeacherRegister = { access, ensureStudent, mount };
 })();

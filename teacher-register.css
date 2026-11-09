@@ -117,3 +117,138 @@
 #classe { scroll-margin-top: 96px; }
 @media(max-width:800px) { .teacher-hero { gap: 28px; padding-block: 52px; } .teacher-hero h1 { font-size: clamp(2.5rem,5.8vw,3.8rem); } .teacher-hero-copy > p:last-of-type { font-size: 16px; } }
 @media(max-width:600px) { .teacher-hero { min-height: calc(100svh - 60px); grid-template-columns: 1fr; gap: 32px; padding-block: 48px; } .teacher-hero h1 { font-size: clamp(2.9rem,12vw,4rem); } .teacher-hero-image { justify-self: center; width: min(100%,360px); } .student-detail { padding: 0; } .student-detail-scroll { max-height: calc(100svh - 38px); padding: 14px 10px; } }
+
+/* Student register: one fixed close control and one scrolling reading surface. */
+html.teacher-student-open { overflow:hidden; scrollbar-gutter:auto; padding-inline-end:var(--student-scrollbar-gap,0px); }
+.dashboard-page .student-detail {
+    position:fixed; inset:0; margin:auto; width:min(1000px,calc(100% - 48px)); max-width:none;
+    max-height:calc(100svh - 48px); max-height:calc(100dvh - 48px);
+    padding:0; border:0; border-radius:32px; overflow:hidden; background:#fff; color:#1d1d1f;
+    box-shadow:0 24px 80px #0002; overscroll-behavior:contain;
+}
+.dashboard-page .student-detail::backdrop { background:#16161c70; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
+.dashboard-page .student-detail[open] { animation:register-dialog-in .28s cubic-bezier(.22,1,.36,1) both; }
+.dashboard-page .student-detail.is-closing { animation:register-dialog-out .18s ease both; pointer-events:none; }
+.dashboard-page .student-detail-scroll { max-height:inherit; margin:0; padding:40px; overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain; scroll-padding-block:28px; scrollbar-gutter:stable; }
+.dashboard-page .student-detail-head { display:grid; grid-template-columns:96px minmax(0,1fr); align-items:center; gap:24px; margin:0 44px 28px 0; }
+.dashboard-page .student-profile-avatar { width:96px; height:96px; overflow:hidden; border:0; border-radius:50%; background:#f5f5f7; }
+.dashboard-page .student-profile-avatar img { display:block; width:100%; height:100%; object-fit:cover; }
+.dashboard-page .student-profile-copy { min-width:0; }
+.dashboard-page .student-detail .eyebrow { margin:0 0 8px; color:#6e6e73; font-size:11px; font-weight:500; letter-spacing:.045em; }
+.dashboard-page .student-detail h2 { margin:0; font-family:var(--font-display) !important; font-size:38px; line-height:1.1; font-weight:600; letter-spacing:-.035em; text-wrap:pretty; overflow-wrap:anywhere; }
+.dashboard-page .student-detail h2:focus, .dashboard-page .student-list-heading h3:focus { outline:none; }
+.dashboard-page .student-profile-context { margin:8px 0 0; color:#6e6e73; font-size:15px; line-height:1.4; }
+.dashboard-page .student-profile-load { display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; min-height:20px; margin-top:6px; }
+.dashboard-page .student-photo-status { display:flex; align-items:center; gap:7px; margin:0; font-size:12px; line-height:1.5; color:#6e6e73; }
+.dashboard-page .student-photo-status .apple-ios14-spinner { width:14px; height:14px; }
+.dashboard-page .student-photo-retry { min-height:28px; border:0; padding:2px 0; border-radius:4px; background:transparent; color:#06c; font-size:12px; cursor:pointer; }
+.dashboard-page .student-photo-retry[hidden] { display:none; }
+.dashboard-page .student-detail-summary { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; gap:16px; padding:0; margin:0 0 24px; }
+.dashboard-page .student-total-card, .dashboard-page .student-activity-card { min-width:0; padding:24px; background:#f5f5f7; border:0; border-radius:22px; box-shadow:none; }
+.dashboard-page .student-total-card { display:flex; align-items:center; justify-content:center; gap:24px; }
+.dashboard-page .student-total-card .student-ring { width:176px; height:176px; min-width:0; flex:0 0 176px; margin:0; box-shadow:none; }
+.dashboard-page .student-total-card .student-ring-center strong { font-size:24px; letter-spacing:-.035em; }
+.dashboard-page .student-total-card .compact-total strong { font-size:20px; }
+.dashboard-page .student-hours-breakdown { display:grid; gap:22px; min-width:0; margin:0; }
+.dashboard-page .student-hours-breakdown dt { color:#6e6e73; font-size:13px; line-height:1.4; }
+.dashboard-page .student-hours-breakdown dt::before { content:''; display:inline-block; width:7px; height:7px; margin-right:6px; border-radius:50%; background:#0a84ff; }
+.dashboard-page .student-hours-breakdown .certificate-hours dt::before { background:#ff2d92; }
+.dashboard-page .student-hours-breakdown dd { margin:6px 0 0; font-size:19px; line-height:1.2; font-weight:600; letter-spacing:-.025em; font-variant-numeric:tabular-nums; }
+.dashboard-page .student-detail-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px 24px; margin:0; }
+.dashboard-page .student-detail-metrics > div { min-width:0; }
+.dashboard-page .student-detail-metrics dt { color:#6e6e73; font-size:13px; line-height:1.4; }
+.dashboard-page .student-detail-metrics dd { margin:8px 0 0; font-size:30px; line-height:1.1; font-weight:600; letter-spacing:-.035em; font-variant-numeric:tabular-nums; }
+.dashboard-page .student-detail-metrics .student-active-metric { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.dashboard-page .student-active-metric dt { color:#1d1d1f; font-size:17px; font-weight:500; }
+.dashboard-page .student-active-metric dd { margin:0; font-size:48px; }
+.dashboard-page .student-detail-metrics p { margin:6px 0 0; font-size:12px; line-height:1.45; color:#6e6e73; }
+.dashboard-page .student-account-note { margin:0 0 24px; padding:16px 20px; background:#f5f5f7; border-radius:16px; font-size:14px; line-height:1.5; color:#6e6e73; }
+.dashboard-page .student-detail-controls { display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+.dashboard-page .student-tabs { flex:0 1 auto; display:flex; min-width:0; margin:0; padding:4px; border:0; border-radius:14px; background:#f0f0f3; }
+.dashboard-page .student-tabs button { min-height:40px; padding:8px 16px; border:0; border-radius:10px; background:transparent; font-size:14px; font-weight:500; line-height:1.4; white-space:nowrap; }
+.dashboard-page .student-tabs button[aria-pressed="true"] { color:#1d1d1f; background:#fff; box-shadow:0 1px 4px #0000000a; }
+.dashboard-page .student-detail select { flex:1 1 180px; width:auto; min-width:0; height:48px; padding:0 36px 0 16px; border:0; border-radius:14px; background-color:#f5f5f7; color:#1d1d1f; font-size:15px; line-height:1.4; }
+.dashboard-page .student-detail .detail-export { min-height:44px; padding:10px 20px; border:0; border-radius:999px; box-shadow:none; font-size:14px !important; font-weight:500 !important; }
+.dashboard-page .detail-export-symbol { display:none; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.dashboard-page .student-list-heading { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px 16px; margin:32px 0 16px; }
+.dashboard-page .student-list-heading h3 { margin:0; font-size:24px; font-weight:600; letter-spacing:-.03em; line-height:1.2; }
+.dashboard-page .detail-status { margin:0; padding:0; color:#6e6e73; font-size:12px; line-height:1.5; }
+.dashboard-page .student-experiences { display:grid; gap:12px; }
+.dashboard-page .teacher-experience { min-width:0; padding:0; overflow:hidden; background:#f5f5f7; border:0; border-radius:20px; box-shadow:none; }
+.dashboard-page .teacher-experience > summary { display:block; padding:22px 24px; list-style:none; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.dashboard-page .teacher-experience > summary::-webkit-details-marker { display:none; }
+.dashboard-page .teacher-experience > summary:focus-visible { outline-offset:-4px; }
+.dashboard-page .teacher-experience-heading { display:flex; align-items:start; justify-content:space-between; gap:20px; }
+.dashboard-page .teacher-experience-title { min-width:0; }
+.dashboard-page .teacher-experience h4 { margin:0; color:#1d1d1f; font-size:18px; line-height:1.35; font-weight:600; letter-spacing:-.022em; overflow-wrap:anywhere; }
+.dashboard-page .teacher-experience .teacher-date { margin:6px 0 0; color:#6e6e73; font-size:12px; line-height:1.5; }
+.dashboard-page .teacher-experience-amount { display:flex; flex:0 0 auto; align-items:center; gap:14px; padding-top:1px; }
+.dashboard-page .teacher-experience-amount strong { font-size:18px; font-weight:600; line-height:1.35; letter-spacing:-.02em; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.dashboard-page .teacher-experience-amount svg { fill:none; stroke:#6e6e73; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; transition:transform .2s ease; }
+.dashboard-page .teacher-experience[open] > summary .teacher-experience-amount svg { transform:rotate(180deg); }
+.dashboard-page .teacher-badges { gap:6px; margin:14px 0 0; }
+.dashboard-page .teacher-badges span { padding:4px 8px; border:0; border-radius:6px; background:#e9e9ee; color:#606067; font-size:11px; line-height:1.35; }
+.dashboard-page .teacher-badges .modified-badge { background:#e2effe; color:#0059b4; }
+.dashboard-page .teacher-badges .deleted-count { background:#f4e8e3; color:#93422b !important; }
+.dashboard-page .teacher-experience-copy { padding:0 24px 24px; }
+.dashboard-page .teacher-experience-copy p { margin:0; color:#515156; font-size:15px; line-height:1.55; }
+.dashboard-page .teacher-experience-copy .teacher-date { margin-top:14px; }
+.dashboard-page .student-experiences .teacher-empty { margin:0; padding:40px 24px; border-radius:20px; background:#f5f5f7; font-size:15px; line-height:1.5; }
+.dashboard-page .student-detail-note { margin:24px 0 0; color:#6e6e73; font-size:13px; line-height:1.55; }
+.dashboard-page .student-detail-note > summary { width:fit-content; padding:8px 0; color:#515156; cursor:pointer; }
+.dashboard-page .student-detail-note p { margin:8px 0 0; }
+.dashboard-page .student-close { position:absolute; z-index:4; top:12px; right:12px; display:grid; place-items:center; width:44px; height:44px; min-height:44px; padding:0; margin:0; border:0; border-radius:50%; background:transparent; color:#6e6e73; box-shadow:none; isolation:isolate; cursor:pointer; line-height:1; }
+.dashboard-page .student-close::before { content:''; position:absolute; inset:4px; z-index:-1; border-radius:50%; background:#e8e8ed; }
+.dashboard-page .student-close:hover::before { background:#dedee3; }
+.dashboard-page .student-close svg { display:block; width:20px; height:20px; fill:currentColor; stroke:none; }
+@media(max-width:1000px) {
+    .dashboard-page .student-detail-scroll { padding:32px; }
+    .dashboard-page .student-total-card { gap:16px; padding:20px; }
+    .dashboard-page .student-total-card .student-ring { width:144px; height:144px; flex-basis:144px; }
+    .dashboard-page .student-hours-breakdown dd { font-size:17px; }
+}
+@media(max-width:760px) {
+    .dashboard-page .student-detail { width:calc(100% - 20px); max-height:calc(100svh - 20px); max-height:calc(100dvh - 20px); border-radius:28px; }
+    .dashboard-page .student-detail-scroll { padding:64px 24px 28px; }
+    .dashboard-page .student-detail-head { grid-template-columns:72px minmax(0,1fr); gap:16px; margin:0 0 24px; }
+    .dashboard-page .student-profile-avatar { width:72px; height:72px; }
+    .dashboard-page .student-detail h2 { font-size:30px; }
+    .dashboard-page .student-profile-context { font-size:14px; }
+    .dashboard-page .student-detail-summary { grid-template-columns:minmax(0,1fr); gap:12px; }
+    .dashboard-page .student-total-card { justify-content:space-evenly; gap:18px; padding:20px; }
+    .dashboard-page .student-total-card .student-ring { width:136px; height:136px; flex-basis:136px; }
+    .dashboard-page .student-total-card .student-ring-center strong { font-size:22px; }
+    .dashboard-page .student-activity-card { padding:22px; }
+    .dashboard-page .student-detail-metrics { grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+    .dashboard-page .student-detail-metrics .student-active-metric { display:block; grid-column:auto; }
+    .dashboard-page .student-detail-metrics dt { font-size:12px; font-weight:400; color:#6e6e73; min-height:34px; }
+    .dashboard-page .student-detail-metrics dd, .dashboard-page .student-active-metric dd { margin:8px 0 0; font-size:30px; }
+    .dashboard-page .student-detail-metrics p { font-size:11px; }
+    .dashboard-page .student-tabs { flex:1 0 100%; width:100%; }
+    .dashboard-page .student-tabs button { flex:1; font-size:14px; }
+    .dashboard-page .student-detail select { flex:1 1 0; font-size:16px; }
+    .dashboard-page .student-detail .detail-export { display:grid; place-items:center; width:48px; min-width:48px; height:48px; padding:12px; border-radius:50%; }
+    .dashboard-page .detail-export-label { display:none; }
+    .dashboard-page .detail-export-symbol { display:block; }
+    .dashboard-page .student-list-heading { margin-top:28px; }
+    .dashboard-page .teacher-experience > summary { padding:20px; }
+    .dashboard-page .teacher-experience-copy { padding:0 20px 20px; }
+    .dashboard-page .teacher-experience h4 { font-size:17px; }
+    .dashboard-page .teacher-experience-amount { gap:10px; }
+    .dashboard-page .teacher-experience-amount strong { font-size:17px; }
+}
+@media(max-width:389px) {
+    .dashboard-page .student-detail-scroll { padding-inline:18px; }
+    .dashboard-page .student-detail-head { grid-template-columns:60px minmax(0,1fr); gap:14px; }
+    .dashboard-page .student-profile-avatar { width:60px; height:60px; }
+    .dashboard-page .student-detail h2 { font-size:27px; }
+    .dashboard-page .student-total-card { padding:18px; gap:14px; }
+    .dashboard-page .student-total-card .student-ring { width:120px; height:120px; flex-basis:120px; }
+    .dashboard-page .student-total-card .student-ring-center strong { font-size:20px; }
+    .dashboard-page .student-total-card .compact-total strong { font-size:17px; }
+    .dashboard-page .student-detail-metrics { gap:12px; }
+}
+@media(prefers-reduced-motion:reduce) {
+    .dashboard-page .student-detail[open], .dashboard-page .student-detail.is-closing, .dashboard-page .student-detail::backdrop { animation:none; }
+    .dashboard-page .teacher-experience-amount svg { transition:none; }
+}

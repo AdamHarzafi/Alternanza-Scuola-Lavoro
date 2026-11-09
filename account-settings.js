@@ -205,6 +205,7 @@
         byId('settings-profile-data').replaceChildren();
         byId('settings-password-action').hidden = true;
         byId('settings-provider-note').hidden = true;
+        if (byId('settings-photo-sharing')) byId('settings-photo-sharing').hidden = true;
         verifyButton.hidden = true;
         resetButton.disabled = false;
         resetButton.textContent = 'Modifica password';
@@ -238,6 +239,7 @@
         byId('settings-name').textContent = value.name;
         byId('settings-email').textContent = value.email;
         byId('settings-role').textContent = value.role === 'docente' ? 'Docente autorizzato' : 'Studente';
+        if (byId('settings-photo-sharing')) byId('settings-photo-sharing').hidden = value.role !== 'studente';
         const rows = value.fields.map(field => {
             const row = document.createElement('div');
             const label = document.createElement('dt'); label.textContent = field.label;

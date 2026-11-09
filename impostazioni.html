@@ -26,7 +26,7 @@
     <script defer src="account-preferences.js?v=20261106-profile-photo-v4"></script>
     <script defer src="account-profile-photo.js?v=20261106-profile-photo-v4"></script>
     <script defer src="account-pdf.js?v=20261108-account-pdf-v1"></script>
-    <script defer src="account-settings.js?v=20261108-settings-pane-v2"></script>
+    <script defer src="account-settings.js?v=20261109-student-photo-visibility-v1"></script>
 </head>
 <body class="account-privacy-page settings-page">
     <svg class="settings-icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -136,6 +136,7 @@
         <div class="settings-editor-body">
             <div class="settings-photo-preview"><canvas id="settings-photo-canvas" width="512" height="512" tabindex="0" aria-label="Sposta la foto per scegliere il ritaglio. Puoi usare anche i tasti freccia."></canvas></div>
             <p class="settings-editor-hint">Sposta la foto per scegliere il ritaglio.</p>
+            <p class="settings-editor-hint" id="settings-photo-sharing" hidden>La foto che scegli è visibile ai docenti autorizzati quando consultano il tuo registro FSL. Puoi sostituirla o rimuoverla quando vuoi.</p>
             <div class="settings-photo-zoom"><label for="settings-photo-zoom">Zoom</label><input id="settings-photo-zoom" type="range" min="1" max="3" step=".01" value="1" disabled></div>
             <div class="settings-photo-actions">
                 <button class="settings-photo-choose" id="settings-photo-choose" type="button">Scegli una foto</button>
