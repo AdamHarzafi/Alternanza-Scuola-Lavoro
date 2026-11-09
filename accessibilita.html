@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" class="accessibility-document">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
     <link rel="stylesheet" href="page-design.css?v=20261108-unified-display-titles-v1">
     <link rel="stylesheet" href="navbar-refinement.css?v=20261108-frosted-glass-v11">
+    <link rel="stylesheet" href="accessibility-details.css?v=20261109-editorial-dialog-v1">
     <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
 </head>
 <body class="accessibility-page">
@@ -69,13 +70,14 @@
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
                     <template id="access-detail-vision">
-                        <p class="access-detail-intro">Il portale mantiene contenuti e comandi leggibili, riconoscibili e utilizzabili anche quando la vista è ridotta o assente.</p>
-                        <ul class="access-detail-list">
-                            <li><strong>Testo alternativo.</strong><span>Le immagini non testuali possiedono descrizioni accurate per essere interpretate dai software assistivi.</span></li>
-                            <li><strong>Screen reader.</strong><span>La struttura HTML5 è semantica e ottimizzata per VoiceOver, NVDA e JAWS.</span></li>
-                            <li><strong>Contrasto elevato.</strong><span>Testi e sfondi mantengono un rapporto minimo di luminanza pari a 4.5:1.</span></li>
-                            <li><strong>Testo ridimensionabile.</strong><span>Il layout può essere ingrandito fino al 200% senza sovrapposizioni o perdita di informazioni.</span></li>
-                        </ul>
+                        <p class="access-detail-intro">Ritrovare un’attività, leggere le ore svolte, riconoscere un comando. Ogni passaggio deve offrire informazioni che puoi comprendere anche attraverso strumenti di lettura assistita.</p>
+                        <h3>Orientati con un lettore di schermo.</h3>
+                        <p>Titoli, sezioni e nomi dei comandi aiutano a riconoscere la pagina e a raggiungere ciò che cerchi. Puoi usare il lettore di schermo del tuo dispositivo, come VoiceOver, oppure uno strumento compatibile con il tuo browser. Le modalità di navigazione e i comandi disponibili dipendono dal programma scelto.</p>
+                        <p>Nel Registro FSL le ore sono riportate anche come valori numerici e testi: il significato dei riepiloghi non dipende soltanto dai colori degli anelli. Le icone che accompagnano una voce aiutano a riconoscerla visivamente; il testo della voce ne chiarisce la funzione.</p>
+                        <h3>Scegli come leggere.</h3>
+                        <p>Usa lo zoom del browser o gli strumenti di ingrandimento del dispositivo per adattare la lettura. Su uno schermo più piccolo, i contenuti si dispongono in verticale e le schede possono essere scorse. Nelle finestre di approfondimento, il pulsante di chiusura rimane raggiungibile anche mentre leggi un testo lungo.</p>
+                        <p>Se trovi una descrizione poco chiara, un elemento difficile da distinguere o un contenuto che il lettore non interpreta correttamente, segnala la pagina e il punto preciso in cui incontri la difficoltà.</p>
+                        <div class="access-detail-actions"><a href="supporto.html">Ricevi supporto <span aria-hidden="true">›</span></a></div>
                     </template>
                 </article>
 
@@ -85,26 +87,32 @@
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
                     <template id="access-detail-motor">
-                        <p class="access-detail-intro">Ogni funzione essenziale è raggiungibile senza dipendere da movimenti precisi o dall'uso del mouse.</p>
-                        <ul class="access-detail-list">
-                            <li><strong>Navigazione da tastiera.</strong><span>Il sito, compresi modali, popup e menu, è utilizzabile con TAB, INVIO e frecce direzionali.</span></li>
-                            <li><strong>Focus visibile.</strong><span>Ogni elemento selezionato presenta un'indicazione chiara e coerente durante la navigazione.</span></li>
-                        </ul>
+                        <p class="access-detail-intro">Scegli il modo di interagire più adatto a te. Tastiera, comandi vocali e strumenti del dispositivo possono accompagnarti nella consultazione del tuo percorso.</p>
+                        <h3>Un comando alla volta.</h3>
+                        <p>Premi Tab per spostarti tra i collegamenti e i pulsanti; usa Maiusc + Tab per tornare all’elemento precedente. Invio apre i collegamenti e attiva i comandi selezionati. Per i pulsanti puoi usare anche la barra spaziatrice. Il contorno di selezione ti indica dove si trova il focus.</p>
+                        <p>Quando apri un approfondimento con il simbolo “+”, la lettura parte dal titolo. La navigazione da tastiera resta nella finestra aperta. Puoi chiuderla con Esc oppure con il pulsante “Chiudi i dettagli”: il focus torna al comando che avevi usato per aprirla.</p>
+                        <h3>Usa gli strumenti del tuo dispositivo.</h3>
+                        <p>I sistemi di controllo vocale e le altre tecnologie di interazione assistita si configurano nelle impostazioni del dispositivo. Possono consentire di selezionare comandi e inserire testo con modalità diverse dal mouse. Le funzioni e le lingue disponibili dipendono dal sistema operativo e dal browser.</p>
+                        <p>Puoi mettere in pausa i caroselli e scegliere direttamente una scheda. Se un’operazione risulta difficile da completare con lo strumento che utilizzi, raccontaci il passaggio e il risultato che desideri ottenere.</p>
+                        <div class="access-detail-actions"><a href="supporto.html">Parla con noi <span aria-hidden="true">›</span></a><a href="https://support.apple.com/it-it/111778">Guida Apple al controllo vocale <span aria-hidden="true">↗</span></a></div>
                     </template>
                 </article>
 
                 <article class="access-info-card access-info-card--green reveal">
                     <h3>Leggi trascrizioni e sottotitoli in tempo reale per tutti i contenuti audio.</h3>
-                    <button class="access-card-more" type="button" data-access-detail="access-detail-cognitive" data-modal-eyebrow="COMPRENSIONE" data-modal-title="Accessibilità cognitiva e uditiva." aria-label="Apri tutti i dettagli sull'accessibilità cognitiva e uditiva">
+                    <button class="access-card-more" type="button" data-access-detail="access-detail-cognitive" data-modal-eyebrow="COMPRENSIONE E ASCOLTO" data-modal-title="I contenuti, al tuo ritmo." aria-label="Apri tutti i dettagli sull'accessibilità cognitiva e uditiva">
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
                     <template id="access-detail-cognitive">
-                        <p class="access-detail-intro">Una struttura prevedibile e un linguaggio diretto rendono le informazioni più facili da seguire, ascoltare e comprendere.</p>
-                        <ul class="access-detail-list">
-                            <li><strong>Struttura ordinata.</strong><span>Intestazioni, sezioni e menu seguono una gerarchia logica e coerente.</span></li>
-                            <li><strong>Sottotitoli e trascrizioni.</strong><span>I contenuti multimediali prevedono equivalenti testuali quando necessari.</span></li>
-                            <li><strong>Linguaggio semplice.</strong><span>I testi sono immediati e privi di elementi lampeggianti potenzialmente dannosi.</span></li>
-                        </ul>
+                        <p class="access-detail-intro">Le informazioni essenziali del tuo percorso si leggono a schermo. Istruzioni e messaggi scritti ti aiutano a seguire ciò che accade, anche senza ascoltare un avviso sonoro.</p>
+                        <h3>Capisci cosa succede.</h3>
+                        <p>I testi dei comandi indicano l’azione da eseguire. Nei moduli trovi le informazioni necessarie per compilare i campi; i messaggi di conferma o di errore spiegano l’esito dell’operazione. Le ore e le attività restano consultabili come testi e valori numerici.</p>
+                        <h3>Dedica a ogni contenuto il tempo che serve.</h3>
+                        <p>Puoi fermare un carosello, selezionare una scheda e riprendere la lettura quando preferisci. Le finestre di approfondimento si aprono su richiesta e rimangono disponibili fino a quando decidi di chiuderle. Le animazioni che supportano la preferenza di movimento ridotto si adattano alle impostazioni del dispositivo.</p>
+                        <h3>Per i contenuti audio e video.</h3>
+                        <p>Quando apri un contenuto su un servizio esterno, cerca nel relativo lettore le opzioni per sottotitoli e trascrizioni. Lingue e disponibilità dipendono dal contenuto e dal servizio che lo pubblica. Gli eventuali strumenti di trascrizione in tempo reale del dispositivo si gestiscono dalle sue impostazioni.</p>
+                        <p>Se una spiegazione è difficile da seguire o ti occorre un’alternativa testuale, indica al supporto il contenuto e l’informazione che stai cercando.</p>
+                        <div class="access-detail-actions"><a href="supporto.html">Chiedi un aiuto <span aria-hidden="true">›</span></a></div>
                     </template>
                 </article>
             </div>
@@ -132,16 +140,18 @@
             <div class="access-card-track" id="access-standards-track" tabindex="0" role="region" aria-label="Conformità e impegni per l'accessibilità">
                 <article class="access-info-card access-info-card--neutral reveal is-current">
                     <h3>Progettato secondo gli standard di accessibilità più elevati.</h3>
-                    <button class="access-card-more" type="button" data-access-detail="access-detail-wcag" data-modal-eyebrow="WCAG 2.1" data-modal-title="Conforme al livello AA." aria-label="Apri tutti i dettagli sulla conformità WCAG 2.1">
+                    <button class="access-card-more" type="button" data-access-detail="access-detail-wcag" data-modal-eyebrow="WCAG" data-modal-title="Criteri chiari. Verifiche concrete." aria-label="Apri tutti i dettagli sui criteri di accessibilità WCAG">
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
                     <template id="access-detail-wcag">
-                        <p class="access-detail-intro">Il Portale Registro FSL Harzafi FSL rispetta i requisiti tecnici WCAG 2.1, Livello AA, con alcune eccezioni documentate.</p>
-                        <span class="access-status-pill">Conforme con eccezioni</span>
-                        <div class="access-detail-callout">
-                            <strong>Un processo continuo.</strong>
-                            <p>La conformità non viene considerata un traguardo definitivo: controlli, correzioni e miglioramenti accompagnano l'evoluzione del portale.</p>
-                        </div>
+                        <p class="access-detail-intro">L’accessibilità si costruisce attraverso scelte che si possono verificare: capire un’informazione, raggiungere un comando e completare un’operazione.</p>
+                        <h3>Un riferimento condiviso.</h3>
+                        <p>Le Web Content Accessibility Guidelines, o WCAG, descrivono criteri per rendere i contenuti percepibili, utilizzabili, comprensibili e compatibili con le tecnologie assistive. La versione 2.2 estende i criteri delle versioni precedenti e costituisce un riferimento per il miglioramento dell’esperienza sul web.</p>
+                        <h3>Cosa significa livello AA.</h3>
+                        <p>Il livello AA comprende i criteri di livello A e quelli di livello AA. La conformità riguarda le pagine complete e gli interi percorsi d’uso: non si può dedurre dalla presenza di una singola funzione, di un simbolo o di un punteggio automatico.</p>
+                        <p>Per Harzafi FSL questo riferimento orienta l’attenzione verso etichette comprensibili, ordine di navigazione, contrasto, uso della tastiera, adattamento dei contenuti e gestione del focus. Una valutazione completa richiede verifiche sui contenuti e sui percorsi, comprese prove con tecnologie assistive.</p>
+                        <p class="access-detail-note">Le informazioni di questa pagina descrivono le attenzioni e le funzioni del portale; non costituiscono una certificazione indipendente di conformità.</p>
+                        <div class="access-detail-actions"><a href="https://www.w3.org/TR/WCAG22/">Consulta le WCAG 2.2 <span aria-hidden="true">↗</span></a><a href="supporto.html">Segnala una difficoltà <span aria-hidden="true">›</span></a></div>
                     </template>
                 </article>
 
@@ -151,26 +161,31 @@
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
                     <template id="access-detail-status">
-                        <p class="access-detail-intro">Le condizioni che incidono sulla conformità vengono esposte in modo diretto e verificabile.</p>
-                        <dl class="access-detail-status-list">
-                            <div><dt>Inosservanza della Legge 4/2004</dt><dd>No</dd></div>
-                            <div><dt>Onere sproporzionato</dt><dd>No</dd></div>
-                            <div><dt>Contenuto escluso dalla legislazione</dt><dd>No</dd></div>
-                        </dl>
+                        <p class="access-detail-intro">Una descrizione utile dell’accessibilità deve aiutarti a capire come usare il servizio e come farci conoscere una difficoltà.</p>
+                        <h3>Guardiamo ai percorsi reali.</h3>
+                        <p>L’attenzione riguarda ciò che fai nel portale: entrare nel tuo account, consultare le ore di FSL, riconoscere un’attività, aprire un dettaglio e usare le impostazioni. Le verifiche su tastiera, finestre, dimensioni dello schermo e messaggi di stato contribuiscono a individuare ostacoli concreti.</p>
+                        <p>Le prove automatiche aiutano a rilevare alcuni errori. L’esperienza di chi usa il sito con strumenti e necessità differenti aggiunge informazioni che quei controlli, da soli, non possono fornire.</p>
+                        <h3>Raccontaci dove ti sei fermato.</h3>
+                        <p>Per una segnalazione utile, indica la pagina, il dispositivo, il browser e l’operazione che stavi cercando di completare. Se utilizzi una tecnologia assistiva, puoi specificarla e descrivere che cosa hai percepito e quale risultato ti aspettavi.</p>
+                        <p>Puoi anche chiedere un modo diverso di consultare un’informazione. Per proteggere il tuo account, lascia fuori dal messaggio password, codici di accesso e dati personali di altre persone.</p>
+                        <div class="access-detail-actions"><a href="supporto.html">Invia una segnalazione <span aria-hidden="true">›</span></a></div>
                     </template>
                 </article>
 
                 <article class="access-info-card access-info-card--dark reveal">
                     <h3>Un diritto garantito a norma di legge.</h3>
-                    <button class="access-card-more" type="button" data-access-detail="access-detail-legal" data-modal-eyebrow="ITALIA · UE" data-modal-title="Un impegno anche legale." aria-label="Apri tutti i dettagli sull'impegno legale">
+                    <button class="access-card-more" type="button" data-access-detail="access-detail-legal" data-modal-eyebrow="RESPONSABILITÀ" data-modal-title="Accesso alle informazioni. Pari opportunità." aria-label="Apri tutti i dettagli sui riferimenti e sull'impegno per l'accessibilità">
                         <span class="access-card-more-disc" aria-hidden="true"><svg class="access-card-more-icon" viewBox="0 0 36 36" focusable="false"><path d="m24 16.5h-4.5v-4.5c0-.8286-.6719-1.5-1.5-1.5s-1.5.6714-1.5 1.5v4.5h-4.5c-.8281 0-1.5.6714-1.5 1.5s.6719 1.5 1.5 1.5h4.5v4.5c0 .8286.6719 1.5 1.5 1.5s1.5-.6714 1.5-1.5v-4.5h4.5c.8281 0 1.5-.6714 1.5-1.5s-.6719-1.5-1.5-1.5z"></path></svg></span>
                     </button>
                     <template id="access-detail-legal">
-                        <p class="access-detail-intro">La dichiarazione di accessibilità è presente nel footer delle pagine pubbliche e descrive ufficialmente lo stato di conformità del portale.</p>
-                        <div class="access-detail-callout">
-                            <strong>Riferimento normativo.</strong>
-                            <p>Contenuti redatti in ottemperanza alla Decisione di esecuzione UE 2018/1523.</p>
-                        </div>
+                        <p class="access-detail-intro">L’accesso alle informazioni merita attenzione, qualunque sia il modo in cui una persona vede, ascolta, si muove o interagisce con la tecnologia.</p>
+                        <h3>Standard e responsabilità.</h3>
+                        <p>In Italia, l’accessibilità digitale è oggetto di norme e indicazioni dell’Agenzia per l’Italia Digitale. Per i soggetti e i servizi a cui si applicano, questi riferimenti definiscono requisiti, verifiche e strumenti per comunicare lo stato di accessibilità.</p>
+                        <p>Harzafi FSL è un progetto personale e indipendente. Questa pagina spiega le attenzioni dedicate all’accessibilità e come richiedere assistenza; non è una dichiarazione ufficiale di un’amministrazione pubblica né un’approvazione rilasciata da un’autorità.</p>
+                        <h3>Un contatto per superare una difficoltà.</h3>
+                        <p>Se incontri una barriera, puoi descriverla al supporto indicando l’informazione o l’operazione di cui hai bisogno. Una segnalazione precisa aiuta a comprendere l’ostacolo e a valutare una soluzione o una modalità alternativa di fruizione.</p>
+                        <p>Per approfondire il quadro di riferimento e le indicazioni istituzionali, consulta le informazioni pubblicate da AgID.</p>
+                        <div class="access-detail-actions"><a href="https://www.agid.gov.it/it/ambiti-intervento/accessibilita-usabilita">Accessibilità: il riferimento AgID <span aria-hidden="true">↗</span></a><a href="supporto.html">Contatta il supporto <span aria-hidden="true">›</span></a></div>
                     </template>
                 </article>
             </div>
@@ -188,18 +203,19 @@
             </div>
         </section>
 
-        <div class="access-modal-overlay" id="access-detail-modal" aria-hidden="true">
-            <section class="access-modal-panel" role="dialog" aria-modal="true" aria-labelledby="access-modal-title" aria-describedby="access-modal-content">
+        <dialog class="access-modal-overlay" id="access-detail-modal" aria-modal="true" aria-labelledby="access-modal-title" aria-hidden="true">
+            <section class="access-modal-panel">
                 <button class="access-modal-close" type="button" aria-label="Chiudi i dettagli">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+                    <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M 12.12 10 l 4.07 -4.06 a 1.5 1.5 0 1 0 -2.11 -2.12 L 10 7.88 L 5.94 3.81 A 1.5 1.5 0 1 0 3.82 5.93 L 7.88 10 L 3.81 14.06 a 1.5 1.5 0 0 0 0 2.12 a 1.51 1.51 0 0 0 2.13 0 L 10 12.12 l 4.06 4.07 a 1.45 1.45 0 0 0 1.06 0.44 a 1.5 1.5 0 0 0 1.06 -2.56 Z"/></svg>
                 </button>
                 <div class="access-modal-scroll">
-                    <span class="access-modal-eyebrow" id="access-modal-eyebrow"></span>
-                    <h2 id="access-modal-title"></h2>
+                    <div class="access-modal-symbol" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="7.5" r="3" fill="currentColor"/><path d="m7 13 9 2 9-2M16 15v7m0 0-5 7m5-7 5 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <span class="access-modal-eyebrow" id="access-modal-eyebrow" hidden></span>
+                    <h2 id="access-modal-title" tabindex="-1"></h2>
                     <div class="access-modal-content" id="access-modal-content"></div>
                 </div>
             </section>
-        </div>
+        </dialog>
     </main>
 
     <footer id="footer" class="harzafi-footer">
@@ -236,7 +252,7 @@
         </div>
     </footer>
 
-    <script src="accessibilita.js"></script>
+    <script src="accessibilita.js?v=20261109-editorial-dialog-v1"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>

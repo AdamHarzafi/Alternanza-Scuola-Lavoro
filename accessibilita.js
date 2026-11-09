@@ -46,14 +46,22 @@ function initAccessibilita() {
     const modalTitle = document.getElementById('access-modal-title');
     const modalContent = document.getElementById('access-modal-content');
     let lastModalTrigger = null;
+    let closeTimer = null;
 
-    const closeAccessModal = () => {
-        if (!modal?.classList.contains('is-open')) return;
-        modal.classList.remove('is-open');
+    const finishModalClose = (restoreFocus = true) => {
+        window.clearTimeout(closeTimer);
+        closeTimer = null;
+        if (modal?.open && typeof modal.close === 'function') modal.close();
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('access-modal-open');
         document.dispatchEvent(new CustomEvent('accessmodalchange'));
-        window.requestAnimationFrame(() => lastModalTrigger?.focus());
+        if (restoreFocus && lastModalTrigger?.isConnected) lastModalTrigger.focus({preventScroll:true});
+    };
+    const closeAccessModal = () => {
+        if (!modal?.classList.contains('is-open')) return;
+        modal.classList.remove('is-open');
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishModalClose();
+        else closeTimer = window.setTimeout(finishModalClose, 280);
     };
 
     const openAccessModal = (trigger) => {
@@ -61,15 +69,20 @@ function initAccessibilita() {
         if (!(template instanceof HTMLTemplateElement) || !modal || !modalTitle || !modalContent || !modalEyebrow) return;
 
         lastModalTrigger = trigger;
+        window.clearTimeout(closeTimer);
+        closeTimer = null;
         modalEyebrow.textContent = trigger.dataset.modalEyebrow || '';
         modalTitle.textContent = trigger.dataset.modalTitle || '';
         modalContent.replaceChildren(template.content.cloneNode(true));
         modalScroll.scrollTop = 0;
         modal.setAttribute('aria-hidden', 'false');
+        if (typeof modal.showModal === 'function' && !modal.open) modal.showModal();
         modal.classList.add('is-open');
         document.body.classList.add('access-modal-open');
         document.dispatchEvent(new CustomEvent('accessmodalchange'));
-        window.requestAnimationFrame(() => modalClose.focus());
+        window.requestAnimationFrame(() => {
+            if (modal.classList.contains('is-open')) modalTitle.focus({preventScroll:true});
+        });
     };
 
     document.querySelectorAll('[data-access-detail]').forEach((button) => {
@@ -77,12 +90,14 @@ function initAccessibilita() {
     });
 
     modalClose?.addEventListener('click', closeAccessModal);
+    modal?.addEventListener('cancel', event => { event.preventDefault(); closeAccessModal(); });
     modal?.addEventListener('click', (event) => {
         if (event.target === modal) closeAccessModal();
     });
 
     modal?.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
+            event.preventDefault();
             closeAccessModal();
             return;
         }
@@ -98,6 +113,12 @@ function initAccessibilita() {
         } else if (!event.shiftKey && document.activeElement === last) {
             event.preventDefault();
             first.focus();
+        }
+    });
+    window.addEventListener('pagehide', () => {
+        if (modal?.open || modal?.classList.contains('is-open')) {
+            modal.classList.remove('is-open');
+            finishModalClose(false);
         }
     });
 }
