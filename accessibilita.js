@@ -55,6 +55,7 @@ function initAccessibilita() {
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('access-modal-open');
         document.documentElement.classList.remove('access-modal-open');
+        document.documentElement.style.removeProperty('--access-scrollbar-width');
         document.dispatchEvent(new CustomEvent('accessmodalchange'));
         if (restoreFocus && lastModalTrigger?.isConnected) lastModalTrigger.focus({preventScroll:true});
     };
@@ -70,6 +71,9 @@ function initAccessibilita() {
         if (!(template instanceof HTMLTemplateElement) || !modal || !modalTitle || !modalContent || !modalEyebrow) return;
 
         lastModalTrigger = trigger;
+        if (!document.documentElement.classList.contains('access-modal-open')) {
+            document.documentElement.style.setProperty('--access-scrollbar-width', `${Math.max(0, window.innerWidth - document.documentElement.clientWidth)}px`);
+        }
         window.clearTimeout(closeTimer);
         closeTimer = null;
         modalEyebrow.textContent = trigger.dataset.modalEyebrow || '';
