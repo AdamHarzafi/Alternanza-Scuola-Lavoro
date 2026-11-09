@@ -22,6 +22,67 @@
     <link rel="stylesheet" href="page-design.css?v=20261108-unified-display-titles-v1">
     <link rel="stylesheet" href="navbar-refinement.css?v=20261108-frosted-glass-v11">
     <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
+    <style>
+        body.error-page { background:#fff; }
+        body.error-page .error-main { padding:132px 24px 72px; }
+        body.error-page .error-card {
+            width:min(100%, 1050px);
+            padding:88px 64px;
+            border:0;
+            border-radius:30px;
+            background:#f5f5f7;
+            box-shadow:none;
+            text-align:center;
+        }
+        body.error-page .error-card h1 {
+            max-width:840px;
+            margin:0 auto 24px;
+            font-family:var(--font-display) !important;
+            font-size:56px;
+            font-weight:600;
+            line-height:1.07143;
+            letter-spacing:-.028em;
+            color:#1d1d1f;
+        }
+        body.error-page .error-card p {
+            max-width:580px;
+            margin:0 auto 32px;
+            font-family:var(--font-text) !important;
+            font-size:19px;
+            font-weight:400;
+            line-height:1.47369;
+            letter-spacing:-.016em;
+            color:#6e6e73;
+        }
+        body.error-page .error-home-link {
+            min-height:44px;
+            padding:11px 22px;
+            border:0;
+            border-radius:999px;
+            box-shadow:none;
+            font-family:var(--font-text) !important;
+            font-size:17px;
+            font-weight:400;
+            line-height:1.29412;
+            letter-spacing:-.012em;
+            transform:none;
+        }
+        @media(max-width:1068px) {
+            body.error-page .error-card { padding:72px 48px; }
+            body.error-page .error-card h1 { font-size:48px; }
+        }
+        @media(max-width:760px) {
+            body.error-page .error-main { padding:108px 20px 44px; }
+            body.error-page .error-card { padding:56px 24px; border-radius:26px; }
+            body.error-page .error-card h1 { font-size:34px; line-height:1.11765; letter-spacing:-.025em; }
+            body.error-page .error-card p { font-size:17px; line-height:1.47059; letter-spacing:-.012em; }
+        }
+        @media(max-width:359px) {
+            body.error-page .error-main { padding-inline:16px; }
+            body.error-page .error-card { padding:48px 22px; }
+            body.error-page .error-card h1 { font-size:30px; }
+        }
+    </style>
 </head>
 <body class="error-page">
 
@@ -48,10 +109,9 @@
 
     <main class="error-main">
         <section class="error-card reveal active" aria-labelledby="error-title">
-            <p class="error-code" aria-hidden="true">404</p>
-            <h1 id="error-title">Questa pagina non c’è.</h1>
-            <p>Il collegamento potrebbe essere cambiato oppure l’indirizzo non è corretto. Puoi tornare al portale e riprendere da lì.</p>
-            <a href="index.html" class="error-home-link">Torna al portale</a>
+            <h1 id="error-title">La pagina che stai cercando non può essere trovata.</h1>
+            <p>Controlla l’indirizzo oppure torna alla pagina iniziale per ritrovare ciò che cerchi su Harzafi FSL.</p>
+            <a href="index.html" class="error-home-link">Torna alla pagina iniziale</a>
         </section>
     </main>
 
