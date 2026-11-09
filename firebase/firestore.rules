@@ -1,0 +1,143 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isRealUser() {
+      return isAuthenticated() && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+    function isTeacher() {
+      return isRealUser() && exists(/databases/$(database)/documents/docenti_autorizzati/$(request.auth.uid))
+        && get(/databases/$(database)/documents/docenti_autorizzati/$(request.auth.uid)).data.enabled == true;
+    }
+    function canViewStudent(uid) {
+      return isTeacher() && exists(/databases/$(database)/documents/registri/$(uid));
+    }
+    match /docenti_autorizzati/{uid} {
+      allow get: if isRealUser() && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+    // Solo i campi del profilo sono consultabili dai docenti già autorizzati al registro.
+    match /account_preferences/{uid} {
+      function isStudentProfileForTeacher() {
+        return canViewStudent(uid)
+          && (!exists(/databases/$(database)/documents/account_preferences/$(uid))
+            || resource.data.keys().hasOnly(['givenName', 'familyName', 'photoData', 'updatedAt']));
+      }
+      function validPreferences() {
+        let data = request.resource.data;
+        return data.keys().hasAll(['updatedAt'])
+          && data.keys().hasOnly(['givenName', 'familyName', 'photoData', 'updatedAt'])
+          && data.updatedAt is timestamp && data.updatedAt == request.time
+          && (!data.keys().hasAny(['givenName', 'familyName'])
+            || (data.keys().hasAll(['givenName', 'familyName'])
+              && data.givenName is string && data.givenName.size() > 0 && data.givenName.size() <= 80
+              && data.familyName is string && data.familyName.size() > 0 && data.familyName.size() <= 80))
+          && (!data.keys().hasAny(['photoData'])
+            || (data.photoData is string && data.photoData.size() <= 180000
+              && (data.photoData == '' || data.photoData.matches('^data:image/jpeg;base64,[A-Za-z0-9+/]+={0,2}$'))));
+      }
+      allow get: if isRealUser() && (request.auth.uid == uid || isStudentProfileForTeacher());
+      allow list, delete: if false;
+      allow create, update: if isRealUser() && request.auth.uid == uid && validPreferences();
+    }
+    match /registri/{uid} {
+      allow read: if isRealUser() && (request.auth.uid == uid || isTeacher());
+      allow create: if isRealUser() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['studentId', 'email'])
+        && request.resource.data.studentId is string
+        && request.resource.data.email == request.auth.token.email.lower()
+        && get(/databases/$(database)/documents/studenti/$(request.resource.data.studentId)).data.email.lower() == request.auth.token.email.lower();
+      allow update, delete: if false;
+    }
+    function isEmailAvogadro() {
+      return isRealUser() && request.auth.token.email != null &&
+        (request.auth.token.email.matches('.*@studenti\\.itisavogadro\\.it') ||
+         request.auth.token.email.matches('.*@itisavogadro\\.it'));
+    }
+
+    function isOwnProfile() {
+      return isRealUser() && request.auth.token.email != null
+        && resource.data.email is string
+        && resource.data.email == request.auth.token.email.lower();
+    }
+    function isLinkedStudent() {
+      return isRealUser() && request.auth.token.email != null
+        && exists(/databases/$(database)/documents/registri/$(request.auth.uid))
+        && get(/databases/$(database)/documents/registri/$(request.auth.uid)).data.email == request.auth.token.email.lower()
+        && get(/databases/$(database)/documents/registri/$(request.auth.uid)).data.studentId is string;
+    }
+    // I profili sono consultabili solo dall'utente autenticato a cui appartengono.
+    // I docenti abilitati possono leggere la lista studenti per il registro di classe.
+    match /studenti/{studentId} {
+      allow get: if isOwnProfile() || isTeacher();
+      allow list: if isOwnProfile() || isTeacher();
+      allow write: if false;
+    }
+    match /docenti/{teacherId} {
+      allow get, list: if isOwnProfile();
+      allow write: if false;
+    }
+
+    function validCalendarDate(value) {
+      return value is string && value.matches('^([0-9]{4}-(01|03|05|07|08|10|12)-(0[1-9]|[12][0-9]|3[01])|[0-9]{4}-(04|06|09|11)-(0[1-9]|[12][0-9]|30)|[0-9]{4}-02-(0[1-9]|1[0-9]|2[0-8])|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)$');
+    }
+    function validActivity(data) {
+      return data.titolo is string && data.titolo.size() > 0 && data.titolo.size() <= 120
+        && data.descrizione is string && data.descrizione.size() <= 2000
+        && validCalendarDate(data.data)
+        && data.ore is number && data.ore > 0 && data.ore <= 10000
+        && math.abs(data.ore * 100 - math.round(data.ore * 100)) <= 0.00000001
+        && data.categoria in ['formazione', 'certificazioni'];
+    }
+    match /attivita_pcto/{activityId} {
+      allow read: if (isLinkedStudent() && resource.data.ownerUid == request.auth.uid)
+        || (isRealUser() && canViewStudent(resource.data.ownerUid));
+      allow delete: if false;
+      allow create: if isLinkedStudent()
+        && request.resource.data.keys().hasAll(['ownerUid', 'titolo', 'descrizione', 'data', 'ore', 'categoria', 'createdAt'])
+        && request.resource.data.keys().hasOnly(['ownerUid', 'titolo', 'descrizione', 'data', 'ore', 'categoria', 'createdAt', 'deleted'])
+        && request.resource.data.get('deleted', false) == false
+        && request.resource.data.ownerUid == request.auth.uid
+        && validActivity(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update: if isLinkedStudent() && resource.data.ownerUid == request.auth.uid
+        && resource.data.get('deleted', false) == false
+        && request.resource.data.updatedAt == request.time
+        && ((request.resource.data.diff(resource.data).affectedKeys().hasOnly(['titolo', 'descrizione', 'data', 'ore', 'categoria', 'updatedAt'])
+              && validActivity(request.resource.data))
+          || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deleted', 'deletedAt', 'updatedAt'])
+              && request.resource.data.deleted == true && request.resource.data.deletedAt == request.time));
+    }
+
+    // Elenco iniziale condiviso: solo l'amministratore puo modificarlo.
+    match /attivita_predefinite/{activityId} {
+      allow read: if isLinkedStudent() || isTeacher();
+      allow write: if false;
+    }
+    // Le modifiche e le cancellazioni riguardano esclusivamente il proprio registro.
+    match /registri/{uid}/predefinite/{activityId} {
+      allow read: if (isLinkedStudent() && request.auth.uid == uid)
+        || (isRealUser() && canViewStudent(uid));
+      function validOverride() {
+        return request.resource.data.keys().hasAll(['titolo', 'descrizione', 'data', 'ore', 'categoria', 'deleted', 'updatedAt'])
+          && request.resource.data.keys().hasOnly(['titolo', 'descrizione', 'data', 'ore', 'categoria', 'deleted', 'updatedAt'])
+          && request.resource.data.deleted == false && request.resource.data.updatedAt == request.time
+          && validActivity(request.resource.data);
+      }
+      allow create: if isLinkedStudent() && request.auth.uid == uid
+        && exists(/databases/$(database)/documents/attivita_predefinite/$(activityId))
+        && (validOverride() || (request.resource.data.keys().hasOnly(['deleted', 'deletedAt', 'updatedAt'])
+          && request.resource.data.deleted == true && request.resource.data.deletedAt == request.time && request.resource.data.updatedAt == request.time));
+      allow update: if isLinkedStudent() && request.auth.uid == uid && resource.data.get('deleted', false) == false
+        && (validOverride() || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deleted', 'deletedAt', 'updatedAt'])
+          && request.resource.data.deleted == true && request.resource.data.deletedAt == request.time && request.resource.data.updatedAt == request.time));
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
