@@ -1,11 +1,12 @@
 /* Editorial accessibility dialogs: the desktop reference is 1029px with 76px insets. */
 html.accessibility-document { scrollbar-gutter:stable; }
+html.accessibility-document.access-modal-open { overflow:hidden; }
 body.accessibility-page .access-modal-overlay {
     --access-dialog-top:max(24px, calc(env(safe-area-inset-top, 0px) + 12px));
     --access-dialog-bottom:max(24px, calc(env(safe-area-inset-bottom, 0px) + 12px));
     position:fixed;
     inset:0;
-    width:100%;
+    width:100vw;
     max-width:none;
     height:100dvh;
     max-height:none;

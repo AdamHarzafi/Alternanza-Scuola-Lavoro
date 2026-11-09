@@ -54,6 +54,7 @@ function initAccessibilita() {
         if (modal?.open && typeof modal.close === 'function') modal.close();
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('access-modal-open');
+        document.documentElement.classList.remove('access-modal-open');
         document.dispatchEvent(new CustomEvent('accessmodalchange'));
         if (restoreFocus && lastModalTrigger?.isConnected) lastModalTrigger.focus({preventScroll:true});
     };
@@ -79,6 +80,7 @@ function initAccessibilita() {
         if (typeof modal.showModal === 'function' && !modal.open) modal.showModal();
         modal.classList.add('is-open');
         document.body.classList.add('access-modal-open');
+        document.documentElement.classList.add('access-modal-open');
         document.dispatchEvent(new CustomEvent('accessmodalchange'));
         window.requestAnimationFrame(() => {
             if (modal.classList.contains('is-open')) modalTitle.focus({preventScroll:true});
