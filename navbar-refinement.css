@@ -6,9 +6,9 @@
     --site-nav-item-ease: cubic-bezier(.22, 1, .36, 1);
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper,
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper.scrolled {
     position: fixed;
     inset: 0 0 auto;
@@ -32,7 +32,7 @@
     transition: transform .28s cubic-bezier(.22, .68, 0, 1), background-color .24s ease, box-shadow .24s ease;
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper.scrolled {
     inset: 0 0 auto;
     width: 100%;
@@ -47,7 +47,7 @@
     box-shadow: none;
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-content {
     display: flex;
     width: min(996px, calc(100% - 48px));
@@ -58,7 +58,7 @@
     margin: 0 auto;
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-logo {
     display: inline-flex;
     flex: 0 0 auto;
@@ -71,7 +71,7 @@
     text-decoration: none;
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-logo img {
     display: block;
     width: auto;
@@ -84,7 +84,7 @@
 .navbar-wrapper .nav-logo:hover img,
 .dashboard-page .dashboard-brand:hover img { transform: none; }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-links {
     display: flex;
     flex: 0 0 auto;
@@ -96,7 +96,7 @@
     padding: 0;
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-links > a:not(.nav-login) {
     display: inline-flex;
     min-height: 44px;
@@ -112,7 +112,7 @@
     transition: color .18s ease;
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-links > a:not(.nav-login)::after {
     content: "";
     position: absolute;
@@ -129,27 +129,27 @@
     pointer-events: none;
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-links > a:not(.nav-login):hover { color: #1d1d1f; transform: none; }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-links > a:not(.nav-login):is([aria-current="page"], .is-section-active) {
     text-decoration: none;
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-links > a:not(.nav-login):is([aria-current="page"], .is-section-active)::after {
     opacity: 1;
     transform: scaleX(1);
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper.has-section-active .nav-links > a[aria-current="page"]::after {
     opacity: 0;
     transform: scaleX(.86);
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper .nav-login {
     display: inline-flex;
     min-width: 76px;
@@ -224,7 +224,7 @@ html { background-color: #F5F5F7 !important; }
     transition: transform .28s cubic-bezier(.22, .68, 0, 1), background-color .24s ease, box-shadow .24s ease;
 }
 
-:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+:is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
     .navbar-wrapper.menu-open,
 .dashboard-page .dashboard-header.menu-open {
     transform: none;
@@ -250,9 +250,9 @@ body.dashboard-page { padding-top: 44px; }
 .dashboard-page .dashboard-menu > :is(a, button) { display: inline-flex; min-height: 44px; align-items: center; }
 
 @media (max-width: 833px) {
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper,
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper.scrolled {
         top: 0;
         right: 0;
@@ -281,7 +281,7 @@ body.dashboard-page { padding-top: 44px; }
             backdrop-filter .34s ease;
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper .nav-content {
         position: relative;
         width: 100%;
@@ -292,7 +292,7 @@ body.dashboard-page { padding-top: 44px; }
         margin: 0;
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper .nav-menu-toggle {
         position: relative;
         z-index: 2;
@@ -329,7 +329,7 @@ body.dashboard-page { padding-top: 44px; }
     .nav-menu-toggle .nav-toggle-glyph,
     .dashboard-menu-toggle .nav-toggle-glyph { overflow: visible; }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper .nav-logo {
         position: relative;
         top: 0;
@@ -340,13 +340,13 @@ body.dashboard-page { padding-top: 44px; }
         transform: none;
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper .nav-logo img {
         max-width: 92px;
         height: 21px;
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper :is(.nav-logo, .nav-mobile-account) {
         transform: none;
         transition:
@@ -355,7 +355,7 @@ body.dashboard-page { padding-top: 44px; }
             visibility 0s;
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper .nav-mobile-account {
         position: relative;
         top: 0;
@@ -374,10 +374,10 @@ body.dashboard-page { padding-top: 44px; }
     .nav-mobile-account svg { width: 19px; height: 19px; }
     .nav-mobile-account svg * { fill: none; stroke: currentColor; stroke-width: 1.45; stroke-linecap: round; stroke-linejoin: round; }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper .nav-links .nav-login { display: none; }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper .nav-links {
         position: absolute;
         top: calc(env(safe-area-inset-top, 0px) + 63px);
@@ -401,7 +401,7 @@ body.dashboard-page { padding-top: 44px; }
         transition: visibility 0s linear .44s;
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper .nav-links > a:not(.nav-login) {
         display: flex;
         min-height: 53px;
@@ -427,13 +427,13 @@ body.dashboard-page { padding-top: 44px; }
         transition-delay: var(--nav-exit-delay, 0ms);
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper.menu-open {
         overflow: visible;
         pointer-events: auto;
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper.menu-open :is(.nav-logo, .nav-mobile-account) {
         visibility: hidden;
         opacity: 0;
@@ -445,21 +445,21 @@ body.dashboard-page { padding-top: 44px; }
             visibility 0s linear .22s;
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper.menu-open .nav-links {
         visibility: visible;
         pointer-events: auto;
         transition: visibility 0s;
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper.menu-open .nav-links > a:not(.nav-login) {
         opacity: 1;
         transform: translate3d(0, 0, 0);
         transition-delay: var(--nav-enter-delay, 0ms);
     }
 
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page)
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page)
         .navbar-wrapper.menu-open .nav-login {
         width: 100%;
         min-height: 48px;
@@ -663,8 +663,8 @@ body.site-nav-closing { overflow: hidden; }
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page) .navbar-wrapper,
-    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.dashboard-page, body.auth-page, body.reset-page) .navbar-wrapper.scrolled,
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page) .navbar-wrapper,
+    :is(body.home-page, body.legal-page, body.accessibility-page, body.account-privacy-page, body.error-page, body.support-page, body.messages-page, body.dashboard-page, body.auth-page, body.reset-page) .navbar-wrapper.scrolled,
     .dashboard-page .dashboard-header {
         background: #F5F5F7;
     }

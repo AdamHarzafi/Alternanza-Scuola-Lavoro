@@ -15,6 +15,15 @@
     let typingTimer, typingRefresh, typingExpiry, lastTyping = 0, readTimer, stateError = false, sending = false, enrollmentBusy = false;
     let pending = new Map(), drafts = new Map(), outbox = new Map(), longPressTimer, suppressClick = false;
     const dialogs = [...document.querySelectorAll('dialog')];
+    const motions = new Map(), visibilityTargets = new Map(), dialogEpochs = new WeakMap(), dialogDesired = new WeakMap();
+    let transitionRequest = 0;
+    const motionFrames = {
+        dialog:[{opacity:0,transform:'translateY(12px) scale(.975)'},{opacity:1,transform:'translateY(0) scale(1)'}],
+        conversation:[{opacity:0},{opacity:1}],
+        message:[{opacity:0,transform:'translateY(8px) scale(.985)'},{opacity:1,transform:'translateY(0) scale(1)'}],
+        accessory:[{opacity:0,transform:'translateY(5px) scale(.96)'},{opacity:1,transform:'translateY(0) scale(1)'}],
+        reaction:[{opacity:0,transform:'scale(.72)'},{opacity:1,transform:'scale(1)'}]
+    };
     const unavailable = 'Messaggi non è disponibile in questo momento. Riprova tra poco.';
 
     async function thumbnail(source) {
@@ -40,13 +49,40 @@
     function nearBottom() { return scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight < 90; }
     function bottom(animate = false) { scroll.scrollTo({ top:scroll.scrollHeight, behavior:animate && !reduced.matches ? 'smooth' : 'instant' }); $('new-messages-indicator').hidden = true; }
     function status(text = '', error = false) { $('composer-status').textContent = text; $('composer-status').classList.toggle('error', error); }
-    function openDialog(dialog) { if (!dialog.open) dialog.showModal(); }
+    function cancelMotion(element) { const running = motions.get(element); if (running) { motions.delete(element); running.cancel(); } }
+    function cancelWithin(element) { for (const target of [...motions.keys()]) if (target === element || element.contains(target)) cancelMotion(target); }
+    async function motion(element, type = 'accessory', entering = true, options = {}) {
+        if (!element) return false;
+        cancelMotion(element);
+        if (reduced.matches || !element.animate) return true;
+        const frames = entering ? motionFrames[type] : [...motionFrames[type]].reverse();
+        const animation = element.animate(frames, {duration:options.duration || 280,delay:options.delay || 0,easing:'cubic-bezier(.4,0,.2,1)'});
+        motions.set(element, animation);
+        let finished = true; await animation.finished.catch(() => { finished = false; });
+        const current = motions.get(element) === animation;
+        if (current) motions.delete(element);
+        return current && finished;
+    }
+    function visibleNow(element, show) { cancelMotion(element); visibilityTargets.set(element, show); element.hidden = !show; }
+    async function reveal(element, show, type = 'accessory') {
+        const previous = visibilityTargets.has(element) ? visibilityTargets.get(element) : !element.hidden;
+        if (previous === show) return;
+        visibilityTargets.set(element, show);
+        if (show) element.hidden = false;
+        const finished = await motion(element, type, show, {duration:220});
+        if (finished && visibilityTargets.get(element) === show) element.hidden = !show;
+    }
+    function openDialog(dialog) {
+        dialogEpochs.set(dialog, (dialogEpochs.get(dialog) || 0) + 1); dialogDesired.set(dialog, true);
+        cancelMotion(dialog); if (!dialog.open) dialog.showModal(); motion(dialog, 'dialog', true);
+    }
     async function dismiss(dialog) {
         if (!dialog.open) return;
-        if (!reduced.matches) await dialog.animate([{opacity:1,transform:'translateY(0) scale(1)'},{opacity:0,transform:'translateY(8px) scale(.985)'}], {duration:160,easing:'ease-in'}).finished.catch(() => {});
-        if (dialog.open) dialog.close();
+        const epoch = dialogEpochs.get(dialog); dialogDesired.set(dialog, false);
+        const finished = await motion(dialog, 'dialog', false);
+        if (finished && dialogEpochs.get(dialog) === epoch && dialog.open && !dialogDesired.get(dialog)) dialog.close();
     }
-    function closeDialogs() { for (const dialog of dialogs) if (dialog.open) dialog.close(); }
+    function closeDialogs() { for (const dialog of dialogs) { dialogEpochs.set(dialog, (dialogEpochs.get(dialog) || 0) + 1); dialogDesired.set(dialog, false); cancelMotion(dialog); if (dialog.open) dialog.close(); } }
     for (const button of document.querySelectorAll('[data-close-dialog]')) button.addEventListener('click', () => dismiss(button.closest('dialog')));
     for (const dialog of dialogs) {
         dialog.addEventListener('cancel', event => { event.preventDefault(); dismiss(dialog); });
@@ -71,12 +107,14 @@
         ++chatVersion; chatStops.splice(0).forEach(stop => stop());
         clearTimeout(readTimer); clearTimeout(typingExpiry); clearTimeout(longPressTimer);
         activeId = recipientUid = replyTo = actionId = ''; states.clear(); messages.clear(); rowNodes.clear(); quotes.clear(); requestedQuotes.clear();
-        $('message-list').replaceChildren(); $('typing-indicator').hidden = true; $('reply-preview').hidden = true;
+        cancelWithin($('active-conversation')); $('active-conversation').inert = false;
+        $('message-list').replaceChildren(); visibleNow($('typing-indicator'), false); visibleNow($('reply-preview'), false);
         $('active-conversation').hidden = true; $('conversation-placeholder').hidden = false; app.classList.remove('conversation-open');
         $('connection-status').hidden = true; $('new-messages-indicator').hidden = true; input.value = ''; resizeInput(); closeDialogs();
         pending = new Map(); sending = false; olderBusy = false; oldest = null; stateError = false;
     }
     function clear() {
+        ++transitionRequest; for (const element of [...motions.keys()]) cancelMotion(element);
         clearChat(); globalStops.splice(0).forEach(stop => stop()); contacts.clear(); conversations = []; store = user = identity = null;
         $('conversation-list').replaceChildren(); $('contact-list').replaceChildren(); $('conversation-search').value = ''; $('contact-search').value = '';
         $('messages-enable').disabled = false; enrollmentBusy = false;
@@ -146,6 +184,7 @@
     function start() {
         const current = version;
         $('messages-gate').hidden = true; app.hidden = false;
+        motion(app, 'conversation', true, {duration:360});
         $('conversation-status').textContent = 'Caricamento delle conversazioni…';
         globalStops.push(store.contacts(snapshot => {
             if (current !== version) return;
@@ -201,8 +240,15 @@
     $('messages-retry').addEventListener('click', () => load(auth.currentUser));
     $('new-conversation').addEventListener('click', newConversation); $('placeholder-new').addEventListener('click', newConversation);
     $('conversation-search').addEventListener('input', renderConversations); $('contact-search').addEventListener('input', renderContacts);
-    $('conversation-back').addEventListener('click', () => { clearChat(); renderConversations(); $('new-conversation').focus(); });
+    $('conversation-back').addEventListener('click', async () => {
+        const request = ++transitionRequest, session = version; stopTyping();
+        $('active-conversation').inert = true;
+        await motion($('active-conversation'), 'conversation', false);
+        if (request !== transitionRequest || session !== version) return;
+        clearChat(); renderConversations(); motion(document.querySelector('.conversation-sidebar'), 'conversation', true); $('new-conversation').focus({preventScroll:true});
+    });
     $('conversation-info').addEventListener('click', () => openDialog($('conversation-details')));
+    $('conversation-encryption').addEventListener('click', () => openDialog($('conversation-details')));
     $('messages-options').addEventListener('click', () => { $('settings-message-status').textContent = ''; openDialog($('messages-settings')); });
     $('disable-messages').addEventListener('click', async () => {
         const current = version; $('disable-messages').disabled = true;
@@ -211,13 +257,26 @@
         finally { $('disable-messages').disabled = false; }
     });
 
-    function selectConversation(id, otherUid) {
+    async function selectConversation(id, otherUid) {
+        const request = ++transitionRequest, session = version;
+        if (id === activeId) { cancelMotion($('active-conversation')); $('active-conversation').inert = false; app.classList.add('conversation-open'); return; }
+        stopTyping();
+        if (activeId && !$('active-conversation').hidden) {
+            $('active-conversation').inert = true; await motion($('active-conversation'), 'conversation', false);
+            if (request !== transitionRequest || session !== version) return;
+        }
+        mountConversation(id, otherUid);
+        motion($('active-conversation'), 'conversation', true);
+        motion($('conversation-avatar'), 'accessory', true);
+        motion(document.querySelector('.conversation-name-glass'), 'accessory', true, {delay:45});
+    }
+    function mountConversation(id, otherUid) {
         if (id === activeId) { app.classList.add('conversation-open'); return; }
         clearChat(); activeId = id; recipientUid = otherUid; const current = chatVersion;
         pending = outbox.get(id) || new Map(); outbox.set(id, pending);
         pending.forEach((value, key) => messages.set(key, value));
         const draft = drafts.get(id); input.value = draft?.text || ''; replyTo = draft?.replyTo || ''; resizeInput();
-        if (replyTo) { const original = quotes.get(replyTo); $('reply-name').textContent = 'Risposta al messaggio'; $('reply-text').textContent = original?.text || 'Il messaggio originale verrà richiamato nella risposta.'; $('reply-preview').hidden = false; }
+        if (replyTo) { const original = quotes.get(replyTo); $('reply-name').textContent = 'Risposta al messaggio'; $('reply-text').textContent = original?.text || 'Il messaggio originale verrà richiamato nella risposta.'; reveal($('reply-preview'), true); }
         $('active-conversation').hidden = false; $('conversation-placeholder').hidden = true; app.classList.add('conversation-open');
         updateHeader(); renderConversations(); status(); $('history-status').textContent = 'Caricamento dei messaggi…'; $('load-older').hidden = true;
         let initial = true;
@@ -233,8 +292,8 @@
             });
             if (!oldest || initial) { oldest = snapshot.docs.at(-1); hasMore = snapshot.docs.length === 50; }
             $('load-older').hidden = !hasMore;
-            $('history-status').textContent = snapshot.metadata?.fromCache ? 'Connessione in corso. Mostro i messaggi già disponibili.' : !messages.size ? 'È l’inizio della vostra conversazione.' : 'Messaggi · Harzafi FSL';
-            renderMessages();
+            $('history-status').textContent = snapshot.metadata?.fromCache ? 'Connessione in corso. Mostro i messaggi già disponibili.' : !messages.size ? 'È l’inizio della vostra conversazione.' : '';
+            renderMessages({animate:initial ? 'history' : true});
             if (stick) bottom(); else if (incoming) $('new-messages-indicator').hidden = false;
             if (!snapshot.metadata?.fromCache && stick) scheduleRead();
             initial = false;
@@ -277,9 +336,9 @@
     async function startReply(id) {
         const message = messages.get(id); if (!message) return;
         replyTo = id; $('reply-name').textContent = 'Risposta a ' + nameOf(message.senderUid); $('reply-text').textContent = message.text;
-        const current = chatVersion; $('reply-preview').hidden = false; await dismiss($('message-actions')); if (current === chatVersion) { input.focus(); resizeInput(); bottom(); }
+        const current = chatVersion; reveal($('reply-preview'), true); await dismiss($('message-actions')); if (current === chatVersion) { input.focus(); resizeInput(); bottom(); }
     }
-    function renderMessages() {
+    function renderMessages({animate = false} = {}) {
         if (!activeId) return;
         const values = [...messages.values()].sort((a, b) => (model.millis(a.createdAt) || a.localTime || Date.now()) - (model.millis(b.createdAt) || b.localTime || Date.now()) || a.id.localeCompare(b.id));
         let previous;
@@ -290,7 +349,7 @@
             const quoted = quoteFor(message), lastOwn = own && !values.slice(index + 1).some(m => m.senderUid === user.uid);
             const peerRead = model.millis(states.get(recipientUid)?.readAt) >= date;
             const signature = JSON.stringify([message, quoted, showDate, grouped, lastOwn, peerRead]);
-            let row = rowNodes.get(message.id);
+            let row = rowNodes.get(message.id); const isNew = !row;
             if (!row) { row = node('li', 'message-row'); row.dataset.messageId = message.id; rowNodes.set(message.id, row); }
             if (row.dataset.signature !== signature) {
                 row.dataset.signature = signature; row.replaceChildren(); row.className = 'message-row' + (own ? ' own' : '') + (grouped ? ' grouped' : '');
@@ -329,6 +388,7 @@
             }
             // Reuse nodes so focus and a user's place in the conversation survive updates.
             const existing = $('message-list').children[index]; if (existing !== row) $('message-list').insertBefore(row, existing || null);
+            if (isNew && animate && (animate !== 'history' || index >= values.length - 6)) motion(row, 'message', true, {duration:300,delay:animate === 'history' ? Math.max(0, index - values.length + 6) * 24 : 0});
             previous = message;
         }
     }
@@ -354,12 +414,12 @@
                 updates.docs.forEach(d => { const value = { ...d.data(), id:d.id }; messages.set(d.id, value); quotes.set(d.id, value); }); renderMessages();
             }, () => { if (current === chatVersion) status('Alcuni messaggi precedenti non si stanno aggiornando. Riapri la conversazione per riprovare.'); }));
         } catch (_) { if (current === chatVersion) status('Non è stato possibile caricare i messaggi precedenti. Riprova.'); }
-        finally { olderBusy = false; $('load-older').disabled = false; }
+        finally { if (current === chatVersion) { olderBusy = false; $('load-older').disabled = false; } }
     }
     $('load-older').addEventListener('click', loadOlder);
     $('new-messages-indicator').addEventListener('click', () => { bottom(true); scheduleRead(); });
     $('reply-action').addEventListener('click', () => startReply(actionId));
-    $('cancel-reply').addEventListener('click', () => { replyTo = ''; $('reply-preview').hidden = true; input.focus(); });
+    $('cancel-reply').addEventListener('click', () => { replyTo = ''; reveal($('reply-preview'), false); input.focus(); });
     $('copy-message').addEventListener('click', async () => {
         const message = messages.get(actionId); if (!message) return;
         try { await navigator.clipboard.writeText(message.text); await dismiss($('message-actions')); status('Testo copiato.'); }
@@ -369,7 +429,7 @@
         clearTimeout(typingExpiry);
         const state = states.get(recipientUid), age = Date.now() - model.millis(state?.updatedAt);
         const typing = state?.isTyping === true && age >= -5000 && age < 8000 && !document.hidden;
-        const stick = nearBottom(); $('typing-indicator').hidden = !typing;
+        const stick = nearBottom(); reveal($('typing-indicator'), typing);
         $('typing-indicator').setAttribute('aria-label', person(recipientUid).name + ' sta scrivendo');
         if (typing) { typingExpiry = setTimeout(updateTyping, Math.max(200, 8100 - age)); if (stick) bottom(); }
     }
@@ -400,7 +460,7 @@
     }
     async function deliver(message) {
         const current = chatVersion, id = activeId, writer = store, session = version, queue = outbox.get(activeId);
-        message.pending = true; message.failed = false; messages.set(message.id, message); renderMessages(); bottom();
+        message.pending = true; message.failed = false; messages.set(message.id, message); renderMessages({animate:true}); bottom();
         try {
             await writer.send(id, message.id, message.text, message.replyTo);
             if (session !== version) return;
@@ -421,22 +481,39 @@
         event.preventDefault(); if (!activeId || sending || !navigator.onLine || person(recipientUid).enabled === false) return;
         let text; try { text = model.messageText(input.value); } catch (error) { status(error.code === 'message-too-long' ? 'Il messaggio può contenere fino a 2.000 caratteri.' : 'Scrivi un messaggio prima di inviarlo.', true); return; }
         const id = store.newMessageId(activeId), message = { id, text, senderUid:user.uid, replyTo, reactions:{}, localTime:Date.now() };
-        pending.set(id, message); input.value = ''; replyTo = ''; $('reply-preview').hidden = true; status(); stopTyping(); resizeInput();
+        pending.set(id, message); input.value = ''; replyTo = ''; reveal($('reply-preview'), false); status(); stopTyping(); resizeInput();
         await deliver(message);
     });
     input.addEventListener('input', () => { resizeInput(); typing(); });
     input.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && window.matchMedia('(min-width:701px)').matches) { event.preventDefault(); $('message-form').requestSubmit(); } });
-    input.addEventListener('blur', stopTyping);
+    input.addEventListener('blur', () => { stopTyping(); viewport(); });
+    input.addEventListener('focus', viewport);
     scroll.addEventListener('scroll', () => { if (nearBottom()) { $('new-messages-indicator').hidden = true; scheduleRead(); } }, { passive:true });
     window.addEventListener('online', () => { connected(); scheduleRead(); }); window.addEventListener('offline', () => { stopTyping(); connected(); });
     document.addEventListener('visibilitychange', () => { if (document.hidden) stopTyping(); else { updateTyping(); scheduleRead(); } });
     function viewport() {
         const height = window.visualViewport?.height || window.innerHeight;
         document.documentElement.style.setProperty('--messages-height', height + 'px');
-        $('message-form').classList.toggle('keyboard-open', window.innerHeight - height > 100);
+        const keyboardOpen = window.innerHeight - height > 100 || (document.activeElement === input && height < 600 && window.matchMedia('(max-width:700px)').matches);
+        $('message-form').classList.toggle('keyboard-open', keyboardOpen);
+        document.body.classList.toggle('messages-keyboard-open', keyboardOpen);
         if (activeId && document.activeElement === input) bottom();
     }
     window.visualViewport?.addEventListener('resize', viewport); window.addEventListener('resize', viewport); viewport();
+    reduced.addEventListener('change', () => {
+        if (!reduced.matches) return;
+        for (const element of [...motions.keys()]) cancelMotion(element);
+        for (const [element, show] of visibilityTargets) element.hidden = !show;
+        for (const dialog of dialogs) if (dialog.open && dialogDesired.get(dialog) === false) dialog.close();
+    });
+    if ('IntersectionObserver' in window) {
+        const seen = new WeakSet();
+        const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+            if (!seen.has(entry.target) && !entry.isIntersecting) return;
+            seen.add(entry.target); motion(entry.target, 'accessory', entry.isIntersecting, {duration:360});
+        }), {threshold:.08});
+        document.querySelectorAll('.messages-site-footer .harzafi-footer-main > div,.messages-site-footer .harzafi-footer-bottom').forEach(element => observer.observe(element));
+    }
     window.addEventListener('pagehide', () => { ++version; clear(); });
     window.addEventListener('pageshow', event => { if (event.persisted) load(auth.currentUser); });
     if (!auth || !db || !model) gate('Messaggi', unavailable, { retry:true });

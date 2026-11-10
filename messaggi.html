@@ -8,14 +8,30 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="preload" href="fonts/SF-Pro-Variable-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="modern.css?v=20261103-footer-active-link-underline-v1">
     <link rel="stylesheet" href="fonts.css">
+    <link rel="stylesheet" href="navbar-refinement.css?v=20261110-messages-v12">
+    <script defer src="navbar.js?v=20261105-mobile-menu-state-v5"></script>
     <link rel="stylesheet" href="loading-indicator.css?v=20261108-ios14-v1">
     <script defer src="loading-indicator.js?v=20261108-ios14-v1"></script>
     <link rel="stylesheet" href="page-transitions.css?v=20261108-direct-entry-v2">
     <script src="page-transitions.js?v=20261108-direct-entry-v2"></script>
-    <link rel="stylesheet" href="messages.css?v=20261110-v1">
+    <link rel="stylesheet" href="messages.css?v=20261110-glass-v2">
 </head>
 <body class="messages-page">
+    <nav class="navbar-wrapper glass home-mainnav messages-site-nav" aria-label="Navigazione principale">
+        <div class="nav-content">
+            <div class="home-nav-brand"><a class="nav-logo" href="index.html#home-hero" aria-label="Harzafi FSL — inizio">Harzafi FSL</a></div>
+            <div class="nav-links" id="messages-site-links">
+                <a href="index.html#features">Esplora</a><a href="messaggi.html" aria-current="page">Messaggi</a><a href="supporto.html">Supporto</a><a href="index.html#footer">Contatti</a>
+            </div>
+            <div class="home-nav-actions">
+                <button class="nav-menu-toggle home-nav-chevron" type="button" aria-expanded="false" aria-controls="messages-site-links" aria-label="Apri il menu"><svg class="nav-toggle-glyph" viewBox="0 0 16 9" aria-hidden="true"><path d="M3.5 2.25 8 6.75l4.5-4.5"/></svg></button>
+                <a class="nav-login nav-mobile-account home-nav-action" href="login.html">Accedi</a>
+            </div>
+        </div>
+    </nav>
+    <div class="messages-workspace">
     <div id="messages-gate" class="messages-gate" role="status">
         <span class="messages-symbol" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 5C12.4 5 3 12.6 3 22c0 5.5 3.2 10.5 8.2 13.6L9 44l10-5.5c1.6.3 3.3.5 5 .5 11.6 0 21-7.6 21-17S35.6 5 24 5Z"/></svg></span>
         <h1 id="gate-title">Messaggi</h1>
@@ -40,7 +56,8 @@
         <section class="conversation-pane" aria-label="Messaggi della conversazione">
             <div id="conversation-placeholder" class="conversation-placeholder"><span class="messages-symbol" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 5C12.4 5 3 12.6 3 22c0 5.5 3.2 10.5 8.2 13.6L9 44l10-5.5c1.6.3 3.3.5 5 .5 11.6 0 21-7.6 21-17S35.6 5 24 5Z"/></svg></span><h2>Una conversazione<br>può fare la differenza.</h2><p>Scegli un messaggio o inizia a scrivere<br>a uno studente o a un docente.</p><button id="placeholder-new" class="primary-button">Nuovo messaggio</button></div>
             <div id="active-conversation" class="active-conversation" hidden>
-                <header class="conversation-header"><button id="conversation-back" class="circle-button mobile-back" aria-label="Torna alle conversazioni"><svg viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7"/></svg></button><button id="conversation-info" class="conversation-person" aria-label="Informazioni sulla conversazione"><span id="conversation-avatar" class="person-avatar"></span><span><strong id="conversation-name"></strong><span id="conversation-role"></span></span><svg viewBox="0 0 16 24" aria-hidden="true"><path d="m5 7 5 5-5 5"/></svg></button><span class="header-spacer" aria-hidden="true"></span></header>
+                <header class="conversation-header"><button id="conversation-back" class="circle-button mobile-back" aria-label="Torna alle conversazioni"><svg viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7"/></svg></button><button id="conversation-info" class="conversation-person" aria-label="Informazioni sulla conversazione"><span id="conversation-avatar" class="person-avatar"></span><span class="conversation-name-glass"><strong id="conversation-name"></strong><svg viewBox="0 0 16 24" aria-hidden="true"><path d="m5 7 5 5-5 5"/></svg></span><span id="conversation-role" class="sr-only"></span></button><span class="header-spacer" aria-hidden="true"></span></header>
+                <div class="conversation-security"><span>Messaggi</span><button type="button" id="conversation-encryption" aria-label="Crittografato: scopri come vengono protetti i messaggi" title="Cifratura durante il trasferimento e la conservazione. Non è cifratura end-to-end."><svg viewBox="0 0 16 20" aria-hidden="true"><path d="M4 8V5a4 4 0 0 1 8 0v3h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2 0h4V5a2 2 0 0 0-4 0v3Z"/></svg><span>Crittografato</span></button></div>
                 <p id="connection-status" class="connection-status" role="status" hidden></p>
                 <div id="message-scroll" class="message-scroll" tabindex="0" aria-label="Cronologia dei messaggi">
                     <button id="load-older" class="load-older" hidden>Carica i messaggi precedenti</button>
@@ -57,10 +74,44 @@
             </div>
         </section>
     </main>
+    </div>
     <dialog id="new-message-dialog" class="messages-dialog"><div class="dialog-heading"><h2>Nuovo messaggio</h2><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi nuovo messaggio"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><label class="messages-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><span class="sr-only">Cerca una persona</span><input id="contact-search" type="search" placeholder="A chi vuoi scrivere?" autocomplete="off"></label><p class="dialog-note">Trovi qui le persone che hanno attivato Messaggi.</p><div id="contact-list" class="contact-list"></div><p id="contact-status" class="dialog-note" role="status"></p></dialog>
     <dialog id="message-actions" class="messages-dialog message-actions"><div class="dialog-heading"><h2>Messaggio</h2><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi azioni"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><p id="action-message-text"></p><div id="reaction-picker" class="reaction-picker" role="group" aria-label="Reagisci al messaggio"></div><button id="reply-action" class="action-row" type="button">Rispondi <span aria-hidden="true">↩</span></button><button id="copy-message" class="action-row" type="button">Copia testo <span aria-hidden="true">▢</span></button><p id="action-status" class="dialog-note" role="status"></p></dialog>
-    <dialog id="conversation-details" class="messages-dialog"><div class="dialog-heading"><h2>La conversazione</h2><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi informazioni"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><p>I messaggi sono consultabili dai due partecipanti. Gli altri studenti e docenti non possono leggerli.</p><p>Il servizio conserva i contenuti per rendere disponibili le conversazioni sui tuoi dispositivi. Non utilizza cifratura end-to-end.</p><a href="privacy.html#messaggi">Scopri come vengono gestiti i messaggi</a></dialog>
+    <dialog id="conversation-details" class="messages-dialog"><div class="dialog-heading"><h2>La conversazione</h2><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi informazioni"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><p>I messaggi sono consultabili dai due partecipanti. Gli altri studenti e docenti non possono leggerli.</p><p><strong>Crittografato durante il trasferimento e la conservazione.</strong> La connessione e l’archivio del servizio proteggono i contenuti. Non utilizza cifratura end-to-end: il gestore dell’infrastruttura e gli amministratori con i relativi permessi tecnici possono accedervi.</p><a href="privacy.html#messaggi">Scopri come vengono gestiti i messaggi</a></dialog>
     <dialog id="messages-settings" class="messages-dialog"><div class="dialog-heading"><h2>Impostazioni messaggi</h2><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi impostazioni messaggi"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><p>Le persone che hanno attivato Messaggi possono trovare il tuo nome, il ruolo e la foto scelta per questa sezione. Il tuo indirizzo email non compare nell’elenco.</p><p>Disattivando Messaggi non sarai più disponibile per nuove conversazioni o nuovi invii. I messaggi già scambiati rimangono conservati e disponibili all’altro partecipante.</p><button id="disable-messages" class="danger-button">Disattiva Messaggi</button><p id="settings-message-status" class="dialog-note" role="status"></p></dialog>
+<footer class="harzafi-footer messages-site-footer" id="footer">
+        <div class="harzafi-footer-inner">
+            <div class="harzafi-footer-main">
+                <div class="harzafi-footer-brand">
+                    <a href="index.html" aria-label="Harzafi FSL — Home"><img src="IMMAGINI/LOGO%20HARZAFI%20NERO.webp" alt="Harzafi FSL"></a>
+                    <h2>Il tuo percorso, <span>in un unico posto.</span></h2>
+                </div>
+                <div class="harzafi-footer-profile">
+                    <img class="harzafi-footer-avatar" src="IMMAGINI/ADAM%20HARZAFI.webp" alt="Adam Harzafi" width="64" height="64" loading="lazy" decoding="async">
+                    <p class="harzafi-footer-eyebrow">Progetto personale</p>
+                    <h3>Harzafi Adam</h3>
+                    <p class="harzafi-footer-school"><span>Classe 4AI</span><span>Anno scolastico 2026/2027</span></p>
+                    <ul class="harzafi-footer-socials" aria-label="Social Harzafi">
+                        <li><a href="https://www.instagram.com/adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="IMMAGINI/SOCIAL-INSTAGRAM.svg" alt=""></a></li>
+                        <li><a href="https://www.snapchat.com/@adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="Snapchat"><img src="IMMAGINI/SOCIAL-SNAPCHAT.svg" alt=""></a></li>
+                        <li><a href="https://it.linkedin.com/in/adamharzafi" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><img src="IMMAGINI/SOCIAL-LINKEDIN.svg" alt=""></a></li>
+                        <li><a href="https://github.com/AdamHarzafi" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><img src="IMMAGINI/SOCIAL-GITHUB.svg" alt=""></a></li>
+                        <li><a href="https://t.me/AdamHarzafi" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><img src="IMMAGINI/SOCIAL-TELEGRAM.svg" alt=""></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="harzafi-footer-bottom">
+                <p>© 2026 Harzafi FSL. Tutti i diritti riservati.</p>
+<nav class="harzafi-footer-links" aria-label="Informazioni legali">
+                    <a href="accessibilita.html">Accessibilità</a>
+                    <a href="privacy-account.html">Il tuo account</a>
+                    <a href="privacy.html">Norme sulla privacy</a>
+                    <a href="termini.html">Termini</a>
+                    <a href="supporto.html">Supporto</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check-compat.js"></script>
@@ -69,6 +120,6 @@
     <script defer src="account-settings-model.js"></script>
     <script defer src="account-preferences.js"></script>
     <script defer src="messages-store.js?v=20261110-v1"></script>
-    <script defer src="messages.js?v=20261110-v1"></script>
+    <script defer src="messages.js?v=20261110-glass-v2"></script>
 </body>
 </html>
