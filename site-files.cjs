@@ -3,7 +3,7 @@ const path = require('node:path');
 const publicPages = new Set([
     'index.html', 'login.html', 'dashboard.html', 'privacy.html',
     'privacy-account.html', 'accessibilita.html', 'supporto.html',
-    'termini.html', 'reset-password.html', '404.html', 'impostazioni.html'
+    'termini.html', 'reset-password.html', '404.html', 'impostazioni.html', 'messaggi.html'
 ]);
 const assetDirectories = ['IMMAGINI', 'fonts', 'src'];
 const developmentFiles = new Set(['server.js', 'build-site.js']);
