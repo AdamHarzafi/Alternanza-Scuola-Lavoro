@@ -168,73 +168,217 @@ service cloud.firestore {
       allow create, update: if messagingAuthorized() && request.auth.uid == uid && validMessagingProfile();
       allow delete: if false;
     }
+    function messagingMember(conversationId) {
+      return messagingAuthorized()
+        && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.members;
+    }
+    match /messaging_preferences/{uid}/conversations/{conversationId} {
+      allow get, list: if isRealUser() && request.auth.uid == uid;
+      allow create, update: if messagingMember(conversationId) && request.auth.uid == uid
+        && request.resource.data.keys().hasAll(['updatedAt'])
+        && request.resource.data.keys().hasOnly(['muted', 'background', 'readAt', 'updatedAt'])
+        && request.resource.data.updatedAt == request.time
+        && (!request.resource.data.keys().hasAny(['muted']) || request.resource.data.muted is bool)
+        && (!request.resource.data.keys().hasAny(['background']) || request.resource.data.background in ['default', 'paper', 'sky', 'mint', 'rose'])
+        && (!request.resource.data.keys().hasAny(['readAt']) || (request.resource.data.readAt is timestamp && request.resource.data.readAt <= request.time));
+      allow delete: if isRealUser() && request.auth.uid == uid;
+    }
+    // Short grants prove immutable conversation membership; Storage rechecks the live role document.
+    match /media_access/{uid}/conversations/{conversationId} {
+      allow get, list, delete: if isRealUser() && request.auth.uid == uid;
+      allow create, update: if messagingMember(conversationId) && messagingUser() && request.auth.uid == uid
+        && request.resource.data.keys().hasAll(['uid', 'conversationId', 'role', 'updatedAt', 'expiresAt'])
+        && request.resource.data.keys().hasOnly(['uid', 'conversationId', 'role', 'updatedAt', 'expiresAt'])
+        && request.resource.data.uid == uid && request.resource.data.conversationId == conversationId
+        && ((request.resource.data.role == 'docente' && isTeacher()) || (request.resource.data.role == 'studente' && isLinkedStudent()))
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.expiresAt is timestamp
+        && request.resource.data.expiresAt >= request.time
+        && request.resource.data.expiresAt <= request.time + duration.value(5, 'm');
+    }
     match /conversations/{conversationId} {
-      function member() {
-        return messagingAuthorized()
-          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.members;
+      function member() { return messagingMember(conversationId); }
+      function writableConversation() {
+        let c = get(/databases/$(database)/documents/conversations/$(conversationId)).data;
+        return messagingUser() && (c.get('kind', 'direct') == 'group'
+          || (messagingEnabled(c.members[0]) && messagingEnabled(c.members[1])));
       }
-      function bothEnabled() {
-        let members = get(/databases/$(database)/documents/conversations/$(conversationId)).data.members;
-        return messagingUser() && messagingEnabled(members[0]) && messagingEnabled(members[1]);
+      function validMemberAt(members, index) {
+        return members.size() <= index || (members[index] is string && members[index].matches('^[A-Za-z0-9_-]{1,128}$'));
+      }
+      function validMembers(m) {
+        return m is list && m.size() >= 2 && m.size() <= 30 && m.toSet().size() == m.size()
+          && validMemberAt(m, 0) && validMemberAt(m, 1) && validMemberAt(m, 2) && validMemberAt(m, 3) && validMemberAt(m, 4)
+          && validMemberAt(m, 5) && validMemberAt(m, 6) && validMemberAt(m, 7) && validMemberAt(m, 8) && validMemberAt(m, 9)
+          && validMemberAt(m, 10) && validMemberAt(m, 11) && validMemberAt(m, 12) && validMemberAt(m, 13) && validMemberAt(m, 14)
+          && validMemberAt(m, 15) && validMemberAt(m, 16) && validMemberAt(m, 17) && validMemberAt(m, 18) && validMemberAt(m, 19)
+          && validMemberAt(m, 20) && validMemberAt(m, 21) && validMemberAt(m, 22) && validMemberAt(m, 23) && validMemberAt(m, 24)
+          && validMemberAt(m, 25) && validMemberAt(m, 26) && validMemberAt(m, 27) && validMemberAt(m, 28) && validMemberAt(m, 29);
+      }
+      function validConversation() {
+        let d = request.resource.data;
+        return d.keys().hasAll(['members', 'createdBy', 'createdAt', 'updatedAt', 'lastText', 'lastSender', 'lastMessageId'])
+          && d.keys().hasOnly(['members', 'createdBy', 'createdAt', 'updatedAt', 'lastText', 'lastSender', 'lastMessageId', 'lastAt', 'kind', 'title'])
+          && validMembers(d.members) && request.auth.uid in d.members
+          && d.createdBy == request.auth.uid && d.createdAt == request.time && d.updatedAt == request.time
+          && (!d.keys().hasAny(['lastAt']) || d.lastAt == request.time)
+          && d.lastText == '' && d.lastSender == '' && d.lastMessageId == ''
+          && ((d.get('kind', 'direct') == 'direct' && d.members.size() == 2
+              && conversationId == d.members[0] + '~' + d.members[1]
+              && !d.keys().hasAny(['title']) && messagingEnabled(d.members[0]) && messagingEnabled(d.members[1]))
+            || (d.get('kind', 'direct') == 'group' && d.title is string && d.title.size() <= 320));
       }
       allow get: if messagingAuthorized()
         && (!exists(/databases/$(database)/documents/conversations/$(conversationId)) || request.auth.uid in resource.data.members);
       allow list: if messagingAuthorized() && request.auth.uid in resource.data.members && request.query.limit <= 100;
-      allow create: if messagingUser()
-        && request.resource.data.keys().hasAll(['members', 'createdBy', 'createdAt', 'updatedAt', 'lastText', 'lastSender', 'lastMessageId'])
-        && request.resource.data.keys().hasOnly(['members', 'createdBy', 'createdAt', 'updatedAt', 'lastText', 'lastSender', 'lastMessageId'])
-        && request.resource.data.members is list && request.resource.data.members.size() == 2
-        && request.resource.data.members[0] is string && request.resource.data.members[1] is string
-        && request.resource.data.members[0] != request.resource.data.members[1]
-        && request.auth.uid in request.resource.data.members
-        && conversationId == request.resource.data.members[0] + '~' + request.resource.data.members[1]
-        && messagingEnabled(request.resource.data.members[0]) && messagingEnabled(request.resource.data.members[1])
-        && request.resource.data.createdBy == request.auth.uid
-        && request.resource.data.createdAt == request.time && request.resource.data.updatedAt == request.time
-        && request.resource.data.lastText == '' && request.resource.data.lastSender == '' && request.resource.data.lastMessageId == '';
+      allow create: if messagingUser() && validConversation();
+      function messagePreview(m) {
+        return m.text.size() > 0 ? m.text : m.get('type', 'text') == 'image' ? 'Foto'
+          : m.get('type', 'text') == 'audio' ? 'Messaggio vocale' : m.get('type', 'text') == 'video' ? 'Video' : 'File';
+      }
       function validChatUpdate() {
         let d = request.resource.data;
         let m = getAfter(/databases/$(database)/documents/conversations/$(conversationId)/messages/$(d.lastMessageId)).data;
-        return d.diff(resource.data).affectedKeys().hasOnly(['lastText', 'lastSender', 'lastMessageId', 'updatedAt'])
-          && d.lastMessageId is string && d.lastMessageId.size() > 0 && d.lastMessageId.size() <= 100
-          && d.lastMessageId != resource.data.lastMessageId
-          && d.lastText is string && d.lastText.size() > 0 && d.lastText.size() <= 8000 && d.lastText == m.text
-          && d.lastSender == request.auth.uid && d.updatedAt == request.time
-          && m.senderUid == request.auth.uid && m.createdAt == request.time;
+        let changed = d.diff(resource.data).affectedKeys();
+        return d.lastMessageId is string && d.lastMessageId.size() > 0 && d.lastMessageId.size() <= 100
+          && d.lastText is string && d.lastText.size() > 0 && d.lastText.size() <= 8000 && d.lastText == messagePreview(m)
+          && m.senderUid == request.auth.uid
+          && ((changed.hasOnly(['lastText', 'lastSender', 'lastMessageId', 'updatedAt', 'lastAt'])
+              && d.lastMessageId != resource.data.lastMessageId && d.lastSender == request.auth.uid
+              && d.updatedAt == request.time && m.createdAt == request.time
+              && (!changed.hasAny(['lastAt']) || d.lastAt == request.time))
+            || (changed.hasOnly(['lastText', 'lastAt']) && d.lastMessageId == resource.data.lastMessageId
+              && m.editedAt == request.time && (!changed.hasAny(['lastAt']) || d.lastAt == m.createdAt)));
       }
-      allow update: if member() && bothEnabled() && validChatUpdate();
+      allow update: if member() && writableConversation() && validChatUpdate();
       allow delete: if false;
+      function validMediaType(kind, mime, size) {
+        return size is int && size > 0
+          && ((kind == 'image' && size <= 5 * 1024 * 1024 && mime in ['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+            || (kind == 'audio' && size <= 8 * 1024 * 1024 && mime in ['audio/webm', 'audio/ogg', 'audio/mp4', 'audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/aac'])
+            || (kind == 'video' && size <= 20 * 1024 * 1024 && mime in ['video/mp4', 'video/webm', 'video/quicktime'])
+            || (kind == 'file' && size <= 10 * 1024 * 1024 && mime in ['application/pdf', 'text/plain', 'text/csv', 'application/zip', 'application/x-zip-compressed', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/rtf', 'application/octet-stream']));
+      }
+      match /uploads/{uploadId} {
+        function uploadOwner() { return resource.data.ownerUid == request.auth.uid; }
+        function uploaded() { return get(/databases/$(database)/documents/conversations/$(conversationId)/uploads/$(uploadId)).data; }
+        allow get: if member() && (!exists(/databases/$(database)/documents/conversations/$(conversationId)/uploads/$(uploadId)) || uploadOwner() || resource.data.complete == true);
+        allow list: if member() && (uploadOwner() || resource.data.complete == true);
+        allow create: if member() && writableConversation()
+          && uploadId.size() > 0 && uploadId.size() <= 100
+          && request.resource.data.keys().hasAll(['ownerUid', 'kind', 'name', 'mime', 'size', 'totalChunks', 'complete', 'createdAt', 'updatedAt'])
+          && request.resource.data.keys().hasOnly(['ownerUid', 'kind', 'name', 'mime', 'size', 'totalChunks', 'complete', 'createdAt', 'updatedAt'])
+          && request.resource.data.ownerUid == request.auth.uid
+          && validMediaType(request.resource.data.kind, request.resource.data.mime, request.resource.data.size)
+          && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 720
+          && request.resource.data.name.matches('^[^/\\\\\\x00-\\x1f\\x7f]+$')
+          && request.resource.data.totalChunks is int && request.resource.data.totalChunks > 0 && request.resource.data.totalChunks <= 80
+          && request.resource.data.totalChunks == math.ceil(request.resource.data.size / 262144.0)
+          && request.resource.data.complete == false && request.resource.data.createdAt == request.time && request.resource.data.updatedAt == request.time;
+        allow update: if member() && writableConversation() && uploadOwner() && resource.data.complete == false
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['complete', 'updatedAt'])
+          && request.resource.data.complete == true && request.resource.data.updatedAt == request.time;
+        allow delete: if false;
+        match /chunks/{chunkId} {
+          allow get, list: if member() && (uploaded().ownerUid == request.auth.uid || uploaded().complete == true);
+          allow create: if member() && writableConversation() && uploaded().ownerUid == request.auth.uid && uploaded().complete == false
+            && request.resource.data.keys().hasAll(['index', 'data']) && request.resource.data.keys().hasOnly(['index', 'data'])
+            && request.resource.data.index is int && request.resource.data.index >= 0 && request.resource.data.index < uploaded().totalChunks
+            && chunkId == string(request.resource.data.index)
+            && request.resource.data.data is string && request.resource.data.data.size() > 0 && request.resource.data.data.size() <= 349528
+            && request.resource.data.data.size() % 4 == 0 && request.resource.data.data.matches('^[A-Za-z0-9+/]+={0,2}$');
+          allow update, delete: if false;
+        }
+      }
       match /messages/{messageId} {
         allow read: if member();
+        function validText(value, required) {
+          return value is string && value.size() <= 8000 && (!required || (value.size() > 0 && value.matches('(?s).*[^\\s].*')));
+        }
+        function validOptionAt(options, index) {
+          return options.size() <= index || (options[index] is string && options[index].size() > 0 && options[index].size() <= 480 && options[index].matches('(?s).*[^\\s].*'));
+        }
+        function validPoll(d) {
+          return d.poll is map && d.poll.keys().hasAll(['question', 'options', 'votes'])
+            && d.poll.keys().hasOnly(['question', 'options', 'votes']) && d.poll.question == d.text
+            && d.poll.options is list && d.poll.options.size() >= 2 && d.poll.options.size() <= 6
+            && d.poll.options.toSet().size() == d.poll.options.size()
+            && validOptionAt(d.poll.options, 0) && validOptionAt(d.poll.options, 1) && validOptionAt(d.poll.options, 2)
+            && validOptionAt(d.poll.options, 3) && validOptionAt(d.poll.options, 4) && validOptionAt(d.poll.options, 5)
+            && d.poll.votes is map && d.poll.votes.size() == 0;
+        }
+        function validAttachment(d) {
+          let a = d.attachment;
+          let parts = a.path.split('/');
+          let upload = get(/databases/$(database)/documents/conversations/$(conversationId)/uploads/$(messageId)).data;
+          return a is map && a.keys().hasAll(['path', 'name', 'mime', 'size'])
+            && a.keys().hasOnly(['path', 'name', 'mime', 'size', 'duration', 'backend']) && a.get('backend', 'firestore') == 'firestore'
+            && a.path is string && a.path.size() <= 600 && parts.size() == 4
+            && parts[0] == 'message_media' && parts[1] == conversationId && parts[2] == messageId
+            && parts[3].matches('^[A-Za-z0-9_.-]{1,180}$')
+            && a.name is string && a.name.size() > 0 && a.name.size() <= 720 && a.name.matches('^[^/\\\\\\x00-\\x1f\\x7f]+$')
+            && a.size is int && a.size > 0
+            && (!a.keys().hasAny(['duration']) || ((d.type == 'audio' || d.type == 'video') && a.duration is number && a.duration >= 0 && a.duration <= 600))
+            && validMediaType(d.type, a.mime, a.size)
+            && upload.complete == true && upload.ownerUid == request.auth.uid && upload.kind == d.type
+            && upload.name == a.name && upload.mime == a.mime && upload.size == a.size;
+        }
         function validMessage() {
           let d = request.resource.data;
+          let type = d.get('type', 'text');
           return d.keys().hasAll(['senderUid', 'text', 'replyTo', 'reactions', 'createdAt'])
-            && d.keys().hasOnly(['senderUid', 'text', 'replyTo', 'reactions', 'createdAt'])
+            && d.keys().hasOnly(['senderUid', 'text', 'replyTo', 'reactions', 'createdAt', 'type', 'attachment', 'poll'])
             && messageId.size() <= 100 && d.senderUid == request.auth.uid
-            && d.text is string && d.text.size() > 0 && d.text.size() <= 8000 && d.text.matches('(?s).*[^\\s].*')
+            && validText(d.text, type == 'text' || type == 'poll')
             && d.createdAt == request.time && d.reactions is map && d.reactions.size() == 0
             && d.replyTo is string && d.replyTo.size() <= 100
-            && (d.replyTo == '' || exists(/databases/$(database)/documents/conversations/$(conversationId)/messages/$(d.replyTo)));
+            && (d.replyTo == '' || exists(/databases/$(database)/documents/conversations/$(conversationId)/messages/$(d.replyTo)))
+            && ((type == 'text' && !d.keys().hasAny(['attachment', 'poll']))
+              || (type == 'poll' && !d.keys().hasAny(['attachment']) && validPoll(d))
+              || (type in ['image', 'audio', 'video', 'file'] && !d.keys().hasAny(['poll']) && validAttachment(d)));
         }
-        allow create: if member() && bothEnabled() && validMessage();
-        allow update: if member() && bothEnabled()
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
-          && request.resource.data.reactions is map
-          && request.resource.data.reactions.keys().hasOnly(get(/databases/$(database)/documents/conversations/$(conversationId)).data.members)
-          && request.resource.data.reactions.diff(resource.data.reactions).affectedKeys().hasOnly([request.auth.uid])
-          && (!request.resource.data.reactions.keys().hasAny([request.auth.uid])
-            || request.resource.data.reactions[request.auth.uid] in ['❤️', '👍', '👎', '😂', '‼️', '❓']);
+        function validReaction() {
+          return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
+            && request.resource.data.reactions is map
+            && request.resource.data.reactions.keys().hasOnly(get(/databases/$(database)/documents/conversations/$(conversationId)).data.members)
+            && request.resource.data.reactions.diff(resource.data.reactions).affectedKeys().hasOnly([request.auth.uid])
+            && (!request.resource.data.reactions.keys().hasAny([request.auth.uid]) || request.resource.data.reactions[request.auth.uid] in ['❤️', '👍', '👎', '😂', '‼️', '❓']);
+        }
+        function validEdit() {
+          return resource.data.senderUid == request.auth.uid && resource.data.get('type', 'text') != 'poll'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt'])
+            && request.resource.data.text != resource.data.text && validText(request.resource.data.text, true)
+            && request.resource.data.editedAt == request.time;
+        }
+        function validVote() {
+          let d = request.resource.data;
+          return resource.data.get('type', 'text') == 'poll'
+            && d.diff(resource.data).affectedKeys().hasOnly(['poll'])
+            && d.poll.diff(resource.data.poll).affectedKeys().hasOnly(['votes'])
+            && d.poll.votes is map && d.poll.votes.keys().hasOnly(get(/databases/$(database)/documents/conversations/$(conversationId)).data.members)
+            && d.poll.votes.diff(resource.data.poll.votes).affectedKeys().hasOnly([request.auth.uid])
+            && (!d.poll.votes.keys().hasAny([request.auth.uid]) || (d.poll.votes[request.auth.uid] is int && d.poll.votes[request.auth.uid] >= 0 && d.poll.votes[request.auth.uid] < d.poll.options.size()));
+        }
+        function validTranscript() {
+          let d = request.resource.data;
+          return resource.data.senderUid == request.auth.uid && resource.data.get('type', 'text') == 'audio'
+            && d.diff(resource.data).affectedKeys().hasOnly(['transcript', 'transcribedAt'])
+            && d.transcript is string && d.transcript.size() > 0 && d.transcript.size() <= 12000
+            && d.transcribedAt == request.time;
+        }
+        allow create: if member() && writableConversation() && validMessage();
+        allow update: if member() && writableConversation() && (validReaction() || validEdit() || validVote() || validTranscript());
         allow delete: if false;
       }
       match /states/{uid} {
         allow read: if member();
-        allow create, update: if member() && bothEnabled() && request.auth.uid == uid
+        allow create, update: if member() && request.auth.uid == uid
           && request.resource.data.keys().hasAll(['updatedAt'])
           && request.resource.data.keys().hasOnly(['isTyping', 'readAt', 'updatedAt'])
           && request.resource.data.updatedAt == request.time
           && (!request.resource.data.keys().hasAny(['isTyping']) || request.resource.data.isTyping is bool)
-          && (!request.resource.data.keys().hasAny(['readAt'])
-            || (request.resource.data.readAt is timestamp && request.resource.data.readAt <= request.time));
+          && (!request.resource.data.keys().hasAny(['readAt']) || (request.resource.data.readAt is timestamp && request.resource.data.readAt <= request.time))
+          && (!request.resource.data.get('isTyping', false) || writableConversation());
         allow delete: if false;
       }
     }
