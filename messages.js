@@ -132,7 +132,7 @@
         $('gate-spinner').hidden = !loading; $('messages-enable').hidden = !enable; $('messages-retry').hidden = !retry;
     }
     function clearChat(writeTyping = true) {
-        media?.destroy();recording?.cancel();recording=null;resetAttachment();
+        media?.cancelActivity?.();recording?.cancel();recording=null;resetAttachment();
         if (activeId) drafts.set(activeId, { text:input.value, replyTo });
         if (writeTyping) stopTyping();
         ++chatVersion; chatStops.splice(0).forEach(stop => stop());
@@ -144,7 +144,8 @@
         $('connection-status').hidden = true; $('new-messages-indicator').hidden = true; input.value = ''; resizeInput(); closeDialogs();
         pending = new Map(); sending = false; olderBusy = false; oldest = null; stateError = false;
     }
-    function clear() {
+    function clear(preservePush=false) {
+        if(user)window.HarzafiMessagePush?.clear(!preservePush);
         ++transitionRequest; for (const element of [...motions.keys()]) cancelMotion(element);
         clearChat(); globalStops.splice(0).forEach(stop => stop()); contacts.clear(); conversations = []; store = user = identity = null;
         inboxStops.forEach(stop=>stop());inboxStops.clear();inboxStates.clear();preferences.clear();clearInterval(inboxTimer);media?.destroy();
@@ -229,9 +230,10 @@
     }
     function start() {
         const current = version;
+        window.HarzafiMessagePush?.start(user);
         $('messages-gate').hidden = true; app.hidden = false;
         motion(app, 'conversation', true, {duration:360});
-        globalStops.push(store.settings(snapshot=>{if(current!==version)return;preferences=new Map(snapshot.docs.map(d=>[d.id,d.data()]));renderConversations();if(activeId)applyPreferences();},()=>{}));
+        globalStops.push(store.settings(snapshot=>{if(current!==version)return;preferences=new Map(snapshot.docs.map(d=>[d.id,d.data()]));for(const [id,value] of preferences)if(typeof value.muted==='boolean')window.HarzafiMessagePush?.preferences(id,value.muted).catch(()=>{});renderConversations();if(activeId)applyPreferences();},()=>{}));
         $('conversation-status').textContent = 'Caricamento delle conversazioni…';
         globalStops.push(store.contacts(snapshot => {
             if (current !== version) return;
@@ -460,11 +462,51 @@
             const observer=new IntersectionObserver(entries=>{if(!entries.some(e=>e.isIntersecting))return;observer.disconnect();load().then(url=>{if(current===chatVersion&&element.isConnected)element.src=url;}).catch(()=>{if(current===chatVersion)element.replaceWith(node('span','media-error','Allegato non disponibile. Riapri la conversazione per riprovare.'));});},{root:scroll,rootMargin:'250px'});observer.observe(element);chatStops.push(()=>observer.disconnect());
             if(message.type==='image')element.addEventListener('click',async()=>{try{const url=await load();if(current!==chatVersion)return;const dialog=$('media-viewer');$('media-viewer-image').src=url;openDialog(dialog);}catch(_){status('Non è stato possibile aprire la foto.',true);}});
         } else if(message.type==='audio') {
-            const panel=node('div','message-audio'),audio=node('audio');audio.controls=true;audio.preload='none';panel.append(audio);
-            const start=node('button','audio-load','Carica audio');start.type='button';start.addEventListener('click',async()=>{start.disabled=true;try{const url=await load();if(current!==chatVersion)return;audio.src=url;start.remove();}catch(_){start.disabled=false;start.textContent='Riprova a caricare';}});panel.append(start);
+            const panel=node('div','message-audio'),audio=node('audio');audio.controls=true;audio.preload='auto';panel.append(audio);
+            const audioStatus=node('span','audio-status','Preparo il vocale…');audioStatus.setAttribute('role','status');panel.append(audioStatus);
+            async function prepareAudio(){
+                try {
+                    const url=await load();
+                    if(current!==chatVersion||!audio.isConnected)return;
+                    audio.src=url;audio.load();audioStatus.remove();
+                } catch (_) {
+                    if(current!==chatVersion)return;
+                    audioStatus.textContent='Caricamento non riuscito. ';
+                    const retry=node('button','audio-load','Riprova');retry.type='button';
+                    retry.addEventListener('click',()=>{retry.remove();audioStatus.textContent='Preparo il vocale…';prepareAudio();});audioStatus.append(retry);
+                }
+            }
+            const audioObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){audioObserver.disconnect();prepareAudio();}},{root:scroll,rootMargin:'500px'});
+            audioObserver.observe(panel);chatStops.push(()=>audioObserver.disconnect());
             const details=node('details','message-transcript');details.append(node('summary','','Trascrizione automatica'));
             const copy=node('p','',message.transcript || 'La trascrizione viene elaborata su questo dispositivo e può contenere errori. Al primo utilizzo scarica il modello di riconoscimento vocale (circa 75 MB).');details.append(copy);
-            if(!message.transcript){const transcribe=node('button','transcribe-audio','Trascrivi sul dispositivo');transcribe.type='button';transcribe.addEventListener('click',async()=>{transcribe.disabled=true;copy.textContent='Preparo il riconoscimento vocale…';try{const url=await load(),text=await media.transcribe(url,value=>{if(current===chatVersion)copy.textContent=value?'Scarico il modello… '+Math.round(value)+'%':'Elaborazione sul dispositivo…';});if(current!==chatVersion)return;copy.textContent=text||'Non è stato riconosciuto un testo.';if(text&&message.senderUid===user.uid)await writer.saveTranscript(activeId,message.id,text);transcribe.remove();}catch(_){if(current===chatVersion){copy.textContent='Trascrizione non disponibile. Riprova con una connessione attiva e un browser aggiornato.';transcribe.disabled=false;}}});details.append(transcribe);}panel.append(details);bubble.append(panel);
+            if (!message.transcript) {
+                const transcribe=node('button','transcribe-audio','Trascrivi sul dispositivo');
+                transcribe.type='button';
+                transcribe.addEventListener('click',async()=>{
+                    transcribe.disabled=true;
+                    copy.textContent='Preparo il riconoscimento vocale in italiano…';
+                    try {
+                        const url=await load();
+                        const text=await media.transcribe(url,value=>{
+                            if(current===chatVersion)copy.textContent=value?'Scarico il modello… '+Math.round(value)+'%':'Elaborazione sul dispositivo…';
+                        });
+                        if(current!==chatVersion)return;
+                        copy.textContent=text||'Non è stato riconosciuto un testo. Verifica che la voce sia udibile.';
+                        transcribe.remove();
+                        if(text&&message.senderUid===user.uid){
+                            try { await writer.saveTranscript(activeId,message.id,text); }
+                            catch (_) { if(current===chatVersion)copy.append(node('small','',' Trascrizione disponibile su questo dispositivo. La sincronizzazione non è riuscita.')); }
+                        }
+                    } catch(error) {
+                        if(current!==chatVersion)return;
+                        copy.textContent=error.code==='transcription-busy'?'Un’altra trascrizione è in corso. Attendi che termini e riprova.':error.code==='audio-too-long'?'Puoi trascrivere audio della durata massima di 5 minuti.':'Trascrizione non disponibile. Controlla la connessione per scaricare il modello e riprova.';
+                        transcribe.disabled=false;
+                    }
+                });
+                details.append(transcribe);
+            }
+            panel.append(details);bubble.append(panel);
         } else {
             const button=node('button','message-document');button.type='button';button.append(node('span','document-icon','▤'));const copy=node('span');copy.append(node('strong','',attachment.name),node('small','',formatSize(attachment.size)+' · Scarica file'));button.append(copy);button.addEventListener('click',async()=>{button.disabled=true;try{const url=await load();if(current!==chatVersion)return;const a=node('a');a.href=url;a.download=attachment.name;a.click();}catch(_){if(current===chatVersion)status('Il file non è disponibile. Riprova.',true);}finally{button.disabled=false;}});bubble.append(button);
         }
@@ -481,12 +523,24 @@
     $('conversation-details').addEventListener('close',()=>{$('conversation-members').replaceChildren();});
     $('conversation-info').addEventListener('click',details);$('conversation-encryption').addEventListener('click',details);
     $('attach-message').addEventListener('click',()=>openDialog($('composer-menu')));
-    $('enable-push').addEventListener('click',async()=>{const current=version;try{const result=await window.HarzafiMessageNotifications.enable();if(current===version)$('push-status').textContent=result==='granted'?'Notifiche attive mentre il sito rimane aperto, anche in un’altra scheda. La consegna a sito chiuso richiede un servizio push ancora da configurare.':result==='unsupported'?'Questo browser non supporta le notifiche.':'Notifiche non consentite. Puoi modificare i permessi nelle impostazioni del browser.';}catch(_){if(current===version)$('push-status').textContent='Le notifiche non sono disponibili su questo dispositivo.';}});
+    $('enable-push').addEventListener('click', async () => {
+        const current=version, push=window.HarzafiMessagePush;
+        $('enable-push').disabled=true;
+        try {
+            const result=await (push?.available()?push.enable():window.HarzafiMessageNotifications.enable());
+            if(current!==version)return;
+            $('push-status').textContent=result==='granted'
+                ? (push?.enabled()?'Notifiche attive su questo dispositivo, anche quando il sito è chiuso.':'Notifiche attive mentre il sito rimane aperto.')
+                : result==='unsupported'?'Per ricevere notifiche su iPhone o iPad, aggiungi il sito alla schermata Home e aprilo da lì. Negli altri browser verifica il supporto alle notifiche.':'Notifiche non consentite. Puoi modificare i permessi nelle impostazioni del browser.';
+        } catch (_) {
+            if(current===version)$('push-status').textContent='Non è stato possibile attivare le notifiche. Controlla la connessione e riprova.';
+        } finally { if(current===version)$('enable-push').disabled=false; }
+    });
     for(const [id,accept]of [['choose-media','image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime'],['choose-file','.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip'],['choose-audio','audio/*']])$(id).addEventListener('click',()=>{const picker=$('message-attachment-input');picker.accept=accept;picker.value='';picker.click();dismiss($('composer-menu'));});
     function resetAttachment(){preparedAttachment=null;attachmentId='';if(localPreview)URL.revokeObjectURL(localPreview);localPreview='';$('attachment-preview').replaceChildren();$('voice-preview').removeAttribute('src');}
     function previewAttachment(prepared){$('attachment-preview').replaceChildren();const box=node('div','attachment-preview');box.append(node('strong','',prepared.name),node('small','',formatSize(prepared.size)));if(prepared.type==='image'){localPreview=URL.createObjectURL(prepared.file);const img=node('img');img.alt='Anteprima allegato';img.src=localPreview;box.prepend(img);}$('attachment-preview').append(box);}
     $('message-attachment-input').addEventListener('change',async event=>{const file=event.target.files[0];if(!file||!activeId)return;const current=chatVersion;resetAttachment();$('attachment-status').textContent='Preparo l’allegato…';$('send-attachment').disabled=true;$('attachment-caption').value='';openDialog($('attachment-dialog'));try{const prepared=await media.prepare(file);if(current!==chatVersion)return;preparedAttachment=prepared;previewAttachment(prepared);$('attachment-status').textContent='Foto ottimizzate · Audio fino a 8 MB · Video fino a 20 MB · File fino a 10 MB.';$('send-attachment').disabled=false;}catch(_){if(current===chatVersion)$('attachment-status').textContent='Formato non supportato o file troppo grande. Scegli un altro allegato.';}});
-    async function sendAttachment(voice=false){if(!preparedAttachment||!activeId||sending)return;const current=chatVersion,writer=store,cid=activeId,session=version,reply=replyTo,caption=voice?'':$('attachment-caption').value,button=$(voice?'send-recording':'send-attachment'),notice=$(voice?'voice-status':'attachment-status');attachmentId ||= writer.newMessageId(cid);sending=true;button.disabled=true;connected();try{const attachment=await media.upload(cid,attachmentId,preparedAttachment,value=>{if(current===chatVersion)notice.textContent='Caricamento… '+Math.round(value)+'%';},writer);if(session!==version)return;await writer.sendMedia(cid,attachmentId,attachment,caption,reply);if(current!==chatVersion)return;resetAttachment();replyTo='';reveal($('reply-preview'),false);await dismiss($(voice?'voice-dialog':'attachment-dialog'));bottom();}catch(_){if(current===chatVersion)notice.textContent='Invio non riuscito. L’allegato rimane qui: riprova quando torni online.';}finally{if(current===chatVersion){sending=false;button.disabled=false;connected();}}}
+    async function sendAttachment(voice=false){if(!preparedAttachment||!activeId||sending)return;const current=chatVersion,writer=store,cid=activeId,session=version,reply=replyTo,caption=voice?'':$('attachment-caption').value,members=conversation()?.members.slice() || [],sender=user,button=$(voice?'send-recording':'send-attachment'),notice=$(voice?'voice-status':'attachment-status');attachmentId ||= writer.newMessageId(cid);sending=true;button.disabled=true;connected();try{const attachment=await media.upload(cid,attachmentId,preparedAttachment,value=>{if(current===chatVersion)notice.textContent='Caricamento… '+Math.round(value)+'%';},writer);if(session!==version)return;await writer.sendMedia(cid,attachmentId,attachment,caption,reply);window.HarzafiMessagePush?.sent(cid,attachmentId,members,sender).catch(()=>{});if(current!==chatVersion)return;resetAttachment();replyTo='';reveal($('reply-preview'),false);await dismiss($(voice?'voice-dialog':'attachment-dialog'));bottom();}catch(_){if(current===chatVersion)notice.textContent='Invio non riuscito. L’allegato rimane qui: riprova quando torni online.';}finally{if(current===chatVersion){sending=false;button.disabled=false;connected();}}}
     $('send-attachment').addEventListener('click',()=>sendAttachment());$('send-recording').addEventListener('click',()=>sendAttachment(true));
     $('attachment-dialog').addEventListener('close',()=>{if(!sending)resetAttachment();});
     async function stopRecording(){if(!recording)return;const controller=recording;recording=null;const current=chatVersion;$('stop-recording').disabled=true;try{const result=await controller.stop();if(current!==chatVersion)return;preparedAttachment=result;localPreview=URL.createObjectURL(result.file);$('voice-preview').src=localPreview;$('voice-preview').hidden=false;$('send-recording').hidden=false;$('stop-recording').hidden=true;$('voice-status').textContent='Ascolta il vocale prima di inviarlo.';}catch(_){if(current===chatVersion)$('voice-status').textContent='Non è stato possibile preparare la registrazione.';}}
@@ -494,7 +548,7 @@
     $('stop-recording').addEventListener('click',stopRecording);$('voice-dialog').addEventListener('close',()=>{recording?.cancel();recording=null;if(!sending)resetAttachment();});
     $('new-poll').addEventListener('click',async()=>{const current=chatVersion;await dismiss($('composer-menu'));if(current!==chatVersion)return;$('poll-form').reset();$('poll-status').textContent='';while($('poll-options').children.length>2)$('poll-options').lastChild.remove();openDialog($('poll-dialog'));});
     $('add-poll-option').addEventListener('click',()=>{const count=$('poll-options').children.length;if(count>=6)return;const label=node('label','','Opzione '+(count+1)),option=node('input','poll-option-input');option.maxLength=100;option.required=true;label.append(option);$('poll-options').append(label);});
-    $('poll-form').addEventListener('submit',async event=>{event.preventDefault();const current=chatVersion;$('send-poll').disabled=true;try{await store.sendPoll(activeId,store.newMessageId(activeId),$('poll-question').value,[...document.querySelectorAll('.poll-option-input')].map(e=>e.value),replyTo);if(current!==chatVersion)return;replyTo='';reveal($('reply-preview'),false);await dismiss($('poll-dialog'));bottom();}catch(_){if(current===chatVersion)$('poll-status').textContent='Controlla la domanda e le opzioni: devono essere diverse. Poi riprova.';}finally{$('send-poll').disabled=false;}});
+    $('poll-form').addEventListener('submit',async event=>{event.preventDefault();const current=chatVersion,cid=activeId,mid=store.newMessageId(activeId),members=conversation()?.members.slice() || [],sender=user;$('send-poll').disabled=true;try{await store.sendPoll(cid,mid,$('poll-question').value,[...document.querySelectorAll('.poll-option-input')].map(e=>e.value),replyTo);window.HarzafiMessagePush?.sent(cid,mid,members,sender).catch(()=>{});if(current!==chatVersion)return;replyTo='';reveal($('reply-preview'),false);await dismiss($('poll-dialog'));bottom();}catch(_){if(current===chatVersion)$('poll-status').textContent='Controlla la domanda e le opzioni: devono essere diverse. Poi riprova.';}finally{$('send-poll').disabled=false;}});
     async function jumpTo(id) {
         const current = chatVersion; let attempts = 0;
         while (!rowNodes.has(id) && hasMore && attempts++ < 8 && current === chatVersion) await loadOlder();
@@ -563,9 +617,11 @@
     }
     async function deliver(message) {
         const current = chatVersion, id = activeId, writer = store, session = version, queue = outbox.get(activeId);
+        const members=conversation(id)?.members.slice() || [],sender=user;
         message.pending = true; message.failed = false; messages.set(message.id, message); renderMessages({animate:true}); bottom();
         try {
             await writer.send(id, message.id, message.text, message.replyTo);
+            window.HarzafiMessagePush?.sent(id,message.id,members,sender).catch(()=>{});
             if (session !== version) return;
             queue?.delete(message.id);
             if (current !== chatVersion) return;
@@ -609,7 +665,7 @@
         for (const [element, show] of visibilityTargets) element.hidden = !show;
         for (const dialog of dialogs) if (dialog.open && dialogDesired.get(dialog) === false) dialog.close();
     });
-    window.addEventListener('pagehide', () => { ++version; clear(); });
+    window.addEventListener('pagehide', () => { ++version; clear(true); });
     window.addEventListener('pageshow', event => { if (event.persisted) load(auth.currentUser); });
     if (!auth || !db || !model) gate('Messaggi', unavailable, { retry:true });
     else auth.onAuthStateChanged(load, () => { ++version; clear(); gate('Messaggi', unavailable, { retry:true }); });

@@ -262,3 +262,22 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
 .message-sender{display:block;font-size:11px;margin-bottom:5px;opacity:.75}.audio-load,.transcribe-audio{background:rgba(255,255,255,.25);color:inherit;border-radius:20px;padding:9px 13px;font-size:12px;min-height:36px}.message-document{border:0;background:none;text-align:left;font:inherit}.message-image{min-height:80px}.media-error{display:block;font-size:12px;max-width:230px}
 .voice-timer{text-align:center;font-size:38px;font-weight:600;font-variant-numeric:tabular-nums;margin:24px 0}#voice-preview{width:100%;margin:18px 0}.media-viewer{width:min(1100px,95vw);max-width:95vw;background:#fff}.media-viewer img{display:block;max-width:100%;max-height:80dvh;object-fit:contain;margin:auto}.media-viewer .circle-button{margin:0 0 12px auto;display:flex}.composer-row textarea{min-width:0}.composer-row{gap:5px}
 #message-actions .message-context-preview.own{background:#008aff;color:#fff;align-self:flex-end}.action-menu .action-row{flex-direction:row-reverse;justify-content:flex-end;gap:18px}.action-menu .action-row svg{width:23px;height:23px;flex:none}.onboarding-note{font-size:12px!important;line-height:1.5!important;margin:0 0 18px!important;text-align:left}.message-text{white-space:pre-wrap}.message-context-preview{white-space:pre-wrap}
+
+@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-regular.woff") format("woff");font-weight:400;font-display:swap}
+@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-medium.woff") format("woff");font-weight:500;font-display:swap}
+@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-semibold.woff") format("woff");font-weight:600 900;font-display:swap}
+@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-bold.woff") format("woff");font-weight:700 900;font-display:swap}
+@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-bold.woff") format("woff");font-weight:600 900;font-display:swap}
+body.messages-page{--font-text:"Messages SF Text",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;--font-display:"Messages SF Display",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+.messages-page .sidebar-header{justify-content:space-between;align-items:center;gap:8px;padding:16px 4px 18px}
+.messages-page .sidebar-title-row{display:flex;align-items:center;gap:6px;min-width:0}
+.messages-page .sidebar-title-row h1{margin:0;font-size:27px;line-height:44px;letter-spacing:-.025em;white-space:nowrap}
+.messages-page .sidebar-title-row .circle-button{width:30px;height:44px;background:transparent}
+.messages-page .sidebar-actions{gap:5px;flex:none}.messages-page .sidebar-actions .circle-button{width:34px;height:34px}
+.messages-page .sidebar-actions svg{width:20px;height:20px}
+.messages-page .onboarding-logo{object-fit:contain;background:transparent;border-radius:0;box-shadow:none}
+.onboarding-privacy-icon{display:block;object-fit:contain;align-self:center;margin:6px auto 12px}
+.audio-status{font-size:12px;line-height:1.4;opacity:.8}
+.reaction-picker button,.reaction-chip{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important}
+@media(min-width:1000px){.messages-gate:has(#messages-onboarding:not([hidden])){max-width:860px;height:auto;min-height:700px}#messages-onboarding{max-width:780px}.onboarding-features,.onboarding-title{width:540px;align-self:center}.onboarding-title>span{white-space:nowrap}.onboarding-note{white-space:normal!important;text-align:center!important}#messages-enable{max-width:540px;align-self:center}}
+@media(max-width:359px){.messages-page .sidebar-title-row h1{font-size:25px}.messages-page .sidebar-header{gap:4px}.messages-page .sidebar-actions{gap:2px}}
