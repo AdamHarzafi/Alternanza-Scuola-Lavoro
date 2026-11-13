@@ -1,0 +1,16 @@
+{
+  "name": "harzafi-messages-push",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-11-13",
+  "account_id": "52bc898c3039afd4fc776dec6e5570e7",
+  "vars": {
+    "VAPID_PUBLIC_KEY": "BCBlEFTrkqT1THhqzu9mLacgVrTq9ZSa-6IEl-4ZC9Emudt2NDpgno44h8CeBftw7owDbDVm0B-6P6SSD8EyJ6Q"
+  },
+  "d1_databases": [
+    {
+      "binding": "PUSH_DB",
+      "database_name": "harzafi-messages-push",
+      "database_id": "55442f86-76bf-46aa-b222-7337b7d4a24d"
+    }
+  ]
+}
