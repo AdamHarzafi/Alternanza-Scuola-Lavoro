@@ -281,3 +281,4 @@ body.messages-page{--font-text:"Messages SF Text",-apple-system,BlinkMacSystemFo
 .reaction-picker button,.reaction-chip{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important}
 @media(min-width:1000px){.messages-gate:has(#messages-onboarding:not([hidden])){max-width:860px;height:auto;min-height:700px}#messages-onboarding{max-width:780px}.onboarding-features,.onboarding-title{width:540px;align-self:center}.onboarding-title>span{white-space:nowrap}.onboarding-note{white-space:normal!important;text-align:center!important}#messages-enable{max-width:540px;align-self:center}}
 @media(max-width:359px){.messages-page .sidebar-title-row h1{font-size:25px}.messages-page .sidebar-header{gap:4px}.messages-page .sidebar-actions{gap:2px}}
+@media(min-width:701px){.messages-gate .onboarding-title{margin:0 0 28px}}

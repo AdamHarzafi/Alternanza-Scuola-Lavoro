@@ -132,6 +132,9 @@
         $('gate-spinner').hidden = !loading; $('messages-enable').hidden = !enable; $('messages-retry').hidden = !retry;
     }
     function clearChat(writeTyping = true) {
+        for(const player of $('message-list').querySelectorAll('audio,video')){
+            player.pause();player.removeAttribute('src');player.load();
+        }
         media?.cancelActivity?.();recording?.cancel();recording=null;resetAttachment();
         if (activeId) drafts.set(activeId, { text:input.value, replyTo });
         if (writeTyping) stopTyping();
