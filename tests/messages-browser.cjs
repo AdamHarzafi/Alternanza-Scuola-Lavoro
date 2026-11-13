@@ -21,6 +21,8 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),{createSer
   assert.equal(await page.locator('.messages-site-nav').isVisible(),true,'The public navigation remains available in Messages');
   assert.equal(await page.locator('.messages-site-footer').isVisible(),true,'Messages includes the site footer');
   assert.equal(await page.locator('#messages-back').isVisible(),true,'Messages has a visible route back beside its title');
+  const headerAlignment=await page.evaluate(()=>{const title=document.querySelector('.sidebar-title-row').getBoundingClientRect(),buttons=document.querySelector('.sidebar-actions').getBoundingClientRect();return Math.abs((title.top+title.height/2)-(buttons.top+buttons.height/2));});
+  assert.ok(headerAlignment<2,'The Messages title and controls share the same horizontal axis');
   await page.locator('#conversation-encryption').click();await page.locator('#conversation-details').waitFor({state:'visible'});
   assert.match(await page.locator('#conversation-details').innerText(),/non[\s\S]*end.to.end/i,'The encryption detail must not imply end-to-end encryption');
   await page.getByRole('button',{name:'Chiudi informazioni',exact:true}).click();await page.locator('#conversation-details').waitFor({state:'hidden'});
@@ -92,6 +94,10 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),{createSer
   const pdf=Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Count 0/Kids[]>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF');
   await attachFile(page,{name:'Documento di prova.pdf',mimeType:'application/pdf',buffer:pdf},'file');await page.locator('.message-document').waitFor();assert.match(await page.locator('.message-document').last().textContent(),/Documento di prova\.pdf/);
   await page.locator('#voice-message').click();await page.locator('#voice-dialog').waitFor({state:'visible'});await page.locator('#stop-recording').click();await page.locator('#send-recording').waitFor({state:'visible'});await page.locator('#send-recording').click();await page.locator('#voice-dialog').waitFor({state:'hidden'});await page.locator('.message-audio').waitFor();
+  await page.waitForFunction(()=>document.querySelector('.message-audio audio').readyState>=2);
+  assert.equal(await page.getByRole('button',{name:'Carica audio',exact:true}).count(),0,'Audio is prepared without a separate loading action');
+  await page.locator('.message-audio audio').evaluate(async audio=>{await audio.play();});
+  await page.waitForFunction(()=>document.querySelector('.message-audio audio').currentTime>0);
   await page.locator('.message-transcript summary').last().click();await page.locator('.transcribe-audio').last().click();await page.getByText('Questo è un messaggio vocale di prova.',{exact:true}).waitFor();
   await page.locator('#conversation-info').click();await page.locator('#mute-conversation').check();await page.locator('#chat-background').selectOption('sky');await page.waitForFunction(()=>__messagesFixture.preferences.get('a').get('a~b').muted===true&&document.querySelector('#active-conversation').dataset.background==='sky');await page.getByRole('button',{name:'Chiudi informazioni',exact:true}).click();await page.locator('#conversation-details').waitFor({state:'hidden'});
   await context.setOffline(true);assert.equal(await page.locator('#send-message').isDisabled(),true);await context.setOffline(false);

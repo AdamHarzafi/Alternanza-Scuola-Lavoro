@@ -23,8 +23,14 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),{createSer
   console.log('PASS: real media compression, exact 700 KB binary upload/download across three chunks, progress, SVG rejection and account-session URL revocation.');
   if(process.env.TEST_ASR==='1'){
    page.on('console',message=>{if(message.type()==='error')console.log('ASR browser:',message.text().slice(0,160));});
-   const text=await page.evaluate(async()=>{const response=await fetch('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/jfk.wav');if(!response.ok)throw new Error('sample-'+response.status);return HarzafiMessageMedia.transcribe(await response.blob());});
+   const text=await page.evaluate(async()=>{const response=await fetch('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/jfk.wav');if(!response.ok)throw new Error('sample-'+response.status);return HarzafiMessageMedia.transcribe(await response.blob(),undefined,{language:'english'});});
    assert.match(text,/country|Americans|ask/i);console.log('PASS: actual on-device Whisper transcription of the public JFK sample:',text.slice(0,160));
+   if(process.env.TEST_ITALIAN_AUDIO){
+    const sample=require('node:fs').readFileSync(process.env.TEST_ITALIAN_AUDIO).toString('base64');
+    const italian=await page.evaluate(async base64=>{const bytes=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));return HarzafiMessageMedia.transcribe(new Blob([bytes],{type:'audio/wav'}));},sample);
+    assert.match(italian,/messaggio/i);assert.match(italian,/lezione|domani/i);
+    console.log('PASS: actual Italian voice transcription:',italian);
+   }
   }
  }finally{await browser.close();await new Promise(r=>server.close(r));}
 })().catch(error=>{console.error(error);process.exitCode=1;});
