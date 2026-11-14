@@ -266,15 +266,6 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
 .voice-timer{text-align:center;font-size:38px;font-weight:600;font-variant-numeric:tabular-nums;margin:24px 0}#voice-preview{width:100%;margin:18px 0}.media-viewer{width:min(1100px,95vw);max-width:95vw;background:#fff}.media-viewer img{display:block;max-width:100%;max-height:80dvh;object-fit:contain;margin:auto}.media-viewer .circle-button{margin:0 0 12px auto;display:flex}.composer-row textarea{min-width:0}.composer-row{gap:5px}
 #message-actions .message-context-preview.own{background:#008aff;color:#fff;align-self:flex-end}.action-menu .action-row{flex-direction:row-reverse;justify-content:flex-end;gap:18px}.action-menu .action-row svg{width:23px;height:23px;flex:none}.onboarding-note{font-size:12px!important;line-height:1.5!important;margin:0 0 18px!important;text-align:left}.message-text{white-space:pre-wrap}.message-context-preview{white-space:pre-wrap}
 
-@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-regular.woff") format("woff");font-weight:400;font-display:swap}
-@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-medium.woff") format("woff");font-weight:500;font-display:swap}
-@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-semibold.woff") format("woff");font-weight:600;font-style:normal;font-display:swap}
-@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-bold.woff") format("woff");font-weight:700;font-style:normal;font-display:swap}
-@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-regular.woff") format("woff");font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-medium.woff") format("woff");font-weight:500;font-style:normal;font-display:swap}
-@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-semibold.woff") format("woff");font-weight:600;font-style:normal;font-display:swap}
-@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-bold.woff") format("woff");font-weight:700;font-style:normal;font-display:swap}
-body.messages-page{--font-text:-apple-system,BlinkMacSystemFont,"Messages SF Text","Helvetica Neue",Arial,sans-serif;--font-display:-apple-system,BlinkMacSystemFont,"Messages SF Display","Helvetica Neue",Arial,sans-serif}
 .messages-page .sidebar-header{justify-content:space-between;align-items:center;gap:8px;padding:16px 4px 18px}
 .messages-page .sidebar-title-row{display:flex;align-items:center;gap:6px;min-width:0}
 .messages-page .sidebar-title-row h1{margin:0;font-size:27px;line-height:44px;letter-spacing:-.025em;white-space:nowrap}
@@ -365,9 +356,9 @@ body.messages-page{--font-text:-apple-system,BlinkMacSystemFont,"Messages SF Tex
 #delete-group-dialog h2{margin:0 0 18px;font-size:26px;line-height:1.15;letter-spacing:-.025em}
 #delete-group{width:100%;margin:14px 0 0;min-height:44px}
 
-/* System San Francisco on Apple devices; exact local Text/Display faces elsewhere. */
+/* Typography uses the same SF Pro Text/Display families supplied by fonts.css across the site. */
 .messages-page{font-synthesis:none;font-kerning:normal;letter-spacing:normal}
-.messages-page :is(.dialog-heading h2,#delete-group-title,#leave-group-title){font-family:var(--font-text)!important;font-size:20px;font-weight:600;line-height:1.2;letter-spacing:-.015em}
+.messages-page :is(.dialog-heading h2,#delete-group-title,#leave-group-title){font-size:20px;font-weight:600;line-height:1.2;letter-spacing:-.015em}
 .messages-page .sidebar-title-row h1{font-size:32px;font-weight:700;letter-spacing:-.025em}
 .messages-page .conversation-name-glass strong{font-weight:600;letter-spacing:normal}
 .messages-page :is(.conversation-item-heading strong,.contact-row strong){font-weight:600;letter-spacing:normal}
