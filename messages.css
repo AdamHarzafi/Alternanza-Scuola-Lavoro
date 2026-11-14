@@ -328,3 +328,12 @@ body.messages-page{--font-text:"Messages SF Text",-apple-system,BlinkMacSystemFo
 .messages-page .composer-row>textarea{min-height:44px;height:44px;padding:10.8px 0;border-radius:0;outline:none!important;outline-offset:0!important;box-shadow:none}
 .messages-page .composer-row>:is(.attachment-button,.voice-button,.send-message){display:inline-flex;align-items:center;justify-content:center;align-self:flex-end;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;margin:0;padding:0;border-radius:50%;line-height:1}
 .messages-page .composer-row>:is(.attachment-button,.voice-button,.send-message)>svg{display:block;width:22px;height:22px;flex:none}
+
+/* Desktop: a rounded rectangle remains distinct against the selected chat background. */
+@media(min-width:701px){
+    .messages-page .active-conversation[data-background=sky]{--message-canvas:#eef7ff}
+    .messages-page .active-conversation[data-background=rose]{--message-canvas:#f5f1fa}
+    .messages-page .active-conversation[data-background=mint]{--message-canvas:#f1f7f1}
+    .messages-page .active-conversation>.message-composer{background:var(--message-canvas)}
+    .messages-page .composer-row{border-radius:16px;background:rgba(250,250,252,.96)}
+}
