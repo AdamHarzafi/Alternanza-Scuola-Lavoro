@@ -321,3 +321,10 @@ body.messages-page{--font-text:"Messages SF Text",-apple-system,BlinkMacSystemFo
 #attach-message[aria-expanded=true] svg{transform:rotate(45deg)}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){#composer-menu{background:rgba(246,246,249,.97)}}
 @media(prefers-reduced-motion:reduce){#attach-message svg{transition:none}}
+
+/* A single rounded focus surface; the text area must not inherit the site's rectangular ring. */
+.messages-page .composer-row{align-items:flex-end;min-height:54px;padding:4px 5px;gap:5px}
+.messages-page .composer-row:focus-within{border-color:#a1a1a6;box-shadow:0 0 0 1px rgba(29,29,31,.12)}
+.messages-page .composer-row>textarea{min-height:44px;height:44px;padding:10.8px 0;border-radius:0;outline:none!important;outline-offset:0!important;box-shadow:none}
+.messages-page .composer-row>:is(.attachment-button,.voice-button,.send-message){display:inline-flex;align-items:center;justify-content:center;align-self:flex-end;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;margin:0;padding:0;border-radius:50%;line-height:1}
+.messages-page .composer-row>:is(.attachment-button,.voice-button,.send-message)>svg{display:block;width:22px;height:22px;flex:none}
