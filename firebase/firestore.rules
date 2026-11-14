@@ -152,6 +152,12 @@ service cloud.firestore {
     function messagingUser() {
       return messagingAuthorized() && messagingEnabled(request.auth.uid);
     }
+    // Display-only identity markers are managed by the platform, never by client profiles.
+    match /messaging_badges/{uid} {
+      allow get: if messagingUser() && resource.data.enabled == true;
+      allow list: if messagingUser() && resource.data.enabled == true && request.query.limit <= 20;
+      allow write: if false;
+    }
     match /messaging_profiles/{uid} {
       function validMessagingProfile() {
         let d = request.resource.data;
@@ -219,15 +225,16 @@ service cloud.firestore {
       function validConversation() {
         let d = request.resource.data;
         return d.keys().hasAll(['members', 'createdBy', 'createdAt', 'updatedAt', 'lastText', 'lastSender', 'lastMessageId'])
-          && d.keys().hasOnly(['members', 'createdBy', 'createdAt', 'updatedAt', 'lastText', 'lastSender', 'lastMessageId', 'lastAt', 'kind', 'title'])
+          && d.keys().hasOnly(['members', 'createdBy', 'ownerUid', 'createdAt', 'updatedAt', 'lastText', 'lastSender', 'lastMessageId', 'lastAt', 'kind', 'title'])
           && validMembers(d.members) && request.auth.uid in d.members
           && d.createdBy == request.auth.uid && d.createdAt == request.time && d.updatedAt == request.time
           && (!d.keys().hasAny(['lastAt']) || d.lastAt == request.time)
           && d.lastText == '' && d.lastSender == '' && d.lastMessageId == ''
           && ((d.get('kind', 'direct') == 'direct' && d.members.size() == 2
               && conversationId == d.members[0] + '~' + d.members[1]
-              && !d.keys().hasAny(['title']) && messagingEnabled(d.members[0]) && messagingEnabled(d.members[1]))
-            || (d.get('kind', 'direct') == 'group' && d.title is string && d.title.size() <= 320));
+              && !d.keys().hasAny(['title', 'ownerUid']) && messagingEnabled(d.members[0]) && messagingEnabled(d.members[1]))
+            || (d.get('kind', 'direct') == 'group' && d.title is string && d.title.size() <= 320
+              && d.get('ownerUid', d.createdBy) == request.auth.uid));
       }
       allow get: if messagingAuthorized()
         && (!exists(/databases/$(database)/documents/conversations/$(conversationId)) || request.auth.uid in resource.data.members);
@@ -254,14 +261,25 @@ service cloud.firestore {
       function validGroupLifecycle() {
         let d = request.resource.data;
         return messagingUser() && resource.data.get('kind', 'direct') == 'group'
-          && resource.data.createdBy == request.auth.uid && request.auth.uid in resource.data.members
+          && resource.data.get('ownerUid', resource.data.createdBy) == request.auth.uid && request.auth.uid in resource.data.members
           && d.keys().hasAll(['deletedAt', 'deletedBy', 'updatedAt'])
           && d.diff(resource.data).affectedKeys().hasOnly(['deletedAt', 'deletedBy', 'updatedAt'])
           && d.updatedAt == request.time
           && ((resource.data.get('deletedAt', null) == null && d.deletedAt == request.time && d.deletedBy == request.auth.uid)
             || (resource.data.get('deletedAt', null) is timestamp && d.deletedAt == null && d.deletedBy == ''));
       }
-      allow update: if validGroupLifecycle() || (member() && writableConversation() && validChatUpdate());
+      function validGroupExit() {
+        let d = request.resource.data;
+        let owner = resource.data.get('ownerUid', resource.data.createdBy);
+        let remaining = resource.data.members.removeAll([request.auth.uid]);
+        return member() && messagingUser() && resource.data.get('kind', 'direct') == 'group'
+          && remaining.size() >= 1 && d.members == remaining && d.updatedAt == request.time
+          && ((owner == request.auth.uid && d.ownerUid is string && d.ownerUid in remaining
+              && d.diff(resource.data).affectedKeys().hasOnly(['members', 'ownerUid', 'updatedAt']))
+            || (owner != request.auth.uid && d.get('ownerUid', d.createdBy) == owner
+              && d.diff(resource.data).affectedKeys().hasOnly(['members', 'updatedAt'])));
+      }
+      allow update: if validGroupLifecycle() || validGroupExit() || (member() && writableConversation() && validChatUpdate());
       allow delete: if false;
       function validMediaType(kind, mime, size) {
         return size is int && size > 0

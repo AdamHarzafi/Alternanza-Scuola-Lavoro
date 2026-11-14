@@ -156,6 +156,25 @@ const model = require('../messages-store.js');
   await writer.setGroupDeleted('group',false);count++;
   await yes(getDoc(doc(b,'conversations/group/messages/group-text')));
   await yes(setDoc(doc(b,'conversations/group/messages/restored'),text('b','Di nuovo disponibile.')));
+  // Verification markers cannot be obtained by changing a name or writing profile fields.
+  await env.withSecurityRulesDisabled(async context=>{await setDoc(doc(context.firestore(),'messaging_badges/c'),{enabled:true,kind:'administrator'});await setDoc(doc(context.firestore(),'messaging_badges/b'),{enabled:false,kind:'administrator'});});
+  await yes(getDoc(doc(a,'messaging_badges/c')));await no(getDoc(doc(guest,'messaging_badges/c')));await no(getDoc(doc(stranger,'messaging_badges/c')));await no(getDoc(doc(a,'messaging_badges/b')));
+  await yes(getDocs(query(collection(a,'messaging_badges'),where('enabled','==',true),limit(20))));await no(getDocs(collection(a,'messaging_badges')));
+  await no(setDoc(doc(a,'messaging_badges/a'),{enabled:true,kind:'administrator'}));await no(updateDoc(doc(a,'messaging_badges/c'),{enabled:false}));await no(deleteDoc(doc(a,'messaging_badges/c')));await no(updateDoc(doc(a,'messaging_profiles/a'),{verified:true}));
+  // Leaving changes only the actor's membership; the owner selects an existing successor.
+  const cid=await writer.createGroup(['b','c'],'Uscita verificata');count++;const cWriter=model.create(c,{uid:'c'},()=>serverTimestamp(),{Timestamp});
+  await writer.send(cid,'history','Una cronologia da proteggere.');count++;
+  await no(updateDoc(doc(b,'conversations',cid),{members:['a','b'],updatedAt:serverTimestamp()}));
+  await no(updateDoc(doc(b,'conversations',cid),{members:['a','c'],ownerUid:'b',updatedAt:serverTimestamp()}));
+  await no(updateDoc(doc(a,'conversations',cid),{members:['b','c'],ownerUid:'stranger',updatedAt:serverTimestamp()}));
+  await no(updateDoc(doc(a,'conversations',cid),{members:['b','c'],ownerUid:'b',createdBy:'b',updatedAt:serverTimestamp()}));
+  await peer.leaveGroup(cid);count++;await no(getDoc(doc(b,'conversations',cid)));await no(getDoc(doc(b,`conversations/${cid}/messages/history`)));await no(setDoc(doc(b,`conversations/${cid}/messages/after-leave`),text('b')));
+  await assert.rejects(()=>writer.leaveGroup(cid),{code:'group-successor-required'});count++;await assert.rejects(()=>writer.leaveGroup(cid,'b'),{code:'group-successor-required'});count++;
+  await writer.leaveGroup(cid,'c');count++;const transferred=(await getDoc(doc(c,'conversations',cid))).data();assert.deepEqual(transferred.members,['c']);assert.equal(transferred.ownerUid,'c');assert.equal(transferred.createdBy,'a');
+  await no(getDoc(doc(a,'conversations',cid)));await no(getDoc(doc(a,`conversations/${cid}/messages/history`)));await yes(getDoc(doc(c,`conversations/${cid}/messages/history`)));
+  await no(updateDoc(doc(c,'conversations',cid),{members:['a','c'],updatedAt:serverTimestamp()}));await cWriter.leaveGroup(cid);count++;await no(getDoc(doc(c,`conversations/${cid}/messages/history`)));
+  await cWriter.setGroupDeleted(cid,false);count++;await yes(getDoc(doc(c,`conversations/${cid}/messages/history`)));await no(getDoc(doc(a,`conversations/${cid}/messages/history`)));await no(getDoc(doc(b,`conversations/${cid}/messages/history`)));
+  await assert.rejects(()=>writer.leaveGroup('a~b'),{code:'group-member-required'});count++;
   await writer.disable();count++;assert.equal((await getDoc(doc(a,'media_access/a/conversations/a~b'))).exists(),false);
   await no(setDoc(doc(a,'conversations/a~b/uploads/disabled'),upload('a')));
   await no(setDoc(doc(b,'conversations/a~b/messages/disabled-peer'),text('b','Non inviare.')));
