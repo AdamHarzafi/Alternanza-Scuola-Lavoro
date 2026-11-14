@@ -34,7 +34,7 @@
     function verifiedBadge(uid) {
         if(!verifiedAccounts.has(uid))return null;
         const badge=node('span','verified-account');badge.setAttribute('role','img');badge.setAttribute('aria-label','Account ufficiale · Amministratore di Harzafi FSL');badge.title='Amministratore di Harzafi FSL';
-        const icon=node('img');icon.src='IMMAGINI/SPUNTA%20BLU.svg';icon.alt='';icon.width=icon.height=18;icon.decoding='async';icon.setAttribute('aria-hidden','true');badge.append(icon);return badge;
+        const icon=node('img');icon.src='IMMAGINI/SPUNTA%20BLU.webp';icon.alt='';icon.width=icon.height=18;icon.decoding='async';icon.setAttribute('aria-hidden','true');badge.append(icon);return badge;
     }
     function nameLabel(uid,text,tag='span') {
         const label=node(tag,'account-name-label');label.append(node('span','account-name-text',text));const badge=verifiedBadge(uid);if(badge)label.append(badge);return label;
