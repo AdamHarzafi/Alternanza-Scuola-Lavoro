@@ -375,7 +375,7 @@ body.messages-page{--font-text:-apple-system,BlinkMacSystemFont,"Messages SF Tex
 @media(max-width:700px){.messages-page .message-bubble{font-size:17px}.messages-page .messages-dialog p{font-size:16px}.messages-page .messages-dialog .dialog-note{font-size:13px}}
 .account-name-label{display:inline-flex;align-items:center;gap:5px;min-width:0;max-width:100%}.account-name-text{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .conversation-item-heading>.account-name-label{display:flex;flex:1;min-width:0;max-width:100%}.conversation-item-heading>.account-name-label>.account-name-text{white-space:nowrap}
-.verified-account{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;vertical-align:-3px;line-height:1;border-radius:50%}.verified-account svg{display:block;width:100%;height:100%}
+.verified-account{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;vertical-align:-3px;line-height:1;border-radius:50%}.verified-account img{display:block;width:100%;height:100%;object-fit:contain}
 .conversation-item[aria-current=true] .verified-account{background:#fff;box-shadow:0 0 0 1px #fff}
 .conversation-name-glass>.verified-account{width:17px;height:17px;margin-left:-3px}
 .message-sender.account-name-label{display:flex;justify-content:flex-start;font-weight:600}.message-sender .verified-account{width:14px;height:14px}

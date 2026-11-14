@@ -34,9 +34,7 @@
     function verifiedBadge(uid) {
         if(!verifiedAccounts.has(uid))return null;
         const badge=node('span','verified-account');badge.setAttribute('role','img');badge.setAttribute('aria-label','Account ufficiale · Amministratore di Harzafi FSL');badge.title='Amministratore di Harzafi FSL';
-        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');
-        const seal=document.createElementNS(svg.namespaceURI,'path');seal.setAttribute('d','m12 1.7 2.4 1.5 2.8.1 1.3 2.5 2.3 1.6-.2 2.8 1.1 2.6-1.6 2.3-.5 2.8-2.6 1.1-1.9 2.1-2.7-.5-2.7.5-1.9-2.1-2.6-1.1-.5-2.8-1.6-2.3 1.1-2.6-.2-2.8 2.3-1.6 1.3-2.5 2.8-.1Z');seal.setAttribute('fill','#008aff');
-        const tick=document.createElementNS(svg.namespaceURI,'path');tick.setAttribute('d','m7.5 12 3 3 6-6');tick.setAttribute('fill','none');tick.setAttribute('stroke','#fff');tick.setAttribute('stroke-width','2.2');tick.setAttribute('stroke-linecap','round');tick.setAttribute('stroke-linejoin','round');svg.append(seal,tick);badge.append(svg);return badge;
+        const icon=node('img');icon.src='IMMAGINI/SPUNTA%20BLU.svg';icon.alt='';icon.width=icon.height=18;icon.decoding='async';icon.setAttribute('aria-hidden','true');badge.append(icon);return badge;
     }
     function nameLabel(uid,text,tag='span') {
         const label=node(tag,'account-name-label');label.append(node('span','account-name-text',text));const badge=verifiedBadge(uid);if(badge)label.append(badge);return label;
