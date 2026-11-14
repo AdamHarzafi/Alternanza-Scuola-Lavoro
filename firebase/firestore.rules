@@ -170,7 +170,8 @@ service cloud.firestore {
     }
     function messagingMember(conversationId) {
       return messagingAuthorized()
-        && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.members;
+        && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.members
+        && get(/databases/$(database)/documents/conversations/$(conversationId)).data.get('deletedAt', null) == null;
     }
     match /messaging_preferences/{uid}/conversations/{conversationId} {
       allow get, list: if isRealUser() && request.auth.uid == uid;
@@ -250,7 +251,17 @@ service cloud.firestore {
             || (changed.hasOnly(['lastText', 'lastAt']) && d.lastMessageId == resource.data.lastMessageId
               && m.editedAt == request.time && (!changed.hasAny(['lastAt']) || d.lastAt == m.createdAt)));
       }
-      allow update: if member() && writableConversation() && validChatUpdate();
+      function validGroupLifecycle() {
+        let d = request.resource.data;
+        return messagingUser() && resource.data.get('kind', 'direct') == 'group'
+          && resource.data.createdBy == request.auth.uid && request.auth.uid in resource.data.members
+          && d.keys().hasAll(['deletedAt', 'deletedBy', 'updatedAt'])
+          && d.diff(resource.data).affectedKeys().hasOnly(['deletedAt', 'deletedBy', 'updatedAt'])
+          && d.updatedAt == request.time
+          && ((resource.data.get('deletedAt', null) == null && d.deletedAt == request.time && d.deletedBy == request.auth.uid)
+            || (resource.data.get('deletedAt', null) is timestamp && d.deletedAt == null && d.deletedBy == ''));
+      }
+      allow update: if validGroupLifecycle() || (member() && writableConversation() && validChatUpdate());
       allow delete: if false;
       function validMediaType(kind, mime, size) {
         return size is int && size > 0
