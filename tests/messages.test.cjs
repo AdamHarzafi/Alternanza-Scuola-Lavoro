@@ -18,3 +18,5 @@ test('Messaging clients require a real authenticated user', () => {
  assert.throws(()=>messages.create({},null,()=>null),{code:'account-unavailable'});
  assert.throws(()=>messages.create({},{uid:'anonymous',isAnonymous:true},()=>null),{code:'account-unavailable'});
 });
+
+test('Group management follows the current owner while keeping legacy creator records compatible',()=>{assert.equal(messages.groupOwner({createdBy:'original'}),'original');assert.equal(messages.groupOwner({createdBy:'original',ownerUid:'successor'}),'successor');assert.equal(messages.groupOwner(null),'');});

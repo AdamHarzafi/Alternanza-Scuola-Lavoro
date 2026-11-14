@@ -5,9 +5,10 @@ module.exports = function (options = {}) {
     const listeners = [], now = Date.now(), people = new Map([
         ['a',{name:'Giulia Rossi',role:'studente',photoData:'',enabled:!options.unenrolled}],
         ['b',{name:'Marco Bianchi',role:'studente',photoData:'',enabled:true}],
-        ['teacher',{name:'Claudia Verdi',role:'docente',photoData:'',enabled:true}]
+        ['teacher',{name:options.teacherName||'Claudia Verdi',role:'docente',photoData:'',enabled:true}]
     ]);
     const chats = new Map([['a~teacher',{members:['a','teacher'],createdBy:'a',updatedAt:ts(now-60000),lastText:'Perfetto, grazie professoressa!',lastSender:'a',lastMessageId:'m5'}]]);
+    const badges=new Map(options.badgeUid?[[options.badgeUid,{enabled:true,kind:'administrator'}]]:[]);
     const rows = new Map(), states = new Map(), preferences = new Map(), uploads = new Map(), authListeners = []; let messageCounter=100;
     states.set('a~teacher',new Map([['a',{readAt:ts(now-60000),isTyping:false,updatedAt:ts(now-60000)}],['teacher',{readAt:ts(now-120000),isTyping:false,updatedAt:ts(now-120000)}]]));
     const history = options.history ? Array.from({length:60},(_,i)=>({id:'old'+i,senderUid:i%2?'a':'teacher',text:'Messaggio precedente '+i,replyTo:'',reactions:{},createdAt:ts(now-86400000+(i*10000))})) : [];
@@ -19,6 +20,7 @@ module.exports = function (options = {}) {
         {id:'m5',senderUid:'a',text:'Perfetto, grazie professoressa!',replyTo:'m4',reactions:{},createdAt:ts(now-60000)}
     ].map(row=>[row.id,row])));
     function snapshot(type,id){
+        if(type==='badges')return {docs:[...badges].filter(([,v])=>v.enabled).map(([id,value])=>doc(id,value))};
         if(type==='contacts') return {docs:[...people].filter(([,v])=>v.enabled).map(([id,value])=>doc(id,value))};
         if(type==='chats') return {docs:[...chats].filter(([,c])=>c.members.includes(auth.currentUser.uid)).map(([id,value])=>doc(id,value)),metadata:{fromCache:false}};
         if(type==='states') return {docs:[...(states.get(id)||new Map())].map(([id,value])=>doc(id,value))};
@@ -38,7 +40,7 @@ module.exports = function (options = {}) {
     };}};}
     window.firebase={firestore,storage};window.HarzafiSession={auth};
     function touchChat(id,message){Object.assign(chats.get(id),{lastText:message.text||({image:'Foto',audio:'Messaggio vocale',video:'Video',file:'File'}[message.type])||message.poll?.question||'',lastSender:message.senderUid,lastMessageId:message.id,lastAt:message.createdAt,updatedAt:message.createdAt});emit('messages',id);emit('chats');}
-    const state=window.__messagesFixture={auth,people,chats,rows,states,preferences,uploads,listeners,sendCount:0,typed:[],failNextSend:false,failNextReaction:false,failNextEdit:false,failNextUpload:false,ts,doc,
+    const state=window.__messagesFixture={auth,people,chats,rows,states,preferences,uploads,listeners,badges,sendCount:0,typed:[],failNextSend:false,failNextReaction:false,failNextEdit:false,failNextUpload:false,ts,doc,
         async createUserProfile(){return {id:'profile-'+auth.currentUser.uid,role:'studente',data:{nome:people.get(auth.currentUser.uid).name}};},
         emit,peerText(text,conversationId='a~teacher',senderUid='teacher'){const id='incoming'+messageCounter++;const message={id,senderUid,text,replyTo:'',reactions:{},createdAt:ts(Date.now())};rows.get(conversationId).set(id,message);touchChat(conversationId,message);return id;},
         peerState(value,conversationId='a~teacher',senderUid='teacher'){if(!states.has(conversationId))states.set(conversationId,new Map());const map=states.get(conversationId);map.set(senderUid,{...map.get(senderUid),...value,updatedAt:value.updatedAt||ts(Date.now())});emit('states',conversationId);},
@@ -46,10 +48,11 @@ module.exports = function (options = {}) {
         create(db,user){const uid=user.uid;return {
             uid,now:()=>ts(Date.now()),profile:async()=>doc(uid,people.get(uid)?.enabled?people.get(uid):undefined),
             enroll:async value=>{people.set(uid,{...value,enabled:true});emit('contacts');},disable:async()=>{people.get(uid).enabled=false;emit('contacts');},
-            contacts:(receive,fail)=>listen('contacts','',receive,fail),conversations:(receive,fail)=>listen('chats','',receive,fail),
+            badges:(receive,fail)=>listen('badges','',receive,fail),contacts:(receive,fail)=>listen('contacts','',receive,fail),conversations:(receive,fail)=>listen('chats','',receive,fail),
             open:async other=>{const id=[uid,other].sort().join('~');if(!chats.has(id)){chats.set(id,{members:[uid,other],createdAt:ts(Date.now()),updatedAt:ts(Date.now()),lastText:'',lastSender:''});rows.set(id,new Map());emit('chats');}return id;},
-            createGroup:async(members,title)=>{const id='group-'+messageCounter++;chats.set(id,{kind:'group',title,members:[...new Set([uid,...members])],createdBy:uid,createdAt:ts(Date.now()),updatedAt:ts(Date.now()),lastText:'',lastSender:'',lastMessageId:''});rows.set(id,new Map());emit('chats');return id;},
-            setGroupDeleted:async(id,deleted)=>{const group=chats.get(id);if(!group||group.kind!=='group'||group.createdBy!==uid||!group.members.includes(uid))throw new Error('group-owner-required');if(state.failNextGroupDelete){state.failNextGroupDelete=false;throw new Error('network');}group.deletedAt=deleted?ts(Date.now()):null;group.deletedBy=deleted?uid:'';group.updatedAt=ts(Date.now());emit('chats');},
+            createGroup:async(members,title)=>{const id='group-'+messageCounter++;chats.set(id,{kind:'group',title,members:[...new Set([uid,...members])],ownerUid:uid,createdBy:uid,createdAt:ts(Date.now()),updatedAt:ts(Date.now()),lastText:'',lastSender:'',lastMessageId:''});rows.set(id,new Map());emit('chats');return id;},
+            setGroupDeleted:async(id,deleted)=>{const group=chats.get(id);if(!group||group.kind!=='group'||(group.ownerUid||group.createdBy)!==uid||!group.members.includes(uid))throw new Error('group-owner-required');if(state.failNextGroupDelete){state.failNextGroupDelete=false;throw new Error('network');}group.deletedAt=deleted?ts(Date.now()):null;group.deletedBy=deleted?uid:'';group.updatedAt=ts(Date.now());emit('chats');},
+            leaveGroup:async(id,nextOwner='')=>{const group=chats.get(id);if(!group||group.kind!=='group'||group.deletedAt||!group.members.includes(uid))throw Object.assign(new Error('group-member-required'),{code:'group-member-required'});if(state.failNextGroupExit){state.failNextGroupExit=false;throw new Error('network');}const remaining=group.members.filter(member=>member!==uid);if(!remaining.length){group.deletedAt=ts(Date.now());group.deletedBy=uid;}else{if((group.ownerUid||group.createdBy)===uid){if(!remaining.includes(nextOwner))throw Object.assign(new Error('group-successor-required'),{code:'group-successor-required'});group.ownerUid=nextOwner;}group.members=remaining;}group.updatedAt=ts(Date.now());emit('chats');},
             listen:(id,receive,fail)=>listen('messages',id,receive,fail),states:(id,receive,fail)=>listen('states',id,receive,fail),
             inboxState:(id,receive,fail)=>listen('states',id,receive,fail),
             settings:(receive,fail)=>listen('settings',uid,receive,fail),
