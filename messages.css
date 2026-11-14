@@ -265,10 +265,13 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
 
 @font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-regular.woff") format("woff");font-weight:400;font-display:swap}
 @font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-medium.woff") format("woff");font-weight:500;font-display:swap}
-@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-semibold.woff") format("woff");font-weight:600 900;font-display:swap}
-@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-bold.woff") format("woff");font-weight:700 900;font-display:swap}
-@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-bold.woff") format("woff");font-weight:600 900;font-display:swap}
-body.messages-page{--font-text:"Messages SF Text",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;--font-display:"Messages SF Display",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-semibold.woff") format("woff");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Messages SF Text";src:url("fonts/sf-pro-text-bold.woff") format("woff");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-regular.woff") format("woff");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-medium.woff") format("woff");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-semibold.woff") format("woff");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Messages SF Display";src:url("fonts/sf-pro-display-bold.woff") format("woff");font-weight:700;font-style:normal;font-display:swap}
+body.messages-page{--font-text:-apple-system,BlinkMacSystemFont,"Messages SF Text","Helvetica Neue",Arial,sans-serif;--font-display:-apple-system,BlinkMacSystemFont,"Messages SF Display","Helvetica Neue",Arial,sans-serif}
 .messages-page .sidebar-header{justify-content:space-between;align-items:center;gap:8px;padding:16px 4px 18px}
 .messages-page .sidebar-title-row{display:flex;align-items:center;gap:6px;min-width:0}
 .messages-page .sidebar-title-row h1{margin:0;font-size:27px;line-height:44px;letter-spacing:-.025em;white-space:nowrap}
@@ -358,3 +361,50 @@ body.messages-page{--font-text:"Messages SF Text",-apple-system,BlinkMacSystemFo
 .group-delete-actions button{min-height:44px;margin:0;padding:11px 18px;border:0;border-radius:999px;font-size:15px}.group-delete-actions .secondary-button{background:#f0f0f3;color:#1d1d1f}
 #delete-group-dialog h2{margin:0 0 18px;font-size:26px;line-height:1.15;letter-spacing:-.025em}
 #delete-group{width:100%;margin:14px 0 0;min-height:44px}
+
+/* System San Francisco on Apple devices; exact local Text/Display faces elsewhere. */
+.messages-page{font-synthesis:none;font-kerning:normal;letter-spacing:normal}
+.messages-page :is(.dialog-heading h2,#delete-group-title,#leave-group-title){font-family:var(--font-text)!important;font-size:20px;font-weight:600;line-height:1.2;letter-spacing:-.015em}
+.messages-page .sidebar-title-row h1{font-size:32px;font-weight:700;letter-spacing:-.025em}
+.messages-page .conversation-name-glass strong{font-weight:600;letter-spacing:normal}
+.messages-page :is(.conversation-item-heading strong,.contact-row strong){font-weight:600;letter-spacing:normal}
+.messages-page .message-bubble{font-size:16px;font-weight:400;line-height:1.4;letter-spacing:normal}
+.messages-page .messages-dialog p{font-size:15px;line-height:1.48;font-weight:400;letter-spacing:normal}
+.messages-page .messages-dialog .dialog-note{font-size:13px;line-height:1.45}
+.messages-page .messages-dialog :is(.primary-button,.danger-button,.secondary-button){font-size:16px;font-weight:500;letter-spacing:normal}
+@media(max-width:700px){.messages-page .message-bubble{font-size:17px}.messages-page .messages-dialog p{font-size:16px}.messages-page .messages-dialog .dialog-note{font-size:13px}}
+.account-name-label{display:inline-flex;align-items:center;gap:5px;min-width:0;max-width:100%}.account-name-text{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.conversation-item-heading>.account-name-label{display:flex;flex:1;min-width:0;max-width:100%}.conversation-item-heading>.account-name-label>.account-name-text{white-space:nowrap}
+.verified-account{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;vertical-align:-3px;line-height:1;border-radius:50%}.verified-account svg{display:block;width:100%;height:100%}
+.conversation-item[aria-current=true] .verified-account{background:#fff;box-shadow:0 0 0 1px #fff}
+.conversation-name-glass>.verified-account{width:17px;height:17px;margin-left:-3px}
+.message-sender.account-name-label{display:flex;justify-content:flex-start;font-weight:600}.message-sender .verified-account{width:14px;height:14px}
+.reply-quote .account-name-label{display:flex;justify-content:flex-start}
+#conversation-members>.account-name-label{display:flex;margin:10px 0}
+/* Quiet, static wallpapers cover the complete chat; the composer stays part of the same canvas. */
+.active-conversation,.wallpaper-default{--message-canvas:#fff;--message-wallpaper:linear-gradient(#fff,#fff)}
+.active-conversation[data-background=paper],.wallpaper-paper{--message-canvas:#f6f2ec;--message-wallpaper:radial-gradient(ellipse at 12% 10%,rgba(236,223,204,.6),transparent 60%),radial-gradient(ellipse at 90% 90%,rgba(236,229,220,.7),transparent 65%),linear-gradient(145deg,#fbf9f5,#f3eee6)}
+.active-conversation[data-background=sky],.wallpaper-sky{--message-canvas:#eff5fc;--message-wallpaper:radial-gradient(ellipse at 95% 0%,rgba(185,220,247,.65),transparent 60%),radial-gradient(ellipse at 0% 100%,rgba(217,216,247,.55),transparent 64%),linear-gradient(155deg,#f7fbff,#edf3fd)}
+.active-conversation[data-background=rose],.wallpaper-rose{--message-canvas:#f7f0f4;--message-wallpaper:radial-gradient(ellipse at 0% 0%,rgba(235,205,217,.6),transparent 62%),radial-gradient(ellipse at 95% 90%,rgba(223,215,246,.62),transparent 64%),linear-gradient(145deg,#fff9f4,#f4effb)}
+.active-conversation[data-background=mint],.wallpaper-mint{--message-canvas:#eef5f2;--message-wallpaper:radial-gradient(ellipse at 100% 0%,rgba(197,222,210,.64),transparent 60%),radial-gradient(ellipse at 10% 100%,rgba(200,224,234,.62),transparent 62%),linear-gradient(150deg,#f7faf7,#edf5f3)}
+.messages-page .active-conversation{background:var(--message-wallpaper)}
+.messages-page .active-conversation>.message-scroll,.messages-page .active-conversation>.message-composer{background:transparent}
+/* A masked tail needs no solid patch, so it stays clean over every wallpaper. */
+.messages-page .message-bubble::after{display:none}
+.messages-page .message-bubble::before{left:-7px;bottom:0;width:13px;height:16px;border-radius:0;background:inherit;clip-path:path('M13 0C13 6 9 12 0 15C5 17 10 16 13 13Z')}
+.messages-page .own .message-bubble::before{left:auto;right:-7px;transform:scaleX(-1)}
+.wallpaper-picker{min-width:0;padding:0;border:0;margin:18px 0 20px}.wallpaper-picker legend{padding:0;margin-bottom:12px;font-size:15px;font-weight:600;line-height:1.35}
+.wallpaper-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px}
+.messages-dialog .wallpaper-option{display:flex;flex-direction:column;position:relative;gap:7px;min-width:0;margin:0;cursor:pointer;text-align:center}
+.messages-dialog .wallpaper-option>input{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;padding:0;opacity:0;cursor:pointer}
+.wallpaper-swatch{display:block;position:relative;width:100%;height:72px;border:2px solid transparent;border-radius:14px;background:var(--message-wallpaper);box-shadow:inset 0 0 0 .5px rgba(60,60,67,.1)}
+.wallpaper-label{font-size:12px;font-weight:400;color:#6e6e73;line-height:1.2}
+.wallpaper-option>.wallpaper-swatch,.wallpaper-option>.wallpaper-label{pointer-events:none}
+.wallpaper-option input:checked+.wallpaper-swatch{border-color:#007aff;box-shadow:0 0 0 2px rgba(0,122,255,.1)}
+.wallpaper-option input:focus-visible+.wallpaper-swatch{outline:3px solid rgba(0,122,255,.6);outline-offset:3px}
+.wallpaper-option input:checked~.wallpaper-label{color:#0071e3;font-weight:600}
+.wallpaper-swatch>svg{position:absolute;right:5px;bottom:5px;width:19px;height:19px;opacity:0;fill:#007aff;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.wallpaper-option input:checked+.wallpaper-swatch>svg{opacity:1}
+.wallpaper-mini-bubble,.wallpaper-mini-bubble::after{position:absolute;display:block;content:'';height:10px;border-radius:6px}.wallpaper-mini-bubble{left:11px;top:16px;width:41px;background:rgba(255,255,255,.92);box-shadow:0 1px 3px rgba(0,0,0,.05)}.wallpaper-mini-bubble::after{left:17px;top:17px;width:33px;background:#48a1ff}
+#leave-group{width:100%;min-height:44px;margin-top:15px;background:#f0f0f3;color:#1d1d1f}
+#group-successor-field{margin-top:20px}

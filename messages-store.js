@@ -18,6 +18,7 @@
     };
     const millis = value => value?.toMillis?.() || (value instanceof Date ? value.getTime() : Number(value) || 0);
     const clean = value => typeof value === 'string' ? value.trim() : '';
+    const groupOwner = value => value?.ownerUid || value?.createdBy || '';
     const failure = code => Object.assign(new Error(code), { code });
     function messageText(value) {
         const text = clean(value).replace(/\r\n?/g, '\n');
@@ -103,6 +104,7 @@
                 existing.docs.forEach(document => batch.delete(document.ref)); await batch.commit(); grants.clear();
             },
             contacts: (receive, fail) => profiles.where('enabled', '==', true).limit(200).onSnapshot(receive, fail),
+            badges: (receive, fail) => db.collection('messaging_badges').where('enabled', '==', true).limit(20).onSnapshot(receive, fail),
             conversations: (receive, fail) => chats.where('members', 'array-contains', uid).limit(100).onSnapshot({ includeMetadataChanges:true }, receive, fail),
             settings: (receive, fail) => preferences.limit(100).onSnapshot(receive, fail),
             saveConversationSettings: (id, patch) => preferences.doc(id).set(preferencesPatch(patch), { merge:true }),
@@ -119,7 +121,7 @@
                 const members = [...new Set([uid, ...memberUids])].sort();
                 if (members.length < 2 || members.length > MAX_GROUP_MEMBERS || members.some(member => typeof member !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(member))) throw failure('invalid-members');
                 const name = clean(title); if (name.length > 80) throw failure('invalid-group-name');
-                const ref = chats.doc(); await ref.set({ kind:'group', title:name, members, createdBy:uid, createdAt:timestamp(), updatedAt:timestamp(), lastText:'', lastSender:'', lastMessageId:'' });
+                const ref = chats.doc(); await ref.set({ kind:'group', title:name, members, ownerUid:uid, createdBy:uid, createdAt:timestamp(), updatedAt:timestamp(), lastText:'', lastSender:'', lastMessageId:'' });
                 return ref.id;
             },
             async setGroupDeleted(id, deleted) {
@@ -127,9 +129,28 @@
                 const ref = chat(id);
                 await db.runTransaction(async transaction => {
                     const snapshot = await transaction.get(ref), value = snapshot.data();
-                    if (!snapshot.exists || value.kind !== 'group' || value.createdBy !== uid || !value.members?.includes(uid)) throw failure('group-owner-required');
+                    if (!snapshot.exists || value.kind !== 'group' || groupOwner(value) !== uid || !value.members?.includes(uid)) throw failure('group-owner-required');
                     if (!!value.deletedAt === deleted) return;
                     transaction.update(ref, { deletedAt:deleted ? timestamp() : null, deletedBy:deleted ? uid : '', updatedAt:timestamp() });
+                });
+            },
+            async leaveGroup(id, nextOwner = '') {
+                if (typeof id !== 'string' || !id || id.includes('/')) throw failure('invalid-group');
+                const ref = chat(id);
+                await db.runTransaction(async transaction => {
+                    const snapshot = await transaction.get(ref), value = snapshot.data();
+                    if (!snapshot.exists || value.kind !== 'group' || value.deletedAt || !value.members?.includes(uid)) throw failure('group-member-required');
+                    const remaining = value.members.filter(member => member !== uid);
+                    if (!remaining.length) {
+                        transaction.update(ref, { deletedAt:timestamp(), deletedBy:uid, updatedAt:timestamp() });
+                        return;
+                    }
+                    const patch = { members:remaining, updatedAt:timestamp() };
+                    if (groupOwner(value) === uid) {
+                        if (!remaining.includes(nextOwner)) throw failure('group-successor-required');
+                        patch.ownerUid = nextOwner;
+                    }
+                    transaction.update(ref, patch);
                 });
             },
             listen: (id, receive, fail, limit = 50) => chat(id).collection('messages').orderBy('createdAt', 'desc').limit(limit).onSnapshot({ includeMetadataChanges:true }, receive, fail),
@@ -263,5 +284,5 @@
             now: timestamp
         };
     }
-    return { create, REACTIONS, MAX_LENGTH, MAX_GROUP_MEMBERS, BACKGROUNDS, MEDIA_LIMITS, MEDIA_MIMES, RAW_CHUNK_BYTES, BASE64_CHUNK_CHARS, MAX_CHUNKS, millis, messageText, conversationId, mediaKind, attachmentValue, pollValue, preview };
+    return { create, groupOwner, REACTIONS, MAX_LENGTH, MAX_GROUP_MEMBERS, BACKGROUNDS, MEDIA_LIMITS, MEDIA_MIMES, RAW_CHUNK_BYTES, BASE64_CHUNK_CHARS, MAX_CHUNKS, millis, messageText, conversationId, mediaKind, attachmentValue, pollValue, preview };
 });

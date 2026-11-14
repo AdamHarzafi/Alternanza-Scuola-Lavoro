@@ -19,16 +19,28 @@
     let transitionRequest = 0;
     let preferences = new Map(), inboxStates = new Map(), inboxStops = new Map(), inboxTimer;
     let deletedGroups = [], groupToDelete = '', groupDeletionBusy = false;
+    let groupToLeave = '', groupExitBusy = false, verifiedAccounts = new Set();
     const restoringGroups = new Set();
     const notificationLast = new Map(); let inboxReady=false;
     let preparedAttachment, attachmentId = '', localPreview = '', recording;
     const media = window.HarzafiMessageMedia;
     const conversation = id => conversations.find(c => c.id === (id || activeId));
+    const groupOwner = value => model.groupOwner(value);
     const peers = id => (conversation(id)?.members || [user?.uid,recipientUid]).filter(uid => uid && uid !== user?.uid);
     const groupChat = id => conversation(id)?.kind === 'group';
     const chatName = c => c.kind === 'group' ? c.title || 'Conversazione di gruppo' : person(c.members.find(uid => uid !== user.uid)).name;
     const latestTime = c => Math.max(model.millis(c.lastAt),model.millis(c.updatedAt));
     const previewText = message => model.preview ? model.preview(message) : message.text || 'Allegato';
+    function verifiedBadge(uid) {
+        if(!verifiedAccounts.has(uid))return null;
+        const badge=node('span','verified-account');badge.setAttribute('role','img');badge.setAttribute('aria-label','Account ufficiale · Amministratore di Harzafi FSL');badge.title='Amministratore di Harzafi FSL';
+        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');
+        const seal=document.createElementNS(svg.namespaceURI,'path');seal.setAttribute('d','m12 1.7 2.4 1.5 2.8.1 1.3 2.5 2.3 1.6-.2 2.8 1.1 2.6-1.6 2.3-.5 2.8-2.6 1.1-1.9 2.1-2.7-.5-2.7.5-1.9-2.1-2.6-1.1-.5-2.8-1.6-2.3 1.1-2.6-.2-2.8 2.3-1.6 1.3-2.5 2.8-.1Z');seal.setAttribute('fill','#008aff');
+        const tick=document.createElementNS(svg.namespaceURI,'path');tick.setAttribute('d','m7.5 12 3 3 6-6');tick.setAttribute('fill','none');tick.setAttribute('stroke','#fff');tick.setAttribute('stroke-width','2.2');tick.setAttribute('stroke-linecap','round');tick.setAttribute('stroke-linejoin','round');svg.append(seal,tick);badge.append(svg);return badge;
+    }
+    function nameLabel(uid,text,tag='span') {
+        const label=node(tag,'account-name-label');label.append(node('span','account-name-text',text));const badge=verifiedBadge(uid);if(badge)label.append(badge);return label;
+    }
     function chatAvatar(target,c) {
         target.classList.toggle('group-avatar',c?.kind === 'group');
         if(c?.kind !== 'group') { avatar(target,person(c?.members.find(uid=>uid!==user.uid) || recipientUid));return; }
@@ -44,7 +56,8 @@
     }
     function applyPreferences() {
         const value=preferences.get(activeId) || {}; $('active-conversation').dataset.background=value.background || 'default';
-        $('mute-conversation').checked=value.muted===true;$('chat-background').value=value.background || 'default';
+        $('mute-conversation').checked=value.muted===true;
+        document.querySelectorAll('input[name="chat-background"]').forEach(option=>{option.checked=option.value===(value.background||'default');});
     }
     const motionFrames = {
         dialog:[{opacity:0,transform:'translateY(12px) scale(.975)'},{opacity:1,transform:'translateY(0) scale(1)'}],
@@ -147,7 +160,7 @@
     }
     async function dismiss(dialog) {
         if (!dialog.open) return;
-        if (dialog.id === 'delete-group-dialog' && groupDeletionBusy) return;
+        if ((dialog.id === 'delete-group-dialog' && groupDeletionBusy) || (dialog.id === 'leave-group-dialog' && groupExitBusy)) return;
         const epoch = dialogEpochs.get(dialog); dialogDesired.set(dialog, false);
         const finished = await (dialog.id === 'composer-menu' ? composerMenuMotion(false) : motion(dialog, 'dialog', false));
         if (finished && dialogEpochs.get(dialog) === epoch && dialog.open && !dialogDesired.get(dialog)) dialog.close();
@@ -208,7 +221,7 @@
         if(user)window.HarzafiMessagePush?.clear(!preservePush);
         ++transitionRequest; for (const element of [...motions.keys()]) cancelMotion(element);
         clearChat(); globalStops.splice(0).forEach(stop => stop()); contacts.clear(); conversations = []; store = user = identity = null;
-        deletedGroups=[];groupToDelete='';groupDeletionBusy=false;restoringGroups.clear();
+        deletedGroups=[];groupToDelete=groupToLeave='';groupDeletionBusy=groupExitBusy=false;restoringGroups.clear();verifiedAccounts.clear();
         $('deleted-group-list').replaceChildren();$('deleted-groups-section').hidden=true;$('deleted-groups-status').textContent='';
         inboxStops.forEach(stop=>stop());inboxStops.clear();inboxStates.clear();preferences.clear();clearInterval(inboxTimer);media?.destroy();
         notificationLast.clear();inboxReady=false;
@@ -253,7 +266,7 @@
             button.setAttribute('aria-current', String(c.id === activeId)); button.setAttribute('aria-label', 'Apri la conversazione con ' + chatName(c));
             const image = node('span', 'person-avatar'); chatAvatar(image, c);
             const copy = node('span', 'conversation-item-copy'), heading = node('span', 'conversation-item-heading');
-            heading.append(node('strong', '', chatName(c)), node('time', '', listDate({toMillis:()=>latestTime(c)})));
+            heading.append(nameLabel(c.kind==='group'?'':other,chatName(c),'strong'), node('time', '', listDate({toMillis:()=>latestTime(c)})));
             const writing=writers(c.id);let preview;
             if(writing.length){preview=node('span','conversation-typing');preview.setAttribute('aria-label',writing.map(([uid])=>nameOf(uid)).join(', ')+' sta scrivendo');for(let i=0;i<3;i++)preview.append(node('span','typing-dot'));preview.append(node('span','','Sta scrivendo…'));}
             else preview=node('span', 'conversation-preview', (c.lastSender === user.uid ? 'Tu: ' : '') + (c.lastText || 'Inizia la conversazione.'));
@@ -274,7 +287,7 @@
         for (const [uid, p] of list) {
             const button = node('button', 'contact-row'); button.type = 'button'; button.setAttribute('aria-label', 'Scrivi a ' + p.name);
             const image = node('span', 'person-avatar'); avatar(image, p);
-            const copy = node('span'); copy.append(node('strong', '', p.name), node('small', '', roleName(p.role)));
+            const copy = node('span'); copy.append(nameLabel(uid,p.name,'strong'), node('small', '', roleName(p.role)));
             button.append(image, copy); button.addEventListener('click', async () => {
                 if (!navigator.onLine) { $('contact-status').textContent = 'Torna online per iniziare una conversazione.'; return; }
                 const current = version; button.disabled = true; $('contact-status').textContent = 'Apro la conversazione…';
@@ -289,6 +302,8 @@
     function updateHeader() {
         const p = person(recipientUid); avatar($('conversation-avatar'), p); $('conversation-name').textContent = p.name;
         const c=conversation();if(c){chatAvatar($('conversation-avatar'),c);$('conversation-name').textContent=chatName(c);}
+        const badge=verifiedBadge(c?.kind==='group'?'':recipientUid);$('conversation-verified').hidden=!badge;$('conversation-verified').replaceChildren(...(badge?[badge.firstChild]:[]));
+        $('conversation-verified').setAttribute('role','img');$('conversation-verified').setAttribute('aria-label','Account ufficiale · Amministratore di Harzafi FSL');
         $('conversation-role').textContent = p.role ? roleName(p.role) : ''; $('conversation-info').setAttribute('aria-label', 'Informazioni sulla conversazione con ' + p.name); connected();
     }
     function start() {
@@ -296,6 +311,10 @@
         window.HarzafiMessagePush?.start(user);
         $('messages-gate').hidden = true; app.hidden = false;
         motion(app, 'conversation', true, {duration:360});
+        globalStops.push(store.badges(snapshot=>{
+            if(current!==version)return;verifiedAccounts=new Set(snapshot.docs.filter(d=>d.data().enabled===true&&d.data().kind==='administrator').map(d=>d.id));
+            renderConversations();renderContacts();if(activeId){updateHeader();renderMessages();}
+        },()=>{if(current===version){verifiedAccounts.clear();renderConversations();renderContacts();if(activeId){updateHeader();renderMessages();}}}));
         globalStops.push(store.settings(snapshot=>{if(current!==version)return;preferences=new Map(snapshot.docs.map(d=>[d.id,d.data()]));for(const [id,value] of preferences)if(typeof value.muted==='boolean')window.HarzafiMessagePush?.preferences(id,value.muted).catch(()=>{});renderConversations();if(activeId)applyPreferences();},()=>{}));
         $('conversation-status').textContent = 'Caricamento delle conversazioni…';
         globalStops.push(store.contacts(snapshot => {
@@ -307,13 +326,13 @@
         globalStops.push(store.conversations(snapshot => {
             if (current !== version) return;
             const all = snapshot.docs.map(d => ({ ...d.data(), id:d.id })).filter(c => Array.isArray(c.members) && c.members.includes(user.uid));
-            deletedGroups=all.filter(c=>c.kind==='group'&&c.deletedAt&&c.createdBy===user.uid);
+            deletedGroups=all.filter(c=>c.kind==='group'&&c.deletedAt&&groupOwner(c)===user.uid);
             conversations=all.filter(c=>!c.deletedAt);renderDeletedGroups();
             if(activeId&&!conversations.some(c=>c.id===activeId)){
                 clearChat(false);$('new-conversation').focus({preventScroll:true});
             }
             for(const c of conversations){if(inboxReady&&notificationLast.get(c.id)!==c.lastMessageId&&c.lastSender!==user.uid&&c.lastMessageId&&!preferences.get(c.id)?.muted)window.HarzafiMessageNotifications?.notify(c.id);notificationLast.set(c.id,c.lastMessageId);}inboxReady=true;
-            syncInbox(); renderConversations();if(activeId)updateHeader();
+            syncInbox(); renderConversations();if(activeId){updateHeader();if($('conversation-details').open)updateGroupControls();}
         }, () => { if (current === version) { ++version; clear(); gate('Messaggi', unavailable, { retry:true }); } }));
     }
     async function load(account) {
@@ -468,7 +487,7 @@
             const grouped = !showDate && previous?.senderUid === message.senderUid && date - (model.millis(previous.createdAt) || previous.localTime) < 120000;
             const quoted = quoteFor(message), lastOwn = own && !values.slice(index + 1).some(m => m.senderUid === user.uid);
             const peerRead = peers().length>0 && peers().every(uid=>model.millis(states.get(uid)?.readAt)>=date);
-            const signature = JSON.stringify([message, quoted, showDate, grouped, lastOwn, peerRead]);
+            const signature = JSON.stringify([message, quoted, showDate, grouped, lastOwn, peerRead, verifiedAccounts.has(message.senderUid)]);
             let row = rowNodes.get(message.id); const isNew = !row;
             if (!row) { row = node('li', 'message-row'); row.dataset.messageId = message.id; rowNodes.set(message.id, row); }
             if (row.dataset.signature !== signature) {
@@ -478,10 +497,10 @@
                 const cluster = node('div', 'message-cluster'), bubble = node('div', 'message-bubble');
                 if (quoted) {
                     const quote = node('button', 'reply-quote'); quote.type = 'button'; quote.setAttribute('aria-label', 'Vai al messaggio a cui si risponde');
-                    quote.append(node('strong', '', nameOf(quoted.senderUid)), node('span', '', quoted.text));
+                    quote.append(nameLabel(quoted.senderUid,nameOf(quoted.senderUid),'strong'), node('span', '', quoted.text));
                     quote.addEventListener('click', () => jumpTo(message.replyTo)); bubble.append(quote);
                 }
-                if(groupChat()&&!own&&!grouped)bubble.append(node('strong','message-sender',nameOf(message.senderUid)));
+                if(groupChat()&&!own&&!grouped){const sender=nameLabel(message.senderUid,nameOf(message.senderUid),'strong');sender.classList.add('message-sender');bubble.append(sender);}
                 if(message.type==='poll')renderPoll(bubble,message);
                 else {if(message.attachment)renderMedia(bubble,message);if(message.text)bubble.append(node('span', 'message-text', message.text));}
                 if (transcriptOpen && bubble.querySelector('.message-transcript')) bubble.querySelector('.message-transcript').open = true;
@@ -615,12 +634,34 @@
             });row.append(copy,button);$('deleted-group-list').append(row);
         }
     }
-    async function details(){applyPreferences();$('conversation-preferences-status').textContent='';$('conversation-members').replaceChildren();for(const uid of conversation()?.members || [])$('conversation-members').append(node('p','',nameOf(uid)));const group=conversation();$('delete-group').hidden=group?.kind!=='group'||group.createdBy!==user.uid;openDialog($('conversation-details'));}
+    function updateGroupControls(){
+        const group=conversation(),isGroup=group?.kind==='group';
+        $('leave-group').hidden=!isGroup;$('delete-group').hidden=!isGroup||groupOwner(group)!==user.uid;
+        $('group-owner-note').hidden=!isGroup;$('group-owner-note').textContent=isGroup?'Gestito da '+(groupOwner(group)===user.uid?'te':nameOf(groupOwner(group)))+'.':'';
+    }
+    async function details(){applyPreferences();$('conversation-preferences-status').textContent='';$('conversation-members').replaceChildren();for(const uid of conversation()?.members || [])$('conversation-members').append(nameLabel(uid,nameOf(uid),'p'));updateGroupControls();openDialog($('conversation-details'));}
     $('delete-group').addEventListener('click',async()=>{
-        const group=conversation(),session=version,cid=activeId;if(group?.kind!=='group'||group.createdBy!==user.uid)return;
+        const group=conversation(),session=version,cid=activeId;if(group?.kind!=='group'||groupOwner(group)!==user.uid)return;
         await dismiss($('conversation-details'));if(session!==version||cid!==activeId)return;
         groupToDelete=cid;$('delete-group-copy').textContent='Stai per eliminare «'+(group.title||'Conversazione di gruppo')+'».';
         $('delete-group-status').textContent='';$('confirm-delete-group').disabled=false;openDialog($('delete-group-dialog'));
+    });
+    $('leave-group').addEventListener('click',async()=>{
+        const group=conversation(),session=version,cid=activeId;if(group?.kind!=='group')return;
+        await dismiss($('conversation-details'));if(session!==version||cid!==activeId)return;
+        groupToLeave=cid;const remaining=group.members.filter(uid=>uid!==user.uid),transfer=groupOwner(group)===user.uid&&remaining.length>0;
+        $('group-successor-field').hidden=!transfer;$('group-successor').replaceChildren();
+        if(transfer){const placeholder=node('option','','Scegli una persona');placeholder.value='';placeholder.disabled=true;placeholder.selected=true;$('group-successor').append(placeholder);for(const uid of remaining){const option=node('option','',nameOf(uid));option.value=uid;$('group-successor').append(option);}}
+        $('leave-group-copy').textContent=!remaining.length?'Sei l’ultimo partecipante. Uscendo, il gruppo verrà spostato tra i gruppi eliminati. Potrai ripristinarlo dalle impostazioni di Messaggi.':transfer?'Affida la gestione di «'+(group.title||'Conversazione di gruppo')+'» a un altro partecipante. Dopo l’uscita non potrai più consultare la chat o inviare messaggi; il gruppo continuerà per gli altri.':'Uscendo da «'+(group.title||'Conversazione di gruppo')+'» non potrai più consultare la chat o inviare messaggi. Il gruppo continuerà per gli altri partecipanti.';
+        $('confirm-leave-group').disabled=transfer;$('leave-group-status').textContent='';openDialog($('leave-group-dialog'));
+    });
+    $('group-successor').addEventListener('change',()=>{$('confirm-leave-group').disabled=!$('group-successor').value;});
+    $('confirm-leave-group').addEventListener('click',async()=>{
+        if(groupExitBusy||!groupToLeave)return;
+        const cid=groupToLeave,session=version,writer=store;groupExitBusy=true;$('confirm-leave-group').disabled=true;$('leave-group-status').textContent='Uscita dal gruppo in corso…';
+        try{await writer.leaveGroup(cid,$('group-successor').value);if(session!==version)return;groupExitBusy=false;if(activeId===cid)clearChat(false);else await dismiss($('leave-group-dialog'));$('new-conversation').focus({preventScroll:true});}
+        catch(error){if(session===version)$('leave-group-status').textContent=error.code==='group-successor-required'?'Scegli chi gestirà il gruppo prima di uscire.':'Non è stato possibile uscire dal gruppo. Controlla la connessione e riprova.';}
+        finally{if(session===version){groupExitBusy=false;$('confirm-leave-group').disabled=false;}}
     });
     $('confirm-delete-group').addEventListener('click',async()=>{
         if(groupDeletionBusy||!groupToDelete)return;
@@ -632,7 +673,9 @@
         finally{if(session===version){groupDeletionBusy=false;$('confirm-delete-group').disabled=false;}}
     });
     // Preferences are private to the signed-in account and sync to its devices.
-    for(const [id,key]of [['mute-conversation','muted'],['chat-background','background']])$(id).addEventListener('change',async()=>{const current=chatVersion,value=key==='muted'?$(id).checked:$(id).value;try{await store.saveConversationSettings(activeId,{[key]:value});}catch(_){if(current===chatVersion){applyPreferences();$('conversation-preferences-status').textContent='Non è stato possibile salvare la preferenza.';}}});
+    async function savePreference(key,value){const current=chatVersion;try{await store.saveConversationSettings(activeId,{[key]:value});}catch(_){if(current===chatVersion){applyPreferences();$('conversation-preferences-status').textContent='Non è stato possibile salvare la preferenza.';}}}
+    $('mute-conversation').addEventListener('change',()=>savePreference('muted',$('mute-conversation').checked));
+    document.querySelectorAll('input[name="chat-background"]').forEach(option=>option.addEventListener('change',()=>{if(option.checked)savePreference('background',option.value);}));
     $('conversation-details').addEventListener('close',()=>{$('conversation-members').replaceChildren();});
     $('conversation-info').addEventListener('click',details);$('conversation-encryption').addEventListener('click',details);
     $('attach-message').addEventListener('click',()=>openDialog($('composer-menu')));
