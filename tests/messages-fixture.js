@@ -49,6 +49,7 @@ module.exports = function (options = {}) {
             contacts:(receive,fail)=>listen('contacts','',receive,fail),conversations:(receive,fail)=>listen('chats','',receive,fail),
             open:async other=>{const id=[uid,other].sort().join('~');if(!chats.has(id)){chats.set(id,{members:[uid,other],createdAt:ts(Date.now()),updatedAt:ts(Date.now()),lastText:'',lastSender:''});rows.set(id,new Map());emit('chats');}return id;},
             createGroup:async(members,title)=>{const id='group-'+messageCounter++;chats.set(id,{kind:'group',title,members:[...new Set([uid,...members])],createdBy:uid,createdAt:ts(Date.now()),updatedAt:ts(Date.now()),lastText:'',lastSender:'',lastMessageId:''});rows.set(id,new Map());emit('chats');return id;},
+            setGroupDeleted:async(id,deleted)=>{const group=chats.get(id);if(!group||group.kind!=='group'||group.createdBy!==uid||!group.members.includes(uid))throw new Error('group-owner-required');if(state.failNextGroupDelete){state.failNextGroupDelete=false;throw new Error('network');}group.deletedAt=deleted?ts(Date.now()):null;group.deletedBy=deleted?uid:'';group.updatedAt=ts(Date.now());emit('chats');},
             listen:(id,receive,fail)=>listen('messages',id,receive,fail),states:(id,receive,fail)=>listen('states',id,receive,fail),
             inboxState:(id,receive,fail)=>listen('states',id,receive,fail),
             settings:(receive,fail)=>listen('settings',uid,receive,fail),
