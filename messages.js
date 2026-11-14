@@ -12,6 +12,13 @@
     let version = 0, store, user, identity, contacts = new Map(), conversations = [], globalStops = [], chatStops = [];
     let activeId = '', chatVersion = 0, recipientUid = '', messages = new Map(), rowNodes = new Map(), states = new Map();
     let quotes = new Map(), requestedQuotes = new Set(), oldest, hasMore = false, replyTo = '', actionId = '', olderBusy = false;
+    const replyThreads = new Map(); let openThreadId = '';
+    const replyObserver = new IntersectionObserver(entries => {
+        for (const entry of entries) if (entry.isIntersecting) {
+            replyObserver.unobserve(entry.target);
+            if (entry.target.isConnected && activeId) ensureThread(entry.target.dataset.replyRoot);
+        }
+    }, { root:scroll, rootMargin:'180px' });
     let typingTimer, typingRefresh, typingExpiry, lastTyping = 0, readTimer, stateError = false, sending = false, enrollmentBusy = false;
     let pending = new Map(), drafts = new Map(), outbox = new Map(), longPressTimer, suppressClick = false;
     const dialogs = [...document.querySelectorAll('dialog')];
@@ -207,6 +214,7 @@
         if (activeId) drafts.set(activeId, { text:input.value, replyTo });
         if (writeTyping) stopTyping();
         ++chatVersion; chatStops.splice(0).forEach(stop => stop());
+        replyObserver.disconnect(); replyThreads.clear(); openThreadId = '';
         clearTimeout(readTimer); clearTimeout(typingExpiry); clearTimeout(longPressTimer);
         activeId = recipientUid = replyTo = actionId = ''; states.clear(); messages.clear(); rowNodes.clear(); quotes.clear(); requestedQuotes.clear();
         cancelWithin($('active-conversation')); $('active-conversation').inert = false;
@@ -415,7 +423,7 @@
         let initial = true;
         chatStops.push(store.listen(id, snapshot => {
             if (current !== chatVersion || id !== activeId) return;
-            const stick = initial || nearBottom();
+            const stick = (initial || nearBottom()) && !$('reply-thread').open;
             let incoming = false;
             snapshot.docs.forEach(doc => {
                 const value = { ...doc.data(), id:doc.id, pending:doc.metadata?.hasPendingWrites === true };
@@ -471,32 +479,141 @@
         }); openDialog($('message-actions'));
     }
     async function startReply(id) {
-        const message = messages.get(id); if (!message) return;
-        replyTo = id; $('reply-name').textContent = 'Risposta a ' + nameOf(message.senderUid); $('reply-text').textContent = message.text;
+        const message = messages.get(id) || quotes.get(id); if (!message?.senderUid) return;
+        replyTo = id; $('reply-name').textContent = 'Risposta a ' + nameOf(message.senderUid); $('reply-text').textContent = previewText(message);
         const current = chatVersion; reveal($('reply-preview'), true); await dismiss($('message-actions')); if (current === chatVersion) { input.focus(); resizeInput(); bottom(); }
     }
+    function threadLabel(thread) {
+        if (!thread?.ready || thread.cacheOnly) return 'Mostra risposte';
+        const count = thread.rows.size;
+        return thread.more ? thread.limit + '+ risposte' : count + (count === 1 ? ' risposta' : ' risposte');
+    }
+    function updateThreadLinks() {
+        for (const button of document.querySelectorAll('.message-replies-link')) {
+            const thread = replyThreads.get(button.dataset.threadId);
+            button.textContent = threadLabel(thread);
+            button.setAttribute('aria-label', threadLabel(thread) + ' a ' + nameOf((messages.get(button.dataset.threadId) || quotes.get(button.dataset.threadId))?.senderUid));
+        }
+    }
+    function subscribeReplies(thread) {
+        thread.stop?.(); thread.error = false; thread.loading = true;
+        const current = chatVersion, request = ++thread.request;
+        thread.stop = store.replies(activeId, thread.id, snapshot => {
+            if (current !== chatVersion || request !== thread.request) return;
+            thread.rows = new Map(snapshot.docs.slice(0,thread.limit).map(doc => [doc.id,{ ...doc.data(), id:doc.id }]));
+            thread.more = snapshot.docs.length > thread.limit;
+            thread.cacheOnly = !!snapshot.metadata?.fromCache;
+            thread.ready = true; thread.loading = false;
+            updateThreadLinks(); renderThread();
+        }, () => {
+            if (current !== chatVersion || request !== thread.request) return;
+            thread.error = true; thread.loading = false; updateThreadLinks(); renderThread();
+        }, thread.limit);
+    }
+    function ensureThread(id) {
+        if (!id || !activeId || replyThreads.has(id)) return replyThreads.get(id);
+        const thread = { id, rows:new Map(), limit:100, request:0, ready:false, loading:true, more:false, error:false };
+        replyThreads.set(id,thread);
+        const current = chatVersion;
+        chatStops.push(store.watchMessage(activeId,id,snapshot => {
+            if (current !== chatVersion) return;
+            quotes.set(id,snapshot.exists ? { ...snapshot.data(), id } : { text:'Messaggio non disponibile', senderUid:'' });
+            if(snapshot.exists&&messages.has(id))messages.set(id,{...snapshot.data(),id});
+            renderMessages(); renderThread();
+        }, () => {
+            if (current !== chatVersion) return;
+            quotes.set(id,{ text:'Messaggio non disponibile', senderUid:'' }); renderMessages(); renderThread();
+        }));
+        chatStops.push(() => thread.stop?.()); subscribeReplies(thread);
+        return thread;
+    }
+    function repliesButton(id) {
+        const button = node('button','message-replies-link',threadLabel(replyThreads.get(id)));
+        button.type = 'button'; button.dataset.threadId = id;
+        button.setAttribute('aria-haspopup','dialog');button.setAttribute('aria-controls','reply-thread');
+        button.addEventListener('click',() => openReplyThread(id));
+        return button;
+    }
+    function replyContext(id, original) {
+        const context = node('div','message-reply-context'); context.dataset.replyRoot = id;
+        const image = node('span','reply-parent-avatar'); image.setAttribute('aria-hidden','true'); avatar(image,person(original.senderUid));
+        const content = node('div','reply-parent-content'), source = node('button','reply-parent-bubble'); source.type = 'button';
+        source.setAttribute('aria-label','Vai al messaggio originale di ' + nameOf(original.senderUid) + ': ' + previewText(original));
+        source.append(node('span','reply-parent-text',previewText(original)));
+        source.addEventListener('click',() => jumpTo(id));
+        content.append(source,repliesButton(id)); context.append(image,content); return context;
+    }
+    function replyConnector() {
+        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 44 46');svg.setAttribute('class','reply-connector');svg.setAttribute('aria-hidden','true');
+        const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d','M4 2v10c0 18 12 29 30 29h6');svg.append(path);return svg;
+    }
+    function openReplyThread(id) {
+        if (!activeId) return;
+        clearTimeout(readTimer);
+        openThreadId = id; $('reply-thread').dataset.renderSignature=''; ensureThread(id); renderThread(); $('thread-scroll').scrollTop=0; openDialog($('reply-thread'));
+    }
+    function renderThread() {
+        if (!openThreadId || !activeId) return;
+        const id=openThreadId, thread=replyThreads.get(id); if (!thread) return;
+        const original=quotes.get(id) || messages.get(id);
+        const rows=[...thread.rows.values()].sort((a,b)=>model.millis(a.createdAt)-model.millis(b.createdAt)||a.id.localeCompare(b.id));
+        const signature=JSON.stringify([id,original,thread.loading,thread.error,thread.more,thread.cacheOnly,thread.limit,rows,rows.map(message=>[nameOf(message.senderUid),verifiedAccounts.has(message.senderUid)]),nameOf(original?.senderUid),verifiedAccounts.has(original?.senderUid)]);
+        if($('reply-thread').dataset.renderSignature===signature)return;
+        $('reply-thread').dataset.renderSignature=signature;
+        $('thread-original').replaceChildren();
+        if (original) {
+            $('thread-original').append(nameLabel(original.senderUid,nameOf(original.senderUid),'strong'),node('span','',previewText(original)));
+            $('thread-reply').disabled=!original.senderUid;
+        } else { $('thread-original').append(node('span','','Caricamento del messaggio originale…')); $('thread-reply').disabled=true; }
+        $('thread-summary').textContent=threadLabel(thread);
+        $('thread-status').textContent=thread.error ? 'Non è stato possibile aggiornare le risposte. Controlla la connessione e riprova.' : thread.loading ? 'Caricamento delle risposte…' : thread.cacheOnly ? 'Risposte salvate su questo dispositivo. Il riepilogo completo si aggiorna quando torni online.' : thread.more ? 'Altre risposte sono disponibili. Caricale per completare la conversazione.' : !thread.rows.size ? 'Non ci sono ancora risposte a questo messaggio.' : '';
+        $('thread-more').hidden=!thread.more&&!thread.error;
+        $('thread-more').disabled=thread.loading;
+        $('thread-more').textContent=thread.error ? 'Riprova' : 'Carica altre risposte';
+        const list=$('thread-replies'), top=$('thread-scroll').scrollTop, focused=document.activeElement;
+        const focusId=focused?.dataset.threadMessage;
+        const fragment=document.createDocumentFragment();
+        for (const message of rows) {
+            const own=message.senderUid===user.uid, item=node('li','thread-reply'+(own?' own':''));
+            item.append(nameLabel(message.senderUid,nameOf(message.senderUid),'strong'));
+            const bubble=node('div','thread-reply-bubble');bubble.append(node('span','',previewText(message)));
+            if(message.editedAt)bubble.append(node('small','message-edited','Modificato'));
+            item.append(bubble);
+            const meta=node('div','thread-reply-meta');const date=model.millis(message.createdAt);
+            if(date)meta.append(node('time','',day.format(date)+' · '+time.format(date)));
+            const locate=node('button','thread-locate','Mostra nella chat');locate.type='button';locate.dataset.threadMessage=message.id;
+            locate.addEventListener('click',async()=>{const current=chatVersion;await dismiss($('reply-thread'));if(current===chatVersion)jumpTo(message.id);});
+            meta.append(locate);item.append(meta);fragment.append(item);
+        }
+        list.replaceChildren(fragment);$('thread-scroll').scrollTop=top;
+        if(focusId)[...list.querySelectorAll('[data-thread-message]')].find(button=>button.dataset.threadMessage===focusId)?.focus({preventScroll:true});
+    }
+    $('thread-original').addEventListener('click',async()=>{const id=openThreadId,current=chatVersion;await dismiss($('reply-thread'));if(current===chatVersion&&id)jumpTo(id);});
+    $('thread-reply').addEventListener('click',async()=>{const id=openThreadId,current=chatVersion;await dismiss($('reply-thread'));if(current===chatVersion&&id)startReply(id);});
+    $('thread-more').addEventListener('click',()=>{const thread=replyThreads.get(openThreadId);if(!thread||thread.loading)return;if(!thread.error)thread.limit+=100;subscribeReplies(thread);renderThread();});
+    $('reply-thread').addEventListener('close',()=>{if($('reply-thread').open)return;openThreadId='';$('reply-thread').dataset.renderSignature='';$('thread-original').replaceChildren();$('thread-replies').replaceChildren();scheduleRead();});
     function renderMessages({animate = false} = {}) {
         if (!activeId) return;
         const values = [...messages.values()].sort((a, b) => (model.millis(a.createdAt) || a.localTime || Date.now()) - (model.millis(b.createdAt) || b.localTime || Date.now()) || a.id.localeCompare(b.id));
+        const replyParents=new Set(values.filter(message=>message.replyTo).map(message=>message.replyTo));
         let previous;
         for (let index = 0; index < values.length; index++) {
             const message = values[index], own = message.senderUid === user.uid, date = model.millis(message.createdAt) || message.localTime || Date.now();
             const showDate = !previous || new Date(date).toDateString() !== new Date(model.millis(previous.createdAt) || previous.localTime).toDateString();
-            const grouped = !showDate && previous?.senderUid === message.senderUid && date - (model.millis(previous.createdAt) || previous.localTime) < 120000;
+            const grouped = !message.replyTo && !previous?.replyTo && !showDate && previous?.senderUid === message.senderUid && date - (model.millis(previous.createdAt) || previous.localTime) < 120000;
             const quoted = quoteFor(message), lastOwn = own && !values.slice(index + 1).some(m => m.senderUid === user.uid);
             const peerRead = peers().length>0 && peers().every(uid=>model.millis(states.get(uid)?.readAt)>=date);
-            const signature = JSON.stringify([message, quoted, showDate, grouped, lastOwn, peerRead, verifiedAccounts.has(message.senderUid)]);
+            const signature = JSON.stringify([message, quoted, showDate, grouped, lastOwn, peerRead, verifiedAccounts.has(message.senderUid),replyParents.has(message.id)]);
             let row = rowNodes.get(message.id); const isNew = !row;
             if (!row) { row = node('li', 'message-row'); row.dataset.messageId = message.id; rowNodes.set(message.id, row); }
             if (row.dataset.signature !== signature) {
                 const transcriptOpen = row.querySelector('.message-transcript')?.open;
-                row.dataset.signature = signature; row.replaceChildren(); row.className = 'message-row' + (own ? ' own' : '') + (grouped ? ' grouped' : '');
+                row.querySelectorAll('[data-reply-root]').forEach(element=>replyObserver.unobserve(element));
+                row.dataset.signature = signature; row.replaceChildren(); row.className = 'message-row' + (own ? ' own' : '') + (grouped ? ' grouped' : '') + (quoted ? ' has-reply' : '');
                 if (showDate) row.append(node('div', 'message-date', day.format(date) + ' · ' + time.format(date)));
                 const cluster = node('div', 'message-cluster'), bubble = node('div', 'message-bubble');
                 if (quoted) {
-                    const quote = node('button', 'reply-quote'); quote.type = 'button'; quote.setAttribute('aria-label', 'Vai al messaggio a cui si risponde');
-                    quote.append(nameLabel(quoted.senderUid,nameOf(quoted.senderUid),'strong'), node('span', '', quoted.text));
-                    quote.addEventListener('click', () => jumpTo(message.replyTo)); bubble.append(quote);
+                    row.append(replyContext(message.replyTo,quoted));
                 }
                 if(groupChat()&&!own&&!grouped){const sender=nameLabel(message.senderUid,nameOf(message.senderUid),'strong');sender.classList.add('message-sender');bubble.append(sender);}
                 if(message.type==='poll')renderPoll(bubble,message);
@@ -512,7 +629,8 @@
                 bubble.addEventListener('pointermove', event => { if (pressPoint && Math.hypot(event.clientX - pressPoint[0], event.clientY - pressPoint[1]) > 10) clearTimeout(longPressTimer); });
                 for (const name of ['pointerup', 'pointercancel']) bubble.addEventListener(name, () => { clearTimeout(longPressTimer); pressPoint = null; });
                 bubble.addEventListener('click', event => { if (suppressClick) { event.preventDefault(); suppressClick = false; } });
-                cluster.append(bubble, actions); row.append(cluster);
+                cluster.append(bubble, actions);
+                if(quoted){const response=node('div','reply-response');response.append(replyConnector(),cluster);row.append(response);}else row.append(cluster);
                 const reactions = Object.entries(message.reactions || {}).filter(([, emoji]) => model.REACTIONS.includes(emoji));
                 if (reactions.length) {
                     const group = node('div', 'message-reactions');
@@ -523,16 +641,19 @@
                         chip.addEventListener('click', () => openActions(message.id)); group.append(chip);
                     } row.append(group);
                 }
+                if(replyParents.has(message.id)){const link=repliesButton(message.id);link.dataset.replyRoot=message.id;row.append(link);}
                 if (own && (lastOwn || message.failed || message.pending)) {
                     const meta = node('div', 'message-meta', message.failed ? 'Invio non riuscito' : message.pending ? 'Invio…' : peerRead ? 'Letto' : 'Inviato');
                     if (message.failed) { const retry = node('button', '', 'Riprova'); retry.type = 'button'; retry.addEventListener('click', () => retrySend(message.id)); meta.append(retry); } row.append(meta);
                 }
+                row.querySelectorAll('[data-reply-root]').forEach(element=>replyObserver.observe(element));
             }
             // Reuse nodes so focus and a user's place in the conversation survive updates.
             const existing = $('message-list').children[index]; if (existing !== row) $('message-list').insertBefore(row, existing || null);
             if (isNew && animate && (animate !== 'history' || index >= values.length - 6)) motion(row, 'message', true, {duration:300,delay:animate === 'history' ? Math.max(0, index - values.length + 6) * 24 : 0});
             previous = message;
         }
+        updateThreadLinks(); renderThread();
     }
     function renderPoll(bubble,message) {
         const poll=message.poll, panel=node('div','message-poll');if(!poll)return;
@@ -760,10 +881,10 @@
     }
     function scheduleRead() {
         clearTimeout(readTimer);
-        if (!activeId || document.hidden || !navigator.onLine || !nearBottom()) return;
+        if (!activeId || document.hidden || !navigator.onLine || !nearBottom() || $('reply-thread').open) return;
         const id = activeId, current = chatVersion;
         readTimer = setTimeout(() => {
-            if (current !== chatVersion || document.hidden || !nearBottom()) return;
+            if (current !== chatVersion || document.hidden || !nearBottom() || $('reply-thread').open) return;
             const latest = [...messages.values()].filter(m => !m.pending && m.senderUid !== user.uid && model.millis(m.createdAt)).sort((a, b) => model.millis(b.createdAt) - model.millis(a.createdAt))[0];
             if (!latest || model.millis(states.get(user.uid)?.readAt) >= model.millis(latest.createdAt)) return;
             store.state(id, { readAt:latest.createdAt, isTyping:!!input.value.trim() }).catch(() => {});

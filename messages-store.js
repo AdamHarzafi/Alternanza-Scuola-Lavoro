@@ -281,6 +281,8 @@
                 });
             },
             getMessage: (id, messageId) => message(id, messageId).get({ source:'server' }),
+            watchMessage: (id, messageId, receive, fail) => message(id, messageId).onSnapshot(receive, fail),
+            replies: (id, messageId, receive, fail, limit = 100) => chat(id).collection('messages').where('replyTo', '==', messageId).limit(limit + 1).onSnapshot({ includeMetadataChanges:true }, receive, fail),
             now: timestamp
         };
     }

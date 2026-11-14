@@ -16,7 +16,7 @@
     <script defer src="loading-indicator.js?v=20261108-ios14-v1"></script>
     <link rel="stylesheet" href="page-transitions.css?v=20261108-direct-entry-v2">
     <script src="page-transitions.js?v=20261108-direct-entry-v2"></script>
-    <link rel="stylesheet" href="messages.css?v=20261114-mobile-chat-footer-v13">
+    <link rel="stylesheet" href="messages.css?v=20261114-inline-replies-v14">
 </head>
 <body class="messages-page">
     <nav class="navbar-wrapper glass home-mainnav messages-site-nav" aria-label="Navigazione principale">
@@ -103,6 +103,16 @@
         <button id="choose-audio" class="action-row" type="button"><span class="composer-menu-icon menu-audio" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M8 6v12M4 10v4m12-8v12m4-8v4"/></svg></span><span>Audio</span></button>
         <button id="new-poll" class="action-row" type="button"><span class="composer-menu-icon menu-poll" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 5h10M7 12h7M7 19h3"/></svg></span><span>Sondaggio</span></button>
     </dialog>
+    <dialog id="reply-thread" class="messages-dialog reply-thread-dialog" aria-labelledby="thread-title" aria-describedby="thread-summary">
+        <div class="dialog-heading"><div><h2 id="thread-title">Risposte</h2><p id="thread-summary" class="dialog-note"></p></div><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi risposte"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div>
+        <div id="thread-scroll" class="thread-scroll" tabindex="0" aria-label="Messaggio originale e risposte">
+            <button id="thread-original" class="thread-original" type="button" aria-label="Mostra il messaggio originale nella chat"></button>
+            <ol id="thread-replies" class="thread-replies" aria-label="Risposte al messaggio"></ol>
+            <p id="thread-status" class="dialog-note" role="status"></p>
+            <button id="thread-more" class="thread-more" type="button" hidden>Carica altre risposte</button>
+        </div>
+        <div class="thread-footer"><button id="thread-reply" class="primary-button" type="button">Rispondi</button><p class="dialog-note">La tua risposta comparirà anche nella chat.</p></div>
+    </dialog>
     <input id="message-attachment-input" type="file" hidden aria-label="Scegli un allegato">
     <dialog id="attachment-dialog" class="messages-dialog"><div class="dialog-heading"><h2>Invia allegato</h2><button type="button" class="circle-button" data-close-dialog aria-label="Annulla allegato"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><div id="attachment-preview"></div><label for="attachment-caption">Aggiungi un messaggio <span>(facoltativo)</span></label><textarea id="attachment-caption" maxlength="2000" rows="2"></textarea><p id="attachment-status" class="dialog-note" role="status"></p><button id="send-attachment" class="primary-button">Invia allegato</button></dialog>
     <dialog id="voice-dialog" class="messages-dialog"><div class="dialog-heading"><h2>Messaggio vocale</h2><button type="button" class="circle-button" data-close-dialog aria-label="Annulla registrazione"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><p id="voice-timer" class="voice-timer">00:00</p><p id="voice-status" class="dialog-note" role="status">Preparo il microfono…</p><audio id="voice-preview" controls hidden preload="metadata"></audio><button id="stop-recording" class="danger-button" type="button">Termina registrazione</button><button id="send-recording" class="primary-button" type="button" hidden>Invia vocale</button></dialog>
@@ -149,10 +159,10 @@
     <script defer src="auth-session.js?v=20261025-account-nav-v1"></script>
     <script defer src="account-settings-model.js"></script>
     <script defer src="account-preferences.js"></script>
-    <script defer src="messages-store.js?v=20261114-group-exit-v7"></script>
+    <script defer src="messages-store.js?v=20261114-reply-threads-v8"></script>
     <script defer src="messages-media.js?v=20261113-messaging-v5"></script>
     <script defer src="messages-push.js?v=20261113"></script>
     <script defer src="messages-notifications.js?v=20261113-messaging-v5"></script>
-    <script defer src="messages.js?v=20261114-blue-badge-webp-v12"></script>
+    <script defer src="messages.js?v=20261114-inline-replies-v14"></script>
 </body>
 </html>
