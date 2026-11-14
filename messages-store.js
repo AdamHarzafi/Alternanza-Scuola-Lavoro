@@ -122,6 +122,16 @@
                 const ref = chats.doc(); await ref.set({ kind:'group', title:name, members, createdBy:uid, createdAt:timestamp(), updatedAt:timestamp(), lastText:'', lastSender:'', lastMessageId:'' });
                 return ref.id;
             },
+            async setGroupDeleted(id, deleted) {
+                if (typeof id !== 'string' || !id || id.includes('/') || typeof deleted !== 'boolean') throw failure('invalid-group');
+                const ref = chat(id);
+                await db.runTransaction(async transaction => {
+                    const snapshot = await transaction.get(ref), value = snapshot.data();
+                    if (!snapshot.exists || value.kind !== 'group' || value.createdBy !== uid || !value.members?.includes(uid)) throw failure('group-owner-required');
+                    if (!!value.deletedAt === deleted) return;
+                    transaction.update(ref, { deletedAt:deleted ? timestamp() : null, deletedBy:deleted ? uid : '', updatedAt:timestamp() });
+                });
+            },
             listen: (id, receive, fail, limit = 50) => chat(id).collection('messages').orderBy('createdAt', 'desc').limit(limit).onSnapshot({ includeMetadataChanges:true }, receive, fail),
             older: (id, cursor) => chat(id).collection('messages').orderBy('createdAt', 'desc').startAfter(cursor).limit(50).get({ source:'server' }),
             listenOlder: (id, cursor, receive, fail) => chat(id).collection('messages').orderBy('createdAt', 'desc').startAfter(cursor).limit(50).onSnapshot(receive, fail),

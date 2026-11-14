@@ -18,6 +18,8 @@
     const motions = new Map(), visibilityTargets = new Map(), dialogEpochs = new WeakMap(), dialogDesired = new WeakMap();
     let transitionRequest = 0;
     let preferences = new Map(), inboxStates = new Map(), inboxStops = new Map(), inboxTimer;
+    let deletedGroups = [], groupToDelete = '', groupDeletionBusy = false;
+    const restoringGroups = new Set();
     const notificationLast = new Map(); let inboxReady=false;
     let preparedAttachment, attachmentId = '', localPreview = '', recording;
     const media = window.HarzafiMessageMedia;
@@ -145,6 +147,7 @@
     }
     async function dismiss(dialog) {
         if (!dialog.open) return;
+        if (dialog.id === 'delete-group-dialog' && groupDeletionBusy) return;
         const epoch = dialogEpochs.get(dialog); dialogDesired.set(dialog, false);
         const finished = await (dialog.id === 'composer-menu' ? composerMenuMotion(false) : motion(dialog, 'dialog', false));
         if (finished && dialogEpochs.get(dialog) === epoch && dialog.open && !dialogDesired.get(dialog)) dialog.close();
@@ -205,6 +208,8 @@
         if(user)window.HarzafiMessagePush?.clear(!preservePush);
         ++transitionRequest; for (const element of [...motions.keys()]) cancelMotion(element);
         clearChat(); globalStops.splice(0).forEach(stop => stop()); contacts.clear(); conversations = []; store = user = identity = null;
+        deletedGroups=[];groupToDelete='';groupDeletionBusy=false;restoringGroups.clear();
+        $('deleted-group-list').replaceChildren();$('deleted-groups-section').hidden=true;$('deleted-groups-status').textContent='';
         inboxStops.forEach(stop=>stop());inboxStops.clear();inboxStates.clear();preferences.clear();clearInterval(inboxTimer);media?.destroy();
         notificationLast.clear();inboxReady=false;
         $('action-message-text').replaceChildren();$('attachment-preview').replaceChildren();$('group-members').replaceChildren();$('conversation-members').replaceChildren();
@@ -220,6 +225,7 @@
         $('connection-status').hidden = !offline;
         $('connection-status').textContent = offline ? 'Sei offline. I nuovi messaggi saranno disponibili quando torni online.' : '';
         const unavailablePeer=!groupChat() && person(recipientUid).enabled === false;
+        $('send-message').hidden = !input.value.trim(); $('voice-message').hidden = !!input.value.trim();
         $('send-message').disabled = !activeId || !input.value.trim() || offline || sending || unavailablePeer;
         $('attach-message').disabled=$('voice-message').disabled=!activeId || offline || unavailablePeer || sending;
     }
@@ -300,7 +306,12 @@
         }, () => { if (current === version) { ++version; clear(); gate('Messaggi', unavailable, { retry:true }); } }));
         globalStops.push(store.conversations(snapshot => {
             if (current !== version) return;
-            conversations = snapshot.docs.map(d => ({ ...d.data(), id:d.id })).filter(c => Array.isArray(c.members) && c.members.includes(user.uid));
+            const all = snapshot.docs.map(d => ({ ...d.data(), id:d.id })).filter(c => Array.isArray(c.members) && c.members.includes(user.uid));
+            deletedGroups=all.filter(c=>c.kind==='group'&&c.deletedAt&&c.createdBy===user.uid);
+            conversations=all.filter(c=>!c.deletedAt);renderDeletedGroups();
+            if(activeId&&!conversations.some(c=>c.id===activeId)){
+                clearChat(false);$('new-conversation').focus({preventScroll:true});
+            }
             for(const c of conversations){if(inboxReady&&notificationLast.get(c.id)!==c.lastMessageId&&c.lastSender!==user.uid&&c.lastMessageId&&!preferences.get(c.id)?.muted)window.HarzafiMessageNotifications?.notify(c.id);notificationLast.set(c.id,c.lastMessageId);}inboxReady=true;
             syncInbox(); renderConversations();if(activeId)updateHeader();
         }, () => { if (current === version) { ++version; clear(); gate('Messaggi', unavailable, { retry:true }); } }));
@@ -588,7 +599,38 @@
     $('select-message-action').addEventListener('click',async()=>{const id=actionId,current=chatVersion;await dismiss($('message-actions'));if(current!==chatVersion)return;const text=rowNodes.get(id)?.querySelector('.message-text');if(text){const range=document.createRange();range.selectNodeContents(text);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);}});
     $('new-group').addEventListener('click',async()=>{const current=version;await dismiss($('new-message-dialog'));if(current!==version)return;$('group-title').value='';$('group-status').textContent='';$('group-members').replaceChildren();for(const [uid,p]of contacts){if(uid===user.uid||!p.enabled)continue;const label=node('label','contact-choice'),image=node('span','person-avatar'),copy=node('span'),check=node('input');avatar(image,p);copy.append(node('strong','',p.name),node('small','',roleName(p.role)));check.type='checkbox';check.dataset.groupMember=uid;label.append(image,copy,check);$('group-members').append(label);}openDialog($('new-group-dialog'));});
     $('group-form').addEventListener('submit',async event=>{event.preventDefault();const members=[...$('group-members').querySelectorAll('input:checked')].map(e=>e.dataset.groupMember);if(members.length<2||members.length>29){$('group-status').textContent='Scegli da 2 a 29 persone.';return;}const current=version;$('create-group').disabled=true;try{const id=await store.createGroup(members,$('group-title').value);if(current!==version)return;await dismiss($('new-group-dialog'));selectConversation(id,members[0]);}catch(_){if(current===version)$('group-status').textContent='Non è stato possibile creare il gruppo. Riprova.';}finally{$('create-group').disabled=false;}});
-    async function details(){applyPreferences();$('conversation-preferences-status').textContent='';$('conversation-members').replaceChildren();for(const uid of conversation()?.members || [])$('conversation-members').append(node('p','',nameOf(uid)));openDialog($('conversation-details'));}
+    function renderDeletedGroups(){
+        $('deleted-groups-section').hidden=!deletedGroups.length;$('deleted-group-list').replaceChildren();
+        for(const group of deletedGroups){
+            const row=node('div','deleted-group-row'),copy=node('span');
+            copy.append(node('strong','',group.title||'Conversazione di gruppo'),node('small','',group.members.length+' partecipanti'));
+            const button=node('button','restore-group','Ripristina');button.type='button';button.disabled=restoringGroups.has(group.id);
+            button.setAttribute('aria-label','Ripristina il gruppo '+(group.title||'senza nome'));
+            button.addEventListener('click',async()=>{
+                if(restoringGroups.has(group.id))return;
+                const session=version,writer=store;restoringGroups.add(group.id);button.disabled=true;$('deleted-groups-status').textContent='';
+                try{await writer.setGroupDeleted(group.id,false);if(session===version)$('settings-message-status').textContent='Gruppo ripristinato. Lo trovi nell’elenco delle conversazioni.';}
+                catch(_){if(session===version)$('deleted-groups-status').textContent='Non è stato possibile ripristinare il gruppo. Controlla la connessione e riprova.';}
+                finally{if(session===version){restoringGroups.delete(group.id);button.disabled=false;}}
+            });row.append(copy,button);$('deleted-group-list').append(row);
+        }
+    }
+    async function details(){applyPreferences();$('conversation-preferences-status').textContent='';$('conversation-members').replaceChildren();for(const uid of conversation()?.members || [])$('conversation-members').append(node('p','',nameOf(uid)));const group=conversation();$('delete-group').hidden=group?.kind!=='group'||group.createdBy!==user.uid;openDialog($('conversation-details'));}
+    $('delete-group').addEventListener('click',async()=>{
+        const group=conversation(),session=version,cid=activeId;if(group?.kind!=='group'||group.createdBy!==user.uid)return;
+        await dismiss($('conversation-details'));if(session!==version||cid!==activeId)return;
+        groupToDelete=cid;$('delete-group-copy').textContent='Stai per eliminare «'+(group.title||'Conversazione di gruppo')+'».';
+        $('delete-group-status').textContent='';$('confirm-delete-group').disabled=false;openDialog($('delete-group-dialog'));
+    });
+    $('confirm-delete-group').addEventListener('click',async()=>{
+        if(groupDeletionBusy||!groupToDelete)return;
+        const cid=groupToDelete,session=version,writer=store;groupDeletionBusy=true;$('confirm-delete-group').disabled=true;
+        try{await writer.setGroupDeleted(cid,true);if(session!==version)return;groupDeletionBusy=false;
+            if(activeId===cid)clearChat(false);else await dismiss($('delete-group-dialog'));
+            $('new-conversation').focus({preventScroll:true});
+        }catch(_){if(session===version)$('delete-group-status').textContent='Il gruppo non è stato eliminato. Controlla la connessione e riprova.';}
+        finally{if(session===version){groupDeletionBusy=false;$('confirm-delete-group').disabled=false;}}
+    });
     // Preferences are private to the signed-in account and sync to its devices.
     for(const [id,key]of [['mute-conversation','muted'],['chat-background','background']])$(id).addEventListener('change',async()=>{const current=chatVersion,value=key==='muted'?$(id).checked:$(id).value;try{await store.saveConversationSettings(activeId,{[key]:value});}catch(_){if(current===chatVersion){applyPreferences();$('conversation-preferences-status').textContent='Non è stato possibile salvare la preferenza.';}}});
     $('conversation-details').addEventListener('close',()=>{$('conversation-members').replaceChildren();});

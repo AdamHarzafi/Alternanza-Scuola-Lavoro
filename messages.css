@@ -322,18 +322,39 @@ body.messages-page{--font-text:"Messages SF Text",-apple-system,BlinkMacSystemFo
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){#composer-menu{background:rgba(246,246,249,.97)}}
 @media(prefers-reduced-motion:reduce){#attach-message svg{transition:none}}
 
-/* A single rounded focus surface; the text area must not inherit the site's rectangular ring. */
-.messages-page .composer-row{align-items:flex-end;min-height:54px;padding:4px 5px;gap:5px}
-.messages-page .composer-row:focus-within{border-color:#a1a1a6;box-shadow:0 0 0 1px rgba(29,29,31,.12)}
-.messages-page .composer-row>textarea{min-height:44px;height:44px;padding:10.8px 0;border-radius:0;outline:none!important;outline-offset:0!important;box-shadow:none}
-.messages-page .composer-row>:is(.attachment-button,.voice-button,.send-message){display:inline-flex;align-items:center;justify-content:center;align-self:flex-end;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;margin:0;padding:0;border-radius:50%;line-height:1}
-.messages-page .composer-row>:is(.attachment-button,.voice-button,.send-message)>svg{display:block;width:22px;height:22px;flex:none}
-
-/* Desktop: a rounded rectangle remains distinct against the selected chat background. */
+/* Separate attachment control and a single capsule for text and the current send action. */
+.messages-page .composer-row{display:flex;align-items:flex-end;gap:10px;min-height:46px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.messages-page .composer-row:focus-within{border:0;box-shadow:none}
+.messages-page .composer-field{display:flex;align-items:flex-end;flex:1;min-width:0;min-height:46px;padding:0 3px 0 14px;border:1px solid rgba(60,60,67,.19);border-radius:24px;background:rgba(250,250,252,.94);box-shadow:inset 0 1px 2px rgba(29,29,31,.025)}
+.messages-page .composer-field:focus-within{border-color:#a1a1a6;box-shadow:0 0 0 1px rgba(29,29,31,.08)}
+.messages-page .composer-field>textarea{display:block;flex:1;min-width:0;width:100%;min-height:44px;height:44px;max-height:150px;margin:0;padding:10.8px 0;border:0;border-radius:0;outline:none!important;outline-offset:0!important;background:transparent;box-shadow:none;resize:none;line-height:1.4;font-size:16px}
+.messages-page .composer-row :is(.attachment-button,.voice-button,.send-message){display:inline-flex;align-items:center;justify-content:center;align-self:flex-end;position:relative;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;margin:0;padding:0;border-radius:50%;line-height:1}
+.messages-page .composer-row .attachment-button{margin-bottom:1px;background:rgba(245,245,247,.92);box-shadow:inset 0 0 0 .5px rgba(60,60,67,.1),0 1px 4px rgba(29,29,31,.035)}
+.messages-page .composer-row .attachment-button:hover{background:#eaeaec}
+.messages-page .composer-row :is(.attachment-button,.voice-button,.send-message)>svg{display:block;flex:none;width:22px;height:22px}
+.messages-page .composer-field>.voice-button{background:transparent;color:#8e8e93}
+.messages-page .composer-field>.voice-button:hover{background:rgba(120,120,128,.07)}
+.messages-page .composer-field>.voice-button>svg{stroke-width:2;stroke-linecap:round}
+.messages-page .composer-field>.send-message{background:transparent;color:#fff;--composer-send-color:#008aff}
+.messages-page .composer-field>.send-message:disabled{background:transparent;--composer-send-color:#c8c8cd}
+.messages-page .composer-field>.send-message::before{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--composer-send-color)}
+.messages-page .composer-field>.send-message>svg{position:relative;width:20px;height:20px}
+.messages-page .composer-field>button:not([hidden]){animation:composer-action-in .16s ease-out}
+@keyframes composer-action-in{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
 @media(min-width:701px){
     .messages-page .active-conversation[data-background=sky]{--message-canvas:#eef7ff}
     .messages-page .active-conversation[data-background=rose]{--message-canvas:#f5f1fa}
     .messages-page .active-conversation[data-background=mint]{--message-canvas:#f1f7f1}
     .messages-page .active-conversation>.message-composer{background:var(--message-canvas)}
-    .messages-page .composer-row{border-radius:16px;background:rgba(250,250,252,.96)}
 }
+@media(prefers-reduced-motion:reduce){.messages-page .composer-field>button:not([hidden]){animation:none}}
+.deleted-groups-section{margin:20px 0 24px;padding-top:18px;border-top:1px solid #e5e5ea}
+.deleted-groups-section h3{font-size:18px;letter-spacing:-.02em;margin:0 0 10px}
+#deleted-group-list{display:flex;flex-direction:column;gap:8px;max-height:240px;overflow:auto}
+.deleted-group-row{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:16px;background:#f5f5f7}
+.deleted-group-row>span{flex:1;min-width:0}.deleted-group-row strong{display:block;font-size:14px;overflow-wrap:anywhere}.deleted-group-row small{display:block;margin-top:4px;font-size:12px;color:#86868b}
+.restore-group{flex:none;min-height:44px;padding:8px 12px;border:0;border-radius:999px;background:#e8f0fa;color:#0071e3;font-size:13px}
+.group-delete-actions{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:10px;margin-top:24px}
+.group-delete-actions button{min-height:44px;margin:0;padding:11px 18px;border:0;border-radius:999px;font-size:15px}.group-delete-actions .secondary-button{background:#f0f0f3;color:#1d1d1f}
+#delete-group-dialog h2{margin:0 0 18px;font-size:26px;line-height:1.15;letter-spacing:-.025em}
+#delete-group{width:100%;margin:14px 0 0;min-height:44px}
