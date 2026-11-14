@@ -19,7 +19,9 @@ module.exports = function (options = {}) {
         {id:'m4',senderUid:'teacher',text:'Se ti serve una mano, scrivimi qui.',replyTo:'',reactions:{},createdAt:ts(now-300000)},
         {id:'m5',senderUid:'a',text:'Perfetto, grazie professoressa!',replyTo:'m4',reactions:{},createdAt:ts(now-60000)}
     ].map(row=>[row.id,row])));
-    function snapshot(type,id){
+    function snapshot(type,id,detail={}){
+        if(type==='original')return doc(detail.parent,rows.get(id)?.get(detail.parent));
+        if(type==='replies')return {docs:[...(rows.get(id)||new Map())].filter(([,value])=>value.replyTo===detail.parent).sort(([a],[b])=>a.localeCompare(b)).slice(0,detail.limit+1).map(([id,value])=>doc(id,value))};
         if(type==='badges')return {docs:[...badges].filter(([,v])=>v.enabled).map(([id,value])=>doc(id,value))};
         if(type==='contacts') return {docs:[...people].filter(([,v])=>v.enabled).map(([id,value])=>doc(id,value))};
         if(type==='chats') return {docs:[...chats].filter(([,c])=>c.members.includes(auth.currentUser.uid)).map(([id,value])=>doc(id,value)),metadata:{fromCache:false}};
@@ -27,8 +29,8 @@ module.exports = function (options = {}) {
         if(type==='settings') return {docs:[...(preferences.get(id)||new Map())].map(([id,value])=>doc(id,value))};
         return {docs:[...(rows.get(id)||new Map())].map(([id,value])=>doc(id,value)).sort((a,b)=>b.data().createdAt.toMillis()-a.data().createdAt.toMillis()).slice(0,50),metadata:{fromCache:false}};
     }
-    function emit(type,id){listeners.filter(l=>l.active&&l.type===type&&(!id||l.id===id)).forEach(l=>setTimeout(()=>{if(l.active)l.receive(snapshot(type,l.id));},0));}
-    function listen(type,id,receive,fail){const listener={type,id,receive,fail,active:true};listeners.push(listener);setTimeout(()=>{if(listener.active)receive(snapshot(type,id));},0);return()=>listener.active=false;}
+    function emit(type,id){listeners.filter(l=>l.active&&(l.type===type||(type==='messages'&&['original','replies'].includes(l.type)))&&(!id||l.id===id)).forEach(l=>setTimeout(()=>{if(l.active)l.receive(snapshot(l.type,l.id,l.detail));},0));}
+    function listen(type,id,receive,fail,detail={}){const listener={type,id,receive,fail,detail,active:true};listeners.push(listener);setTimeout(()=>{if(!listener.active)return;if(type==='replies'&&state.failNextThread){state.failNextThread=false;listener.active=false;fail(new Error('network'));}else receive(snapshot(type,id,detail));},0);return()=>listener.active=false;}
     const auth = {currentUser:a,onAuthStateChanged(receive){authListeners.push(receive);setTimeout(()=>receive(auth.currentUser),0);return()=>{};}};
     const db = { collection(name) { return { doc(uid) { return { async get() { return doc(uid, name === 'registri' ? {studentId:'profile-'+uid,email:auth.currentUser.email} : {}); } }; } }; } };
     function firestore(){return db;} firestore.FieldValue={serverTimestamp:()=>ts(Date.now())};
@@ -42,7 +44,7 @@ module.exports = function (options = {}) {
     function touchChat(id,message){Object.assign(chats.get(id),{lastText:message.text||({image:'Foto',audio:'Messaggio vocale',video:'Video',file:'File'}[message.type])||message.poll?.question||'',lastSender:message.senderUid,lastMessageId:message.id,lastAt:message.createdAt,updatedAt:message.createdAt});emit('messages',id);emit('chats');}
     const state=window.__messagesFixture={auth,people,chats,rows,states,preferences,uploads,listeners,badges,sendCount:0,typed:[],failNextSend:false,failNextReaction:false,failNextEdit:false,failNextUpload:false,ts,doc,
         async createUserProfile(){return {id:'profile-'+auth.currentUser.uid,role:'studente',data:{nome:people.get(auth.currentUser.uid).name}};},
-        emit,peerText(text,conversationId='a~teacher',senderUid='teacher'){const id='incoming'+messageCounter++;const message={id,senderUid,text,replyTo:'',reactions:{},createdAt:ts(Date.now())};rows.get(conversationId).set(id,message);touchChat(conversationId,message);return id;},
+        emit,peerText(text,conversationId='a~teacher',senderUid='teacher',replyTo=''){const id='incoming'+messageCounter++;const message={id,senderUid,text,replyTo,reactions:{},createdAt:ts(Date.now())};rows.get(conversationId).set(id,message);touchChat(conversationId,message);return id;},
         peerState(value,conversationId='a~teacher',senderUid='teacher'){if(!states.has(conversationId))states.set(conversationId,new Map());const map=states.get(conversationId);map.set(senderUid,{...map.get(senderUid),...value,updatedAt:value.updatedAt||ts(Date.now())});emit('states',conversationId);},
         changeUser(uid){auth.currentUser=uid==='b'?b:a;authListeners.forEach(fn=>fn(auth.currentUser));},
         create(db,user){const uid=user.uid;return {
@@ -68,7 +70,9 @@ module.exports = function (options = {}) {
             sendPoll:async(id,messageId,question,options,replyTo='')=>{const message={id:messageId,senderUid:uid,type:'poll',text:question,poll:{question,options,votes:{}},replyTo,reactions:{},createdAt:ts(Date.now())};rows.get(id).set(messageId,message);touchChat(id,message);},
             vote:async(id,messageId,optionIndex)=>{const message=rows.get(id).get(messageId);if(optionIndex===null||message.poll.votes[uid]===optionIndex)delete message.poll.votes[uid];else message.poll.votes[uid]=optionIndex;emit('messages',id);},
             react:async(id,messageId,emoji)=>{if(state.failNextReaction){state.failNextReaction=false;throw new Error('network');}const row=rows.get(id).get(messageId);if(row.reactions[uid]===emoji)delete row.reactions[uid];else row.reactions[uid]=emoji;emit('messages',id);},
-            getMessage:async(id,messageId)=>doc(messageId,rows.get(id).get(messageId))
+            getMessage:async(id,messageId)=>doc(messageId,rows.get(id).get(messageId)),
+            watchMessage:(id,messageId,receive,fail)=>listen('original',id,receive,fail,{parent:messageId}),
+            replies:(id,messageId,receive,fail,limit=100)=>listen('replies',id,receive,fail,{parent:messageId,limit})
         };}
     };
     state.media={
