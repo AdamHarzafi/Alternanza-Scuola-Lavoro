@@ -282,3 +282,42 @@ body.messages-page{--font-text:"Messages SF Text",-apple-system,BlinkMacSystemFo
 @media(min-width:1000px){.messages-gate:has(#messages-onboarding:not([hidden])){max-width:860px;height:auto;min-height:700px}#messages-onboarding{max-width:780px}.onboarding-features,.onboarding-title{width:540px;align-self:center}.onboarding-title>span{white-space:nowrap}.onboarding-note{white-space:normal!important;text-align:center!important}#messages-enable{max-width:540px;align-self:center}}
 @media(max-width:359px){.messages-page .sidebar-title-row h1{font-size:25px}.messages-page .sidebar-header{gap:4px}.messages-page .sidebar-actions{gap:2px}}
 @media(min-width:701px){.messages-gate .onboarding-title{margin:0 0 28px}}
+
+/* Each masked layer adds blur nearer the top, leaving the history edge clear. */
+.conversation-progressive-blur{position:absolute;inset:0 0 auto;height:calc(var(--message-header-height) + var(--message-security-height) + 22px);z-index:4;pointer-events:none;background:linear-gradient(to bottom,rgba(255,255,255,.88),rgba(255,255,255,.54) 56%,rgba(255,255,255,0) 100%)}
+.conversation-progressive-blur>span{position:absolute;inset:0;backdrop-filter:blur(var(--progressive-radius));-webkit-backdrop-filter:blur(var(--progressive-radius));mask-image:linear-gradient(to bottom,#000 var(--progressive-solid),transparent var(--progressive-end));-webkit-mask-image:linear-gradient(to bottom,#000 var(--progressive-solid),transparent var(--progressive-end))}
+.conversation-progressive-blur>span:nth-child(1){--progressive-radius:.75px;--progressive-solid:72%;--progressive-end:100%}
+.conversation-progressive-blur>span:nth-child(2){--progressive-radius:1.5px;--progressive-solid:58%;--progressive-end:88%}
+.conversation-progressive-blur>span:nth-child(3){--progressive-radius:3px;--progressive-solid:44%;--progressive-end:76%}
+.conversation-progressive-blur>span:nth-child(4){--progressive-radius:6px;--progressive-solid:30%;--progressive-end:64%}
+.conversation-progressive-blur>span:nth-child(5){--progressive-radius:12px;--progressive-solid:16%;--progressive-end:52%}
+.conversation-progressive-blur>span:nth-child(6){--progressive-radius:24px;--progressive-solid:0%;--progressive-end:40%}
+.active-conversation>.conversation-header,.active-conversation>.conversation-security{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;mask-image:none;-webkit-mask-image:none}
+.active-conversation>.conversation-header::after{display:none}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.conversation-progressive-blur{background:linear-gradient(#fff 35%,rgba(255,255,255,.95) 68%,rgba(255,255,255,0))}}
+
+/* The visible photo and its bubble share the original image's proportions. */
+.message-image{width:100%;height:auto;max-width:100%;max-height:none;min-height:0;object-fit:contain;background:transparent}
+.message-bubble:has(>.message-image){box-sizing:border-box;width:calc(min(var(--photo-native-width,280px),310px,var(--photo-tall-width,310px)) + 8px);min-width:0;max-width:100%}
+.message-bubble:has(>.message-image)>.reply-quote{max-width:100%;box-sizing:border-box}
+@media(max-width:700px){.message-bubble:has(>.message-image){width:calc(min(var(--photo-native-width,280px),280px,var(--photo-mobile-tall-width,280px)) + 8px)}}
+
+/* The attachment menu owns the glass; its transparent backdrop leaves the chat sharp. */
+#composer-menu{position:fixed;inset:auto;margin:0;padding:14px 12px 18px;border:0;border-radius:30px;box-sizing:border-box;overflow:auto;overscroll-behavior:contain;background:rgba(246,246,249,.74);backdrop-filter:blur(30px) saturate(1.55);-webkit-backdrop-filter:blur(30px) saturate(1.55);box-shadow:0 12px 42px rgba(0,0,0,.16),inset 0 0 0 .5px rgba(255,255,255,.8);transform-origin:bottom left}
+#composer-menu::backdrop{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+#composer-menu .dialog-heading{padding:0 4px 6px 12px;margin:0;min-height:36px;align-items:center}
+#composer-menu .dialog-heading h2{font-family:var(--font-text)!important;font-size:13px;line-height:1.3;font-weight:600;letter-spacing:.01em;color:#6e6e73;margin:0}
+#composer-menu .dialog-heading .circle-button{width:30px;height:30px;background:rgba(120,120,128,.1);color:#6e6e73}
+#composer-menu .dialog-heading svg{width:15px;height:15px}
+#composer-menu .action-row{display:flex;align-items:center;justify-content:flex-start;gap:16px;width:100%;min-height:58px;padding:9px 12px;border:0;border-radius:18px;background:transparent;text-align:left;font-size:18px;font-weight:500;line-height:1.25;color:#1d1d1f}
+#composer-menu .action-row:hover,#composer-menu .action-row:focus-visible{background:rgba(255,255,255,.65)}
+#composer-menu .composer-menu-icon{display:grid;place-items:center;flex:none;width:34px;height:34px;border-radius:11px;color:#fff}
+#composer-menu .composer-menu-icon svg{display:block;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#composer-menu .menu-photos{background:linear-gradient(145deg,#64caff,#007aff)}
+#composer-menu .menu-files{background:linear-gradient(145deg,#6facff,#3867e9)}
+#composer-menu .menu-audio{background:linear-gradient(145deg,#ff918e,#ff453a)}
+#composer-menu .menu-poll{background:linear-gradient(145deg,#ffd45c,#ff9f0a)}
+#attach-message svg{transition:transform .3s cubic-bezier(.22,.8,.24,1)}
+#attach-message[aria-expanded=true] svg{transform:rotate(45deg)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){#composer-menu{background:rgba(246,246,249,.97)}}
+@media(prefers-reduced-motion:reduce){#attach-message svg{transition:none}}

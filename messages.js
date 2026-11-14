@@ -83,7 +83,7 @@
         cancelMotion(element);
         if (reduced.matches || !element.animate) return true;
         const frames = entering ? motionFrames[type] : [...motionFrames[type]].reverse();
-        const animation = element.animate(frames, {duration:options.duration || 280,delay:options.delay || 0,easing:'cubic-bezier(.4,0,.2,1)'});
+        const animation = element.animate(frames, {duration:options.duration || 280,delay:options.delay || 0,fill:options.fill || 'none',easing:'cubic-bezier(.4,0,.2,1)'});
         motions.set(element, animation);
         let finished = true; await animation.finished.catch(() => { finished = false; });
         const current = motions.get(element) === animation;
@@ -99,19 +99,64 @@
         const finished = await motion(element, type, show, {duration:220});
         if (finished && visibilityTargets.get(element) === show) element.hidden = !show;
     }
+    function positionComposerMenu() {
+        const dialog = $('composer-menu'), anchor = $('attach-message').getBoundingClientRect();
+        const viewport = window.visualViewport;
+        const left = viewport?.offsetLeft || 0, top = viewport?.offsetTop || 0;
+        const width = viewport?.width || innerWidth, height = viewport?.height || innerHeight;
+        const edge = 12, availableHeight = Math.max(120, height - edge * 2);
+        dialog.style.width = Math.min(300, width - edge * 2) + 'px';
+        dialog.style.maxHeight = availableHeight + 'px';
+        const boxHeight = dialog.offsetHeight;
+        const x = Math.max(left + edge, Math.min(anchor.left - 8, left + width - dialog.offsetWidth - edge));
+        const y = Math.max(top + edge, Math.min(anchor.bottom + 8 - boxHeight, top + height - boxHeight - edge));
+        dialog.style.left = x + 'px'; dialog.style.top = y + 'px';
+        return { anchor, x, y, width:dialog.offsetWidth, height:boxHeight };
+    }
+    async function composerMenuMotion(entering) {
+        const dialog = $('composer-menu'), interrupted = motions.has(dialog);
+        const currentClip = interrupted ? getComputedStyle(dialog).clipPath : '';
+        cancelMotion(dialog);
+        const box = positionComposerMenu(), radius = box.anchor.width / 2;
+        // Reveal the glass itself from the source circle; the labels never stretch.
+        const collapsed = `inset(${box.anchor.top - box.y}px ${box.x + box.width - box.anchor.right}px ${box.y + box.height - box.anchor.bottom}px ${box.anchor.left - box.x}px round ${radius}px)`;
+        const expanded = 'inset(0px 0px 0px 0px round 30px)';
+        const frames = [{clipPath:currentClip && currentClip !== 'none' ? currentClip : entering ? collapsed : expanded}, {clipPath:entering ? expanded : collapsed}];
+        if (reduced.matches || !dialog.animate) return true;
+        const animation = dialog.animate(frames, {
+            duration:entering ? 430 : 300, easing:entering ? 'cubic-bezier(.22,.8,.24,1)' : 'cubic-bezier(.4,0,.6,1)'
+        });
+        motions.set(dialog, animation);
+        for (const [index, item] of [...dialog.querySelectorAll('.dialog-heading,.action-row')].entries()) {
+            motion(item, 'accessory', entering, {duration:entering ? 250 : 300, delay:entering ? 95 + index * 24 : 0, fill:'backwards'});
+        }
+        let finished = true; await animation.finished.catch(() => { finished = false; });
+        const current = motions.get(dialog) === animation;
+        if (current) motions.delete(dialog);
+        return current && finished;
+    }
     function openDialog(dialog) {
         dialogEpochs.set(dialog, (dialogEpochs.get(dialog) || 0) + 1); dialogDesired.set(dialog, true);
-        cancelMotion(dialog); if (!dialog.open) dialog.showModal(); motion(dialog, 'dialog', true);
+        if (!dialog.open) dialog.showModal();
+        if (dialog.id === 'composer-menu') {
+            $('attach-message').setAttribute('aria-expanded', 'true');
+            composerMenuMotion(true);
+        } else { cancelMotion(dialog); motion(dialog, 'dialog', true); }
     }
     async function dismiss(dialog) {
         if (!dialog.open) return;
         const epoch = dialogEpochs.get(dialog); dialogDesired.set(dialog, false);
-        const finished = await motion(dialog, 'dialog', false);
+        const finished = await (dialog.id === 'composer-menu' ? composerMenuMotion(false) : motion(dialog, 'dialog', false));
         if (finished && dialogEpochs.get(dialog) === epoch && dialog.open && !dialogDesired.get(dialog)) dialog.close();
     }
     function closeDialogs() { for (const dialog of dialogs) { dialogEpochs.set(dialog, (dialogEpochs.get(dialog) || 0) + 1); dialogDesired.set(dialog, false); cancelMotion(dialog); if (dialog.open) dialog.close(); } }
     for (const button of document.querySelectorAll('[data-close-dialog]')) button.addEventListener('click', () => dismiss(button.closest('dialog')));
     for (const dialog of dialogs) {
+        dialog.addEventListener('close', () => {
+            if (dialog.id === 'composer-menu' && !dialog.open) {
+                cancelWithin(dialog); $('attach-message').setAttribute('aria-expanded', 'false');
+            }
+        });
         dialog.addEventListener('cancel', event => { event.preventDefault(); dismiss(dialog); });
         dialog.addEventListener('click', event => { if (event.target !== dialog) return; const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dismiss(dialog); });
         dialog.addEventListener('keydown', event => {
@@ -122,6 +167,15 @@
             else if (!event.shiftKey && document.activeElement === items.at(-1)) { event.preventDefault(); items[0].focus(); }
         });
     }
+    const repositionComposerMenu = () => {
+        const dialog=$('composer-menu'); if (!dialog.open) return;
+        if (dialogDesired.get(dialog) === false) { cancelWithin(dialog); dialog.close(); }
+        else { cancelMotion(dialog); positionComposerMenu(); }
+    };
+    window.addEventListener('resize', repositionComposerMenu);
+    window.visualViewport?.addEventListener('resize', repositionComposerMenu);
+    window.visualViewport?.addEventListener('scroll', repositionComposerMenu);
+    window.addEventListener('scroll', repositionComposerMenu, {passive:true});
 
     function gate(title, copy, { loading = false, enable = false, retry = false } = {}) {
         $('messages-gate').hidden = false; app.hidden = true;
@@ -407,6 +461,7 @@
             let row = rowNodes.get(message.id); const isNew = !row;
             if (!row) { row = node('li', 'message-row'); row.dataset.messageId = message.id; rowNodes.set(message.id, row); }
             if (row.dataset.signature !== signature) {
+                const transcriptOpen = row.querySelector('.message-transcript')?.open;
                 row.dataset.signature = signature; row.replaceChildren(); row.className = 'message-row' + (own ? ' own' : '') + (grouped ? ' grouped' : '');
                 if (showDate) row.append(node('div', 'message-date', day.format(date) + ' · ' + time.format(date)));
                 const cluster = node('div', 'message-cluster'), bubble = node('div', 'message-bubble');
@@ -418,6 +473,7 @@
                 if(groupChat()&&!own&&!grouped)bubble.append(node('strong','message-sender',nameOf(message.senderUid)));
                 if(message.type==='poll')renderPoll(bubble,message);
                 else {if(message.attachment)renderMedia(bubble,message);if(message.text)bubble.append(node('span', 'message-text', message.text));}
+                if (transcriptOpen && bubble.querySelector('.message-transcript')) bubble.querySelector('.message-transcript').open = true;
                 if(message.editedAt)bubble.append(node('span','message-edited','Modificato'));
                 const actions = node('button', 'bubble-actions', '•••'); actions.type = 'button'; actions.setAttribute('aria-label', 'Azioni del messaggio: ' + message.text.slice(0, 60)); actions.disabled = !!message.pending || !!message.failed;
                 actions.addEventListener('click', () => openActions(message.id));
@@ -460,7 +516,19 @@
         const attachment=message.attachment,current=chatVersion,writer=store;
         const load=()=>media.load(attachment,writer);
         if(message.type==='image'||message.type==='video') {
-            const element=node(message.type==='image'?'img':'video','message-'+message.type);element.setAttribute('aria-label',attachment.name);if(message.type==='image'){element.alt=attachment.name;element.loading='lazy';}else{element.controls=true;element.preload='metadata';}bubble.append(element);
+            const element=node(message.type==='image'?'img':'video','message-'+message.type);element.setAttribute('aria-label',attachment.name);if(message.type==='image'){
+                element.alt=attachment.name;element.loading='lazy';element.decoding='async';
+                element.width=280;element.height=210;
+                element.addEventListener('load',()=>{
+                    if(current!==chatVersion || !element.naturalWidth || !element.naturalHeight)return;
+                    const follow=nearBottom(),ratio=element.naturalWidth/element.naturalHeight;
+                    element.width=element.naturalWidth;element.height=element.naturalHeight;
+                    bubble.style.setProperty('--photo-native-width',element.naturalWidth+'px');
+                    bubble.style.setProperty('--photo-tall-width',420*ratio+'px');
+                    bubble.style.setProperty('--photo-mobile-tall-width',360*ratio+'px');
+                    if(follow)bottom();
+                });
+            }else{element.controls=true;element.preload='metadata';}bubble.append(element);
             // Load only visible media, rather than all files in a long conversation.
             const observer=new IntersectionObserver(entries=>{if(!entries.some(e=>e.isIntersecting))return;observer.disconnect();load().then(url=>{if(current===chatVersion&&element.isConnected)element.src=url;}).catch(()=>{if(current===chatVersion)element.replaceWith(node('span','media-error','Allegato non disponibile. Riapri la conversazione per riprovare.'));});},{root:scroll,rootMargin:'250px'});observer.observe(element);chatStops.push(()=>observer.disconnect());
             if(message.type==='image')element.addEventListener('click',async()=>{try{const url=await load();if(current!==chatVersion)return;const dialog=$('media-viewer');$('media-viewer-image').src=url;openDialog(dialog);}catch(_){status('Non è stato possibile aprire la foto.',true);}});
