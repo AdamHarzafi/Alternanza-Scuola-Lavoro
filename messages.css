@@ -230,6 +230,9 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
     .message-poll{min-width:180px;max-width:250px}.poll-option{min-height:44px;font-size:13px}
     .message-transcript{max-width:250px}
     .messages-site-footer{display:block!important;position:relative!important;margin-top:0;background:#f5f5f7;opacity:1;visibility:visible;transform:none}
+    body.messages-page:has(.messages-app.conversation-open) .messages-site-footer{display:none!important}
+    .messages-workspace:has(.messages-app.conversation-open){padding-bottom:0}
+    .messages-app.conversation-open{height:calc(var(--messages-height,100svh) - var(--messages-nav-height) - var(--messages-top-gap))}
     .messages-gate:has(#messages-onboarding:not([hidden])){height:auto;min-height:calc(var(--messages-height,100svh) - var(--messages-nav-height,48px) - 38px);padding:20px 28px 24px;justify-content:flex-start}
     #messages-onboarding{min-height:calc(var(--messages-height,100svh) - var(--messages-nav-height,48px) - 82px);max-width:430px;padding-top:7px}
     .onboarding-symbol{width:86px;height:86px;margin-bottom:31px;border-radius:23px}.onboarding-symbol svg{width:54px;height:54px}
