@@ -307,7 +307,12 @@
         }
         $('contact-list').replaceChildren(fragment); $('contact-status').textContent = list.length ? '' : query ? 'Nessuna persona trovata.' : 'Le altre persone appariranno qui dopo aver attivato Messaggi.';
     }
-    function newConversation() { $('contact-search').value = ''; renderContacts(); openDialog($('new-message-dialog')); $('contact-search').focus(); }
+    function newConversation(event) {
+        const dialog=$('new-message-dialog');dialog.dataset.inputMode=event?.detail===0?'keyboard':'pointer';
+        $('contact-search').value='';renderContacts();openDialog(dialog);$('contact-search').focus({preventScroll:true});
+    }
+    $('new-message-dialog').addEventListener('pointerdown',()=>{$('new-message-dialog').dataset.inputMode='pointer';});
+    $('new-message-dialog').addEventListener('keydown',event=>{if(event.key==='Tab')$('new-message-dialog').dataset.inputMode='keyboard';});
     function updateHeader() {
         const p = person(recipientUid); avatar($('conversation-avatar'), p); $('conversation-name').textContent = p.name;
         const c=conversation();if(c){chatAvatar($('conversation-avatar'),c);$('conversation-name').textContent=chatName(c);}
