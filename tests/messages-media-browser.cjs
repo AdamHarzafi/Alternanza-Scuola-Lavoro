@@ -2,7 +2,7 @@ const assert=require('node:assert/strict'),path=require('node:path');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),{createServer}=require('../server.js');
 (async()=>{
  const server=createServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin=`http://127.0.0.1:${server.address().port}`;
- const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE});
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_EXECUTABLE,args:['--use-fake-ui-for-media-stream','--use-fake-device-for-media-stream']});
  try{
   const page=await browser.newPage();await page.goto(origin+'/404.html');
   await page.addScriptTag({path:path.join(__dirname,'../messages-store.js')});await page.addScriptTag({path:path.join(__dirname,'../messages-media.js')});
@@ -21,6 +21,15 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),{createSer
   });
   assert.equal(result.chunks,3);assert.equal(result.progress.at(-1),100);assert.deepEqual(result.dimensions,[1600,1200]);assert.ok(result.optimized<1572864);assert.ok(result.rejected&&result.revoked);
   console.log('PASS: real media compression, exact 700 KB binary upload/download across three chunks, progress, SVG rejection and account-session URL revocation.');
+  const recording=await page.evaluate(async()=>{
+   const api=HarzafiMessageMedia,levels=[],segments=[];
+   for(let i=0;i<2;i++){const controller=await api.startRecording({onLevel:value=>levels.push(value)});await new Promise(r=>setTimeout(r,650));segments.push(await controller.stop());}
+   const joined=await api.mergeRecordings(segments),shape=await api.waveform(joined.file);
+   const bytes=new DataView(await joined.file.arrayBuffer());
+   const firstUrl=URL.createObjectURL(joined.file),second=await api.startRecording();second.cancel();URL.revokeObjectURL(firstUrl);
+   return{duration:joined.duration,decoded:shape.duration,values:shape.values.length,peak:Math.max(...shape.values),levels:levels.length,mime:joined.mime,rate:bytes.getUint32(24,true),size:joined.size};
+  });
+  assert.equal(recording.mime,'audio/wav');assert.equal(recording.rate,16000);assert.equal(recording.values,48);assert.ok(recording.levels>0&&recording.duration>1&&recording.duration<3);assert.ok(Math.abs(recording.duration-recording.decoded)<.02);assert.ok(recording.peak>.1);console.log('PASS: real microphone capture, live levels, stop/restart, complete joined WAV, decoded waveform, correct duration and cancellation.',recording);
   if(process.env.TEST_ASR==='1'){
    page.on('console',message=>{if(message.type()==='error')console.log('ASR browser:',message.text().slice(0,160));});
    const text=await page.evaluate(async()=>{const response=await fetch('https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/jfk.wav');if(!response.ok)throw new Error('sample-'+response.status);return HarzafiMessageMedia.transcribe(await response.blob(),undefined,{language:'english'});});

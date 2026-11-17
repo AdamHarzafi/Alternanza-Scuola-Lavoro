@@ -88,8 +88,11 @@ module.exports = function (options = {}) {
         async load(attachment,authorize){if(typeof authorize === 'function')await authorize(attachment.path.split('/')[1]);const item=uploads.get(attachment.path);if(!item)throw new Error('object-not-found');return item.url;},
         release(){},
         canRecord:()=>true,
-        async startRecording({onTick}={}){
-            state.recording=true;onTick?.(1);
+        async mergeRecordings(segments){return {...segments[0],duration:segments.reduce((sum,segment)=>sum+segment.duration,0)};},
+        async waveform(){return {values:Array.from({length:48},(_,i)=>.12+Math.sin(i*.3)**2*.8),duration:1};},
+        async startRecording({onTick,onLevel}={}){
+            if(state.failRecording)throw new Error('microphone-unavailable');
+            state.recording=true;onTick?.(1);onLevel?.(.5);
             return {async stop(){state.recording=false;const data=new Uint8Array(44+16000),view=new DataView(data.buffer),put=(at,value)=>{for(let i=0;i<value.length;i++)data[at+i]=value.charCodeAt(i);};put(0,'RIFF');view.setUint32(4,data.length-8,true);put(8,'WAVE');put(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,8000,true);view.setUint32(28,16000,true);view.setUint16(32,2,true);view.setUint16(34,16,true);put(36,'data');view.setUint32(40,16000,true);const file=new File([data],'Messaggio vocale.wav',{type:'audio/wav'});return {...await state.media.prepare(file),duration:1};},cancel(){state.recording=false;}};
         },
         async transcribe(){state.transcriptionCount=(state.transcriptionCount||0)+1;if(state.failNextTranscript){state.failNextTranscript=false;throw new Error('transcription-failed');}return 'Questo è un messaggio vocale di prova.';},

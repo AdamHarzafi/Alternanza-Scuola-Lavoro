@@ -148,12 +148,33 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),{createSer
   await page.setViewportSize({width:390,height:844});
   const pdf=Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Count 0/Kids[]>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF');
   await attachFile(page,{name:'Documento di prova.pdf',mimeType:'application/pdf',buffer:pdf},'file');await page.locator('.message-document').waitFor();assert.match(await page.locator('.message-document').last().textContent(),/Documento di prova\.pdf/);
-  await page.locator('#voice-message').click();await page.locator('#voice-dialog').waitFor({state:'visible'});await page.locator('#stop-recording').click();await page.locator('#send-recording').waitFor({state:'visible'});await page.locator('#send-recording').click();await page.locator('#voice-dialog').waitFor({state:'hidden'});await page.locator('.message-audio').waitFor();
+  await page.locator('#voice-message').click();await page.locator('#voice-draft[data-state=recording]').waitFor({state:'visible'});
+  assert.equal(await page.locator('.composer-row').isVisible(),false);assert.equal(await page.locator('dialog[open]').count(),0,'Recording stays in the composer and never obscures the conversation');
+  await page.waitForFunction(()=>!document.querySelector('#voice-draft').getAnimations({subtree:true}).some(a=>a.playState==='running'));await page.screenshot({path:path.join(os.tmpdir(),'harzafi-registrazione-in-chat.png')});
+  await page.locator('#stop-recording').click();await page.locator('#voice-draft[data-state=preview]').waitFor();assert.equal(await page.evaluate(()=>__messagesFixture.recording),false,'The microphone stops while previewing');
+  await page.locator('#voice-preview .audio-play').click();await page.waitForFunction(()=>document.querySelector('#voice-preview audio').currentTime>0);
+  await page.locator('#resume-recording').click();await page.locator('#voice-draft[data-state=recording]').waitFor();assert.equal(await page.evaluate(()=>__messagesFixture.recording),true);
+  await page.locator('#stop-recording').click();await page.locator('#voice-draft[data-state=preview]').waitFor();assert.match(await page.locator('#voice-resume-time').innerText(),/00:02/,'Resuming keeps the full recording duration');
+  await page.evaluate(()=>__messagesFixture.failNextUpload=true);await page.locator('#send-recording').click();await page.getByText('Invio non riuscito. L’allegato rimane qui: riprova quando torni online.',{exact:true}).waitFor();assert.equal(await page.locator('#voice-preview').isVisible(),true);
+  await page.locator('#send-recording').click();await page.locator('#voice-draft').waitFor({state:'hidden'});await page.locator('.message-audio').waitFor();
   await page.waitForFunction(()=>document.querySelector('.message-audio audio').readyState>=2);
   assert.equal(await page.getByRole('button',{name:'Carica audio',exact:true}).count(),0,'Audio is prepared without a separate loading action');
-  await page.locator('.message-audio audio').evaluate(async audio=>{await audio.play();});
+  assert.equal(await page.locator('.message-audio audio').evaluate(audio=>audio.controls),false,'The audio bubble uses its own accessible waveform player');
+  await page.locator('.message-audio .audio-play').click();
   await page.waitForFunction(()=>document.querySelector('.message-audio audio').currentTime>0);
+  const unchangedPlayer=await page.locator('.message-audio audio').evaluate(audio=>{audio.dataset.identity='playing';return audio.dataset.identity;});
+  await page.evaluate(()=>__messagesFixture.peerState({readAt:__messagesFixture.ts(Date.now())},'a~b','b'));await page.waitForTimeout(80);assert.equal(await page.locator('.message-audio audio').getAttribute('data-identity'),unchangedPlayer,'Read receipts preserve the live audio element');
+  await page.locator('.audio-seek').last().fill('500');assert.ok(await page.locator('.message-audio audio').evaluate(audio=>audio.currentTime>=.45),'The waveform seeks through the audio');
   await page.locator('.message-transcript summary').last().click();await page.locator('.transcribe-audio').last().click();await page.getByText('Questo è un messaggio vocale di prova.',{exact:true}).waitFor();
+  for(const viewport of [{width:320,height:740},{width:390,height:844},{width:834,height:1194},{width:1440,height:1000}]){
+   await page.setViewportSize(viewport);await page.locator('.message-audio').last().scrollIntoViewIfNeeded();
+   const audioGeometry=await page.locator('.message-audio').last().evaluate(element=>{const r=element.getBoundingClientRect(),p=element.querySelector('.audio-play').getBoundingClientRect(),t=element.querySelector('.audio-timeline').getBoundingClientRect(),time=element.querySelector('.audio-time').getBoundingClientRect();return{left:r.left,right:r.right,aligned:Math.abs(p.top+p.height/2-t.top-t.height/2)<1,inside:time.right<=r.right+1,wave:t.width,overflow:document.documentElement.scrollWidth>innerWidth+1};});
+   assert.ok(audioGeometry.aligned&&audioGeometry.inside&&audioGeometry.wave>30&&!audioGeometry.overflow,JSON.stringify({viewport,...audioGeometry}));
+   await page.locator('#voice-message').click();await page.locator('#voice-draft[data-state=recording]').waitFor();const capsule=await page.locator('.voice-capsule').boundingBox(),stop=await page.locator('#stop-recording').boundingBox();assert.ok(stop.x>=capsule.x&&stop.x+stop.width<=capsule.x+capsule.width+1);await page.locator('#cancel-recording').click();await page.locator('#voice-draft').waitFor({state:'hidden'});assert.equal(await page.evaluate(()=>__messagesFixture.recording),false);
+   if(viewport.width===390)await page.screenshot({path:path.join(os.tmpdir(),'harzafi-vocale-con-trascrizione.png')});
+  }
+  await page.evaluate(()=>__messagesFixture.failRecording=true);await page.locator('#voice-message').click();await page.getByText('Microfono non disponibile. Controlla i permessi del browser oppure allega un file audio.',{exact:true}).waitFor();await page.locator('#cancel-recording').click();await page.evaluate(()=>__messagesFixture.failRecording=false);
+  await page.setViewportSize({width:390,height:844});
   await page.locator('#conversation-info').click();await page.locator('#mute-conversation').check();await page.getByRole('radio',{name:'Orizzonte',exact:true}).check();await page.waitForFunction(()=>__messagesFixture.preferences.get('a').get('a~b').muted===true&&document.querySelector('#active-conversation').dataset.background==='sky');await page.getByRole('button',{name:'Chiudi informazioni',exact:true}).click();await page.locator('#conversation-details').waitFor({state:'hidden'});
   await context.setOffline(true);assert.equal(await page.locator('#send-message').isDisabled(),true);await context.setOffline(false);
   await page.getByRole('button',{name:'Torna alle conversazioni',exact:true}).click();await page.getByRole('button',{name:'Impostazioni messaggi',exact:true}).click();await page.getByRole('button',{name:'Disattiva Messaggi',exact:true}).click();await page.locator('#messages-enable').waitFor();
