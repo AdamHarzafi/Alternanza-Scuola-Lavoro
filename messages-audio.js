@@ -11,6 +11,7 @@
     }
     function wave(count = 48) {
         const element = make('span', 'audio-wave'), base = make('span', 'audio-wave-bars'), fill = make('span', 'audio-wave-bars audio-wave-fill');
+        element.style.setProperty('--wave-count', count);
         element.setAttribute('aria-hidden', 'true');
         const values = Array(count).fill(.06);
         const bars = [base, fill].map(layer => values.map(() => { const bar = make('i'); layer.append(bar); return bar; }));

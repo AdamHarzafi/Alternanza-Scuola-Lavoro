@@ -16,7 +16,7 @@
     <script defer src="loading-indicator.js?v=20261108-ios14-v1"></script>
     <link rel="stylesheet" href="page-transitions.css?v=20261108-direct-entry-v2">
     <script src="page-transitions.js?v=20261108-direct-entry-v2"></script>
-    <link rel="stylesheet" href="messages.css?v=20261117-voice-v18">
+    <link rel="stylesheet" href="messages.css?v=20261117-stable-voice-v19">
 </head>
 <body class="messages-page">
     <nav class="navbar-wrapper glass home-mainnav messages-site-nav" aria-label="Navigazione principale">
@@ -81,21 +81,21 @@
                     <div id="reply-preview" class="reply-preview" hidden><span><strong id="reply-name"></strong><span id="reply-text"></span></span><button id="cancel-reply" class="circle-button" type="button" aria-label="Annulla risposta"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div>
                     <div class="composer-row">
                         <button id="attach-message" class="attachment-button circle-button" type="button" aria-label="Aggiungi un allegato" aria-haspopup="dialog" aria-controls="composer-menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
-                        <div class="composer-field"><label class="sr-only" for="message-input">Scrivi un messaggio</label><textarea id="message-input" rows="1" maxlength="2000" placeholder="Messaggio" enterkeyhint="enter"></textarea><button id="voice-message" class="voice-button circle-button" type="button" aria-label="Registra un messaggio vocale"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 12v4m5-8v12m5-18v24m5-18v12m5-8v4"/></svg></button><button id="send-message" class="send-message" aria-label="Invia messaggio" hidden disabled><svg viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></div>
-                    </div>
-                    <div id="voice-draft" class="voice-draft" role="region" aria-label="Registrazione del messaggio vocale" hidden>
-                        <div class="voice-draft-row">
-                            <button id="cancel-recording" class="circle-button voice-cancel" type="button" aria-label="Annulla registrazione"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M7 17 17 7"/></svg></button>
-                            <div class="voice-capsule">
+                        <button id="cancel-recording" class="circle-button voice-cancel" type="button" aria-label="Annulla registrazione" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M7 17 17 7"/></svg></button>
+                        <div class="composer-field">
+                            <label class="sr-only" for="message-input">Scrivi un messaggio</label><textarea id="message-input" rows="1" maxlength="2000" placeholder="Messaggio" enterkeyhint="enter"></textarea><button id="voice-message" class="voice-button circle-button" type="button" aria-label="Registra un messaggio vocale"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 12v4m5-8v12m5-18v24m5-18v12m5-8v4"/></svg></button><button id="send-message" class="send-message" aria-label="Invia messaggio" hidden disabled><svg viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
+                            <div id="voice-draft" class="voice-draft" role="region" aria-label="Registrazione del messaggio vocale" hidden>
+                                <div class="voice-capsule">
                                 <div id="voice-live" class="voice-live"><span id="voice-waveform" class="voice-waveform"></span><span id="voice-timer" class="voice-time" aria-label="Durata della registrazione">00:00</span></div>
                                 <div id="voice-preview" class="voice-preview" hidden></div>
                                 <button id="resume-recording" class="voice-resume" type="button" aria-label="Riprendi registrazione" hidden><span aria-hidden="true">＋</span><span id="voice-resume-time">00:00</span></button>
                                 <button id="stop-recording" class="circle-button voice-stop" type="button" aria-label="Termina registrazione"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
                                 <button id="send-recording" class="circle-button voice-send" type="button" aria-label="Invia vocale" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
+                                </div>
                             </div>
                         </div>
-                        <p id="voice-status" class="voice-status" role="status"></p>
                     </div>
+                    <p id="voice-status" class="voice-status" role="status"></p>
                     <p id="composer-status" class="composer-status" role="status"></p>
                 </form>
             </div>
@@ -172,10 +172,10 @@
     <script defer src="account-settings-model.js"></script>
     <script defer src="account-preferences.js"></script>
     <script defer src="messages-store.js?v=20261114-reply-threads-v8"></script>
-    <script defer src="messages-media.js?v=20261117-voice-v18"></script>
-    <script defer src="messages-audio.js?v=20261117-voice-v18"></script>
+    <script defer src="messages-media.js?v=20261117-stable-voice-v19"></script>
+    <script defer src="messages-audio.js?v=20261117-stable-voice-v19"></script>
     <script defer src="messages-push.js?v=20261113"></script>
     <script defer src="messages-notifications.js?v=20261113-messaging-v5"></script>
-    <script defer src="messages.js?v=20261117-voice-v18"></script>
+    <script defer src="messages.js?v=20261117-stable-voice-v19"></script>
 </body>
 </html>
