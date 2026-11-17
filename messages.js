@@ -263,7 +263,11 @@
     function listDate(value) {
         const date = new Date(model.millis(value));
         if (!date.getTime()) return '';
-        return date.toDateString() === new Date().toDateString() ? time.format(date) : new Intl.DateTimeFormat('it-IT', { day:'2-digit', month:'2-digit' }).format(date);
+        const today=new Date(),calendarDay=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()),elapsed=(calendarDay(today)-calendarDay(date))/86400000;
+        if(elapsed===0)return time.format(date);
+        if(elapsed===1)return 'ieri';
+        if(elapsed>1&&elapsed<7)return new Intl.DateTimeFormat('it-IT',{weekday:'long'}).format(date);
+        return new Intl.DateTimeFormat('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'}).format(date);
     }
     function renderConversations() {
         const search = $('conversation-search').value.trim().toLocaleLowerCase('it');
@@ -278,7 +282,11 @@
             button.setAttribute('aria-current', String(c.id === activeId)); button.setAttribute('aria-label', 'Apri la conversazione con ' + chatName(c));
             const image = node('span', 'person-avatar'); chatAvatar(image, c);
             const copy = node('span', 'conversation-item-copy'), heading = node('span', 'conversation-item-heading');
-            heading.append(nameLabel(c.kind==='group'?'':other,chatName(c),'strong'), node('time', '', listDate({toMillis:()=>latestTime(c)})));
+            const meta=node('span','conversation-item-meta'),timestamp=node('time','',listDate({toMillis:()=>latestTime(c)})),updated=latestTime(c);
+            if(updated){timestamp.dateTime=new Date(updated).toISOString();timestamp.title=day.format(updated)+' · '+time.format(updated);}
+            const chevron=document.createElementNS('http://www.w3.org/2000/svg','svg');chevron.setAttribute('viewBox','0 0 12 20');chevron.setAttribute('class','conversation-chevron');chevron.setAttribute('aria-hidden','true');
+            const chevronPath=document.createElementNS(chevron.namespaceURI,'path');chevronPath.setAttribute('d','m3.5 4.5 5.5 5.5-5.5 5.5');chevron.append(chevronPath);meta.append(timestamp,chevron);
+            heading.append(nameLabel(c.kind==='group'?'':other,chatName(c),'strong'),meta);
             const writing=writers(c.id);let preview;
             if(writing.length){preview=node('span','conversation-typing');preview.setAttribute('aria-label',writing.map(([uid])=>nameOf(uid)).join(', ')+' sta scrivendo');for(let i=0;i<3;i++)preview.append(node('span','typing-dot'));preview.append(node('span','','Sta scrivendo…'));}
             else preview=node('span', 'conversation-preview', (c.lastSender === user.uid ? 'Tu: ' : '') + (c.lastText || 'Inizia la conversazione.'));

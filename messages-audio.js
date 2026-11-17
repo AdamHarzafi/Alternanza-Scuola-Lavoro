@@ -3,10 +3,11 @@
     const players = new Set();
     const make = (tag, name) => { const element = document.createElement(tag); if (name) element.className = name; return element; };
     const clock = seconds => { const value = Math.max(0, Math.ceil(Number.isFinite(seconds) ? seconds : 0)); return String(Math.floor(value / 60)).padStart(2, '0') + ':' + String(value % 60).padStart(2, '0'); };
+    const playbackPaths = {"play":"m 23.7555 36.6237 c 0.4478 0 0.8598 -0.1343 1.4241 -0.4568 l 10.9178 -6.3322 c 0.8598 -0.5016 1.3614 -1.021 1.3614 -1.8361 c 0 -0.8061 -0.5016 -1.3255 -1.3614 -1.8271 l -10.9178 -6.3322 c -0.5643 -0.3314 -0.9762 -0.4657 -1.4241 -0.4657 c -0.9315 0 -1.7555 0.7165 -1.7555 1.9435 v 13.3629 c 0 1.227 0.824 1.9435 1.7555 1.9435 Z","pause":"m 21.7334 36.67 h 2.5342 c 1.1483 0 1.7324 -0.5796 1.7324 -1.7193 v -13.9015 c 0 -1.12 -0.5841 -1.6898 -1.7324 -1.7193 h -2.5342 c -1.1483 0 -1.7324 0.5698 -1.7324 1.7193 v 13.9015 c -0.0297 1.1396 0.5544 1.7193 1.7324 1.7193 Z m 9.9992 0 h 2.5347 c 1.1485 0 1.7327 -0.5796 1.7327 -1.7193 v -13.9015 c 0 -1.12 -0.5842 -1.7193 -1.7327 -1.7193 h -2.5347 c -1.1485 0 -1.7327 0.5698 -1.7327 1.7193 v 13.9015 c 0 1.1396 0.5545 1.7193 1.7327 1.7193 Z"};
     function icon(kind) {
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('viewBox', '0 0 56 56'); svg.setAttribute('aria-hidden', 'true');
         const path = document.createElementNS(svg.namespaceURI, 'path');
-        path.setAttribute('d', kind === 'pause' ? 'M7 5h3v14H7zm7 0h3v14h-3z' : 'M8 4.8c-.7-.4-1.5.1-1.5.9v12.6c0 .8.8 1.3 1.5.9l10.2-6.3a1.1 1.1 0 0 0 0-1.8z');
+        path.setAttribute('d', playbackPaths[kind] || playbackPaths.play);
         svg.append(path); return svg;
     }
     function wave(count = 48) {
