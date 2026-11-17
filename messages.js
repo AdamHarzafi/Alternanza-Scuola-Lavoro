@@ -20,10 +20,10 @@
         }
     }, { root:scroll, rootMargin:'180px' });
     let typingTimer, typingRefresh, typingExpiry, lastTyping = 0, readTimer, stateError = false, sending = false, enrollmentBusy = false;
-    let pending = new Map(), drafts = new Map(), outbox = new Map(), longPressTimer, suppressClick = false;
+    let pending = new Map(), drafts = new Map(), outbox = new Map(), longPressTimer, pressTarget, suppressClick = false;
     const dialogs = [...document.querySelectorAll('dialog')];
     const motions = new Map(), visibilityTargets = new Map(), dialogEpochs = new WeakMap(), dialogDesired = new WeakMap();
-    let transitionRequest = 0;
+    let transitionRequest = 0, actionOriginRect;
     const viewportState = { width:window.innerWidth, baseline:window.innerHeight, height:0, scale:window.visualViewport?.scale || 1, followLatest:true };
     let preferences = new Map(), inboxStates = new Map(), inboxStops = new Map(), inboxTimer;
     let deletedGroups = [], groupToDelete = '', groupDeletionBusy = false;
@@ -158,19 +158,32 @@
         if (current) motions.delete(dialog);
         return current && finished;
     }
+    async function messageActionsMotion(entering) {
+        const dialog=$('message-actions'),preview=$('action-message-text');cancelWithin(dialog);
+        if(reduced.matches||!preview.animate){dialog.classList.remove('message-context-animating');return true;}
+        dialog.classList.add('message-context-animating');
+        const target=preview.getBoundingClientRect(),source=entering?actionOriginRect:rowNodes.get(actionId)?.querySelector('.message-bubble')?.getBoundingClientRect();
+        const visible=source&&source.width>0&&source.height>0&&source.bottom>0&&source.top<window.innerHeight;
+        const transform=visible?`translate(${source.left+source.width/2-target.left-target.width/2}px,${source.top+source.height/2-target.top-target.height/2}px) scale(${source.width/target.width},${source.height/target.height})`:'scale(.94)';
+        const frames=[{opacity:visible?1:0,transform},{opacity:1,transform:'translate(0,0) scale(1)'}];
+        const animation=preview.animate(entering?frames:[...frames].reverse(),{duration:entering?320:230,easing:entering?'cubic-bezier(.2,.8,.2,1)':'cubic-bezier(.4,0,.2,1)'});motions.set(preview,animation);
+        for(const [index,element]of [dialog.querySelector('.dialog-heading'),$('reaction-picker'),dialog.querySelector('.action-menu')].entries())motion(element,'accessory',entering,{duration:entering?240:170,delay:entering?60+index*35:0,fill:'backwards'});
+        let finished=true;await animation.finished.catch(()=>{finished=false;});const current=motions.get(preview)===animation;if(current){motions.delete(preview);dialog.classList.remove('message-context-animating');}return current&&finished;
+    }
     function openDialog(dialog) {
         dialogEpochs.set(dialog, (dialogEpochs.get(dialog) || 0) + 1); dialogDesired.set(dialog, true);
         if (!dialog.open) dialog.showModal();
         if (dialog.id === 'composer-menu') {
             $('attach-message').setAttribute('aria-expanded', 'true');
             composerMenuMotion(true);
-        } else { cancelMotion(dialog); motion(dialog, 'dialog', true); }
+        } else if(dialog.id==='message-actions'){cancelMotion(dialog);dialog.scrollTop=0;messageActionsMotion(true);}
+        else { cancelMotion(dialog); motion(dialog, 'dialog', true); }
     }
     async function dismiss(dialog) {
         if (!dialog.open) return;
         if ((dialog.id === 'delete-group-dialog' && groupDeletionBusy) || (dialog.id === 'leave-group-dialog' && groupExitBusy)) return;
         const epoch = dialogEpochs.get(dialog); dialogDesired.set(dialog, false);
-        const finished = await (dialog.id === 'composer-menu' ? composerMenuMotion(false) : motion(dialog, 'dialog', false));
+        const finished = await (dialog.id === 'composer-menu' ? composerMenuMotion(false) : dialog.id==='message-actions'?messageActionsMotion(false):motion(dialog, 'dialog', false));
         if (finished && dialogEpochs.get(dialog) === epoch && dialog.open && !dialogDesired.get(dialog)) dialog.close();
     }
     function closeDialogs() { for (const dialog of dialogs) { dialogEpochs.set(dialog, (dialogEpochs.get(dialog) || 0) + 1); dialogDesired.set(dialog, false); cancelMotion(dialog); if (dialog.open) dialog.close(); } }
@@ -180,6 +193,7 @@
             if (dialog.id === 'composer-menu' && !dialog.open) {
                 cancelWithin(dialog); $('attach-message').setAttribute('aria-expanded', 'false');
             }
+            if(dialog.id==='message-actions'&&!dialog.open){cancelWithin(dialog);dialog.classList.remove('message-context-animating');$('action-message-text').replaceChildren();actionOriginRect=null;}
         });
         dialog.addEventListener('cancel', event => { event.preventDefault(); dismiss(dialog); });
         dialog.addEventListener('click', event => { if (event.target !== dialog) return; const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dismiss(dialog); });
@@ -219,7 +233,7 @@
         ++chatVersion; chatStops.splice(0).forEach(stop => stop());
         replyObserver.disconnect(); replyThreads.clear(); openThreadId = '';
         viewportState.followLatest=true;
-        clearTimeout(readTimer); clearTimeout(typingExpiry); clearTimeout(longPressTimer);
+        clearTimeout(readTimer); clearTimeout(typingExpiry); cancelMessagePress();
         activeId = recipientUid = replyTo = actionId = ''; states.clear(); messages.clear(); rowNodes.clear(); quotes.clear(); requestedQuotes.clear();
         cancelWithin($('active-conversation')); $('active-conversation').inert = false;
         $('message-list').replaceChildren(); visibleNow($('typing-indicator'), false); visibleNow($('reply-preview'), false);
@@ -478,11 +492,21 @@
         }
         return { text:'Caricamento del messaggio…', senderUid:'' };
     }
+    function cancelMessagePress(){clearTimeout(longPressTimer);pressTarget?.classList.remove('message-pressing');pressTarget=null;}
     function openActions(id) {
         const message = messages.get(id); if (!message || message.pending || message.failed) return;
-        actionId = id; $('action-message-text').textContent = message.text; $('action-status').textContent = '';
+        cancelMessagePress();if($('message-actions').open&&actionId===id)return;
+        const source=rowNodes.get(id)?.querySelector('.message-bubble'),preview=$('action-message-text');actionOriginRect=source?.getBoundingClientRect();
+        const sourceStyle=source?getComputedStyle(source):null;
+        actionId = id; preview.replaceChildren(); $('action-status').textContent = '';
+        preview.setAttribute('aria-label','Messaggio selezionato: '+(message.text||previewText(message)));
+        preview.style.setProperty('--context-font-size',Math.min(21,(parseFloat(sourceStyle?.fontSize)||16)*1.15)+'px');
+        preview.style.setProperty('--context-background',sourceStyle?.backgroundColor||(message.senderUid===user.uid?'#008aff':'#e9e9eb'));preview.style.setProperty('--context-foreground',sourceStyle?.color||(message.senderUid===user.uid?'#fff':'#1d1d1f'));
+        preview.style.minWidth=actionOriginRect?Math.min(actionOriginRect.width*1.08,Math.max(0,window.innerWidth-64),436)+'px':'';
+        preview.classList.toggle('has-media',!!message.attachment);
+        if(source){const content=node('div','message-preview-content'),clone=source.cloneNode(true);content.inert=true;for(const element of clone.querySelectorAll('[id]'))element.removeAttribute('id');for(const element of clone.querySelectorAll('audio'))element.remove();for(const element of clone.querySelectorAll('video'))element.replaceWith(node('span','',previewText(message)));for(const element of clone.querySelectorAll('button,input,select,textarea'))element.disabled=true;for(const element of clone.querySelectorAll('a'))element.removeAttribute('href');content.append(...clone.childNodes);preview.append(content);}
+        else preview.textContent=message.text||previewText(message);
         $('action-message-text').classList.toggle('own',message.senderUid===user.uid);
-        if(!message.text)$('action-message-text').textContent=previewText(message);
         $('edit-message-action').hidden=message.senderUid!==user.uid || (message.type && message.type!=='text');
         $('copy-message').hidden=$('select-message-action').hidden=!message.text;
         const picker = $('reaction-picker'); picker.replaceChildren();
@@ -647,12 +671,12 @@
                 if(message.editedAt)bubble.append(node('span','message-edited','Modificato'));
                 const actions = node('button', 'bubble-actions', '•••'); actions.type = 'button'; actions.setAttribute('aria-label', 'Azioni del messaggio: ' + message.text.slice(0, 60)); actions.disabled = !!message.pending || !!message.failed;
                 actions.addEventListener('click', () => openActions(message.id));
-                bubble.addEventListener('contextmenu', event => { event.preventDefault(); openActions(message.id); });
-                bubble.addEventListener('dblclick', () => openActions(message.id));
+                bubble.addEventListener('contextmenu', event => { if(event.target.closest('button,input,a,audio,video,summary'))return;event.preventDefault();openActions(message.id); });
+                bubble.addEventListener('dblclick', event => {if(!event.target.closest('button,input,a,audio,video,summary'))openActions(message.id);});
                 let pressPoint;
-                bubble.addEventListener('pointerdown', event => { if (event.pointerType !== 'touch'||event.target.closest('button,input,a,audio,video,summary')) return; pressPoint = [event.clientX, event.clientY]; suppressClick = false; longPressTimer = setTimeout(() => { suppressClick = true; openActions(message.id); }, 480); });
-                bubble.addEventListener('pointermove', event => { if (pressPoint && Math.hypot(event.clientX - pressPoint[0], event.clientY - pressPoint[1]) > 10) clearTimeout(longPressTimer); });
-                for (const name of ['pointerup', 'pointercancel']) bubble.addEventListener(name, () => { clearTimeout(longPressTimer); pressPoint = null; });
+                bubble.addEventListener('pointerdown', event => { if(event.button!==0||event.isPrimary===false||event.target.closest('button,input,a,audio,video,summary'))return;cancelMessagePress();pressTarget=bubble;bubble.classList.add('message-pressing');pressPoint=[event.clientX,event.clientY];suppressClick=false;longPressTimer=setTimeout(()=>{suppressClick=true;openActions(message.id);},450); });
+                bubble.addEventListener('pointermove', event => { if(pressTarget===bubble&&pressPoint&&Math.hypot(event.clientX-pressPoint[0],event.clientY-pressPoint[1])>10)cancelMessagePress(); });
+                for(const name of ['pointerup','pointercancel'])bubble.addEventListener(name,()=>{if(pressTarget===bubble)cancelMessagePress();pressPoint=null;});
                 bubble.addEventListener('click', event => { if (suppressClick) { event.preventDefault(); suppressClick = false; } });
                 cluster.append(bubble, actions);
                 if(quoted){const response=node('div','reply-response');response.append(replyConnector(),cluster);row.append(response);}else row.append(cluster);
@@ -969,7 +993,7 @@
     input.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && window.matchMedia('(min-width:701px)').matches) { event.preventDefault(); $('message-form').requestSubmit(); } });
     input.addEventListener('blur', () => { stopTyping(); viewport(); });
     input.addEventListener('focus', viewport);
-    scroll.addEventListener('scroll', () => { viewportState.followLatest=nearBottom();if (viewportState.followLatest) { $('new-messages-indicator').hidden = true; scheduleRead(); } }, { passive:true });
+    scroll.addEventListener('scroll', () => { cancelMessagePress();viewportState.followLatest=nearBottom();if (viewportState.followLatest) { $('new-messages-indicator').hidden = true; scheduleRead(); } }, { passive:true });
     window.addEventListener('online', () => { connected(); scheduleRead(); }); window.addEventListener('offline', () => { stopTyping(); connected(); });
     document.addEventListener('visibilitychange', () => { if (document.hidden) stopTyping(); else { updateTyping(); scheduleRead(); } });
     function viewport() {
@@ -991,6 +1015,7 @@
     window.visualViewport?.addEventListener('resize', viewport); window.addEventListener('resize', viewport); viewport();
     reduced.addEventListener('change', () => {
         if (!reduced.matches) return;
+        $('message-actions').classList.remove('message-context-animating');
         for (const element of [...motions.keys()]) cancelMotion(element);
         for (const [element, show] of visibilityTargets) element.hidden = !show;
         for (const dialog of dialogs) if (dialog.open && dialogDesired.get(dialog) === false) dialog.close();
