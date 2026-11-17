@@ -79,7 +79,7 @@
         await store.completeUpload(cid, mid);
         check();
         const safeName = prepared.name.replace(/[^A-Za-z0-9_.-]/g, '_');
-        return {
+        const attachment = {
             backend: 'firestore',
             path: `message_media/${cid}/${mid}/${safeName}`,
             name: prepared.name,
@@ -87,6 +87,11 @@
             size: bytes.length,
             ...(prepared.duration ? { duration: prepared.duration } : {}),
         };
+        // The sender already has the bytes. Reuse them for immediate playback after sending.
+        const url = URL.createObjectURL(prepared.file);
+        resolvedUrls.add(url);
+        urls.set(store.uid + ':' + attachment.path, Promise.resolve(url));
+        return attachment;
     }
     async function load(attachment, store) {
         const epoch = generation,
@@ -131,7 +136,41 @@
             throw error;
         }
     }
-    async function startRecording({ onTick, onLimit } = {}) {
+    async function decodeAudio(source) {
+        const blob = source instanceof Blob ? source : await (await fetch(source)).blob();
+        const Audio = window.AudioContext || window.webkitAudioContext;
+        if (!Audio) throw fail('audio-unsupported');
+        const context = new Audio();
+        try { return await context.decodeAudioData(await blob.arrayBuffer()); }
+        finally { await context.close(); }
+    }
+    async function waveform(source, count = 48) {
+        const buffer = await decodeAudio(source), samples = buffer.getChannelData(0), values = [];
+        for (let i = 0; i < count; i++) {
+            const start = Math.floor(i * samples.length / count), end = Math.floor((i + 1) * samples.length / count);
+            let sum = 0, n = 0;
+            for (let j = start; j < end; j += Math.max(1, Math.floor((end - start) / 300))) { sum += samples[j] ** 2; n++; }
+            values.push(Math.sqrt(sum / Math.max(1, n)));
+        }
+        const peak = Math.max(.001, ...values);
+        return { values:values.map(value => Math.max(.06, value / peak)), duration:buffer.duration };
+    }
+    async function mergeRecordings(segments) {
+        if (segments.length === 1) return segments[0];
+        const buffers = [];
+        for (const segment of segments) buffers.push(await decodeAudio(segment.file));
+        const duration = buffers.reduce((sum, buffer) => sum + buffer.duration, 0), rate = 16000;
+        if (!duration || duration > 122) throw fail('audio-too-long');
+        const context = new OfflineAudioContext(1, Math.ceil(duration * rate), rate);
+        let offset = 0;
+        for (const buffer of buffers) { const source = context.createBufferSource(); source.buffer = buffer; source.connect(context.destination); source.start(offset); offset += buffer.duration; }
+        const samples = (await context.startRendering()).getChannelData(0), output = new ArrayBuffer(44 + samples.length * 2), view = new DataView(output);
+        const write = (at, value) => { for (let i = 0; i < value.length; i++) view.setUint8(at + i, value.charCodeAt(i)); };
+        write(0, 'RIFF'); view.setUint32(4, output.byteLength - 8, true); write(8, 'WAVE'); write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true); view.setUint32(24, rate, true); view.setUint32(28, rate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, samples.length * 2, true);
+        samples.forEach((value, index) => view.setInt16(44 + index * 2, Math.max(-1, Math.min(1, value)) * (value < 0 ? 32768 : 32767), true));
+        return { ...await prepare(new File([output], 'Messaggio vocale.wav', { type:'audio/wav' })), duration };
+    }
+    async function startRecording({ onTick, onLevel, onLimit, maxSeconds = 120 } = {}) {
         if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder)
             throw fail('recording-unsupported');
         const epoch = generation,
@@ -143,19 +182,38 @@
         const mime = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/ogg;codecs=opus'].find((value) =>
             MediaRecorder.isTypeSupported(value),
         );
-        const recording = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined),
-            chunks = [];
-        let seconds = 0,
-            finished = false;
+        let recording;
+        try { recording = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined); }
+        catch (error) { stream.getTracks().forEach(track => track.stop()); throw error; }
+        const chunks = [];
+        let seconds = 0, finished = false, audioContext, analyser, frame;
+        const started = performance.now();
+        try {
+            const Audio = window.AudioContext || window.webkitAudioContext;
+            audioContext = new Audio(); analyser = audioContext.createAnalyser(); analyser.fftSize = 512;
+            audioContext.createMediaStreamSource(stream).connect(analyser);
+            await audioContext.resume();
+            const samples = new Float32Array(analyser.fftSize); let lastLevel = 0;
+            const draw = now => {
+                if (finished) return;
+                if (now - lastLevel > 60) { analyser.getFloatTimeDomainData(samples); let sum = 0; for (const value of samples) sum += value * value; onLevel?.(Math.min(1, Math.sqrt(sum / samples.length) * 5)); lastLevel = now; }
+                frame = requestAnimationFrame(draw);
+            };
+            frame = requestAnimationFrame(draw);
+        } catch (_) { audioContext?.close().catch(() => {}); audioContext = null; }
+        let limitReached = false;
         const timer = setInterval(() => {
-            onTick?.(++seconds);
-            if (seconds >= 120) onLimit?.();
-        }, 1000);
+            seconds = Math.min(maxSeconds, (performance.now() - started) / 1000);
+            onTick?.(seconds);
+            if (seconds >= maxSeconds && !limitReached) { limitReached = true; onLimit?.(); }
+        }, 100);
         recording.addEventListener('dataavailable', (event) => {
             if (event.data.size) chunks.push(event.data);
         });
         const cleanup = () => {
             clearInterval(timer);
+            cancelAnimationFrame(frame);
+            audioContext?.close().catch(() => {});
             stream.getTracks().forEach((t) => t.stop());
             if (recorder === controller) recorder = null;
         };
@@ -178,26 +236,26 @@
                                 const result = await prepare(
                                     new File(chunks, 'Messaggio vocale.' + ext, { type }),
                                 );
-                                resolve({ ...result, duration: Math.max(1, seconds) });
+                                resolve({ ...result, duration: Math.max(.1, Math.min(maxSeconds, (performance.now() - started) / 1000)) });
                             } catch (error) {
                                 reject(error);
                             }
                         },
                         { once: true },
                     );
-                    recording.stop();
+                    try { recording.stop(); } catch (error) { cleanup(); reject(error); }
                 });
             },
             cancel() {
                 if (!finished) {
                     finished = true;
-                    recording.stop();
+                    if (recording.state !== 'inactive') recording.stop();
                 }
                 cleanup();
             },
         };
         recorder = controller;
-        recording.start(250);
+        try { recording.start(250); } catch (error) { finished = true; cleanup(); throw error; }
         return controller;
     }
     async function transcribe(source, onProgress, { language = 'italian' } = {}) {
@@ -273,6 +331,8 @@
         load,
         startRecording,
         transcribe,
+        waveform,
+        mergeRecordings,
         cancelActivity,
         destroy,
         canRecord: () => !!(navigator.mediaDevices?.getUserMedia && window.MediaRecorder),

@@ -16,7 +16,7 @@
     <script defer src="loading-indicator.js?v=20261108-ios14-v1"></script>
     <link rel="stylesheet" href="page-transitions.css?v=20261108-direct-entry-v2">
     <script src="page-transitions.js?v=20261108-direct-entry-v2"></script>
-    <link rel="stylesheet" href="messages.css?v=20261117-contact-search-v17">
+    <link rel="stylesheet" href="messages.css?v=20261117-voice-v18">
 </head>
 <body class="messages-page">
     <nav class="navbar-wrapper glass home-mainnav messages-site-nav" aria-label="Navigazione principale">
@@ -81,7 +81,20 @@
                     <div id="reply-preview" class="reply-preview" hidden><span><strong id="reply-name"></strong><span id="reply-text"></span></span><button id="cancel-reply" class="circle-button" type="button" aria-label="Annulla risposta"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div>
                     <div class="composer-row">
                         <button id="attach-message" class="attachment-button circle-button" type="button" aria-label="Aggiungi un allegato" aria-haspopup="dialog" aria-controls="composer-menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
-                        <div class="composer-field"><label class="sr-only" for="message-input">Scrivi un messaggio</label><textarea id="message-input" rows="1" maxlength="2000" placeholder="Messaggio" enterkeyhint="enter"></textarea><button id="voice-message" class="voice-button circle-button" type="button" aria-label="Registra un messaggio vocale"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4m4-7v10m4-14v18m4-14v10m4-7v4"/></svg></button><button id="send-message" class="send-message" aria-label="Invia messaggio" hidden disabled><svg viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></div>
+                        <div class="composer-field"><label class="sr-only" for="message-input">Scrivi un messaggio</label><textarea id="message-input" rows="1" maxlength="2000" placeholder="Messaggio" enterkeyhint="enter"></textarea><button id="voice-message" class="voice-button circle-button" type="button" aria-label="Registra un messaggio vocale"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 12v4m5-8v12m5-18v24m5-18v12m5-8v4"/></svg></button><button id="send-message" class="send-message" aria-label="Invia messaggio" hidden disabled><svg viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></div>
+                    </div>
+                    <div id="voice-draft" class="voice-draft" role="region" aria-label="Registrazione del messaggio vocale" hidden>
+                        <div class="voice-draft-row">
+                            <button id="cancel-recording" class="circle-button voice-cancel" type="button" aria-label="Annulla registrazione"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M7 17 17 7"/></svg></button>
+                            <div class="voice-capsule">
+                                <div id="voice-live" class="voice-live"><span id="voice-waveform" class="voice-waveform"></span><span id="voice-timer" class="voice-time" aria-label="Durata della registrazione">00:00</span></div>
+                                <div id="voice-preview" class="voice-preview" hidden></div>
+                                <button id="resume-recording" class="voice-resume" type="button" aria-label="Riprendi registrazione" hidden><span aria-hidden="true">＋</span><span id="voice-resume-time">00:00</span></button>
+                                <button id="stop-recording" class="circle-button voice-stop" type="button" aria-label="Termina registrazione"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></button>
+                                <button id="send-recording" class="circle-button voice-send" type="button" aria-label="Invia vocale" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
+                            </div>
+                        </div>
+                        <p id="voice-status" class="voice-status" role="status"></p>
                     </div>
                     <p id="composer-status" class="composer-status" role="status"></p>
                 </form>
@@ -115,7 +128,6 @@
     </dialog>
     <input id="message-attachment-input" type="file" hidden aria-label="Scegli un allegato">
     <dialog id="attachment-dialog" class="messages-dialog"><div class="dialog-heading"><h2>Invia allegato</h2><button type="button" class="circle-button" data-close-dialog aria-label="Annulla allegato"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><div id="attachment-preview"></div><label for="attachment-caption">Aggiungi un messaggio <span>(facoltativo)</span></label><textarea id="attachment-caption" maxlength="2000" rows="2"></textarea><p id="attachment-status" class="dialog-note" role="status"></p><button id="send-attachment" class="primary-button">Invia allegato</button></dialog>
-    <dialog id="voice-dialog" class="messages-dialog"><div class="dialog-heading"><h2>Messaggio vocale</h2><button type="button" class="circle-button" data-close-dialog aria-label="Annulla registrazione"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><p id="voice-timer" class="voice-timer">00:00</p><p id="voice-status" class="dialog-note" role="status">Preparo il microfono…</p><audio id="voice-preview" controls hidden preload="metadata"></audio><button id="stop-recording" class="danger-button" type="button">Termina registrazione</button><button id="send-recording" class="primary-button" type="button" hidden>Invia vocale</button></dialog>
     <dialog id="new-group-dialog" class="messages-dialog"><form id="group-form"><div class="dialog-heading"><h2>Nuovo gruppo</h2><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi nuovo gruppo"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><label for="group-title">Nome del gruppo</label><input id="group-title" maxlength="80" required autocomplete="off"><p class="dialog-note">Scegli almeno altre due persone. I partecipanti saranno visibili a tutti i membri del gruppo.</p><div id="group-members" class="contact-list"></div><p id="group-status" class="dialog-note" role="status"></p><button id="create-group" class="primary-button">Crea gruppo</button></form></dialog>
     <dialog id="poll-dialog" class="messages-dialog"><form id="poll-form"><div class="dialog-heading"><h2>Nuovo sondaggio</h2><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi sondaggio"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button></div><label for="poll-question">Domanda</label><input id="poll-question" maxlength="240" required><div id="poll-options"><label>Opzione 1<input class="poll-option-input" maxlength="100" required></label><label>Opzione 2<input class="poll-option-input" maxlength="100" required></label></div><button id="add-poll-option" class="action-row" type="button">Aggiungi un’opzione</button><p class="dialog-note">Ogni partecipante può scegliere una risposta e cambiare il proprio voto. I voti sono visibili ai partecipanti.</p><button id="send-poll" class="primary-button">Invia sondaggio</button><p id="poll-status" class="dialog-note" role="status"></p></form></dialog>
     <dialog id="media-viewer" class="messages-dialog media-viewer"><button class="circle-button" data-close-dialog aria-label="Chiudi foto"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M7 17 17 7"/></svg></button><img id="media-viewer-image" alt="Foto allegata alla conversazione"></dialog>
@@ -160,9 +172,10 @@
     <script defer src="account-settings-model.js"></script>
     <script defer src="account-preferences.js"></script>
     <script defer src="messages-store.js?v=20261114-reply-threads-v8"></script>
-    <script defer src="messages-media.js?v=20261113-messaging-v5"></script>
+    <script defer src="messages-media.js?v=20261117-voice-v18"></script>
+    <script defer src="messages-audio.js?v=20261117-voice-v18"></script>
     <script defer src="messages-push.js?v=20261113"></script>
     <script defer src="messages-notifications.js?v=20261113-messaging-v5"></script>
-    <script defer src="messages.js?v=20261117-contact-search-v17"></script>
+    <script defer src="messages.js?v=20261117-voice-v18"></script>
 </body>
 </html>

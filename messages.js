@@ -31,6 +31,8 @@
     const restoringGroups = new Set();
     const notificationLast = new Map(); let inboxReady=false;
     let preparedAttachment, attachmentId = '', localPreview = '', recording;
+    let voiceEpoch = 0, voiceBusy = false, voiceSegments = [], voicePreview, liveWave;
+    const audioUI = window.HarzafiMessageAudio;
     const media = window.HarzafiMessageMedia;
     const conversation = id => conversations.find(c => c.id === (id || activeId));
     const groupOwner = value => model.groupOwner(value);
@@ -211,7 +213,7 @@
         for(const player of $('message-list').querySelectorAll('audio,video')){
             player.pause();player.removeAttribute('src');player.load();
         }
-        media?.cancelActivity?.();recording?.cancel();recording=null;resetAttachment();
+        media?.cancelActivity?.();resetVoice();resetAttachment();
         if (activeId) drafts.set(activeId, { text:input.value, replyTo });
         if (writeTyping) stopTyping();
         ++chatVersion; chatStops.splice(0).forEach(stop => stop());
@@ -616,6 +618,11 @@
             if (!row) { row = node('li', 'message-row'); row.dataset.messageId = message.id; rowNodes.set(message.id, row); }
             if (row.dataset.signature !== signature) {
                 const transcriptOpen = row.querySelector('.message-transcript')?.open;
+                const mediaKey=JSON.stringify(message.attachment);
+                const reusableAudio=row.dataset.mediaKey===mediaKey?row.querySelector('.message-audio'):null;
+                if(!reusableAudio)row.querySelector('.message-audio')?.audioController?.destroy();
+                if(reusableAudio&&message.transcript){const details=reusableAudio.querySelector('.message-transcript');const wasTranscribed=details.classList.contains('has-transcript');details.querySelector('p').textContent=message.transcript;details.querySelector('.transcribe-audio')?.remove();details.classList.add('has-transcript');if(!wasTranscribed)details.open=true;}
+                row.dataset.mediaKey=mediaKey;
                 row.querySelectorAll('[data-reply-root]').forEach(element=>replyObserver.unobserve(element));
                 row.dataset.signature = signature; row.replaceChildren(); row.className = 'message-row' + (own ? ' own' : '') + (grouped ? ' grouped' : '') + (quoted ? ' has-reply' : '');
                 if (showDate) row.append(node('div', 'message-date', day.format(date) + ' · ' + time.format(date)));
@@ -625,7 +632,7 @@
                 }
                 if(groupChat()&&!own&&!grouped){const sender=nameLabel(message.senderUid,nameOf(message.senderUid),'strong');sender.classList.add('message-sender');bubble.append(sender);}
                 if(message.type==='poll')renderPoll(bubble,message);
-                else {if(message.attachment)renderMedia(bubble,message);if(message.text)bubble.append(node('span', 'message-text', message.text));}
+                else {if(reusableAudio)bubble.append(reusableAudio);else if(message.attachment)renderMedia(bubble,message);if(message.text)bubble.append(node('span', 'message-text', message.text));}
                 if (transcriptOpen && bubble.querySelector('.message-transcript')) bubble.querySelector('.message-transcript').open = true;
                 if(message.editedAt)bubble.append(node('span','message-edited','Modificato'));
                 const actions = node('button', 'bubble-actions', '•••'); actions.type = 'button'; actions.setAttribute('aria-label', 'Azioni del messaggio: ' + message.text.slice(0, 60)); actions.disabled = !!message.pending || !!message.failed;
@@ -633,7 +640,7 @@
                 bubble.addEventListener('contextmenu', event => { event.preventDefault(); openActions(message.id); });
                 bubble.addEventListener('dblclick', () => openActions(message.id));
                 let pressPoint;
-                bubble.addEventListener('pointerdown', event => { if (event.pointerType !== 'touch') return; pressPoint = [event.clientX, event.clientY]; suppressClick = false; longPressTimer = setTimeout(() => { suppressClick = true; openActions(message.id); }, 480); });
+                bubble.addEventListener('pointerdown', event => { if (event.pointerType !== 'touch'||event.target.closest('button,input,a,audio,video,summary')) return; pressPoint = [event.clientX, event.clientY]; suppressClick = false; longPressTimer = setTimeout(() => { suppressClick = true; openActions(message.id); }, 480); });
                 bubble.addEventListener('pointermove', event => { if (pressPoint && Math.hypot(event.clientX - pressPoint[0], event.clientY - pressPoint[1]) > 10) clearTimeout(longPressTimer); });
                 for (const name of ['pointerup', 'pointercancel']) bubble.addEventListener(name, () => { clearTimeout(longPressTimer); pressPoint = null; });
                 bubble.addEventListener('click', event => { if (suppressClick) { event.preventDefault(); suppressClick = false; } });
@@ -690,23 +697,12 @@
             const observer=new IntersectionObserver(entries=>{if(!entries.some(e=>e.isIntersecting))return;observer.disconnect();load().then(url=>{if(current===chatVersion&&element.isConnected)element.src=url;}).catch(()=>{if(current===chatVersion)element.replaceWith(node('span','media-error','Allegato non disponibile. Riapri la conversazione per riprovare.'));});},{root:scroll,rootMargin:'250px'});observer.observe(element);chatStops.push(()=>observer.disconnect());
             if(message.type==='image')element.addEventListener('click',async()=>{try{const url=await load();if(current!==chatVersion)return;const dialog=$('media-viewer');$('media-viewer-image').src=url;openDialog(dialog);}catch(_){status('Non è stato possibile aprire la foto.',true);}});
         } else if(message.type==='audio') {
-            const panel=node('div','message-audio'),audio=node('audio');audio.controls=true;audio.preload='auto';panel.append(audio);
-            const audioStatus=node('span','audio-status','Preparo il vocale…');audioStatus.setAttribute('role','status');panel.append(audioStatus);
-            async function prepareAudio(){
-                try {
-                    const url=await load();
-                    if(current!==chatVersion||!audio.isConnected)return;
-                    audio.src=url;audio.load();audioStatus.remove();
-                } catch (_) {
-                    if(current!==chatVersion)return;
-                    audioStatus.textContent='Caricamento non riuscito. ';
-                    const retry=node('button','audio-load','Riprova');retry.type='button';
-                    retry.addEventListener('click',()=>{retry.remove();audioStatus.textContent='Preparo il vocale…';prepareAudio();});audioStatus.append(retry);
-                }
-            }
-            const audioObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){audioObserver.disconnect();prepareAudio();}},{root:scroll,rootMargin:'500px'});
+            const panel=node('div','message-audio'),player=audioUI.player({source:load,duration:attachment.duration,media});panel.audioController=player;panel.append(player.element);
+            const audioObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){audioObserver.disconnect();player.prepare().catch(()=>{});}},{root:scroll,rootMargin:'500px'});
             audioObserver.observe(panel);chatStops.push(()=>audioObserver.disconnect());
+            chatStops.push(()=>player.destroy());
             const details=node('details','message-transcript');details.append(node('summary','','Trascrizione automatica'));
+            details.open=!!message.transcript;
             const copy=node('p','',message.transcript || 'La trascrizione viene elaborata su questo dispositivo e può contenere errori. Al primo utilizzo scarica il modello di riconoscimento vocale (circa 75 MB).');details.append(copy);
             if (!message.transcript) {
                 const transcribe=node('button','transcribe-audio','Trascrivi sul dispositivo');
@@ -721,7 +717,7 @@
                         });
                         if(current!==chatVersion)return;
                         copy.textContent=text||'Non è stato riconosciuto un testo. Verifica che la voce sia udibile.';
-                        transcribe.remove();
+                        transcribe.remove();details.classList.add('has-transcript');
                         if(text&&message.senderUid===user.uid){
                             try { await writer.saveTranscript(activeId,message.id,text); }
                             catch (_) { if(current===chatVersion)copy.append(node('small','',' Trascrizione disponibile su questo dispositivo. La sincronizzazione non è riuscita.')); }
@@ -734,11 +730,16 @@
                 });
                 details.append(transcribe);
             }
+            if(message.transcript)details.classList.add('has-transcript');
             panel.append(details);bubble.append(panel);
         } else {
-            const button=node('button','message-document');button.type='button';button.append(node('span','document-icon','▤'));const copy=node('span');copy.append(node('strong','',attachment.name),node('small','',formatSize(attachment.size)+' · Scarica file'));button.append(copy);button.addEventListener('click',async()=>{button.disabled=true;try{const url=await load();if(current!==chatVersion)return;const a=node('a');a.href=url;a.download=attachment.name;a.click();}catch(_){if(current===chatVersion)status('Il file non è disponibile. Riprova.',true);}finally{button.disabled=false;}});bubble.append(button);
+            const button=node('button','message-document');button.type='button';button.setAttribute('aria-label','Scarica '+attachment.name);
+            const icon=node('span','document-icon');icon.setAttribute('aria-hidden','true');icon.append(node('span','document-fold'));
+            const copy=node('span','document-copy');copy.append(node('strong','',attachment.name),node('small','',documentKind(attachment)+' · '+formatSize(attachment.size)));button.append(icon,copy);
+            button.addEventListener('click',async()=>{button.disabled=true;button.setAttribute('aria-busy','true');try{const url=await load();if(current!==chatVersion)return;const a=node('a');a.href=url;a.download=attachment.name;a.click();}catch(_){if(current===chatVersion)status('Il file non è disponibile. Riprova.',true);}finally{button.disabled=false;button.removeAttribute('aria-busy');}});bubble.append(button);
         }
     }
+    function documentKind(attachment){const mime=attachment.mime||'';if(mime.includes('pdf'))return 'Documento PDF';if(/word|rtf/.test(mime))return 'Documento di testo';if(/sheet|excel|csv/.test(mime))return 'Foglio di calcolo';if(/presentation|powerpoint/.test(mime))return 'Presentazione';if(/zip/.test(mime))return 'Archivio ZIP';return 'Documento';}
     function formatSize(size){return size<1048576?Math.max(1,Math.round(size/1024))+' KB':(size/1048576).toFixed(1)+' MB';}
     $('edit-message-action').addEventListener('click',async()=>{const message=messages.get(actionId);if(!message||message.senderUid!==user.uid)return;const current=chatVersion;await dismiss($('message-actions'));if(current!==chatVersion)return;$('edit-message-input').value=message.text;$('edit-message-status').textContent='';openDialog($('edit-message-dialog'));$('edit-message-input').focus();});
     $('edit-message-form').addEventListener('submit',async event=>{event.preventDefault();const current=chatVersion;$('save-message-edit').disabled=true;try{await store.edit(activeId,actionId,$('edit-message-input').value);if(current===chatVersion)await dismiss($('edit-message-dialog'));}catch(_){if(current===chatVersion)$('edit-message-status').textContent='Non è stato possibile salvare la modifica. Controlla il testo e riprova.';}finally{$('save-message-edit').disabled=false;}});
@@ -820,15 +821,43 @@
         } finally { if(current===version)$('enable-push').disabled=false; }
     });
     for(const [id,accept]of [['choose-media','image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime'],['choose-file','.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip'],['choose-audio','audio/*']])$(id).addEventListener('click',()=>{const picker=$('message-attachment-input');picker.accept=accept;picker.value='';picker.click();dismiss($('composer-menu'));});
-    function resetAttachment(){preparedAttachment=null;attachmentId='';if(localPreview)URL.revokeObjectURL(localPreview);localPreview='';$('attachment-preview').replaceChildren();$('voice-preview').removeAttribute('src');}
+    function resetAttachment(){preparedAttachment=null;attachmentId='';voicePreview?.destroy();voicePreview=null;if(localPreview)URL.revokeObjectURL(localPreview);localPreview='';$('attachment-preview').replaceChildren();$('voice-preview').replaceChildren();}
     function previewAttachment(prepared){$('attachment-preview').replaceChildren();const box=node('div','attachment-preview');box.append(node('strong','',prepared.name),node('small','',formatSize(prepared.size)));if(prepared.type==='image'){localPreview=URL.createObjectURL(prepared.file);const img=node('img');img.alt='Anteprima allegato';img.src=localPreview;box.prepend(img);}$('attachment-preview').append(box);}
     $('message-attachment-input').addEventListener('change',async event=>{const file=event.target.files[0];if(!file||!activeId)return;const current=chatVersion;resetAttachment();$('attachment-status').textContent='Preparo l’allegato…';$('send-attachment').disabled=true;$('attachment-caption').value='';openDialog($('attachment-dialog'));try{const prepared=await media.prepare(file);if(current!==chatVersion)return;preparedAttachment=prepared;previewAttachment(prepared);$('attachment-status').textContent='Foto ottimizzate · Audio fino a 8 MB · Video fino a 20 MB · File fino a 10 MB.';$('send-attachment').disabled=false;}catch(_){if(current===chatVersion)$('attachment-status').textContent='Formato non supportato o file troppo grande. Scegli un altro allegato.';}});
-    async function sendAttachment(voice=false){if(!preparedAttachment||!activeId||sending)return;const current=chatVersion,writer=store,cid=activeId,session=version,reply=replyTo,caption=voice?'':$('attachment-caption').value,members=conversation()?.members.slice() || [],sender=user,button=$(voice?'send-recording':'send-attachment'),notice=$(voice?'voice-status':'attachment-status');attachmentId ||= writer.newMessageId(cid);sending=true;button.disabled=true;connected();try{const attachment=await media.upload(cid,attachmentId,preparedAttachment,value=>{if(current===chatVersion)notice.textContent='Caricamento… '+Math.round(value)+'%';},writer);if(session!==version)return;await writer.sendMedia(cid,attachmentId,attachment,caption,reply);window.HarzafiMessagePush?.sent(cid,attachmentId,members,sender).catch(()=>{});if(current!==chatVersion)return;resetAttachment();replyTo='';reveal($('reply-preview'),false);await dismiss($(voice?'voice-dialog':'attachment-dialog'));bottom();}catch(_){if(current===chatVersion)notice.textContent='Invio non riuscito. L’allegato rimane qui: riprova quando torni online.';}finally{if(current===chatVersion){sending=false;button.disabled=false;connected();}}}
+    async function sendAttachment(voice=false){if(!preparedAttachment||!activeId||sending||voiceBusy)return;const current=chatVersion,writer=store,cid=activeId,session=version,reply=replyTo,caption=voice?'':$('attachment-caption').value,members=conversation()?.members.slice() || [],sender=user,button=$(voice?'send-recording':'send-attachment'),notice=$(voice?'voice-status':'attachment-status');attachmentId ||= writer.newMessageId(cid);sending=true;button.disabled=true;if(voice){voicePreview?.audio.pause();$('cancel-recording').disabled=$('resume-recording').disabled=true;}connected();try{const attachment=await media.upload(cid,attachmentId,preparedAttachment,value=>{if(current===chatVersion)notice.textContent='Caricamento… '+Math.round(value)+'%';},writer);if(session!==version)return;await writer.sendMedia(cid,attachmentId,attachment,caption,reply);window.HarzafiMessagePush?.sent(cid,attachmentId,members,sender).catch(()=>{});if(current!==chatVersion)return;resetAttachment();replyTo='';reveal($('reply-preview'),false);if(voice)resetVoice();else await dismiss($('attachment-dialog'));bottom();}catch(_){if(current===chatVersion)notice.textContent='Invio non riuscito. L’allegato rimane qui: riprova quando torni online.';}finally{if(current===chatVersion){sending=false;button.disabled=false;if(voice){$('cancel-recording').disabled=false;$('resume-recording').disabled=voiceDuration()>=119.9;}connected();}}}
     $('send-attachment').addEventListener('click',()=>sendAttachment());$('send-recording').addEventListener('click',()=>sendAttachment(true));
     $('attachment-dialog').addEventListener('close',()=>{if(!sending)resetAttachment();});
-    async function stopRecording(){if(!recording)return;const controller=recording;recording=null;const current=chatVersion;$('stop-recording').disabled=true;try{const result=await controller.stop();if(current!==chatVersion)return;preparedAttachment=result;localPreview=URL.createObjectURL(result.file);$('voice-preview').src=localPreview;$('voice-preview').hidden=false;$('send-recording').hidden=false;$('stop-recording').hidden=true;$('voice-status').textContent='Ascolta il vocale prima di inviarlo.';}catch(_){if(current===chatVersion)$('voice-status').textContent='Non è stato possibile preparare la registrazione.';}}
-    $('voice-message').addEventListener('click',async()=>{if(!activeId)return;resetAttachment();const current=chatVersion;$('voice-timer').textContent='00:00';$('voice-preview').hidden=true;$('send-recording').hidden=true;$('stop-recording').hidden=false;$('stop-recording').disabled=false;$('voice-status').textContent='Consenti l’uso del microfono per registrare. Massimo 2 minuti.';openDialog($('voice-dialog'));try{const controller=await media.startRecording({onTick:seconds=>{if(current===chatVersion)$('voice-timer').textContent=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');},onLimit:stopRecording});if(current!==chatVersion||!$('voice-dialog').open){controller.cancel();return;}recording=controller;$('voice-status').textContent='Registrazione in corso…';}catch(_){if(current===chatVersion){$('voice-status').textContent='Microfono non disponibile. Controlla i permessi del browser oppure allega un file audio.';$('stop-recording').hidden=true;}}});
-    $('stop-recording').addEventListener('click',stopRecording);$('voice-dialog').addEventListener('close',()=>{recording?.cancel();recording=null;if(!sending)resetAttachment();});
+    const voiceDuration=()=>voiceSegments.reduce((total,segment)=>total+(segment.duration||0),0);
+    function resetVoice(){++voiceEpoch;recording?.cancel();recording=null;voiceBusy=false;voiceSegments=[];voicePreview?.destroy();voicePreview=null;liveWave=null;$('voice-draft').hidden=true;$('voice-status').textContent='';document.querySelector('.composer-row').hidden=false;$('cancel-recording').disabled=false;}
+    async function stopRecording(){
+        if(!recording||voiceBusy)return;
+        const controller=recording,current=chatVersion,epoch=voiceEpoch;recording=null;voiceBusy=true;$('stop-recording').disabled=true;$('voice-draft').dataset.state='preparing';$('voice-status').textContent='Preparo l’anteprima…';
+        try{
+            const result=await controller.stop();if(current!==chatVersion||epoch!==voiceEpoch)return;
+            voiceSegments.push(result);const prepared=await media.mergeRecordings(voiceSegments);if(current!==chatVersion||epoch!==voiceEpoch)return;
+            preparedAttachment=prepared;if(localPreview)URL.revokeObjectURL(localPreview);localPreview=URL.createObjectURL(prepared.file);
+            voicePreview?.destroy();voicePreview=audioUI.player({source:()=>localPreview,duration:prepared.duration,media});$('voice-preview').replaceChildren(voicePreview.element);voicePreview.prepare().catch(()=>{});
+            $('voice-preview').hidden=false;$('voice-live').hidden=true;$('send-recording').hidden=false;$('stop-recording').hidden=true;$('resume-recording').hidden=false;$('resume-recording').disabled=voiceDuration()>=119.9;$('voice-resume-time').textContent=audioUI.clock(prepared.duration);$('voice-status').textContent='Ascolta, riprendi o invia il vocale.';$('voice-draft').dataset.state='preview';$('send-recording').focus({preventScroll:true});
+        }catch(_){if(current===chatVersion&&epoch===voiceEpoch){$('voice-status').textContent='Non è stato possibile preparare il vocale. Puoi annullare e registrarlo di nuovo.';$('stop-recording').hidden=true;}}
+        finally{if(epoch===voiceEpoch)voiceBusy=false;}
+    }
+    async function recordSegment(){
+        if(voiceBusy||recording||voiceDuration()>=119.9)return;
+        voiceBusy=true;const current=chatVersion,epoch=voiceEpoch,offset=voiceDuration();
+        voicePreview?.destroy();voicePreview=null;$('voice-preview').replaceChildren();$('voice-preview').hidden=true;$('voice-live').hidden=false;$('resume-recording').hidden=$('send-recording').hidden=true;$('stop-recording').hidden=false;$('stop-recording').disabled=true;$('voice-draft').dataset.state='preparing';$('voice-timer').textContent=audioUI.clock(offset);$('voice-status').textContent='Preparo il microfono…';
+        liveWave ||= audioUI.wave();$('voice-waveform').replaceChildren(liveWave.element);
+        try{
+            const controller=await media.startRecording({maxSeconds:120-offset,onTick:seconds=>{if(current===chatVersion&&epoch===voiceEpoch)$('voice-timer').textContent=audioUI.clock(offset+seconds);},onLevel:value=>{if(current===chatVersion&&epoch===voiceEpoch)liveWave?.push(value);},onLimit:stopRecording});
+            if(current!==chatVersion||epoch!==voiceEpoch||$('voice-draft').hidden){controller.cancel();return;}
+            recording=controller;preparedAttachment=null;attachmentId='';$('voice-draft').dataset.state='recording';$('stop-recording').disabled=false;$('voice-status').textContent='Registrazione in corso · Massimo 2 minuti';$('stop-recording').focus({preventScroll:true});
+        }catch(_){if(current===chatVersion&&epoch===voiceEpoch){$('voice-status').textContent='Microfono non disponibile. Controlla i permessi del browser oppure allega un file audio.';$('stop-recording').hidden=true;}}
+        finally{if(epoch===voiceEpoch)voiceBusy=false;}
+    }
+    $('voice-message').addEventListener('click',()=>{if(!activeId||sending||!$('voice-draft').hidden)return;resetAttachment();resetVoice();stopTyping();input.blur();$('voice-draft').hidden=false;document.querySelector('.composer-row').hidden=true;recordSegment();});
+    $('stop-recording').addEventListener('click',stopRecording);$('resume-recording').addEventListener('click',recordSegment);
+    $('cancel-recording').addEventListener('click',()=>{if(sending)return;resetVoice();resetAttachment();$('voice-message').focus({preventScroll:true});});
+    $('voice-draft').addEventListener('keydown',event=>{if(event.key==='Escape'&&!sending){event.preventDefault();$('cancel-recording').click();}});
+    document.addEventListener('visibilitychange',()=>{if(document.hidden&&recording)stopRecording();});
     $('new-poll').addEventListener('click',async()=>{const current=chatVersion;await dismiss($('composer-menu'));if(current!==chatVersion)return;$('poll-form').reset();$('poll-status').textContent='';while($('poll-options').children.length>2)$('poll-options').lastChild.remove();openDialog($('poll-dialog'));});
     $('add-poll-option').addEventListener('click',()=>{const count=$('poll-options').children.length;if(count>=6)return;const label=node('label','','Opzione '+(count+1)),option=node('input','poll-option-input');option.maxLength=100;option.required=true;label.append(option);$('poll-options').append(label);});
     $('poll-form').addEventListener('submit',async event=>{event.preventDefault();const current=chatVersion,cid=activeId,mid=store.newMessageId(activeId),members=conversation()?.members.slice() || [],sender=user;$('send-poll').disabled=true;try{await store.sendPoll(cid,mid,$('poll-question').value,[...document.querySelectorAll('.poll-option-input')].map(e=>e.value),replyTo);window.HarzafiMessagePush?.sent(cid,mid,members,sender).catch(()=>{});if(current!==chatVersion)return;replyTo='';reveal($('reply-preview'),false);await dismiss($('poll-dialog'));bottom();}catch(_){if(current===chatVersion)$('poll-status').textContent='Controlla la domanda e le opzioni: devono essere diverse. Poi riprova.';}finally{$('send-poll').disabled=false;}});
