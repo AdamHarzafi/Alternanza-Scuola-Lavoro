@@ -98,13 +98,13 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
 .conversation-muted svg{width:12px;height:12px}
 
 /* Both pieces stay over the scroll surface, so content really passes behind glass. */
-.active-conversation{position:relative;--message-header-height:118px;--message-security-height:50px;--message-canvas:#fff}
+.active-conversation{position:relative;--message-header-height:118px;--message-canvas:#fff}
 .active-conversation>.conversation-header{position:absolute;inset:0 0 auto;z-index:6;height:var(--message-header-height);min-height:var(--message-header-height);background:rgba(255,255,255,.7);backdrop-filter:blur(26px) saturate(1.3);-webkit-backdrop-filter:blur(26px) saturate(1.3)}
 .active-conversation>.conversation-header::after{content:"";position:absolute;inset:auto 0 -16px;height:16px;background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,0));pointer-events:none}
-.active-conversation>.conversation-security{position:absolute;inset:var(--message-header-height) 0 auto;z-index:5;min-height:var(--message-security-height);height:var(--message-security-height);background:rgba(255,255,255,.72);backdrop-filter:blur(22px) saturate(1.2);-webkit-backdrop-filter:blur(22px) saturate(1.2);mask-image:linear-gradient(#000 0%,#000 86%,transparent);-webkit-mask-image:linear-gradient(#000 0%,#000 86%,transparent)}
-.active-conversation>.message-scroll{padding-top:calc(var(--message-header-height) + var(--message-security-height) + 10px);background:var(--message-canvas);scroll-padding-top:calc(var(--message-header-height) + var(--message-security-height) + 16px)}
-.active-conversation>.connection-status:not([hidden]){position:absolute;top:calc(var(--message-header-height) + var(--message-security-height));left:0;right:0;z-index:7;box-shadow:0 1px 0 rgba(29,29,31,.04)}
-.active-conversation:has(>.connection-status:not([hidden]))>.message-scroll{padding-top:calc(var(--message-header-height) + var(--message-security-height) + 48px)}
+.active-conversation>.message-scroll{padding-top:calc(var(--message-header-height) + 12px);background:var(--message-canvas);scroll-padding-top:calc(var(--message-header-height) + 16px)}
+.message-scroll>.conversation-security{position:relative;inset:auto;height:auto;min-height:0;margin:0 0 10px;padding:6px 0 8px;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;mask-image:none;-webkit-mask-image:none}
+.active-conversation>.connection-status:not([hidden]){position:absolute;top:var(--message-header-height);left:0;right:0;z-index:7;box-shadow:0 1px 0 rgba(29,29,31,.04)}
+.active-conversation:has(>.connection-status:not([hidden]))>.message-scroll{padding-top:calc(var(--message-header-height) + 60px)}
 .conversation-pane[data-background="mist"] .active-conversation{--message-canvas:#f4f6f9}
 .conversation-pane[data-background="sky"] .active-conversation{--message-canvas:#eef7ff}
 .conversation-pane[data-background="lavender"] .active-conversation{--message-canvas:#f5f1ff}
@@ -215,9 +215,8 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
     .conversation-item .unread-dot{left:3px;box-shadow:0 0 0 2px #fff}.conversation-item[aria-current=true] .unread-dot{background:#008aff;box-shadow:0 0 0 2px #f3f3f6}
     .conversation-item[aria-current=true] :is(.conversation-typing,.typing-inline,.conversation-preview.is-typing){color:#6e6e73}
     .sidebar-footnote{padding-bottom:18px;color:#8e8e93}
-    .active-conversation{--message-header-height:112px;--message-security-height:48px}
+    .active-conversation{--message-header-height:112px}
     .active-conversation>.conversation-header{padding:8px 16px 2px;background:rgba(255,255,255,.66);backdrop-filter:blur(28px) saturate(1.2);-webkit-backdrop-filter:blur(28px) saturate(1.2)}
-    .active-conversation>.conversation-security{background:rgba(255,255,255,.69)}
     .conversation-header .mobile-back{color:#1d1d1f;background:rgba(244,244,247,.72);width:44px;height:44px}
     .conversation-header .mobile-back:hover{background:#e9e9ef}
     .message-scroll{padding-left:18px;padding-right:18px}.message-composer{padding:8px 12px max(10px,env(safe-area-inset-bottom));background:rgba(255,255,255,.94)}
@@ -248,7 +247,7 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
     #message-actions .reaction-picker button{flex-basis:42px;width:42px;height:48px;font-size:27px}
     #message-actions #action-message-text,#message-actions .message-context-preview{max-width:calc(100% - 14px);font-size:16px;padding:13px 17px;border-radius:22px}
     .action-menu .action-row{min-height:52px;padding:14px 21px;font-size:16px;gap:14px}
-    body.messages-keyboard-open .active-conversation{--message-header-height:80px;--message-security-height:40px}
+    body.messages-keyboard-open .active-conversation{--message-header-height:80px}
 }
 @media(max-width:359px){
     .messages-gate:has(#messages-onboarding:not([hidden])){padding-left:22px;padding-right:22px}
@@ -281,7 +280,7 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
 @media(min-width:701px){.messages-gate .onboarding-title{margin:0 0 28px}}
 
 /* Each masked layer adds blur nearer the top, leaving the history edge clear. */
-.conversation-progressive-blur{position:absolute;inset:0 0 auto;height:calc(var(--message-header-height) + var(--message-security-height) + 22px);z-index:4;pointer-events:none;background:linear-gradient(to bottom,rgba(255,255,255,.88),rgba(255,255,255,.54) 56%,rgba(255,255,255,0) 100%)}
+.conversation-progressive-blur{position:absolute;inset:0 0 auto;height:calc(var(--message-header-height) + 16px);z-index:4;pointer-events:none;background:linear-gradient(to bottom,rgba(255,255,255,.88),rgba(255,255,255,.54) 56%,rgba(255,255,255,0) 100%)}
 .conversation-progressive-blur>span{position:absolute;inset:0;backdrop-filter:blur(var(--progressive-radius));-webkit-backdrop-filter:blur(var(--progressive-radius));mask-image:linear-gradient(to bottom,#000 var(--progressive-solid),transparent var(--progressive-end));-webkit-mask-image:linear-gradient(to bottom,#000 var(--progressive-solid),transparent var(--progressive-end))}
 .conversation-progressive-blur>span:nth-child(1){--progressive-radius:.75px;--progressive-solid:72%;--progressive-end:100%}
 .conversation-progressive-blur>span:nth-child(2){--progressive-radius:1.5px;--progressive-solid:58%;--progressive-end:88%}
@@ -289,7 +288,7 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
 .conversation-progressive-blur>span:nth-child(4){--progressive-radius:6px;--progressive-solid:30%;--progressive-end:64%}
 .conversation-progressive-blur>span:nth-child(5){--progressive-radius:12px;--progressive-solid:16%;--progressive-end:52%}
 .conversation-progressive-blur>span:nth-child(6){--progressive-radius:24px;--progressive-solid:0%;--progressive-end:40%}
-.active-conversation>.conversation-header,.active-conversation>.conversation-security{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;mask-image:none;-webkit-mask-image:none}
+.active-conversation>.conversation-header{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;mask-image:none;-webkit-mask-image:none}
 .active-conversation>.conversation-header::after{display:none}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.conversation-progressive-blur{background:linear-gradient(#fff 35%,rgba(255,255,255,.95) 68%,rgba(255,255,255,0))}}
 
@@ -369,12 +368,20 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
 @media(max-width:700px){.messages-page .message-bubble{font-size:17px}.messages-page .messages-dialog p{font-size:16px}.messages-page .messages-dialog .dialog-note{font-size:13px}}
 .account-name-label{display:inline-flex;align-items:center;gap:5px;min-width:0;max-width:100%}.account-name-text{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .conversation-item-heading>.account-name-label{display:flex;flex:1;min-width:0;max-width:100%}.conversation-item-heading>.account-name-label>.account-name-text{white-space:nowrap}
-.verified-account{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;vertical-align:-3px;line-height:1;border-radius:50%}.verified-account img{display:block;width:100%;height:100%;object-fit:contain}
-.conversation-item[aria-current=true] .verified-account{background:#fff;box-shadow:0 0 0 1px #fff}
+.verified-account{display:inline-flex;align-items:center;justify-content:center;flex:none;width:18px;height:18px;vertical-align:-3px;line-height:1;border:0;border-radius:0;background:none;box-shadow:none}.verified-account img{display:block;width:100%;height:100%;object-fit:contain}
+.conversation-item[aria-current=true] .verified-account{background:none;box-shadow:none}
 .conversation-name-glass>.verified-account{width:17px;height:17px;margin-left:-3px}
 .message-sender.account-name-label{display:flex;justify-content:flex-start;font-weight:600}.message-sender .verified-account{width:14px;height:14px}
 .reply-quote .account-name-label{display:flex;justify-content:flex-start}
 #conversation-members>.account-name-label{display:flex;margin:10px 0}
+/* Reserve a separate column for read state, so it can never cover the avatar. */
+.messages-page .conversation-item{--inbox-avatar-size:52px;grid-template-columns:12px var(--inbox-avatar-size) minmax(0,1fr);column-gap:8px;padding-inline:4px 8px}
+.conversation-status-marker{grid-column:1;align-self:center;display:flex;align-items:center;justify-content:center;width:12px;height:12px}
+.messages-page .conversation-item .conversation-status-marker>.unread-dot{position:static;inset:auto;margin:0;width:9px;height:9px;box-shadow:none;flex:none}
+.messages-page .conversation-item>.person-avatar{grid-column:2;width:var(--inbox-avatar-size);height:var(--inbox-avatar-size)}
+.messages-page .conversation-item>.conversation-item-copy{grid-column:3;min-width:0}
+@media(min-width:701px) and (max-width:1000px){.messages-page .conversation-item{--inbox-avatar-size:44px}}
+@media(max-width:359px){.messages-page .conversation-item{--inbox-avatar-size:44px;column-gap:7px}}
 /* Quiet, static wallpapers cover the complete chat; the composer stays part of the same canvas. */
 .active-conversation,.wallpaper-default{--message-canvas:#fff;--message-wallpaper:linear-gradient(#fff,#fff)}
 .active-conversation[data-background=paper],.wallpaper-paper{--message-canvas:#f6f2ec;--message-wallpaper:radial-gradient(ellipse at 12% 10%,rgba(236,223,204,.6),transparent 60%),radial-gradient(ellipse at 90% 90%,rgba(236,229,220,.7),transparent 65%),linear-gradient(145deg,#fbf9f5,#f3eee6)}
@@ -385,8 +392,10 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
 .messages-page .active-conversation>.message-scroll,.messages-page .active-conversation>.message-composer{background:transparent}
 /* A masked tail needs no solid patch, so it stays clean over every wallpaper. */
 .messages-page .message-bubble::after{display:none}
-.messages-page .message-bubble::before{left:-7px;bottom:0;width:13px;height:16px;border-radius:0;background:inherit;clip-path:path('M13 0C13 6 9 12 0 15C5 17 10 16 13 13Z')}
-.messages-page .own .message-bubble::before{left:auto;right:-7px;transform:scaleX(-1)}
+.messages-page .message-bubble{border-radius:18px;line-height:1.35}
+.messages-page .message-bubble:not(:has(>.message-image,>.message-video)){padding:8px 12px}
+.messages-page .message-bubble::before{left:-5px;bottom:-3px;width:14px;height:20px;border-radius:0;background:inherit;clip-path:path('M0 0C4 4 3 12 12 19C5 18 0 15 0 10Z');transform:scaleX(-1)}
+.messages-page .own .message-bubble::before{left:auto;right:-5px;transform:none}
 .wallpaper-picker{min-width:0;padding:0;border:0;margin:18px 0 20px}.wallpaper-picker legend{padding:0;margin-bottom:12px;font-size:15px;font-weight:600;line-height:1.35}
 .wallpaper-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px}
 .messages-dialog .wallpaper-option{display:flex;flex-direction:column;position:relative;gap:7px;min-width:0;margin:0;cursor:pointer;text-align:center}

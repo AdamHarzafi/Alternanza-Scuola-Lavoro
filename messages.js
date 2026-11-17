@@ -24,6 +24,7 @@
     const dialogs = [...document.querySelectorAll('dialog')];
     const motions = new Map(), visibilityTargets = new Map(), dialogEpochs = new WeakMap(), dialogDesired = new WeakMap();
     let transitionRequest = 0;
+    const viewportState = { width:window.innerWidth, baseline:window.innerHeight, height:0, scale:window.visualViewport?.scale || 1, followLatest:true };
     let preferences = new Map(), inboxStates = new Map(), inboxStops = new Map(), inboxTimer;
     let deletedGroups = [], groupToDelete = '', groupDeletionBusy = false;
     let groupToLeave = '', groupExitBusy = false, verifiedAccounts = new Set();
@@ -215,6 +216,7 @@
         if (writeTyping) stopTyping();
         ++chatVersion; chatStops.splice(0).forEach(stop => stop());
         replyObserver.disconnect(); replyThreads.clear(); openThreadId = '';
+        viewportState.followLatest=true;
         clearTimeout(readTimer); clearTimeout(typingExpiry); clearTimeout(longPressTimer);
         activeId = recipientUid = replyTo = actionId = ''; states.clear(); messages.clear(); rowNodes.clear(); quotes.clear(); requestedQuotes.clear();
         cancelWithin($('active-conversation')); $('active-conversation').inert = false;
@@ -278,8 +280,9 @@
             else preview=node('span', 'conversation-preview', (c.lastSender === user.uid ? 'Tu: ' : '') + (c.lastText || 'Inizia la conversazione.'));
             copy.append(heading,preview);
             const readAt=Math.max(model.millis(preferences.get(c.id)?.readAt),model.millis(inboxStates.get(c.id)?.get(user.uid)?.readAt));
-            if(c.lastSender && c.lastSender!==user.uid && latestTime(c)>readAt){const dot=node('span','unread-dot');dot.setAttribute('aria-label','Messaggi non letti');button.append(dot);}
-            button.append(image, copy); button.addEventListener('click', () => selectConversation(c.id, other)); fragment.append(button);
+            const marker=node('span','conversation-status-marker');
+            if(c.lastSender && c.lastSender!==user.uid && latestTime(c)>readAt){const dot=node('span','unread-dot');dot.setAttribute('role','img');dot.setAttribute('aria-label','Messaggi non letti');marker.append(dot);}
+            button.append(marker,image,copy); button.addEventListener('click', () => selectConversation(c.id, other)); fragment.append(button);
         }
         $('conversation-list').replaceChildren(fragment);
         if (focused) [...$('conversation-list').children].find(b => b.dataset.conversation === focused)?.focus({ preventScroll:true });
@@ -922,16 +925,24 @@
     input.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && window.matchMedia('(min-width:701px)').matches) { event.preventDefault(); $('message-form').requestSubmit(); } });
     input.addEventListener('blur', () => { stopTyping(); viewport(); });
     input.addEventListener('focus', viewport);
-    scroll.addEventListener('scroll', () => { if (nearBottom()) { $('new-messages-indicator').hidden = true; scheduleRead(); } }, { passive:true });
+    scroll.addEventListener('scroll', () => { viewportState.followLatest=nearBottom();if (viewportState.followLatest) { $('new-messages-indicator').hidden = true; scheduleRead(); } }, { passive:true });
     window.addEventListener('online', () => { connected(); scheduleRead(); }); window.addEventListener('offline', () => { stopTyping(); connected(); });
     document.addEventListener('visibilitychange', () => { if (document.hidden) stopTyping(); else { updateTyping(); scheduleRead(); } });
     function viewport() {
-        const height = window.visualViewport?.height || window.innerHeight;
-        document.documentElement.style.setProperty('--messages-height', height + 'px');
-        const keyboardOpen = window.innerHeight - height > 100 || (document.activeElement === input && height < 600 && window.matchMedia('(max-width:700px)').matches);
+        const visual=window.visualViewport,scale=visual?.scale || 1;
+        const height=Math.round(Math.max(1,Math.min(window.innerHeight,(visual?.height || window.innerHeight)*scale))*100)/100;
+        const focused=document.activeElement===input,widthChanged=Math.abs(window.innerWidth-viewportState.width)>1;
+        if(!focused||widthChanged)viewportState.baseline=window.innerHeight;
+        else viewportState.baseline=Math.max(viewportState.baseline,window.innerHeight);
+        const heightChanged=Math.abs(height-viewportState.height)>.5,scaleChanged=Math.abs(scale-viewportState.scale)>.01;
+        if(heightChanged)document.documentElement.style.setProperty('--messages-height',height+'px');
+        const keyboardOpen=focused&&viewportState.baseline-height>100;
         $('message-form').classList.toggle('keyboard-open', keyboardOpen);
         document.body.classList.toggle('messages-keyboard-open', keyboardOpen);
-        if (activeId && document.activeElement === input) bottom();
+        if(activeId&&(heightChanged||widthChanged)&&!scaleChanged&&!$('reply-thread').open&&(viewportState.followLatest||(focused&&keyboardOpen))){
+            const current=chatVersion;requestAnimationFrame(()=>{if(current===chatVersion&&activeId&&!$('reply-thread').open)bottom();});
+        }
+        Object.assign(viewportState,{width:window.innerWidth,height,scale});
     }
     window.visualViewport?.addEventListener('resize', viewport); window.addEventListener('resize', viewport); viewport();
     reduced.addEventListener('change', () => {

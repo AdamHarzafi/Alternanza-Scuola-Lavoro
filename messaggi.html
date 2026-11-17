@@ -16,7 +16,7 @@
     <script defer src="loading-indicator.js?v=20261108-ios14-v1"></script>
     <link rel="stylesheet" href="page-transitions.css?v=20261108-direct-entry-v2">
     <script src="page-transitions.js?v=20261108-direct-entry-v2"></script>
-    <link rel="stylesheet" href="messages.css?v=20261114-shared-site-font-v15">
+    <link rel="stylesheet" href="messages.css?v=20261117-chat-geometry-v16">
 </head>
 <body class="messages-page">
     <nav class="navbar-wrapper glass home-mainnav messages-site-nav" aria-label="Navigazione principale">
@@ -68,9 +68,9 @@
             <div id="active-conversation" class="active-conversation" hidden>
                 <div class="conversation-progressive-blur" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
                 <header class="conversation-header"><button id="conversation-back" class="circle-button mobile-back" aria-label="Torna alle conversazioni"><svg viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7"/></svg></button><button id="conversation-info" class="conversation-person" aria-label="Informazioni sulla conversazione"><span id="conversation-avatar" class="person-avatar"></span><span class="conversation-name-glass"><strong id="conversation-name"></strong><span id="conversation-verified" class="verified-account" hidden></span><svg viewBox="0 0 16 24" aria-hidden="true"><path d="m5 7 5 5-5 5"/></svg></span><span id="conversation-role" class="sr-only"></span></button><span class="header-spacer" aria-hidden="true"></span></header>
-                <div class="conversation-security"><span>Messaggi</span><button type="button" id="conversation-encryption" aria-label="Crittografato: scopri come vengono protetti i messaggi" title="Cifratura durante il trasferimento e la conservazione. Non è cifratura end-to-end."><svg viewBox="0 0 16 20" aria-hidden="true"><path d="M4 8V5a4 4 0 0 1 8 0v3h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2 0h4V5a2 2 0 0 0-4 0v3Z"/></svg><span>Crittografato</span></button></div>
                 <p id="connection-status" class="connection-status" role="status" hidden></p>
                 <div id="message-scroll" class="message-scroll" tabindex="0" aria-label="Cronologia dei messaggi">
+                    <div class="conversation-security"><span>Messaggi</span><button type="button" id="conversation-encryption" aria-label="Crittografato: scopri come vengono protetti i messaggi" title="Cifratura durante il trasferimento e la conservazione. Non è cifratura end-to-end."><svg viewBox="0 0 16 20" aria-hidden="true"><path d="M4 8V5a4 4 0 0 1 8 0v3h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2 0h4V5a2 2 0 0 0-4 0v3Z"/></svg><span>Crittografato</span></button></div>
                     <button id="load-older" class="load-older" hidden>Carica i messaggi precedenti</button>
                     <p id="history-status" class="history-status" role="status"></p>
                     <ol id="message-list" class="message-list"></ol>
@@ -163,6 +163,6 @@
     <script defer src="messages-media.js?v=20261113-messaging-v5"></script>
     <script defer src="messages-push.js?v=20261113"></script>
     <script defer src="messages-notifications.js?v=20261113-messaging-v5"></script>
-    <script defer src="messages.js?v=20261114-inline-replies-v14"></script>
+    <script defer src="messages.js?v=20261117-chat-geometry-v16"></script>
 </body>
 </html>
