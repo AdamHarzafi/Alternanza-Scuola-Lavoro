@@ -661,6 +661,14 @@
                 row.dataset.mediaKey=mediaKey;
                 row.querySelectorAll('[data-reply-root]').forEach(element=>replyObserver.unobserve(element));
                 const textKey=JSON.stringify([message.text,message.textEffect?.name,message.textEffect?.start,message.textEffect?.end]), reusableText=row.dataset.textKey===textKey?row.querySelector('.message-text'):null;
+                const reactionKey=JSON.stringify(Object.entries(message.reactions||{}).sort(([a],[b])=>a.localeCompare(b))), oldReactions=row.querySelector('.message-reactions');
+                const reusableReactions=row.dataset.reactionKey===reactionKey?oldReactions:null;
+                if(reusableReactions)reusableReactions.remove();
+                else if(oldReactions&&!Object.keys(message.reactions||{}).length&&!reduced.matches){
+                    const rect=oldReactions.getBoundingClientRect(),ghost=oldReactions.cloneNode(true);ghost.classList.add('tapback-ghost');ghost.inert=true;ghost.setAttribute('aria-hidden','true');
+                    Object.assign(ghost.style,{position:'fixed',left:rect.left+'px',top:rect.top+'px',right:'auto',width:rect.width+'px',height:rect.height+'px',zIndex:'20'});document.body.append(ghost);motion(ghost,'accessory',false,{duration:180}).finally(()=>ghost.remove());
+                }
+                row.dataset.reactionKey=reactionKey;
                 if(reusableText)reusableText.remove();row.dataset.textKey=textKey;
                 effects?.cancelWithin(row);row.dataset.signature = signature; row.replaceChildren(); row.className = 'message-row' + (own ? ' own' : '') + (grouped ? ' grouped' : '') + (quoted ? ' has-reply' : '');
                 if (showDate) row.append(node('div', 'message-date', day.format(date) + ' · ' + time.format(date)));
@@ -682,17 +690,26 @@
                 bubble.addEventListener('pointermove', event => { if(pressTarget===bubble&&pressPoint&&Math.hypot(event.clientX-pressPoint[0],event.clientY-pressPoint[1])>10)cancelMessagePress(); });
                 for(const name of ['pointerup','pointercancel'])bubble.addEventListener(name,()=>{if(pressTarget===bubble)cancelMessagePress();pressPoint=null;});
                 bubble.addEventListener('click', event => { if (suppressClick) { event.preventDefault(); suppressClick = false; } });
-                cluster.append(bubble, actions);
+                const bubbleWrap=node('div','message-bubble-wrap');bubbleWrap.append(bubble);cluster.append(bubbleWrap, actions);
                 if(quoted){const response=node('div','reply-response');response.append(replyConnector(),cluster);row.append(response);}else row.append(cluster);
                 const reactions = Object.entries(message.reactions || {}).filter(([, emoji]) => model.REACTIONS.includes(emoji));
                 if (reactions.length) {
-                    const group = node('div', 'message-reactions');
-                    const types = [...new Set(reactions.map(([, emoji]) => emoji))];
-                    for (const emoji of types) {
-                        const reactors = reactions.filter(([, value]) => value === emoji), chip = node('button', 'reaction-chip', emoji + (reactors.length > 1 ? ' ' + reactors.length : ''));
-                        chip.type = 'button'; chip.setAttribute('aria-pressed', String(message.reactions[user.uid] === emoji)); chip.setAttribute('aria-label', reactors.map(([uid]) => nameOf(uid)).join(' e ') + ': ' + emoji + '. Gestisci reazione');
-                        chip.addEventListener('click', () => openActions(message.id)); group.append(chip);
-                    } row.append(group);
+                    const group = reusableReactions || node('div', 'message-reactions');
+                    if(!reusableReactions){
+                        group.setAttribute('role','group');group.setAttribute('aria-label','Reazioni al messaggio');
+                        const ownReaction=message.reactions[user.uid],types = [...new Set(reactions.map(([, emoji]) => emoji))].sort((a,b)=>Number(b===ownReaction)-Number(a===ownReaction));
+                        let width=0,lineWidth=0,lines=1;
+                        for (const emoji of types) {
+                            const reactors = reactions.filter(([, value]) => value === emoji),counted=reactors.length>1,chip = node('button', 'reaction-chip'+(counted?' has-count':'')),chipWidth=counted?56:36;
+                            chip.append(node('span','reaction-emoji',emoji));if(counted)chip.append(node('span','reaction-count',String(reactors.length)));
+                            if(lineWidth&&lineWidth+5+chipWidth>219){lines++;lineWidth=0;}
+                            lineWidth+=(lineWidth?5:0)+chipWidth;width=Math.max(width,lineWidth);
+                            chip.type = 'button';chip.setAttribute('aria-pressed',String(message.reactions[user.uid]===emoji));chip.setAttribute('aria-label',reactors.map(([uid])=>nameOf(uid)).join(' e ')+': '+emoji+'. Gestisci reazione');
+                            chip.addEventListener('click',()=>openActions(message.id));group.append(chip);
+                        }
+                        group.style.setProperty('--tapback-width',width+'px');group.style.setProperty('--tapback-height',(lines*36+(lines-1)*5)+'px');
+                    }
+                    bubbleWrap.style.setProperty('--tapback-height',group.style.getPropertyValue('--tapback-height'));bubbleWrap.classList.add('has-reactions');bubbleWrap.append(group);
                 }
                 if(replyParents.has(message.id)){const link=repliesButton(message.id);link.dataset.replyRoot=message.id;row.append(link);}
                 if (own && (lastOwn || message.failed || message.pending)) {
