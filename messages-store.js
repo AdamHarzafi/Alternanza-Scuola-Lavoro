@@ -6,6 +6,7 @@
     'use strict';
     const REACTIONS = ['❤️', '👍', '👎', '😂', '‼️', '❓'];
     const MAX_LENGTH = 2000;
+    const TEXT_EFFECTS = ['big', 'small', 'shake', 'nod', 'explode', 'ripple', 'bloom', 'jitter'];
     const MAX_GROUP_MEMBERS = 30;
     const BACKGROUNDS = ['default', 'paper', 'sky', 'mint', 'rose'];
     const MEDIA_LIMITS = { image:5 * 1024 * 1024, audio:8 * 1024 * 1024, video:20 * 1024 * 1024, file:10 * 1024 * 1024 };
@@ -29,6 +30,18 @@
     function conversationId(a, b) {
         if (!a || !b || a === b || [a, b].some(v => typeof v !== 'string' || v.includes('/') || v.includes('~'))) throw failure('invalid-recipient');
         return [a, b].sort().join('~');
+    }
+    function textEffect(value, text) {
+        if (value == null) return null;
+        if (typeof value !== 'object' || Array.isArray(value) || Object.keys(value).sort().join(',') !== 'end,name,start'
+            || !TEXT_EFFECTS.includes(value.name) || !Number.isInteger(value.start) || !Number.isInteger(value.end)
+            || value.start < 0 || value.end <= value.start || value.end > text.length) throw failure('invalid-text-effect');
+        const boundaries = new Set([0, text.length]);
+        if (typeof Intl.Segmenter === 'function') {
+            for (const part of new Intl.Segmenter(undefined, {granularity:'grapheme'}).segment(text)) boundaries.add(part.index);
+        } else { let offset = 0; for (const part of text) { offset += part.length; boundaries.add(offset); } }
+        if (!boundaries.has(value.start) || !boundaries.has(value.end)) throw failure('invalid-text-effect');
+        return {name:value.name, start:value.start, end:value.end};
     }
     function mediaKind(mime) {
         const normalized = clean(mime).split(';')[0].toLowerCase();
@@ -87,6 +100,7 @@
                     const saved = previous.data();
                     if (saved.senderUid === uid && saved.text === value.text && saved.replyTo === value.replyTo && (saved.type || 'text') === (value.type || 'text')
                         && JSON.stringify(saved.attachment || null) === JSON.stringify(value.attachment || null)
+                        && (saved.textEffect?.name || '') === (value.textEffect?.name || '') && (saved.textEffect?.start ?? -1) === (value.textEffect?.start ?? -1) && (saved.textEffect?.end ?? -1) === (value.textEffect?.end ?? -1)
                         && JSON.stringify(saved.poll?.options || null) === JSON.stringify(value.poll?.options || null)) return;
                     throw failure('message-conflict');
                 }
@@ -165,8 +179,9 @@
                 return batch.commit();
             },
             newMessageId: id => chat(id).collection('messages').doc().id,
-            async send(id, messageId, text, replyTo = '') {
-                return sendPayload(id, messageId, { text:messageText(text), replyTo });
+            async send(id, messageId, text, replyTo = '', effect = null) {
+                const body = messageText(text), normalized = textEffect(effect, body);
+                return sendPayload(id, messageId, { text:body, replyTo, ...(normalized ? {textEffect:normalized} : {}) });
             },
             async sendMedia(id, messageId, attachment, caption = '', replyTo = '') {
                 const value = attachmentValue(id, messageId, attachment), text = clean(caption);
@@ -183,7 +198,7 @@
                     const saved = await transaction.get(ref), conversation = await transaction.get(chat(id));
                     if (!saved.exists || saved.data().senderUid !== uid || saved.data().type === 'poll') throw failure('message-not-editable');
                     if (saved.data().text === body) return;
-                    transaction.update(ref, { text:body, editedAt:timestamp() });
+                    transaction.update(ref, { text:body, editedAt:timestamp(), ...(saved.data().textEffect ? {textEffect:null} : {}) });
                     if (conversation.data()?.lastMessageId === messageId) transaction.update(chat(id), { lastText:body, ...(!conversation.data().lastAt ? {lastAt:saved.data().createdAt} : {}) });
                 });
             },
@@ -286,5 +301,5 @@
             now: timestamp
         };
     }
-    return { create, groupOwner, REACTIONS, MAX_LENGTH, MAX_GROUP_MEMBERS, BACKGROUNDS, MEDIA_LIMITS, MEDIA_MIMES, RAW_CHUNK_BYTES, BASE64_CHUNK_CHARS, MAX_CHUNKS, millis, messageText, conversationId, mediaKind, attachmentValue, pollValue, preview };
+    return { create, groupOwner, REACTIONS, MAX_LENGTH, TEXT_EFFECTS, textEffect, MAX_GROUP_MEMBERS, BACKGROUNDS, MEDIA_LIMITS, MEDIA_MIMES, RAW_CHUNK_BYTES, BASE64_CHUNK_CHARS, MAX_CHUNKS, millis, messageText, conversationId, mediaKind, attachmentValue, pollValue, preview };
 });

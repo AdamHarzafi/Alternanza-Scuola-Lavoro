@@ -8,6 +8,7 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="preload" href="fonts/SF-Pro-Variable-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="IMMAGINI/emoji-apple-16.webp" as="image" type="image/webp">
     <link rel="stylesheet" href="modern.css?v=20261103-footer-active-link-underline-v1">
     <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
     <link rel="stylesheet" href="navbar-refinement.css?v=20261110-messages-v12">
@@ -17,6 +18,7 @@
     <link rel="stylesheet" href="page-transitions.css?v=20261108-direct-entry-v2">
     <script src="page-transitions.js?v=20261108-direct-entry-v2"></script>
     <link rel="stylesheet" href="messages.css?v=20261117-context-actions-v21">
+    <link rel="stylesheet" href="messages-effects.css?v=20261126-effects-v1">
 </head>
 <body class="messages-page">
     <nav class="navbar-wrapper glass home-mainnav messages-site-nav" aria-label="Navigazione principale">
@@ -79,6 +81,7 @@
                 <button id="new-messages-indicator" class="new-messages-indicator" hidden>Nuovi messaggi ↓</button>
                 <form id="message-form" class="message-composer">
                     <div id="reply-preview" class="reply-preview" hidden><span><strong id="reply-name"></strong><span id="reply-text"></span></span><button id="cancel-reply" class="circle-button" type="button" aria-label="Annulla risposta"><svg class="message-close-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M 12.12 10 l 4.07 -4.06 a 1.5 1.5 0 1 0 -2.11 -2.12 L 10 7.88 L 5.94 3.81 A 1.5 1.5 0 1 0 3.82 5.93 L 7.88 10 L 3.81 14.06 a 1.5 1.5 0 0 0 0 2.12 a 1.51 1.51 0 0 0 2.13 0 L 10 12.12 l 4.06 4.07 a 1.45 1.45 0 0 0 1.06 0.44 a 1.5 1.5 0 0 0 1.06 -2.56 Z"/></svg></button></div>
+                    <div id="effect-draft" class="effect-draft" hidden><button id="change-text-effect" type="button"></button><button id="clear-text-effect" type="button" aria-label="Rimuovi effetto">Rimuovi</button></div>
                     <div class="composer-row">
                         <button id="attach-message" class="attachment-button circle-button" type="button" aria-label="Aggiungi un allegato" aria-haspopup="dialog" aria-controls="composer-menu" aria-expanded="false"><svg class="message-plus-icon" viewBox="0 0 36 36" aria-hidden="true"><path d="m 24 16.5 h -4.5 v -4.5 c 0 -0.8286 -0.6719 -1.5 -1.5 -1.5 s -1.5 0.6714 -1.5 1.5 v 4.5 h -4.5 c -0.8281 0 -1.5 0.6714 -1.5 1.5 s 0.6719 1.5 1.5 1.5 h 4.5 v 4.5 c 0 0.8286 0.6719 1.5 1.5 1.5 s 1.5 -0.6714 1.5 -1.5 v -4.5 h 4.5 c 0.8281 0 1.5 -0.6714 1.5 -1.5 s -0.6719 -1.5 -1.5 -1.5 Z"/></svg></button>
                         <button id="cancel-recording" class="circle-button voice-cancel" type="button" aria-label="Annulla registrazione" hidden><svg class="message-close-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M 12.12 10 l 4.07 -4.06 a 1.5 1.5 0 1 0 -2.11 -2.12 L 10 7.88 L 5.94 3.81 A 1.5 1.5 0 1 0 3.82 5.93 L 7.88 10 L 3.81 14.06 a 1.5 1.5 0 0 0 0 2.12 a 1.51 1.51 0 0 0 2.13 0 L 10 12.12 l 4.06 4.07 a 1.45 1.45 0 0 0 1.06 0.44 a 1.5 1.5 0 0 0 1.06 -2.56 Z"/></svg></button>
@@ -109,8 +112,17 @@
     <dialog id="leave-group-dialog" class="messages-dialog" aria-labelledby="leave-group-title"><h2 id="leave-group-title">Uscire dal gruppo?</h2><p id="leave-group-copy"></p><div id="group-successor-field" hidden><label for="group-successor">Scegli chi gestirà il gruppo</label><select id="group-successor"></select></div><div class="group-delete-actions"><button class="secondary-button" type="button" data-close-dialog>Annulla</button><button id="confirm-leave-group" class="danger-button" type="button">Esci dal gruppo</button></div><p id="leave-group-status" class="dialog-note" role="status"></p></dialog>
     <dialog id="delete-group-dialog" class="messages-dialog" aria-labelledby="delete-group-title"><h2 id="delete-group-title">Eliminare il gruppo?</h2><p id="delete-group-copy"></p><p>Il gruppo scomparirà per tutti i partecipanti. Potrai ripristinarlo dalle impostazioni di Messaggi, recuperando anche la cronologia.</p><div class="group-delete-actions"><button class="secondary-button" type="button" data-close-dialog>Annulla</button><button id="confirm-delete-group" class="danger-button" type="button">Elimina gruppo</button></div><p id="delete-group-status" class="dialog-note" role="status"></p></dialog>
     <dialog id="edit-message-dialog" class="messages-dialog"><form id="edit-message-form"><div class="dialog-heading"><h2>Modifica messaggio</h2><button type="button" class="circle-button" data-close-dialog aria-label="Annulla modifica"><svg class="message-close-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M 12.12 10 l 4.07 -4.06 a 1.5 1.5 0 1 0 -2.11 -2.12 L 10 7.88 L 5.94 3.81 A 1.5 1.5 0 1 0 3.82 5.93 L 7.88 10 L 3.81 14.06 a 1.5 1.5 0 0 0 0 2.12 a 1.51 1.51 0 0 0 2.13 0 L 10 12.12 l 4.06 4.07 a 1.45 1.45 0 0 0 1.06 0.44 a 1.5 1.5 0 0 0 1.06 -2.56 Z"/></svg></button></div><label for="edit-message-input">Messaggio</label><textarea id="edit-message-input" maxlength="2000" rows="5" required></textarea><p class="dialog-note">Il messaggio mostrerà la dicitura «Modificato».</p><button id="save-message-edit" class="primary-button">Salva modifica</button><p id="edit-message-status" role="status" class="dialog-note"></p></form></dialog>
+    <dialog id="text-effects-dialog" class="messages-dialog effects-dialog" aria-labelledby="effects-title">
+        <div class="dialog-heading"><h2 id="effects-title">Effetti del testo</h2><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi effetti"><svg class="message-close-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M 12.12 10 l 4.07 -4.06 a 1.5 1.5 0 1 0 -2.11 -2.12 L 10 7.88 L 5.94 3.81 A 1.5 1.5 0 1 0 3.82 5.93 L 7.88 10 L 3.81 14.06 a 1.5 1.5 0 0 0 0 2.12 a 1.51 1.51 0 0 0 2.13 0 L 10 12.12 l 4.06 4.07 a 1.45 1.45 0 0 0 1.06 0.44 a 1.5 1.5 0 0 0 1.06 -2.56 Z"/></svg></button></div>
+        <p class="effects-description">Scegli un effetto per il messaggio. Per animare solo una parola o un’emoji, selezionala nel campo di scrittura prima di aprire gli effetti.</p>
+        <div class="effect-preview-surface"><div id="effect-preview" class="effect-preview" aria-label="Anteprima del messaggio"></div></div>
+        <div id="effect-choices" class="effect-choices" role="group" aria-label="Scegli un effetto"></div>
+        <div class="effects-bottom"><button id="effect-none" class="effect-none" type="button">Nessun effetto</button><button id="effect-done" class="primary-button" type="button">Fine</button></div>
+        <p class="dialog-note">L’effetto sarà visibile anche a chi riceve il messaggio. Se hai ridotto le animazioni sul dispositivo, il testo rimane fermo.</p>
+    </dialog>
     <dialog id="composer-menu" class="messages-dialog composer-add-menu" aria-labelledby="composer-menu-title">
         <div class="dialog-heading"><h2 id="composer-menu-title">Aggiungi</h2><button type="button" class="circle-button" data-close-dialog aria-label="Chiudi allegati"><svg class="message-close-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M 12.12 10 l 4.07 -4.06 a 1.5 1.5 0 1 0 -2.11 -2.12 L 10 7.88 L 5.94 3.81 A 1.5 1.5 0 1 0 3.82 5.93 L 7.88 10 L 3.81 14.06 a 1.5 1.5 0 0 0 0 2.12 a 1.51 1.51 0 0 0 2.13 0 L 10 12.12 l 4.06 4.07 a 1.45 1.45 0 0 0 1.06 0.44 a 1.5 1.5 0 0 0 1.06 -2.56 Z"/></svg></button></div>
+        <button id="choose-text-effects" class="action-row" type="button"><span class="composer-menu-icon menu-effects" aria-hidden="true">A<span style="font-size:12px">a</span></span><span>Effetti del testo</span></button>
         <button id="choose-media" class="action-row" type="button"><span class="composer-menu-icon menu-photos" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg></span><span>Foto e video</span></button>
         <button id="choose-file" class="action-row" type="button"><span class="composer-menu-icon menu-files" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10Z"/><path d="M13 3v7h7M8 14h8m-8 3h5"/></svg></span><span>Documento o file</span></button>
         <button id="choose-audio" class="action-row" type="button"><span class="composer-menu-icon menu-audio" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M8 6v12M4 10v4m12-8v12m4-8v4"/></svg></span><span>Audio</span></button>
@@ -171,11 +183,14 @@
     <script defer src="auth-session.js?v=20261025-account-nav-v1"></script>
     <script defer src="account-settings-model.js"></script>
     <script defer src="account-preferences.js"></script>
-    <script defer src="messages-store.js?v=20261114-reply-threads-v8"></script>
+    <script defer src="messages-store.js?v=20261126-effects-v1"></script>
     <script defer src="messages-media.js?v=20261117-context-actions-v21"></script>
     <script defer src="messages-audio.js?v=20261117-context-actions-v21"></script>
     <script defer src="messages-push.js?v=20261113"></script>
     <script defer src="messages-notifications.js?v=20261113-messaging-v5"></script>
-    <script defer src="messages.js?v=20261117-context-actions-v21"></script>
+    <script defer src="messages-emoji-data.js?v=16.0.0"></script>
+    <script defer src="messages-emoji.js?v=20261126-effects-v1"></script>
+    <script defer src="messages-effects.js?v=20261126-effects-v1"></script>
+    <script defer src="messages.js?v=20261126-effects-v1"></script>
 </body>
 </html>

@@ -1,0 +1,36 @@
+.effect-range{position:relative}
+.effect-unit{display:inline-block;max-width:100%;overflow-wrap:anywhere;white-space:pre-wrap;transform-origin:50% 65%}
+.effect-playing{position:relative;z-index:1}
+.effect-replay{display:block;margin:6px 9px 0 auto;padding:4px 6px;border:0;background:none;color:#007aff;font:inherit;font-size:12px;cursor:pointer;line-height:1.3}
+.message-row:not(.own) .effect-replay{margin-left:9px;margin-right:auto}
+.effect-replay:focus-visible,.effect-choice:focus-visible{outline:2px solid #007aff;outline-offset:3px}
+.effect-draft{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 4px 8px;font-size:13px;color:#6e6e73}
+.effect-draft[hidden]{display:none}
+.effect-draft button{border:0;background:none;color:#007aff;font:inherit;padding:4px;cursor:pointer}
+.effects-dialog{width:min(480px,calc(100% - 28px));padding:24px!important;box-sizing:border-box}
+.effects-dialog .dialog-heading{margin-bottom:12px}
+.effects-description{font-size:14px;line-height:1.45;color:#6e6e73;margin:0 0 18px}
+.effect-preview-surface{min-height:80px;max-height:200px;overflow:auto;display:flex;justify-content:flex-end;align-items:center;padding:22px 16px;background:#f5f5f7;border-radius:22px;margin-bottom:20px}
+.effect-preview{padding:10px 16px;max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:22px;background:#008cff;color:white;line-height:1.4;font-size:18px;box-sizing:border-box}
+.effect-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.effect-choice{min-height:48px;padding:12px 8px;border:0;border-radius:16px;background:#f2f2f7;color:#1d1d1f;font:inherit;font-size:16px;cursor:pointer;transition:background .18s,color .18s,transform .18s}
+.effect-choice[aria-pressed="true"]{background:#007aff;color:#fff}
+.effect-choice:active{transform:scale(.96)}
+.effect-choice[data-effect="big"]{font-size:21px}.effect-choice[data-effect="small"]{font-size:13px}
+.effects-bottom{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:20px}
+.effect-none{border:0;background:none;color:#007aff;font:inherit;font-size:14px;padding:10px 0;cursor:pointer}
+.effects-dialog .primary-button{min-width:100px}
+.composer-menu-icon.menu-effects{background:linear-gradient(155deg,#568aff,#006eff);color:#fff;font-size:23px;font-weight:600;letter-spacing:-1.4px}
+.apple-emoji{display:inline-block;width:1.18em;height:1.18em;vertical-align:-.22em;position:relative;white-space:nowrap;font-family:"Apple Color Emoji","Segoe UI Emoji",sans-serif;font-weight:normal;font-style:normal;line-height:1;letter-spacing:0}
+.apple-emoji-art{position:absolute;inset:0;display:block;background-image:url('IMMAGINI/emoji-apple-16.webp');background-size:var(--emoji-sheet-size);background-position:var(--emoji-position);background-repeat:no-repeat;pointer-events:none}
+.emoji-ready .apple-emoji{color:transparent!important;text-shadow:none!important;-webkit-text-fill-color:transparent}
+.apple-emoji-art{visibility:hidden}.emoji-ready .apple-emoji-art{visibility:visible}
+.composer-field{position:relative}
+.composer-emoji-mirror{position:absolute;pointer-events:none;overflow:hidden;z-index:0;color:#1d1d1f;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;box-sizing:border-box;margin:0;scrollbar-width:none;visibility:hidden}
+.emoji-ready .composer-emoji-mirror{visibility:visible}
+.composer-emoji-mirror .apple-emoji{vertical-align:-.18em}
+.emoji-ready #message-input.has-emoji{color:transparent!important;-webkit-text-fill-color:transparent!important;caret-color:#1d1d1f!important}
+.emoji-ready #message-input.has-emoji::selection{background:rgba(0,122,255,.24)}
+#message-input.has-emoji{position:relative;z-index:1;background:transparent}
+@media(forced-colors:active){.apple-emoji-art,.composer-emoji-mirror{display:none!important}.emoji-ready .apple-emoji{color:CanvasText!important;-webkit-text-fill-color:CanvasText!important}.emoji-ready #message-input.has-emoji{color:CanvasText!important;-webkit-text-fill-color:CanvasText!important}}
+@media(prefers-reduced-motion:reduce){.effect-choice{transition:none}.effect-choice:active{transform:none}}

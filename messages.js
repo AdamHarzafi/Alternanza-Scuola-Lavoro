@@ -6,7 +6,7 @@
     const time = new Intl.DateTimeFormat('it-IT', { hour:'2-digit', minute:'2-digit' });
     const day = new Intl.DateTimeFormat('it-IT', { day:'numeric', month:'long' });
     const roleName = role => role === 'docente' ? 'Docente' : 'Studente';
-    const node = (tag, className, text) => { const e = document.createElement(tag); if (className) e.className = className; if (text !== undefined) e.textContent = text; return e; };
+    const node = (tag, className, text) => { const e = document.createElement(tag); if (className) e.className = className; if (text !== undefined) { if(window.HarzafiEmoji) window.HarzafiEmoji.render(e,String(text)); else e.textContent = text; } return e; };
     const defaultPhoto = 'IMMAGINI/PROFILO-UTENTE-LOGO.webp';
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     let version = 0, store, user, identity, contacts = new Map(), conversations = [], globalStops = [], chatStops = [];
@@ -22,6 +22,8 @@
     let typingTimer, typingRefresh, typingExpiry, lastTyping = 0, readTimer, stateError = false, sending = false, enrollmentBusy = false;
     let pending = new Map(), drafts = new Map(), outbox = new Map(), longPressTimer, pressTarget, suppressClick = false;
     const dialogs = [...document.querySelectorAll('dialog')];
+    const effects = window.HarzafiTextEffects, syncEmojiDraft = window.HarzafiEmoji?.mirror(input) || (()=>{});
+    let draftEffect = null, draftEffectAll = false, draftText = '', effectSelection = null;
     const motions = new Map(), visibilityTargets = new Map(), dialogEpochs = new WeakMap(), dialogDesired = new WeakMap();
     let transitionRequest = 0, actionOriginRect;
     const viewportState = { width:window.innerWidth, baseline:window.innerHeight, height:0, scale:window.visualViewport?.scale || 1, followLatest:true };
@@ -228,7 +230,7 @@
             player.pause();player.removeAttribute('src');player.load();
         }
         media?.cancelActivity?.();resetVoice();resetAttachment();
-        if (activeId) drafts.set(activeId, { text:input.value, replyTo });
+        if (activeId) drafts.set(activeId, { text:input.value, replyTo, textEffect:draftEffect, effectAll:draftEffectAll });
         if (writeTyping) stopTyping();
         ++chatVersion; chatStops.splice(0).forEach(stop => stop());
         replyObserver.disconnect(); replyThreads.clear(); openThreadId = '';
@@ -236,9 +238,9 @@
         clearTimeout(readTimer); clearTimeout(typingExpiry); cancelMessagePress();
         activeId = recipientUid = replyTo = actionId = ''; states.clear(); messages.clear(); rowNodes.clear(); quotes.clear(); requestedQuotes.clear();
         cancelWithin($('active-conversation')); $('active-conversation').inert = false;
-        $('message-list').replaceChildren(); visibleNow($('typing-indicator'), false); visibleNow($('reply-preview'), false);
+        effects?.cancelWithin($('message-list')); $('message-list').replaceChildren(); visibleNow($('typing-indicator'), false); visibleNow($('reply-preview'), false);
         $('active-conversation').hidden = true; $('conversation-placeholder').hidden = false; app.classList.remove('conversation-open');
-        $('connection-status').hidden = true; $('new-messages-indicator').hidden = true; input.value = ''; resizeInput(); closeDialogs();
+        $('connection-status').hidden = true; $('new-messages-indicator').hidden = true; input.value = ''; draftEffect=null;draftEffectAll=false;draftText='';resizeInput();closeDialogs();
         pending = new Map(); sending = false; olderBusy = false; oldest = null; stateError = false;
     }
     function clear(preservePush=false) {
@@ -253,7 +255,7 @@
         preparedAttachment=null;recording?.cancel();recording=null;if(localPreview)URL.revokeObjectURL(localPreview);localPreview='';
         $('conversation-list').replaceChildren(); $('contact-list').replaceChildren(); $('conversation-search').value = ''; $('contact-search').value = '';
         $('messages-enable').disabled = false; enrollmentBusy = false;
-        drafts.clear(); outbox.clear();
+        drafts.clear(); outbox.clear();effects?.clear();
         for(const id of ['edit-message-input','attachment-caption','group-title','poll-question'])$(id).value='';
         document.querySelectorAll('.poll-option-input').forEach(e=>e.value='');$('media-viewer-image').removeAttribute('src');
     }
@@ -268,7 +270,7 @@
         $('send-message').disabled = !activeId || !input.value.trim() || offline || sending || unavailablePeer;
         $('attach-message').disabled=$('voice-message').disabled=!activeId || offline || unavailablePeer || sending;
     }
-    function resizeInput() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight || 34, 150) + 'px'; connected(); }
+    function resizeInput() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight || 34, 150) + 'px'; connected();syncEmojiDraft();syncEffectDraft(); }
     function chatError(error) {
         if (!activeId) return;
         $('history-status').textContent = error?.code === 'permission-denied' ? 'Questa conversazione non è disponibile per il tuo account.' : 'Non riesco ad aggiornare la conversazione. Torna all’elenco e riprova.';
@@ -450,7 +452,7 @@
         clearChat(); activeId = id; recipientUid = otherUid; const current = chatVersion;
         pending = outbox.get(id) || new Map(); outbox.set(id, pending);
         pending.forEach((value, key) => messages.set(key, value));
-        const draft = drafts.get(id); input.value = draft?.text || ''; replyTo = draft?.replyTo || ''; resizeInput();
+        const draft = drafts.get(id); input.value = draft?.text || ''; replyTo = draft?.replyTo || ''; draftEffect=draft?.textEffect||null;draftEffectAll=!!draft?.effectAll;draftText=input.value;resizeInput();
         if (replyTo) { const original = quotes.get(replyTo); $('reply-name').textContent = 'Risposta al messaggio'; $('reply-text').textContent = original?.text || 'Il messaggio originale verrà richiamato nella risposta.'; reveal($('reply-preview'), true); }
         $('active-conversation').hidden = false; $('conversation-placeholder').hidden = true; app.classList.add('conversation-open');
         updateHeader();applyPreferences(); renderConversations(); status(); $('history-status').textContent = 'Caricamento dei messaggi…'; $('load-older').hidden = true;
@@ -620,7 +622,7 @@
         for (const message of rows) {
             const own=message.senderUid===user.uid, item=node('li','thread-reply'+(own?' own':''));
             item.append(nameLabel(message.senderUid,nameOf(message.senderUid),'strong'));
-            const bubble=node('div','thread-reply-bubble');bubble.append(node('span','',previewText(message)));
+            const bubble=node('div','thread-reply-bubble');const body=node('span','message-text');effects.render(body,previewText(message),message.textEffect);bubble.append(body);
             if(message.editedAt)bubble.append(node('small','message-edited','Modificato'));
             item.append(bubble);
             const meta=node('div','thread-reply-meta');const date=model.millis(message.createdAt);
@@ -658,7 +660,9 @@
                 if(reusableAudio&&message.transcript){const details=reusableAudio.querySelector('.message-transcript');const wasTranscribed=details.classList.contains('has-transcript');details.querySelector('p').textContent=message.transcript;details.querySelector('.transcribe-audio')?.remove();details.classList.add('has-transcript');if(!wasTranscribed)details.open=true;}
                 row.dataset.mediaKey=mediaKey;
                 row.querySelectorAll('[data-reply-root]').forEach(element=>replyObserver.unobserve(element));
-                row.dataset.signature = signature; row.replaceChildren(); row.className = 'message-row' + (own ? ' own' : '') + (grouped ? ' grouped' : '') + (quoted ? ' has-reply' : '');
+                const textKey=JSON.stringify([message.text,message.textEffect?.name,message.textEffect?.start,message.textEffect?.end]), reusableText=row.dataset.textKey===textKey?row.querySelector('.message-text'):null;
+                if(reusableText)reusableText.remove();row.dataset.textKey=textKey;
+                effects?.cancelWithin(row);row.dataset.signature = signature; row.replaceChildren(); row.className = 'message-row' + (own ? ' own' : '') + (grouped ? ' grouped' : '') + (quoted ? ' has-reply' : '');
                 if (showDate) row.append(node('div', 'message-date', day.format(date) + ' · ' + time.format(date)));
                 const cluster = node('div', 'message-cluster'), bubble = node('div', 'message-bubble');
                 if (quoted) {
@@ -666,7 +670,7 @@
                 }
                 if(groupChat()&&!own&&!grouped){const sender=nameLabel(message.senderUid,nameOf(message.senderUid),'strong');sender.classList.add('message-sender');bubble.append(sender);}
                 if(message.type==='poll')renderPoll(bubble,message);
-                else {if(reusableAudio)bubble.append(reusableAudio);else if(message.attachment)renderMedia(bubble,message);if(message.text)bubble.append(node('span', 'message-text', message.text));}
+                else {if(reusableAudio)bubble.append(reusableAudio);else if(message.attachment)renderMedia(bubble,message);if(message.text){const body=reusableText||node('span','message-text');if(!reusableText)effects.render(body,message.text,message.textEffect);bubble.append(body);}}
                 if (transcriptOpen && bubble.querySelector('.message-transcript')) bubble.querySelector('.message-transcript').open = true;
                 if(message.editedAt)bubble.append(node('span','message-edited','Modificato'));
                 const actions = node('button', 'bubble-actions', '•••'); actions.type = 'button'; actions.setAttribute('aria-label', 'Azioni del messaggio: ' + message.text.slice(0, 60)); actions.disabled = !!message.pending || !!message.failed;
@@ -695,11 +699,13 @@
                     const meta = node('div', 'message-meta', message.failed ? 'Invio non riuscito' : message.pending ? 'Invio…' : peerRead ? 'Letto' : 'Inviato');
                     if (message.failed) { const retry = node('button', '', 'Riprova'); retry.type = 'button'; retry.addEventListener('click', () => retrySend(message.id)); meta.append(retry); } row.append(meta);
                 }
+                if(message.textEffect && !message.editedAt){const replay=node('button','effect-replay','Riproduci effetto');replay.type='button';replay.setAttribute('aria-label','Riproduci effetto '+(effects.labels[message.textEffect.name]||''));replay.addEventListener('click',()=>effects.play(row.querySelector('.message-text'),message.textEffect));row.append(replay);}
                 row.querySelectorAll('[data-reply-root]').forEach(element=>replyObserver.observe(element));
             }
             // Reuse nodes so focus and a user's place in the conversation survive updates.
             const existing = $('message-list').children[index]; if (existing !== row) $('message-list').insertBefore(row, existing || null);
             if (isNew && animate && (animate !== 'history' || index >= values.length - 6)) motion(row, 'message', true, {duration:300,delay:animate === 'history' ? Math.max(0, index - values.length + 6) * 24 : 0});
+            if(animate && message.textEffect && !message.editedAt && !message.failed){const body=row.querySelector('.message-text');if(body)effects.schedule(body,message.textEffect,user.uid+'/'+activeId+'/'+message.id);}
             previous = message;
         }
         updateThreadLinks(); renderThread();
@@ -840,6 +846,43 @@
     document.querySelectorAll('input[name="chat-background"]').forEach(option=>option.addEventListener('change',()=>{if(option.checked)savePreference('background',option.value);}));
     $('conversation-details').addEventListener('close',()=>{$('conversation-members').replaceChildren();});
     $('conversation-info').addEventListener('click',details);$('conversation-encryption').addEventListener('click',details);
+    function syncEffectDraft() {
+        $('effect-draft').hidden=!draftEffect;
+        $('change-text-effect').textContent=draftEffect?'Effetto: '+effects.labels[draftEffect.name]:'';
+    }
+    function previewEffect() {
+        const value=input.value.trim()||'Un messaggio speciale ✨';
+        const effect=draftEffect?{...draftEffect,...(!input.value.trim()?{start:0,end:value.length}:{})}:null;
+        effects.cancelWithin($('effect-preview'));effects.render($('effect-preview'),value,effect);
+        for(const button of $('effect-choices').children)button.setAttribute('aria-pressed',String(button.dataset.effect===effect?.name));
+        requestAnimationFrame(()=>{if($('text-effects-dialog').open)effects.play($('effect-preview'),effect);});
+        syncEffectDraft();
+    }
+    async function chooseTextEffects(fromMenu=false) {
+        const raw=input.value, trimStart=raw.length-raw.trimStart().length, value=raw.trim();
+        const selected=input.selectionEnd>input.selectionStart;
+        let start=Math.max(0,input.selectionStart-trimStart),end=Math.min(value.length,input.selectionEnd-trimStart);
+        if(selected&&typeof Intl.Segmenter==='function'){
+            const points=[...new Intl.Segmenter(undefined,{granularity:'grapheme'}).segment(value)].map(p=>p.index).concat(value.length);
+            start=points.filter(p=>p<=start).at(-1)||0;end=points.find(p=>p>=end)??value.length;
+        }
+        effectSelection=selected&&end>start?{start,end}:{start:0,end:value.length};
+        const current=chatVersion;
+        if(fromMenu)await dismiss($('composer-menu'));
+        if(current!==chatVersion||!activeId)return;
+        openDialog($('text-effects-dialog'));previewEffect();
+    }
+    for(const [name,label]of Object.entries(effects.labels)){
+        const button=node('button','effect-choice',label);button.type='button';button.dataset.effect=name;button.setAttribute('aria-pressed','false');
+        button.addEventListener('click',()=>{draftEffect={name,...effectSelection};draftEffectAll=effectSelection.start===0&&effectSelection.end===input.value.trim().length;draftText=input.value;previewEffect();});
+        $('effect-choices').append(button);
+    }
+    $('choose-text-effects').addEventListener('click',()=>chooseTextEffects(true));
+    $('change-text-effect').addEventListener('click',()=>chooseTextEffects());
+    $('clear-text-effect').addEventListener('click',()=>{draftEffect=null;syncEffectDraft();});
+    $('effect-none').addEventListener('click',()=>{draftEffect=null;previewEffect();});
+    $('effect-done').addEventListener('click',()=>dismiss($('text-effects-dialog')));
+    $('text-effects-dialog').addEventListener('close',()=>effects.cancelWithin($('effect-preview')));
     $('attach-message').addEventListener('click',()=>openDialog($('composer-menu')));
     $('enable-push').addEventListener('click', async () => {
         const current=version, push=window.HarzafiMessagePush;
@@ -966,7 +1009,7 @@
         const members=conversation(id)?.members.slice() || [],sender=user;
         message.pending = true; message.failed = false; messages.set(message.id, message); renderMessages({animate:true}); bottom();
         try {
-            await writer.send(id, message.id, message.text, message.replyTo);
+            await writer.send(id, message.id, message.text, message.replyTo, message.textEffect || null);
             window.HarzafiMessagePush?.sent(id,message.id,members,sender).catch(()=>{});
             if (session !== version) return;
             queue?.delete(message.id);
@@ -986,10 +1029,14 @@
         event.preventDefault(); if (!activeId || sending || !navigator.onLine || (!groupChat() && person(recipientUid).enabled === false)) return;
         let text; try { text = model.messageText(input.value); } catch (error) { status(error.code === 'message-too-long' ? 'Il messaggio può contenere fino a 2.000 caratteri.' : 'Scrivi un messaggio prima di inviarlo.', true); return; }
         const id = store.newMessageId(activeId), message = { id, text, senderUid:user.uid, replyTo, reactions:{}, localTime:Date.now() };
-        pending.set(id, message); input.value = ''; replyTo = ''; reveal($('reply-preview'), false); status(); stopTyping(); resizeInput();
+        if(draftEffect){try{const effect=model.textEffect(draftEffect,text);if(effect)message.textEffect=effect;}catch(_){status('Seleziona di nuovo l’effetto per questo testo.',true);return;}}
+        pending.set(id, message); input.value = '';draftEffect=null;draftEffectAll=false;draftText=''; replyTo = ''; reveal($('reply-preview'), false); status(); stopTyping(); resizeInput();
         await deliver(message);
     });
-    input.addEventListener('input', () => { resizeInput(); typing(); });
+    input.addEventListener('input', () => {
+        if(draftEffect){if(draftEffectAll)draftEffect={name:draftEffect.name,start:0,end:input.value.trim().length};else if(input.value!==draftText)draftEffect=null;}
+        draftText=input.value;resizeInput();typing();
+    });
     input.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && window.matchMedia('(min-width:701px)').matches) { event.preventDefault(); $('message-form').requestSubmit(); } });
     input.addEventListener('blur', () => { stopTyping(); viewport(); });
     input.addEventListener('focus', viewport);
