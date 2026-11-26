@@ -1,0 +1,33 @@
+.messages-page .message-app-logo{display:block;flex:none;object-fit:contain;width:80px;height:80px;background:none;border:0;border-radius:0;box-shadow:none}
+.messages-page .message-app-logo[hidden]{display:none}
+.messages-page .conversation-placeholder .message-app-logo{width:72px;height:72px}
+.messages-page .messages-gate:has(#messages-onboarding:not([hidden])){box-sizing:border-box;width:100%;max-width:none;height:auto;min-height:calc(var(--messages-height,100svh) - var(--messages-nav-height,52px) - var(--messages-top-gap,24px) - 24px);margin:0 auto;padding:32px 24px;gap:14px;align-items:center;justify-content:center}
+.messages-page #messages-onboarding{box-sizing:border-box;display:flex;flex-direction:column;align-items:stretch;gap:0;width:100%;max-width:540px;min-height:0;margin:0 auto;padding:0;text-align:left}
+.messages-page #messages-onboarding[hidden]{display:none}
+.messages-page #messages-onboarding .onboarding-logo{display:block;align-self:center;object-fit:contain;flex:none;width:80px;height:80px;margin:0 auto 26px;padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+.messages-page #messages-onboarding .onboarding-title{box-sizing:border-box;align-self:stretch;width:100%;margin:0 0 26px;text-align:left;font-size:32px;font-weight:700;line-height:1.1;letter-spacing:-.035em}
+.messages-page #messages-onboarding .onboarding-title>span{white-space:normal;color:#007aff}
+.messages-page #messages-onboarding .onboarding-title>strong{font-weight:700}
+.messages-page #messages-onboarding .onboarding-features{align-self:stretch;width:100%;margin:0 0 26px;padding:0;gap:19px}
+.messages-page #messages-onboarding .onboarding-features li{grid-template-columns:30px minmax(0,1fr);gap:15px}
+.messages-page #messages-onboarding .onboarding-features li>svg{width:28px;height:28px}
+.messages-page #messages-onboarding .onboarding-features strong{font-size:16px;line-height:1.35}
+.messages-page #messages-onboarding .onboarding-features p{font-size:15px;line-height:1.4}
+.messages-page .onboarding-privacy{width:100%;margin:0 0 22px;text-align:left}
+.messages-page .onboarding-privacy .onboarding-privacy-icon{display:block;align-self:flex-start;object-fit:contain;width:28px;height:24px;margin:0 0 8px}
+.messages-page .messages-gate .onboarding-privacy .onboarding-note{width:100%;margin:0!important;text-align:left!important;white-space:normal!important;font-size:12px!important;font-weight:400;line-height:1.45!important;letter-spacing:normal;color:#86868b}
+.messages-page .messages-gate .onboarding-privacy a{font-size:inherit;font-weight:400;line-height:inherit;color:#007aff;text-decoration:none}
+.messages-page .messages-gate .onboarding-privacy a:hover{text-decoration:underline}
+.messages-page #messages-onboarding>.primary-button{width:100%;min-height:50px;margin:0;padding:14px 22px;font-size:16px;line-height:1.35;border-radius:999px}
+.messages-page .messages-gate:has(#messages-onboarding:not([hidden]))>a{box-sizing:border-box;max-width:540px;padding:6px 12px;font-size:14px;line-height:1.4}
+@media(max-width:700px){
+ .messages-page .messages-gate:has(#messages-onboarding:not([hidden])){min-height:calc(var(--messages-height,100svh) - var(--messages-nav-height,48px) - var(--messages-top-gap,16px) - 16px);padding:24px 22px 20px;gap:12px}
+ .messages-page #messages-onboarding .onboarding-logo{width:68px;height:68px;margin-bottom:24px}
+ .messages-page #messages-onboarding .onboarding-title{font-size:29px;margin-bottom:24px}
+ .messages-page #messages-onboarding .onboarding-features{gap:18px;margin-bottom:24px}
+ .messages-page #messages-onboarding .onboarding-features li{grid-template-columns:27px minmax(0,1fr);gap:12px}
+ .messages-page #messages-onboarding .onboarding-features li>svg{width:26px;height:26px}
+ .messages-page #messages-onboarding .onboarding-features strong{font-size:15px}
+ .messages-page #messages-onboarding .onboarding-features p{font-size:14px}
+}
+@media(max-width:360px){.messages-page #messages-onboarding .onboarding-title{font-size:27px}}

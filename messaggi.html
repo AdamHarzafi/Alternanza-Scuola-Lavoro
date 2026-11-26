@@ -9,6 +9,7 @@
     <link rel="icon" href="IMMAGINI/HARZAFI-LOGO-FOR-APPLE.webp">
     <link rel="preload" href="fonts/SF-Pro-Variable-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="IMMAGINI/emoji-apple-16.webp" as="image" type="image/webp">
+    <link rel="preload" href="IMMAGINI/ICONA-MESSAGGI.webp" as="image" type="image/webp">
     <link rel="stylesheet" href="modern.css?v=20261103-footer-active-link-underline-v1">
     <link rel="stylesheet" href="fonts.css?v=20261027-hero-display-font-fix-v1">
     <link rel="stylesheet" href="navbar-refinement.css?v=20261110-messages-v12">
@@ -18,7 +19,8 @@
     <link rel="stylesheet" href="page-transitions.css?v=20261108-direct-entry-v2">
     <script src="page-transitions.js?v=20261108-direct-entry-v2"></script>
     <link rel="stylesheet" href="messages.css?v=20261117-context-actions-v21">
-    <link rel="stylesheet" href="messages-effects.css?v=20261126-caret-tapbacks-v2">
+    <link rel="stylesheet" href="messages-effects.css?v=20261126-welcome-tapbacks-v3">
+    <link rel="stylesheet" href="messages-welcome.css?v=20261126-welcome-tapbacks-v3">
 </head>
 <body class="messages-page">
     <nav class="navbar-wrapper glass home-mainnav messages-site-nav" aria-label="Navigazione principale">
@@ -35,20 +37,22 @@
     </nav>
     <div class="messages-workspace">
     <div id="messages-gate" class="messages-gate" role="status">
-        <span class="messages-symbol" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 5C12.4 5 3 12.6 3 22c0 5.5 3.2 10.5 8.2 13.6L9 44l10-5.5c1.6.3 3.3.5 5 .5 11.6 0 21-7.6 21-17S35.6 5 24 5Z"/></svg></span>
+        <img class="messages-symbol message-app-logo" src="IMMAGINI/ICONA-MESSAGGI.webp" alt="" width="80" height="80">
         <h1 id="gate-title">Messaggi</h1>
         <p id="gate-copy">Preparo le tue conversazioni…</p>
         <span id="gate-spinner" class="apple-ios14-spinner" aria-label="Caricamento"></span>
         <div id="messages-onboarding" hidden>
-            <img class="onboarding-symbol onboarding-logo" src="IMMAGINI/LOGO-DOMANDA-HARZAFI.webp" alt="" width="98" height="98">
-            <h1 class="onboarding-title"><span>Ti diamo il benvenuto in</span><strong>Messaggi</strong></h1>
+            <img class="onboarding-symbol onboarding-logo" src="IMMAGINI/ICONA-MESSAGGI.webp" alt="" width="80" height="80">
+            <h1 id="onboarding-title" class="onboarding-title"><span>Ti diamo il benvenuto in</span><strong>Messaggi</strong></h1>
             <ul class="onboarding-features">
                 <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 8 0 0 0-9 8c0 3 2 5 4 6l-1 4 5-2h1a9 8 0 0 0 0-16Z"/></svg><div><strong>Le persone, più vicine.</strong><p>Scrivi agli studenti e ai docenti, rispondi a un messaggio o crea un gruppo.</p></div></li>
                 <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="m4 16 5-5 4 4 3-3 5 5"/><circle cx="16" cy="8" r="1"/></svg><div><strong>Più modi per condividere.</strong><p>Foto, file, messaggi vocali e reazioni. Ogni conversazione trova il suo modo.</p></div></li>
                 <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg><div><strong>Il tuo spazio, sui tuoi dispositivi.</strong><p>Ritrova le conversazioni dopo l’accesso. Solo i partecipanti possono consultarle nel portale.</p></div></li>
             </ul>
-            <img class="onboarding-privacy-icon" src="IMMAGINI/ICONA%20PRIVACY%20HARZAFI.svg" alt="Privacy" width="44" height="36">
-            <p class="onboarding-note">Continuando, rendi visibili agli altri utenti di Messaggi il tuo nome, il ruolo e la foto del profilo. La tua email rimane riservata.</p>
+            <div class="onboarding-privacy">
+                <img class="onboarding-privacy-icon" src="IMMAGINI/ICONA%20PRIVACY%20HARZAFI.svg" alt="Privacy" width="28" height="24">
+                <p class="onboarding-note">Le informazioni relative all’Account Harzafi vengono utilizzate in Harzafi Messaggi per consentirti di conversare con studenti e docenti autorizzati e ritrovare le conversazioni sui tuoi dispositivi. Attivando il servizio, rendi visibili agli altri utenti di Messaggi il tuo nome, il ruolo e la foto del profilo; la tua email rimane riservata. I messaggi, gli allegati e le reazioni sono consultabili nel portale soltanto dai partecipanti alla conversazione.<br><a href="privacy-account.html">Scopri come vengono gestiti i tuoi dati...</a></p>
+            </div>
             <button id="messages-enable" class="primary-button" hidden>Continua</button>
         </div>
         <button id="messages-retry" class="primary-button" hidden>Riprova</button>
@@ -66,7 +70,7 @@
             <p class="sidebar-footnote">Uno spazio per studenti e docenti.</p>
         </aside>
         <section class="conversation-pane" aria-label="Messaggi della conversazione">
-            <div id="conversation-placeholder" class="conversation-placeholder"><span class="messages-symbol" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 5C12.4 5 3 12.6 3 22c0 5.5 3.2 10.5 8.2 13.6L9 44l10-5.5c1.6.3 3.3.5 5 .5 11.6 0 21-7.6 21-17S35.6 5 24 5Z"/></svg></span><h2>Una conversazione<br>può fare la differenza.</h2><p>Scegli un messaggio o inizia a scrivere<br>a uno studente o a un docente.</p><button id="placeholder-new" class="primary-button">Nuovo messaggio</button></div>
+            <div id="conversation-placeholder" class="conversation-placeholder"><img class="messages-symbol message-app-logo" src="IMMAGINI/ICONA-MESSAGGI.webp" alt="" width="72" height="72"><h2>Una conversazione<br>può fare la differenza.</h2><p>Scegli un messaggio o inizia a scrivere<br>a uno studente o a un docente.</p><button id="placeholder-new" class="primary-button">Nuovo messaggio</button></div>
             <div id="active-conversation" class="active-conversation" hidden>
                 <div class="conversation-progressive-blur" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
                 <header class="conversation-header"><button id="conversation-back" class="circle-button mobile-back" aria-label="Torna alle conversazioni"><svg viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7"/></svg></button><button id="conversation-info" class="conversation-person" aria-label="Informazioni sulla conversazione"><span id="conversation-avatar" class="person-avatar"></span><span class="conversation-name-glass"><strong id="conversation-name"></strong><span id="conversation-verified" class="verified-account" hidden></span><svg viewBox="0 0 16 24" aria-hidden="true"><path d="m5 7 5 5-5 5"/></svg></span><span id="conversation-role" class="sr-only"></span></button><span class="header-spacer" aria-hidden="true"></span></header>
@@ -191,6 +195,6 @@
     <script defer src="messages-emoji-data.js?v=16.0.0"></script>
     <script defer src="messages-emoji.js?v=20261126-caret-tapbacks-v2"></script>
     <script defer src="messages-effects.js?v=20261126-effects-v1"></script>
-    <script defer src="messages.js?v=20261126-caret-tapbacks-v2"></script>
+    <script defer src="messages.js?v=20261126-welcome-tapbacks-v3"></script>
 </body>
 </html>

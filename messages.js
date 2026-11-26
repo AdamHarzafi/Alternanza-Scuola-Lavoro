@@ -222,6 +222,8 @@
         $('gate-title').textContent = title; $('gate-copy').textContent = copy;
         $('gate-title').hidden=enable; $('gate-copy').hidden=enable;
         $('messages-onboarding').hidden=!enable;
+        $('messages-gate').setAttribute('role',enable?'region':'status');
+        $('messages-gate').setAttribute('aria-labelledby',enable?'onboarding-title':'gate-title');
         document.querySelector('#messages-gate > .messages-symbol')?.toggleAttribute('hidden',enable);
         $('gate-spinner').hidden = !loading; $('messages-enable').hidden = !enable; $('messages-retry').hidden = !retry;
     }
@@ -234,6 +236,8 @@
         if (writeTyping) stopTyping();
         ++chatVersion; chatStops.splice(0).forEach(stop => stop());
         replyObserver.disconnect(); replyThreads.clear(); openThreadId = '';
+        $('thread-original').replaceChildren();$('thread-replies').replaceChildren();
+        $('reply-thread').dataset.renderSignature='';$('thread-summary').textContent='';$('thread-status').textContent='';
         viewportState.followLatest=true;
         clearTimeout(readTimer); clearTimeout(typingExpiry); cancelMessagePress();
         activeId = recipientUid = replyTo = actionId = ''; states.clear(); messages.clear(); rowNodes.clear(); quotes.clear(); requestedQuotes.clear();
