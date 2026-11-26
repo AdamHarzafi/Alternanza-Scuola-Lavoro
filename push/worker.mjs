@@ -12,6 +12,14 @@ const decode = (value) =>
             Uint8Array.from(atob(value.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0)),
         ),
     );
+function reportPushFailure(error, path) {
+    // Never log request headers, tokens, subscriptions, account IDs or message data.
+    const type = ['Error', 'TypeError', 'ReferenceError', 'RangeError', 'DOMException'].includes(error?.name)
+        ? error.name : 'Error';
+    const frames = String(error?.stack || '').match(/(?:worker\.js|worker\.bundle\.mjs|cloudflare-internal:d1-api):\d+:\d+/g)?.slice(0, 3) || [];
+    const route = ['/subscribe', '/unsubscribe', '/notify', '/preferences', '/health', '/config'].includes(path) ? path : 'other';
+    console.error('[Harzafi Push]', { type, route, frames });
+}
 async function digest(value) {
     return [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))]
         .map((x) => x.toString(16).padStart(2, '0'))
@@ -70,7 +78,8 @@ async function authenticated(request) {
     async function read(path, mask) {
         const query = new URLSearchParams();
         for (const field of mask) query.append('mask.fieldPaths', field);
-        const response = await fetch(BASE + path + '?' + query, { headers, redirect: 'error' });
+        // Workers supports manual/follow, but throws before sending for redirect: 'error'.
+        const response = await fetch(BASE + path + '?' + query, { headers, redirect: 'manual' });
         if (!response.ok) deny(403);
         return fields(await response.json());
     }
@@ -207,7 +216,7 @@ async function route(request, env) {
                         privateKey: env.VAPID_PRIVATE_KEY,
                     },
                 );
-                const response = await fetch(subscription.endpoint, { ...payload, redirect: 'error' });
+                const response = await fetch(subscription.endpoint, { ...payload, redirect: 'manual' });
                 if (response.ok) delivered++;
                 else if ([404, 410].includes(response.status))
                     await db.prepare('DELETE FROM subscriptions WHERE id=?').bind(row.id).run();
@@ -240,6 +249,7 @@ export default {
         try {
             return new Response(JSON.stringify(await route(request, env)), { headers });
         } catch (error) {
+            if (!error.status) reportPushFailure(error, new URL(request.url).pathname);
             return new Response(JSON.stringify({ error: 'Richiesta non disponibile' }), {
                 status: error.status || 503,
                 headers,
