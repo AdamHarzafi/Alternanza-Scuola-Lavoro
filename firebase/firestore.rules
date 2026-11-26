@@ -279,7 +279,11 @@ service cloud.firestore {
             || (owner != request.auth.uid && d.get('ownerUid', d.createdBy) == owner
               && d.diff(resource.data).affectedKeys().hasOnly(['members', 'updatedAt'])));
       }
-      allow update: if validGroupLifecycle() || validGroupExit() || (member() && writableConversation() && validChatUpdate());
+      // Ordinary sends must not evaluate the unrelated group lifecycle checks first.
+      // Repeating those identity checks can exceed the expression budget for teachers.
+      allow update: if (request.resource.data.diff(resource.data).affectedKeys().hasAny(['lastMessageId', 'lastText', 'lastAt'])
+          && member() && writableConversation() && validChatUpdate())
+        || (resource.data.get('kind', 'direct') == 'group' && (validGroupLifecycle() || validGroupExit()));
       allow delete: if false;
       function validMediaType(kind, mime, size) {
         return size is int && size > 0
@@ -352,13 +356,22 @@ service cloud.firestore {
             && upload.complete == true && upload.ownerUid == request.auth.uid && upload.kind == d.type
             && upload.name == a.name && upload.mime == a.mime && upload.size == a.size;
         }
+        function validTextEffect(d) {
+          let e = d.get('textEffect', null);
+          return e == null || (e is map && e.keys().hasAll(['name', 'start', 'end'])
+            && e.keys().hasOnly(['name', 'start', 'end'])
+            && e.name in ['big', 'small', 'shake', 'nod', 'explode', 'ripple', 'bloom', 'jitter']
+            && e.start is int && e.end is int && e.start >= 0 && e.end > e.start
+            && e.end <= 2000 && e.end <= d.text.size() && d.get('type', 'text') == 'text');
+        }
         function validMessage() {
           let d = request.resource.data;
           let type = d.get('type', 'text');
           return d.keys().hasAll(['senderUid', 'text', 'replyTo', 'reactions', 'createdAt'])
-            && d.keys().hasOnly(['senderUid', 'text', 'replyTo', 'reactions', 'createdAt', 'type', 'attachment', 'poll'])
+            && d.keys().hasOnly(['senderUid', 'text', 'replyTo', 'reactions', 'createdAt', 'type', 'attachment', 'poll', 'textEffect'])
             && messageId.size() <= 100 && d.senderUid == request.auth.uid
             && validText(d.text, type == 'text' || type == 'poll')
+            && validTextEffect(d)
             && d.createdAt == request.time && d.reactions is map && d.reactions.size() == 0
             && d.replyTo is string && d.replyTo.size() <= 100
             && (d.replyTo == '' || exists(/databases/$(database)/documents/conversations/$(conversationId)/messages/$(d.replyTo)))
@@ -375,7 +388,8 @@ service cloud.firestore {
         }
         function validEdit() {
           return resource.data.senderUid == request.auth.uid && resource.data.get('type', 'text') != 'poll'
-            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt'])
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt', 'textEffect'])
+            && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['textEffect']) || request.resource.data.get('textEffect', null) == null)
             && request.resource.data.text != resource.data.text && validText(request.resource.data.text, true)
             && request.resource.data.editedAt == request.time;
         }
