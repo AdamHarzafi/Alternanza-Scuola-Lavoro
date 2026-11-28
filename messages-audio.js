@@ -21,6 +21,7 @@
         set(values);
         return { element, set, push(value) { set([...values.slice(1), Math.max(.06, value)]); }, progress(value) { element.style.setProperty('--played', Math.max(0, Math.min(100, value * 100)) + '%'); } };
     }
+    let playbackRequest = 0;
     function player({ source, duration = 0, media = window.HarzafiMessageMedia } = {}) {
         const element = make('div', 'audio-player'), audio = make('audio'), play = make('button', 'audio-play'), timeline = make('div', 'audio-timeline'), waveform = wave(), seek = make('input', 'audio-seek'), time = make('span', 'audio-time'), status = make('span', 'audio-player-status sr-only');
         audio.preload = 'auto'; audio.hidden = true; audio.setAttribute('aria-hidden', 'true');
@@ -47,7 +48,8 @@
         play.addEventListener('click', async () => {
             if (!audio.paused || wanted) { wanted = false; audio.pause(); return; }
             wanted = true;
-            try { await prepare(); if (disposed || !wanted) return; if (audio.ended) audio.currentTime = 0; await audio.play(); }
+            const request = ++playbackRequest;
+            try { await prepare(); if (disposed || !wanted || request !== playbackRequest) return; if (audio.ended) audio.currentTime = 0; await audio.play(); }
             catch (_) { if (!disposed) status.textContent = 'Non è stato possibile riprodurre il vocale. Tocca per riprovare.'; }
             finally { wanted = false; }
         });

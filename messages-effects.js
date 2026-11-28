@@ -4,7 +4,7 @@
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const played = new Set(), running = new Map(), waiting = new Map();
     const observer = new IntersectionObserver(entries => {
-        for (const entry of entries) if (entry.isIntersecting) {
+        for (const entry of entries) if (entry.isIntersecting && !document.hidden) {
             observer.unobserve(entry.target);
             const pending = waiting.get(entry.target); waiting.delete(entry.target);
             if (pending) play(entry.target, pending.effect, pending.key);
@@ -84,6 +84,14 @@
         for (const element of [...running.keys()]) stop(element);
         observer.disconnect(); waiting.clear(); played.clear();
     }
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) return;
+        for (const element of [...waiting.keys()]) {
+            observer.unobserve(element);
+            if (element.isConnected) observer.observe(element);
+            else waiting.delete(element);
+        }
+    });
     reduced.addEventListener('change',()=>{if(reduced.matches){for(const element of [...running.keys()])stop(element);observer.disconnect();waiting.clear();}});
     window.HarzafiTextEffects = {labels, render, play, schedule, cancelWithin, clear};
 })();

@@ -28,6 +28,7 @@
     let transitionRequest = 0, actionOriginRect;
     const viewportState = { width:window.innerWidth, baseline:window.innerHeight, height:0, scale:window.visualViewport?.scale || 1, followLatest:true };
     let preferences = new Map(), inboxStates = new Map(), inboxStops = new Map(), inboxTimer;
+    const inboxViews = new WeakMap();
     let deletedGroups = [], groupToDelete = '', groupDeletionBusy = false;
     let groupToLeave = '', groupExitBusy = false, verifiedAccounts = new Set();
     const restoringGroups = new Set();
@@ -295,29 +296,35 @@
         const list = conversations.filter(c => chatName(c).toLocaleLowerCase('it').includes(search))
             .sort((a, b) => latestTime(b) - latestTime(a));
         const focused = document.activeElement?.dataset?.conversation;
-        const fragment = document.createDocumentFragment();
+        const container = $('conversation-list'), previous = new Map([...container.children].map(button => [button.dataset.conversation, button])), buttons = [];
         for (const c of list) {
-            const other = c.members.find(uid => uid !== user.uid), p = person(other);
+            const other = c.members.find(uid => uid !== user.uid), title = chatName(c), updated = latestTime(c), dateLabel = listDate({toMillis:()=>updated}), writing = writers(c.id);
+            const readAt=Math.max(model.millis(preferences.get(c.id)?.readAt),model.millis(inboxStates.get(c.id)?.get(user.uid)?.readAt));
+            const unread=!!c.lastSender && c.lastSender!==user.uid && updated>readAt;
+            const view=[title,updated,dateLabel,unread,c.id===activeId,c.kind,c.lastSender===user.uid,c.lastText||'',verifiedAccounts.has(other),c.members.join('\0'),...c.members.filter(uid=>uid!==user.uid).slice(0,c.kind==='group'?2:1).map(uid=>person(uid).photoData),JSON.stringify(writing.map(([uid])=>[uid,nameOf(uid)]))];
+            const existing=previous.get(c.id), saved=existing && inboxViews.get(existing);
+            if(saved && view.length===saved.length && view.every((value,index)=>value===saved[index])){buttons.push(existing);continue;}
             const button = node('button', 'conversation-item'); button.type = 'button'; button.dataset.conversation = c.id;
-            button.setAttribute('aria-current', String(c.id === activeId)); button.setAttribute('aria-label', 'Apri la conversazione con ' + chatName(c));
+            button.setAttribute('aria-current', String(c.id === activeId)); button.setAttribute('aria-label', 'Apri la conversazione con ' + title);
             const image = node('span', 'person-avatar'); chatAvatar(image, c);
             const copy = node('span', 'conversation-item-copy'), heading = node('span', 'conversation-item-heading');
-            const meta=node('span','conversation-item-meta'),timestamp=node('time','',listDate({toMillis:()=>latestTime(c)})),updated=latestTime(c);
+            const meta=node('span','conversation-item-meta'),timestamp=node('time','',dateLabel);
             if(updated){timestamp.dateTime=new Date(updated).toISOString();timestamp.title=day.format(updated)+' · '+time.format(updated);}
             const chevron=document.createElementNS('http://www.w3.org/2000/svg','svg');chevron.setAttribute('viewBox','0 0 12 20');chevron.setAttribute('class','conversation-chevron');chevron.setAttribute('aria-hidden','true');
             const chevronPath=document.createElementNS(chevron.namespaceURI,'path');chevronPath.setAttribute('d','m3.5 4.5 5.5 5.5-5.5 5.5');chevron.append(chevronPath);meta.append(timestamp,chevron);
-            heading.append(nameLabel(c.kind==='group'?'':other,chatName(c),'strong'),meta);
-            const writing=writers(c.id);let preview;
+            heading.append(nameLabel(c.kind==='group'?'':other,title,'strong'),meta);
+            let preview;
             if(writing.length){preview=node('span','conversation-typing');preview.setAttribute('aria-label',writing.map(([uid])=>nameOf(uid)).join(', ')+' sta scrivendo');for(let i=0;i<3;i++)preview.append(node('span','typing-dot'));preview.append(node('span','','Sta scrivendo…'));}
             else preview=node('span', 'conversation-preview', (c.lastSender === user.uid ? 'Tu: ' : '') + (c.lastText || 'Inizia la conversazione.'));
             copy.append(heading,preview);
-            const readAt=Math.max(model.millis(preferences.get(c.id)?.readAt),model.millis(inboxStates.get(c.id)?.get(user.uid)?.readAt));
             const marker=node('span','conversation-status-marker');
-            if(c.lastSender && c.lastSender!==user.uid && latestTime(c)>readAt){const dot=node('span','unread-dot');dot.setAttribute('role','img');dot.setAttribute('aria-label','Messaggi non letti');marker.append(dot);}
-            button.append(marker,image,copy); button.addEventListener('click', () => selectConversation(c.id, other)); fragment.append(button);
+            if(unread){const dot=node('span','unread-dot');dot.setAttribute('role','img');dot.setAttribute('aria-label','Messaggi non letti');marker.append(dot);}
+            button.append(marker,image,copy); button.addEventListener('click', () => selectConversation(c.id, other)); inboxViews.set(button,view);buttons.push(button);
         }
-        $('conversation-list').replaceChildren(fragment);
-        if (focused) [...$('conversation-list').children].find(b => b.dataset.conversation === focused)?.focus({ preventScroll:true });
+        const visible=new Set(buttons);
+        for(const button of [...container.children])if(!visible.has(button))button.remove();
+        buttons.forEach((button,index)=>{if(container.children[index]!==button)container.insertBefore(button,container.children[index]||null);});
+        if (focused) buttons.find(b => b.dataset.conversation === focused)?.focus({ preventScroll:true });
         $('conversation-status').textContent = list.length ? `${list.length} ${list.length === 1 ? 'conversazione' : 'conversazioni'}` : search ? 'Nessuna conversazione trovata.' : 'Le tue conversazioni iniziano qui.';
     }
     function renderContacts() {
@@ -755,11 +762,11 @@
                 });
             }else{element.controls=true;element.preload='metadata';}bubble.append(element);
             // Load only visible media, rather than all files in a long conversation.
-            const observer=new IntersectionObserver(entries=>{if(!entries.some(e=>e.isIntersecting))return;observer.disconnect();load().then(url=>{if(current===chatVersion&&element.isConnected)element.src=url;}).catch(()=>{if(current===chatVersion)element.replaceWith(node('span','media-error','Allegato non disponibile. Riapri la conversazione per riprovare.'));});},{root:scroll,rootMargin:'250px'});observer.observe(element);chatStops.push(()=>observer.disconnect());
-            if(message.type==='image')element.addEventListener('click',async()=>{try{const url=await load();if(current!==chatVersion)return;const dialog=$('media-viewer');$('media-viewer-image').src=url;openDialog(dialog);}catch(_){status('Non è stato possibile aprire la foto.',true);}});
+            const observer=new IntersectionObserver(entries=>{if(!entries.some(e=>e.isIntersecting))return;observer.disconnect();if(current!==chatVersion||!element.isConnected)return;load().then(url=>{if(current===chatVersion&&element.isConnected)element.src=url;}).catch(()=>{if(current===chatVersion)element.replaceWith(node('span','media-error','Allegato non disponibile. Riapri la conversazione per riprovare.'));});},{root:scroll,rootMargin:'250px'});observer.observe(element);chatStops.push(()=>observer.disconnect());
+            if(message.type==='image')element.addEventListener('click',async()=>{try{const url=await load();if(current!==chatVersion)return;const dialog=$('media-viewer');$('media-viewer-image').src=url;openDialog(dialog);}catch(_){if(current===chatVersion)status('Non è stato possibile aprire la foto.',true);}});
         } else if(message.type==='audio') {
             const panel=node('div','message-audio'),player=audioUI.player({source:load,duration:attachment.duration,media});panel.audioController=player;panel.append(player.element);
-            const audioObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){audioObserver.disconnect();player.prepare().catch(()=>{});}},{root:scroll,rootMargin:'500px'});
+            const audioObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){audioObserver.disconnect();if(current===chatVersion&&panel.isConnected)player.prepare().catch(()=>{});}},{root:scroll,rootMargin:'500px'});
             audioObserver.observe(panel);chatStops.push(()=>audioObserver.disconnect());
             chatStops.push(()=>player.destroy());
             const details=node('details','message-transcript');details.append(node('summary','','Trascrizione automatica'));
@@ -773,6 +780,7 @@
                     copy.textContent='Preparo il riconoscimento vocale in italiano…';
                     try {
                         const url=await load();
+                        if(current!==chatVersion)return;
                         const text=await media.transcribe(url,value=>{
                             if(current===chatVersion)copy.textContent=value?'Scarico il modello… '+Math.round(value)+'%':'Elaborazione sul dispositivo…';
                         });
@@ -989,8 +997,14 @@
     $('cancel-reply').addEventListener('click', () => { replyTo = ''; reveal($('reply-preview'), false); input.focus(); });
     $('copy-message').addEventListener('click', async () => {
         const message = messages.get(actionId); if (!message) return;
-        try { await navigator.clipboard.writeText(message.text); await dismiss($('message-actions')); status('Testo copiato.'); }
-        catch (_) { $('action-status').textContent = 'Copia non disponibile. Puoi selezionare il testo del messaggio.'; }
+        const current=chatVersion, selected=actionId;
+        try {
+            await navigator.clipboard.writeText(message.text);
+            if(current!==chatVersion || selected!==actionId)return;
+            await dismiss($('message-actions'));
+            if(current===chatVersion)status('Testo copiato.');
+        }
+        catch (_) { if(current===chatVersion && selected===actionId)$('action-status').textContent = 'Copia non disponibile. Puoi selezionare il testo del messaggio.'; }
     });
     function updateTyping() {
         clearTimeout(typingExpiry);
@@ -1063,7 +1077,7 @@
     input.addEventListener('focus', viewport);
     scroll.addEventListener('scroll', () => { cancelMessagePress();viewportState.followLatest=nearBottom();if (viewportState.followLatest) { $('new-messages-indicator').hidden = true; scheduleRead(); } }, { passive:true });
     window.addEventListener('online', () => { connected(); scheduleRead(); }); window.addEventListener('offline', () => { stopTyping(); connected(); });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) stopTyping(); else { updateTyping(); scheduleRead(); } });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stopTyping(); else { renderConversations(); updateTyping(); scheduleRead(); } });
     function viewport() {
         const visual=window.visualViewport,scale=visual?.scale || 1;
         const height=Math.round(Math.max(1,Math.min(window.innerHeight,(visual?.height || window.innerHeight)*scale))*100)/100;

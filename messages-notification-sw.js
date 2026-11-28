@@ -11,7 +11,7 @@ self.addEventListener('push', (event) => {
             await self.registration.showNotification(payload.title, {
                 body: 'Apri Messaggi per leggere la conversazione.',
                 tag: typeof payload.tag === 'string' ? payload.tag.slice(0, 180) : 'harzafi-messages',
-                icon: new URL('IMMAGINI/LOGO-DOMANDA-HARZAFI.webp', self.location.href).href,
+                icon: new URL('IMMAGINI/ICONA-MESSAGGI.webp', self.location.href).href,
             });
         })(),
     );
