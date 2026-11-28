@@ -59,9 +59,13 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),{createSer
    const a=HarzafiMessageAudio.player({source:()=>new Promise(r=>window.__audioA=r)}),b=HarzafiMessageAudio.player({source:()=>new Promise(r=>window.__audioB=r)});
    document.body.append(a.element,b.element);a.element.querySelector('button').click();await Promise.resolve();b.element.querySelector('button').click();await Promise.resolve();
    __audioB('data:audio/wav;base64,');await new Promise(r=>setTimeout(r,20));__audioA('data:audio/wav;base64,');await new Promise(r=>setTimeout(r,20));
-   const outcome={count:calls.length,lastRequested:calls[0]===b.audio};a.destroy();b.destroy();a.element.remove();b.element.remove();HTMLMediaElement.prototype.play=realPlay;return outcome;
+   const outcome={count:calls.length,lastRequested:calls[0]===b.audio};a.destroy();b.destroy();a.element.remove();b.element.remove();calls=[];
+   const c=HarzafiMessageAudio.player({source:()=>new Promise(r=>window.__audioC=r)});document.body.append(c.element);
+   const button=c.element.querySelector('button');button.click();await Promise.resolve();button.click();button.click();await Promise.resolve();
+   __audioC('data:audio/wav;base64,');await new Promise(r=>setTimeout(r,20));outcome.rapidRestart=calls.length===1&&calls[0]===c.audio;
+   c.destroy();c.element.remove();HTMLMediaElement.prototype.play=realPlay;return outcome;
   });
-  assert.deepEqual(result,{count:1,lastRequested:true},'Only the last requested voice message may start when previous loading is delayed');
+  assert.deepEqual(result,{count:1,lastRequested:true,rapidRestart:true},'Only the last requested voice may start; cancelling and restarting during loading preserves the final tap');
   assert.deepEqual(errors,[]);console.log('PASS: stable inbox and typing animations, effects after background return, cancelled stale transcription/clipboard work, last-requested voice playback.');
  }finally{await browser.close();await new Promise(r=>server.close(r));}
 })().catch(error=>{console.error(error);process.exitCode=1;});
