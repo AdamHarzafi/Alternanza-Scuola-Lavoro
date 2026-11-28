@@ -26,7 +26,8 @@
     let draftEffect = null, draftEffectAll = false, draftText = '', effectSelection = null;
     const motions = new Map(), visibilityTargets = new Map(), dialogEpochs = new WeakMap(), dialogDesired = new WeakMap();
     let transitionRequest = 0, actionOriginRect;
-    const viewportState = { width:window.innerWidth, baseline:window.innerHeight, height:0, scale:window.visualViewport?.scale || 1, followLatest:true };
+    const viewportState = { width:window.innerWidth, baseline:window.innerHeight, height:0, top:0, keyboard:false, scale:window.visualViewport?.scale || 1, followLatest:true };
+    let viewportFrame = 0;
     let preferences = new Map(), inboxStates = new Map(), inboxStops = new Map(), inboxTimer;
     const inboxViews = new WeakMap();
     let deletedGroups = [], groupToDelete = '', groupDeletionBusy = false;
@@ -161,6 +162,18 @@
         if (current) motions.delete(dialog);
         return current && finished;
     }
+    function positionMessageActions() {
+        const dialog=$('message-actions');if(!dialog.open)return;
+        const preview=$('action-message-text'),visual=window.visualViewport;
+        const left=visual?.offsetLeft || 0,top=visual?.offsetTop || 0;
+        const width=visual?.width || innerWidth,height=visual?.height || innerHeight,edge=12;
+        const source=rowNodes.get(actionId)?.querySelector('.message-bubble')?.getBoundingClientRect() || actionOriginRect;
+        const x=source?(preview.classList.contains('own')?source.right-preview.offsetLeft-preview.offsetWidth:source.left-preview.offsetLeft):left+(width-dialog.offsetWidth)/2;
+        const y=source?source.top-preview.offsetTop:top+(height-dialog.offsetHeight)/2;
+        dialog.style.left=Math.max(left+edge,Math.min(x,left+width-dialog.offsetWidth-edge))+'px';
+        dialog.style.top=Math.max(top+edge,Math.min(y,top+height-dialog.offsetHeight-edge))+'px';
+        dialog.classList.toggle('message-actions-constrained',dialog.scrollHeight>dialog.clientHeight+1);
+    }
     async function messageActionsMotion(entering) {
         const dialog=$('message-actions'),preview=$('action-message-text');cancelWithin(dialog);
         if(reduced.matches||!preview.animate){dialog.classList.remove('message-context-animating');return true;}
@@ -179,7 +192,7 @@
         if (dialog.id === 'composer-menu') {
             $('attach-message').setAttribute('aria-expanded', 'true');
             composerMenuMotion(true);
-        } else if(dialog.id==='message-actions'){cancelMotion(dialog);dialog.scrollTop=0;messageActionsMotion(true);}
+        } else if(dialog.id==='message-actions'){cancelMotion(dialog);dialog.scrollTop=0;positionMessageActions();messageActionsMotion(true);}
         else { cancelMotion(dialog); motion(dialog, 'dialog', true); }
     }
     async function dismiss(dialog) {
@@ -247,6 +260,7 @@
         $('active-conversation').hidden = true; $('conversation-placeholder').hidden = false; app.classList.remove('conversation-open');
         $('connection-status').hidden = true; $('new-messages-indicator').hidden = true; input.value = ''; draftEffect=null;draftEffectAll=false;draftText='';resizeInput();closeDialogs();
         pending = new Map(); sending = false; olderBusy = false; oldest = null; stateError = false;
+        viewport();
     }
     function clear(preservePush=false) {
         if(user)window.HarzafiMessagePush?.clear(!preservePush);
@@ -467,6 +481,7 @@
         if (replyTo) { const original = quotes.get(replyTo); $('reply-name').textContent = 'Risposta al messaggio'; $('reply-text').textContent = original?.text || 'Il messaggio originale verrà richiamato nella risposta.'; reveal($('reply-preview'), true); }
         $('active-conversation').hidden = false; $('conversation-placeholder').hidden = true; app.classList.add('conversation-open');
         updateHeader();applyPreferences(); renderConversations(); status(); $('history-status').textContent = 'Caricamento dei messaggi…'; $('load-older').hidden = true;
+        updateViewport();
         let initial = true;
         chatStops.push(store.listen(id, snapshot => {
             if (current !== chatVersion || id !== activeId) return;
@@ -506,7 +521,8 @@
         return { text:'Caricamento del messaggio…', senderUid:'' };
     }
     function cancelMessagePress(){clearTimeout(longPressTimer);pressTarget?.classList.remove('message-pressing');pressTarget=null;}
-    function openActions(id) {
+    function openActions(id, inputMode='pointer') {
+        $('message-actions').dataset.inputMode=inputMode;
         const message = messages.get(id); if (!message || message.pending || message.failed) return;
         cancelMessagePress();if($('message-actions').open&&actionId===id)return;
         const source=rowNodes.get(id)?.querySelector('.message-bubble'),preview=$('action-message-text');actionOriginRect=source?.getBoundingClientRect();
@@ -693,7 +709,7 @@
                 if (transcriptOpen && bubble.querySelector('.message-transcript')) bubble.querySelector('.message-transcript').open = true;
                 if(message.editedAt)bubble.append(node('span','message-edited','Modificato'));
                 const actions = node('button', 'bubble-actions', '•••'); actions.type = 'button'; actions.setAttribute('aria-label', 'Azioni del messaggio: ' + message.text.slice(0, 60)); actions.disabled = !!message.pending || !!message.failed;
-                actions.addEventListener('click', () => openActions(message.id));
+                actions.addEventListener('click', event => openActions(message.id,event.detail===0?'keyboard':'pointer'));
                 bubble.addEventListener('contextmenu', event => { if(event.target.closest('button,input,a,audio,video,summary'))return;event.preventDefault();openActions(message.id); });
                 bubble.addEventListener('dblclick', event => {if(!event.target.closest('button,input,a,audio,video,summary'))openActions(message.id);});
                 let pressPoint;
@@ -716,7 +732,7 @@
                             if(lineWidth&&lineWidth+5+chipWidth>219){lines++;lineWidth=0;}
                             lineWidth+=(lineWidth?5:0)+chipWidth;width=Math.max(width,lineWidth);
                             chip.type = 'button';chip.setAttribute('aria-pressed',String(message.reactions[user.uid]===emoji));chip.setAttribute('aria-label',reactors.map(([uid])=>nameOf(uid)).join(' e ')+': '+emoji+'. Gestisci reazione');
-                            chip.addEventListener('click',()=>openActions(message.id));group.append(chip);
+                            chip.addEventListener('click',event=>openActions(message.id,event.detail===0?'keyboard':'pointer'));group.append(chip);
                         }
                         group.style.setProperty('--tapback-width',width+'px');group.style.setProperty('--tapback-height',(lines*36+(lines-1)*5)+'px');
                     }
@@ -994,6 +1010,8 @@
     $('load-older').addEventListener('click', loadOlder);
     $('new-messages-indicator').addEventListener('click', () => { bottom(true); scheduleRead(); });
     $('reply-action').addEventListener('click', () => startReply(actionId));
+    $('message-actions').addEventListener('keydown',event=>{if(event.key==='Tab')$('message-actions').dataset.inputMode='keyboard';});
+    $('message-actions').addEventListener('pointerdown',()=>{$('message-actions').dataset.inputMode='pointer';});
     $('cancel-reply').addEventListener('click', () => { replyTo = ''; reveal($('reply-preview'), false); input.focus(); });
     $('copy-message').addEventListener('click', async () => {
         const message = messages.get(actionId); if (!message) return;
@@ -1079,22 +1097,37 @@
     window.addEventListener('online', () => { connected(); scheduleRead(); }); window.addEventListener('offline', () => { stopTyping(); connected(); });
     document.addEventListener('visibilitychange', () => { if (document.hidden) stopTyping(); else { renderConversations(); updateTyping(); scheduleRead(); } });
     function viewport() {
+        if (!viewportFrame) viewportFrame=requestAnimationFrame(updateViewport);
+    }
+    function updateViewport() {
+        cancelAnimationFrame(viewportFrame);viewportFrame=0;
         const visual=window.visualViewport,scale=visual?.scale || 1;
         const height=Math.round(Math.max(1,Math.min(window.innerHeight,(visual?.height || window.innerHeight)*scale))*100)/100;
         const focused=document.activeElement===input,widthChanged=Math.abs(window.innerWidth-viewportState.width)>1;
-        if(!focused||widthChanged)viewportState.baseline=window.innerHeight;
+        if((!focused&&!viewportState.keyboard)||widthChanged)viewportState.baseline=window.innerHeight;
         else viewportState.baseline=Math.max(viewportState.baseline,window.innerHeight);
         const heightChanged=Math.abs(height-viewportState.height)>.5,scaleChanged=Math.abs(scale-viewportState.scale)>.01;
+        const mobileChat=!!activeId&&!app.hidden&&window.matchMedia('(max-width:700px), (max-width:1000px) and (max-height:500px) and (pointer:coarse)').matches;
+        const top=mobileChat?(Math.abs(scale-1)<.01?Math.min(Math.max(0,visual?.offsetTop || 0),Math.max(0,window.innerHeight-height)):viewportState.top):0;
         if(heightChanged)document.documentElement.style.setProperty('--messages-height',height+'px');
-        const keyboardOpen=focused&&viewportState.baseline-height>100;
+        if(Math.abs(top-viewportState.top)>.25)document.documentElement.style.setProperty('--messages-viewport-top',top+'px');
+        document.documentElement.style.setProperty('--composer-text-max-height',Math.max(44,Math.min(150,height*.2))+'px');
+        const keyboardOpen=mobileChat&&viewportState.baseline-height>100;
+        document.body.classList.toggle('messages-mobile-chat',mobileChat);
+        document.body.classList.toggle('messages-compact-view',mobileChat&&height<360);
         $('message-form').classList.toggle('keyboard-open', keyboardOpen);
         document.body.classList.toggle('messages-keyboard-open', keyboardOpen);
-        if(activeId&&(heightChanged||widthChanged)&&!scaleChanged&&!$('reply-thread').open&&(viewportState.followLatest||(focused&&keyboardOpen))){
-            const current=chatVersion;requestAnimationFrame(()=>{if(current===chatVersion&&activeId&&!$('reply-thread').open)bottom();});
+        if(activeId&&(heightChanged||widthChanged)&&!scaleChanged&&!$('reply-thread').open&&viewportState.followLatest){
+            const current=chatVersion,anchor=scroll.scrollTop;
+            requestAnimationFrame(()=>{if(current===chatVersion&&activeId&&viewportState.height===height&&!$('reply-thread').open&&Math.abs(scroll.scrollTop-anchor)<1)bottom();});
         }
-        Object.assign(viewportState,{width:window.innerWidth,height,scale});
+        Object.assign(viewportState,{width:window.innerWidth,height,top,scale,keyboard:keyboardOpen});
+        syncEmojiDraft();
+        if($('composer-menu').open)repositionComposerMenu();
+        if($('message-actions').open)positionMessageActions();
     }
-    window.visualViewport?.addEventListener('resize', viewport); window.addEventListener('resize', viewport); viewport();
+    window.visualViewport?.addEventListener('resize', viewport); window.visualViewport?.addEventListener('scroll', viewport);
+    window.addEventListener('resize', viewport); viewport();
     reduced.addEventListener('change', () => {
         if (!reduced.matches) return;
         $('message-actions').classList.remove('message-context-animating');

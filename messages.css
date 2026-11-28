@@ -528,3 +528,47 @@ body.messages-page .messages-site-footer svg{width:24px;height:24px}
 .thread-footer .primary-button{flex:none}
 .messages-page .thread-footer .dialog-note{margin:0;font-size:12px;line-height:1.4}
 @media(max-width:700px){.reply-response .message-cluster{max-width:100%}.reply-parent-content{max-width:calc(100% - 12px)}.reply-parent-bubble{font-size:13px}.reply-thread-dialog{padding:20px;width:calc(100vw - 24px);border-radius:26px}.thread-reply-bubble{font-size:17px}.thread-footer{gap:12px}.thread-reply{max-width:94%}}
+
+/* Follow Safari's visible viewport. The keyboard already animates this geometry. */
+html:has(body.messages-mobile-chat){height:100%;overflow:hidden;overscroll-behavior:none}
+body.messages-page.messages-mobile-chat{height:100%;min-height:0;overflow:hidden;overscroll-behavior:none;--messages-nav-height:calc(48px + env(safe-area-inset-top,0px));--messages-top-gap:8px}
+body.messages-mobile-chat .messages-workspace{
+    position:fixed;inset:var(--messages-viewport-top,0px) 0 auto;
+    width:100%;height:var(--messages-height,100svh);min-height:0;box-sizing:border-box;
+    padding:calc(var(--messages-nav-height) + var(--messages-top-gap)) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px);
+    overflow:hidden;transition:none;background:#fff;
+}
+body.messages-mobile-chat .messages-site-nav{top:var(--messages-viewport-top,0px);height:var(--messages-nav-height);min-height:var(--messages-nav-height)}
+body.messages-mobile-chat .messages-app.conversation-open{display:block;width:100%;height:100%;min-height:0;max-width:none;margin:0}
+body.messages-mobile-chat .conversation-sidebar{display:none}
+body.messages-mobile-chat .conversation-pane{display:block;height:100%;min-height:0;border:0;border-radius:0}
+body.messages-mobile-chat .messages-site-footer{display:none!important}
+body.messages-mobile-chat .active-conversation{--message-header-height:112px}
+body.messages-mobile-chat .active-conversation>.message-scroll{padding-top:0}
+body.messages-mobile-chat .active-conversation>.message-scroll::before{content:"";display:block;height:calc(var(--message-header-height) + 12px);pointer-events:none}
+body.messages-mobile-chat .active-conversation:has(>.connection-status:not([hidden]))>.message-scroll::before{height:calc(var(--message-header-height) + 60px)}
+body.messages-mobile-chat .active-conversation>.conversation-header{height:var(--message-header-height);min-height:var(--message-header-height);padding:8px 16px 2px;justify-content:space-between}
+body.messages-mobile-chat .conversation-person{max-width:calc(100% - 104px)}
+body.messages-mobile-chat .conversation-person .person-avatar{width:60px;height:60px}
+body.messages-mobile-chat .conversation-name-glass strong{font-size:17px}
+body.messages-mobile-chat .mobile-back{display:inline-flex;color:#1d1d1f;background:rgba(244,244,247,.72);width:44px;height:44px}
+body.messages-mobile-chat .header-spacer{display:block;width:44px;flex:none}
+body.messages-mobile-chat #message-form{padding:8px 12px max(10px,env(safe-area-inset-bottom,0px));transition:none}
+body.messages-mobile-chat.messages-keyboard-open #message-form{padding-bottom:10px}
+body.messages-mobile-chat .composer-field>textarea{max-height:var(--composer-text-max-height,150px);scroll-padding-block:4px}
+body.messages-mobile-chat .composer-status{max-height:3.9em;overflow:auto;overscroll-behavior:contain}
+body.messages-mobile-chat.messages-compact-view .active-conversation{--message-header-height:64px}
+body.messages-mobile-chat.messages-compact-view .active-conversation>.conversation-header{padding-block:6px}
+body.messages-mobile-chat.messages-compact-view .conversation-person{flex-direction:row;gap:8px}
+body.messages-mobile-chat.messages-compact-view .conversation-person .person-avatar{width:36px;height:36px}
+body.messages-mobile-chat.messages-compact-view .conversation-name-glass{min-height:32px;margin:0;padding:6px 11px}
+body.messages-mobile-chat.messages-compact-view .conversation-name-glass strong{font-size:16px}
+
+/* Keep the lifted message and its actions close to the pressed bubble. */
+#message-actions{position:fixed;inset:auto;margin:0;max-height:calc(var(--messages-height,100dvh) - 24px)}
+#message-actions::backdrop{background:rgba(29,29,31,.22);backdrop-filter:blur(2px) saturate(.92);-webkit-backdrop-filter:blur(2px) saturate(.92)}
+#message-actions .action-menu{width:min(264px,calc(100% - 8px));align-self:flex-start;margin-left:3px}
+#message-actions:has(.message-context-preview.own) .action-menu{align-self:flex-end;margin-left:auto;margin-right:3px}
+#message-actions.message-actions-constrained.message-context-animating{overflow:auto}
+#message-actions #action-message-text.own{align-self:flex-end;margin-left:auto;margin-right:3px}
+#message-actions[data-input-mode=pointer] button:focus-visible{outline:none!important;outline-offset:0!important}
