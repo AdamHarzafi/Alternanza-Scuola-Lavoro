@@ -29,7 +29,7 @@
         seek.type = 'range'; seek.min = '0'; seek.max = '1000'; seek.step = '1'; seek.value = '0'; seek.disabled = true; seek.setAttribute('aria-label', 'Posizione del vocale'); seek.setAttribute('aria-valuetext', '00:00');
         time.textContent = clock(duration); time.setAttribute('aria-hidden', 'true'); status.setAttribute('role', 'status');
         timeline.append(waveform.element, seek); element.append(audio, play, timeline, time, status);
-        let prepared, disposed = false, wanted = false, frame, knownDuration = duration;
+        let prepared, disposed = false, wanted = false, frame, knownDuration = duration, playIntent = 0;
         const length = () => Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : knownDuration;
         const sync = () => { const total = length(), position = audio.currentTime || 0; waveform.progress(total ? position / total : 0); seek.value = String(total ? Math.round(position / total * 1000) : 0); seek.setAttribute('aria-valuetext', clock(position) + ' di ' + clock(total)); time.textContent = clock(audio.ended ? total : total - position); };
         const tick = () => { sync(); if (!audio.paused && !disposed) frame = requestAnimationFrame(tick); };
@@ -46,19 +46,19 @@
             return prepared;
         }
         play.addEventListener('click', async () => {
-            if (!audio.paused || wanted) { wanted = false; audio.pause(); return; }
+            if (!audio.paused || wanted) { ++playIntent; wanted = false; audio.pause(); return; }
             wanted = true;
-            const request = ++playbackRequest;
-            try { await prepare(); if (disposed || !wanted || request !== playbackRequest) return; if (audio.ended) audio.currentTime = 0; await audio.play(); }
-            catch (_) { if (!disposed) status.textContent = 'Non è stato possibile riprodurre il vocale. Tocca per riprovare.'; }
-            finally { wanted = false; }
+            const request = ++playbackRequest, intent = ++playIntent;
+            try { await prepare(); if (disposed || !wanted || intent !== playIntent || request !== playbackRequest) return; if (audio.ended) audio.currentTime = 0; await audio.play(); }
+            catch (_) { if (!disposed && intent === playIntent && request === playbackRequest) status.textContent = 'Non è stato possibile riprodurre il vocale. Tocca per riprovare.'; }
+            finally { if (intent === playIntent) wanted = false; }
         });
         audio.addEventListener('play', () => { for (const other of players) if (other !== audio) other.pause(); appearance(); });
         for (const name of ['pause', 'ended', 'loadedmetadata', 'durationchange', 'timeupdate']) audio.addEventListener(name, appearance);
         audio.addEventListener('error', () => { if (!disposed) { element.dataset.state = 'error'; status.textContent = 'Questo formato audio non può essere riprodotto dal browser.'; } });
         seek.addEventListener('input', () => { const total = length(); if (total && Number.isFinite(total)) { audio.currentTime = Number(seek.value) / 1000 * total; sync(); } });
         players.add(audio);
-        return { element, audio, prepare, destroy() { if (disposed) return; disposed = true; wanted = false; cancelAnimationFrame(frame); players.delete(audio); audio.pause(); audio.removeAttribute('src'); audio.load(); } };
+        return { element, audio, prepare, destroy() { if (disposed) return; disposed = true; ++playIntent; wanted = false; cancelAnimationFrame(frame); players.delete(audio); audio.pause(); audio.removeAttribute('src'); audio.load(); } };
     }
     window.HarzafiMessageAudio = { player, wave, clock };
 })();
